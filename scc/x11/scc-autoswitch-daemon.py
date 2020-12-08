@@ -23,7 +23,6 @@ from scc.x11.autoswitcher import AutoSwitcher
 
 log = logging.getLogger("AS-Daemon")
 
-
 if __name__ == "__main__":
     from scc.paths import get_share_path
     from scc.tools import init_logging
