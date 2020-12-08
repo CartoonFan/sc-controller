@@ -13,7 +13,6 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
 # pylint: disable=invalid-name, too-few-public-methods, too-many-arguments
 # pylint: disable=missing-docstring
 """
@@ -24,10 +23,26 @@ You should not need to import this if you use usb1 module.
 Declares all constants, data structures and exported symbols.
 Locates and loads libusb1 dynamic library.
 """
-from ctypes import (CFUNCTYPE, POINTER, LittleEndianStructure, Structure,
-                    addressof, c_char_p, c_int, c_long, c_short, c_size_t,
-                    c_uint, c_uint8, c_uint16, c_uint32, c_void_p, cast,
-                    pointer, py_object, sizeof, string_at)
+from ctypes import addressof
+from ctypes import c_char_p
+from ctypes import c_int
+from ctypes import c_long
+from ctypes import c_short
+from ctypes import c_size_t
+from ctypes import c_uint
+from ctypes import c_uint16
+from ctypes import c_uint32
+from ctypes import c_uint8
+from ctypes import c_void_p
+from ctypes import cast
+from ctypes import CFUNCTYPE
+from ctypes import LittleEndianStructure
+from ctypes import POINTER
+from ctypes import pointer
+from ctypes import py_object
+from ctypes import sizeof
+from ctypes import string_at
+from ctypes import Structure
 
 try:
     from ctypes import c_ssize_t
