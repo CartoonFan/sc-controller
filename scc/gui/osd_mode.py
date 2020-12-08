@@ -13,13 +13,17 @@ from __future__ import unicode_literals
 import logging
 import os
 
-from gi.repository import Gdk, GLib, Gtk
+from gi.repository import Gdk
+from gi.repository import GLib
+from gi.repository import Gtk
 
 from scc.constants import SCButtons
 from scc.gui.daemon_manager import ControllerManager
-from scc.gui.gdk_to_key import KEY_TO_GDK, KEY_TO_KEYCODE
+from scc.gui.gdk_to_key import KEY_TO_GDK
+from scc.gui.gdk_to_key import KEY_TO_KEYCODE
 from scc.osd.slave_mapper import SlaveMapper
-from scc.uinput import Keys, Scans
+from scc.uinput import Keys
+from scc.uinput import Scans
 
 log = logging.getLogger("OSDModMapper")
 
