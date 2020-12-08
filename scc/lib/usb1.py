@@ -2079,7 +2079,7 @@ class USBContext(object):
     def _exit(self):
         context_p = self.__context_p
         if context_p:
-            for handle in self.__hotplug_callback_dict.keys():
+            for handle in self.__hotplug_callback_dict:
                 self.hotplugDeregisterCallback(handle)
             pop = self.__close_set.pop
             while True:
