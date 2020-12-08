@@ -45,31 +45,19 @@ All LIBUSB_ERROR_* constants are available in this module as exception classes,
 subclassing USBError.
 """
 
-from ctypes import (
-    byref,
-    create_string_buffer,
-    c_int,
-    sizeof,
-    POINTER,
-    cast,
-    c_uint8,
-    c_uint16,
-    c_ubyte,
-    string_at,
-    c_void_p,
-    cdll,
-    addressof,
-    c_char,
-)
-from ctypes.util import find_library
+import collections
+import contextlib
+import functools
+import inspect
 import sys
 import threading
 import warnings
 import weakref
-import collections
-import functools
-import contextlib
-import inspect
+from ctypes import (POINTER, addressof, byref, c_char, c_int, c_ubyte, c_uint8,
+                    c_uint16, c_void_p, cast, cdll, create_string_buffer,
+                    sizeof, string_at)
+from ctypes.util import find_library
+
 import libusb1
 
 if sys.version_info[:2] >= (2, 6):
