@@ -16,13 +16,28 @@ import time
 from difflib import get_close_matches
 from math import sqrt
 
-from scc.actions import (MOUSE_BUTTONS, Action, ButtonAction,
-                         HapticEnabledAction, NoAction, OSDEnabledAction,
-                         SpecialAction)
-from scc.constants import (DEFAULT, FE_PAD, FE_STICK, FE_TRIGGER, LEFT, RIGHT,
-                           SAME, STICK, STICK_PAD_MAX, SCButtons)
-from scc.modifiers import Modifier, NameModifier
-from scc.tools import clamp, nameof, strip_gesture
+from scc.actions import Action
+from scc.actions import ButtonAction
+from scc.actions import HapticEnabledAction
+from scc.actions import MOUSE_BUTTONS
+from scc.actions import NoAction
+from scc.actions import OSDEnabledAction
+from scc.actions import SpecialAction
+from scc.constants import DEFAULT
+from scc.constants import FE_PAD
+from scc.constants import FE_STICK
+from scc.constants import FE_TRIGGER
+from scc.constants import LEFT
+from scc.constants import RIGHT
+from scc.constants import SAME
+from scc.constants import SCButtons
+from scc.constants import STICK
+from scc.constants import STICK_PAD_MAX
+from scc.modifiers import Modifier
+from scc.modifiers import NameModifier
+from scc.tools import clamp
+from scc.tools import nameof
+from scc.tools import strip_gesture
 
 log = logging.getLogger("SActions")
 

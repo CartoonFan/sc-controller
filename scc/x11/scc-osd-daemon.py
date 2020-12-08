@@ -1,5 +1,4 @@
 #!/usr/bin/env python2
-
 """
 SC-Controller - OSD Daemon
 
@@ -14,7 +13,10 @@ import time
 import traceback
 
 import gi
-from gi.repository import Gdk, GdkX11, GLib, Gtk
+from gi.repository import Gdk
+from gi.repository import GdkX11
+from gi.repository import GLib
+from gi.repository import Gtk
 
 from scc.config import Config
 from scc.gui.daemon_manager import DaemonManager
@@ -30,7 +32,10 @@ from scc.osd.message import Message
 from scc.osd.quick_menu import QuickMenu
 from scc.osd.radial_menu import RadialMenu
 from scc.special_actions import OSDAction
-from scc.tools import _, set_logging_level, shjoin, shsplit
+from scc.tools import _
+from scc.tools import set_logging_level
+from scc.tools import shjoin
+from scc.tools import shsplit
 
 gi.require_version("Gtk", "3.0")
 gi.require_version("Rsvg", "2.0")
