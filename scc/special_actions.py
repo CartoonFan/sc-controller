@@ -10,20 +10,19 @@ action only prints warning to console.
 """
 from __future__ import unicode_literals
 
-from scc.constants import FE_STICK, FE_TRIGGER, FE_PAD, SCButtons
-from scc.constants import LEFT, RIGHT, STICK, SAME
-from scc.constants import STICK_PAD_MAX, DEFAULT
-from scc.actions import Action, NoAction, SpecialAction, ButtonAction
-from scc.actions import HapticEnabledAction, OSDEnabledAction
-from scc.actions import MOUSE_BUTTONS
-from scc.tools import strip_gesture, nameof, clamp
-from scc.modifiers import Modifier, NameModifier
+import logging
+import sys
+import time
 from difflib import get_close_matches
 from math import sqrt
 
-import sys
-import time
-import logging
+from scc.actions import (MOUSE_BUTTONS, Action, ButtonAction,
+                         HapticEnabledAction, NoAction, OSDEnabledAction,
+                         SpecialAction)
+from scc.constants import (DEFAULT, FE_PAD, FE_STICK, FE_TRIGGER, LEFT, RIGHT,
+                           SAME, STICK, STICK_PAD_MAX, SCButtons)
+from scc.modifiers import Modifier, NameModifier
+from scc.tools import clamp, nameof, strip_gesture
 
 log = logging.getLogger("SActions")
 

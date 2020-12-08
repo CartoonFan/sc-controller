@@ -6,30 +6,31 @@ SC-Controller - OSD Daemon
 Controls stuff displayed as OSD.
 """
 from __future__ import unicode_literals
-import traceback
-import time
+
 import logging
-import sys
 import os
-from scc.config import Config
-from scc.tools import shsplit, shjoin
-from scc.special_actions import OSDAction
-from scc.osd.area import Area
-from scc.osd.menu import Menu
-from scc.osd import OSDWindow
-from scc.osd.dialog import Dialog
-from scc.osd.message import Message
-from scc.osd.keyboard import Keyboard
-from scc.osd.grid_menu import GridMenu
-from scc.osd.quick_menu import QuickMenu
-from scc.osd.hmenu import HorizontalMenu
-from scc.osd.radial_menu import RadialMenu
-from scc.osd.gesture_display import GestureDisplay
-from scc.gui.daemon_manager import DaemonManager
-from gi.repository import Gtk, Gdk, GdkX11, GLib
-from scc.tools import _, set_logging_level
+import sys
+import time
+import traceback
 
 import gi
+from gi.repository import Gdk, GdkX11, GLib, Gtk
+
+from scc.config import Config
+from scc.gui.daemon_manager import DaemonManager
+from scc.osd import OSDWindow
+from scc.osd.area import Area
+from scc.osd.dialog import Dialog
+from scc.osd.gesture_display import GestureDisplay
+from scc.osd.grid_menu import GridMenu
+from scc.osd.hmenu import HorizontalMenu
+from scc.osd.keyboard import Keyboard
+from scc.osd.menu import Menu
+from scc.osd.message import Message
+from scc.osd.quick_menu import QuickMenu
+from scc.osd.radial_menu import RadialMenu
+from scc.special_actions import OSDAction
+from scc.tools import _, set_logging_level, shjoin, shsplit
 
 gi.require_version("Gtk", "3.0")
 gi.require_version("Rsvg", "2.0")
@@ -309,8 +310,8 @@ class OSDDaemon(object):
 
 
 if __name__ == "__main__":
-    from scc.tools import init_logging
     from scc.paths import get_share_path
+    from scc.tools import init_logging
 
     init_logging(suffix=" OSD")
     set_logging_level("debug" in sys.argv, "debug" in sys.argv)
