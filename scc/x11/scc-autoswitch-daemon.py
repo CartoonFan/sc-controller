@@ -12,21 +12,27 @@ from scc.tools import set_logging_level, find_profile
 from scc.paths import get_daemon_socket
 from scc.config import Config
 
-import os, sys, time, socket, threading, signal, logging
+import os
+import sys
+import time
+import socket
+import threading
+import signal
+import logging
 log = logging.getLogger("AS-Daemon")
 
 
 if __name__ == "__main__":
-	from scc.tools import init_logging
-	from scc.paths import get_share_path
-	init_logging(suffix=" AS ")
-	set_logging_level('debug' in sys.argv, 'debug' in sys.argv)
-	
-	if "DISPLAY" not in os.environ:
-		log.error("DISPLAY env variable not set.")
-		sys.exit(1)
-	
-	d = AutoSwitcher()
-	signal.signal(signal.SIGINT, d.sigint)
-	d.run()
-	sys.exit(d.exit_code)
+    from scc.tools import init_logging
+    from scc.paths import get_share_path
+    init_logging(suffix=" AS ")
+    set_logging_level('debug' in sys.argv, 'debug' in sys.argv)
+
+    if "DISPLAY" not in os.environ:
+        log.error("DISPLAY env variable not set.")
+        sys.exit(1)
+
+    d = AutoSwitcher()
+    signal.signal(signal.SIGINT, d.sigint)
+    d.run()
+    sys.exit(d.exit_code)
