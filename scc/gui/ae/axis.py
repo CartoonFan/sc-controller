@@ -6,16 +6,13 @@ Handles specific XYActions
 """
 from __future__ import unicode_literals
 from scc.tools import _
-
-from gi.repository import Gtk, Gdk, GLib
-from scc.actions import ButtonAction, MultiAction, NoAction
+from scc.actions import ButtonAction, MultiAction
 from scc.actions import Action, AxisAction, MouseAction
 from scc.gui.ae import AEComponent, describe_action
 from scc.gui.area_to_action import action_to_area
-from scc.gui.simple_chooser import SimpleChooser
 from scc.gui.chooser import Chooser
 
-import os, logging
+import logging
 log = logging.getLogger("AE.Axis")
 
 __all__ = [ 'AxisComponent' ]

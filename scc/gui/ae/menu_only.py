@@ -9,11 +9,10 @@ from scc.tools import _
 
 from scc.special_actions import MenuAction, PositionModifier
 from scc.actions import Action
-from scc.gui.userdata_manager import UserDataManager
 from scc.gui.ae.menu_action import MenuActionCofC
 from scc.gui.ae import AEComponent
 
-import os, logging
+import logging
 log = logging.getLogger("AE.SA")
 
 __all__ = [ 'MenuOnlyComponent' ]

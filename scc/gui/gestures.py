@@ -3,14 +3,13 @@
 SC-Controller - Gesture-related GUI stuff.
 """
 from __future__ import unicode_literals
-from scc.tools import _, set_logging_level
 
-from gi.repository import Gtk, Gdk, GLib, GObject
+from gi.repository import Gtk, Gdk
 from scc.constants import STICK_PAD_MIN, STICK_PAD_MAX
 from scc.osd import parse_rgba
 from collections import deque
 
-import math, logging
+import logging
 log = logging.getLogger("Gestures")
 
 

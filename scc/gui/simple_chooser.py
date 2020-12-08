@@ -5,13 +5,10 @@ SC-Controller - Simple Chooser
 Used by Action Editor to display window with just one Component
 """
 from __future__ import unicode_literals
-from scc.tools import _
-
-from gi.repository import Gtk, Gdk, GLib
 from scc.gui.dwsnc import headerbar
 from scc.gui.ae import AEComponent
 from scc.gui.editor import Editor
-import logging, os, types, importlib
+import logging, types, importlib
 log = logging.getLogger("SimpleChooser")
 
 class SimpleChooser(Editor):

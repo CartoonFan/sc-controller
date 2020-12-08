@@ -8,17 +8,11 @@ button.
 """
 from __future__ import unicode_literals
 from scc.tools import _
-
-from gi.repository import Gtk, Gdk, GLib
-from scc.actions import Action, ButtonAction, MultiAction, NoAction
-from scc.gui.area_to_action import action_to_area
+from scc.actions import Action
 from scc.gui.ae.buttons import ButtonsComponent
-from scc.gui.key_grabber import KeyGrabber
-from scc.gui.parser import InvalidAction
-from scc.gui.chooser import Chooser
 from scc.gui.ae import AEComponent
 
-import os, logging
+import logging
 log = logging.getLogger("AE.Buttons")
 
 __all__ = [ 'OSKButtonsComponent' ]

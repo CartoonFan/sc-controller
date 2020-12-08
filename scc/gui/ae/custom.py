@@ -6,13 +6,11 @@ Custom Action page in Action Editor window
 """
 from __future__ import unicode_literals
 from scc.tools import _
-
-from gi.repository import Gtk, Gdk, GLib
-from scc.gui.parser import GuiActionParser, InvalidAction
+from scc.gui.parser import GuiActionParser
 from scc.gui.ae import AEComponent
 from scc.actions import Action
 
-import os, logging
+import logging
 log = logging.getLogger("AE.Custom")
 
 __all__ = [ 'CustomActionComponent' ]

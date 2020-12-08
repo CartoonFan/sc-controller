@@ -18,13 +18,13 @@ from scc.constants import STICK_PAD_MAX_HALF, TRIGGER_MIN, TRIGGER_HALF
 from scc.constants import HIPFIRE_NORMAL, HIPFIRE_SENSIBLE, HIPFIRE_EXCLUSIVE
 from scc.constants import LEFT, RIGHT, CPAD, STICK, PITCH, YAW, ROLL
 from scc.constants import PARSER_CONSTANTS, ControllerFlags
-from scc.constants import FE_STICK, FE_TRIGGER, FE_PAD
+from scc.constants import FE_STICK, FE_PAD
 from scc.constants import TRIGGER_CLICK, TRIGGER_MAX
 from scc.constants import SCButtons
 from scc.aliases import ALL_BUTTONS as GAMEPAD_BUTTONS
 from math import sqrt, sin, cos, atan2, pi as PI
 
-import sys, time, logging, inspect
+import sys, logging, inspect
 log = logging.getLogger("Actions")
 
 # Default delay after action, if used in macro. May be overriden using sleep() action.

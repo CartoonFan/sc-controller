@@ -6,18 +6,11 @@ Allows to edit button or trigger action.
 """
 from __future__ import unicode_literals
 from scc.tools import _
-
-from scc.gui.controller_widget import ControllerButton
-from scc.gui.controller_widget import STICKS, PADS
 from scc.gui.editor import Editor, ComboSetter
 from scc.gui.dwsnc import headerbar
-from scc.modifiers import ModeModifier, DoubleclickModifier, HoldModifier
+from scc.modifiers import ModeModifier
 from scc.actions import Action, RingAction, NoAction, MultiAction
-from scc.constants import SCButtons
-from scc.profile import Profile
-
-from gi.repository import Gtk, Gdk, GLib
-import os, logging
+import logging
 log = logging.getLogger("RingEditor")
 
 class RingEditor(Editor, ComboSetter):

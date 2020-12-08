@@ -5,16 +5,8 @@ SC-Controller - Action Editor
 Allows to edit button or trigger action.
 """
 from __future__ import unicode_literals
-from scc.tools import _
 
-from gi.repository import Gtk, Gdk, GLib
-from scc.uinput import Keys
-from scc.actions import MultiAction, HatLeftAction, HatRightAction
-from scc.actions import ButtonAction, AxisAction, MouseAction
-from scc.actions import HatUpAction, HatDownAction
-from scc.gui.svg_widget import SVGWidget
-from scc.gui.gdk_to_key import keyevent_to_key
-from scc.gui.area_to_action import AREA_TO_ACTION
+from gi.repository import Gtk, Gdk
 
 import os, logging
 log = logging.getLogger("Editor")

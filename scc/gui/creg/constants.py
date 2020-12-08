@@ -7,7 +7,6 @@ Just huge chunk of constants put aside to make impotant code more readable
 from __future__ import unicode_literals
 
 from scc.constants import SCButtons, STICK, LEFT, RIGHT
-from scc.gui import BUTTON_ORDER
 
 X = 0
 Y = 1

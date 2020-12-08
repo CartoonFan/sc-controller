@@ -7,21 +7,16 @@ Setups DPAD emulation or menu display
 """
 from __future__ import unicode_literals
 from scc.tools import _
-
-from gi.repository import Gtk, Gdk, GLib
 from scc.actions import HatUpAction, HatDownAction, HatLeftAction,HatRightAction
 from scc.actions import Action, NoAction, DPadAction, DPad8Action, ButtonAction
-from scc.constants import LEFT, RIGHT, STICK, SAME, DEFAULT, SCButtons
-from scc.modifiers import NameModifier
-from scc.special_actions import MenuAction
+from scc.constants import STICK, SAME, DEFAULT, SCButtons
 from scc.uinput import Keys, Axes
 from scc.gui.ae import AEComponent, describe_action
 from scc.gui.ae.menu_action import MenuActionCofC
 from scc.gui.binding_editor import BindingEditor
-from scc.gui.action_editor import ActionEditor
 
 
-import os, logging
+import logging
 log = logging.getLogger("AE.DPAD")
 
 __all__ = [ 'DPADComponent' ]

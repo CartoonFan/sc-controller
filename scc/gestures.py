@@ -7,11 +7,9 @@ It's technically part of SCC-Daemon, separater into special module just to keep
 it clean.
 """
 from scc.actions import Action
-from scc.tools import circle_to_square, clamp
+from scc.tools import clamp
 from scc.constants import STICK_PAD_MIN, STICK_PAD_MAX, CPAD, CPAD_MIN
 from scc.constants import CPAD_X_MAX, CPAD_Y_MAX
-from math import pi as PI, atan2, sqrt
-from itertools import groupby
 
 import logging
 log = logging.getLogger("Gestures")

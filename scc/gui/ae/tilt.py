@@ -6,19 +6,12 @@ Setups DPAD emulation or menu display
 """
 from __future__ import unicode_literals
 from scc.tools import _
-
-from gi.repository import Gtk, Gdk, GLib
-from scc.actions import Action, NoAction, TiltAction, ButtonAction
-from scc.special_actions import MenuAction
-from scc.modifiers import NameModifier
-from scc.uinput import Keys
+from scc.actions import Action, NoAction, TiltAction
 from scc.gui.ae import AEComponent, describe_action
-from scc.gui.ae.menu_action import MenuActionCofC
 from scc.gui.binding_editor import BindingEditor
-from scc.gui.action_editor import ActionEditor
 
 
-import os, logging
+import logging
 log = logging.getLogger("AE.Tilt")
 
 __all__ = [ 'TiltComponent' ]

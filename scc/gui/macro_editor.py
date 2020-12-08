@@ -6,19 +6,15 @@ Allows to edit button or trigger action.
 """
 from __future__ import unicode_literals
 from scc.tools import _
-
-from scc.gui.controller_widget import ControllerButton
 from scc.gui.editor import Editor
 from scc.macros import SleepAction, PressAction, ReleaseAction
 from scc.actions import Action, ButtonAction, NoAction
-from scc.macros import Macro, Repeat, Cycle
-from scc.modifiers import ModeModifier
+from scc.macros import Macro, Cycle
 from scc.constants import SCButtons
-from scc.profile import Profile
 
-from gi.repository import Gtk, Gdk, GLib
+from gi.repository import Gtk
 from collections import namedtuple
-import os, logging
+import logging
 log = logging.getLogger("MacroEditor")
 
 class MacroEditor(Editor):

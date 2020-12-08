@@ -9,8 +9,8 @@ from scc.tools import _
 
 from scc.modifiers import ModeModifier, SensitivityModifier, FeedbackModifier
 from scc.modifiers import DoubleclickModifier, HoldModifier
-from scc.actions import NoAction, RingAction, MultiAction
-from scc.macros import Macro, Type, Repeat, Cycle
+from scc.actions import NoAction
+from scc.macros import Macro, Type
 from scc.constants import SCButtons, LEFT, RIGHT
 from scc.profile import Profile
 from scc.gui.controller_widget import TRIGGERS, PADS, STICKS, GYROS, BUTTONS, PRESSABLE

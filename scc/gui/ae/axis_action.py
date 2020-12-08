@@ -24,7 +24,7 @@ from scc.gui.simple_chooser import SimpleChooser
 from scc.gui.controller_widget import STICKS
 from scc.gui.ae import AEComponent
 
-import os, logging, math
+import os, logging
 log = logging.getLogger("AE.AxisAction")
 
 __all__ = [ 'AxisActionComponent' ]
