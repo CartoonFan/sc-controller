@@ -14,16 +14,18 @@ Tests various inputs for crashes and incorrect behaviour,
 mostly using dummy outputs and FakeController
 """
 
-FakeControllerInput = namedtuple('FakeControllerInput',
-                                 'buttons ltrig rtrig stick_x stick_y lpad_x lpad_y rpad_x rpad_y '
-                                 'gpitch groll gyaw q1 q2 q3 q4 '
-                                 )
+FakeControllerInput = namedtuple(
+    "FakeControllerInput",
+    "buttons ltrig rtrig stick_x stick_y lpad_x lpad_y rpad_x rpad_y "
+    "gpitch groll gyaw q1 q2 q3 q4 ",
+)
 ZERO_STATE = FakeControllerInput(*[0] * len(FakeControllerInput._fields))
 parser = ActionParser()
 
 
 def input_test(fn):
     """ Decorator that creates usable mapper """
+
     def wrapper(*a):
         _time = time.time
 
@@ -32,6 +34,7 @@ def input_test(fn):
 
         def add(n):
             fake_time.t += n
+
         fake_time.t = _time()
         fake_time.add = add
         time.time = fake_time
@@ -39,8 +42,9 @@ def input_test(fn):
         controller = FakeController(0)
         profile = Profile(parser)
         scheduler = Scheduler()
-        mapper = Mapper(profile, scheduler, keyboard=False,
-                        mouse=False, gamepad=False, poller=None)
+        mapper = Mapper(
+            profile, scheduler, keyboard=False, mouse=False, gamepad=False, poller=None
+        )
         mapper.keyboard = RememberingDummy()
         mapper.gamepad = RememberingDummy()
         mapper.mouse = RememberingDummy()
@@ -54,6 +58,7 @@ def input_test(fn):
             add(mapper._tick_rate)
             _mapper_input(*a)
             scheduler.run()
+
         mapper.input = mapper_input
 
         a = list(a) + [mapper]
@@ -61,6 +66,7 @@ def input_test(fn):
             return fn(*a)
         finally:
             time.time = _time
+
     return wrapper
 
 
@@ -104,8 +110,9 @@ class TestInputs(object):
         """
         Just test for test, this should work every time.
         """
-        mapper.profile.buttons[SCButtons.A] = (parser
-                                               .restart("button(Keys.KEY_ENTER)")).parse()
+        mapper.profile.buttons[SCButtons.A] = (
+            parser.restart("button(Keys.KEY_ENTER)")
+        ).parse()
         state = ZERO_STATE._replace(buttons=SCButtons.A)
         mapper.input(mapper.controller, ZERO_STATE, state)
         assert Keys.KEY_ENTER in mapper.keyboard.pressed
@@ -117,12 +124,14 @@ class TestInputs(object):
         """
         Tests trackball emulation
         """
-        mapper.profile.pads[Profile.LEFT] = (parser.restart(
-            "ball(XY("
-            "	mouse(Rels.REL_HWHEEL, 1.0), "
-            "	mouse(Rels.REL_WHEEL, 1.0)"
-            "))"
-        )).parse()
+        mapper.profile.pads[Profile.LEFT] = (
+            parser.restart(
+                "ball(XY("
+                "	mouse(Rels.REL_HWHEEL, 1.0), "
+                "	mouse(Rels.REL_WHEEL, 1.0)"
+                "))"
+            )
+        ).parse()
 
         # Create movement over left pad
         state = ZERO_STATE
@@ -143,28 +152,27 @@ class TestInputs(object):
         """
         Tests WSAD
         """
-        mapper.profile.pads[Profile.LEFT] = (parser.restart(
-            "dpad("
-            "	button(Keys.KEY_W), button(Keys.KEY_S),"
-            "	button(Keys.KEY_A), button(Keys.KEY_D))"
-        )).parse()
+        mapper.profile.pads[Profile.LEFT] = (
+            parser.restart(
+                "dpad("
+                "	button(Keys.KEY_W), button(Keys.KEY_S),"
+                "	button(Keys.KEY_A), button(Keys.KEY_D))"
+            )
+        ).parse()
 
         # Create movements over left pad
         # - A
-        state = ZERO_STATE._replace(
-            buttons=SCButtons.LPADTOUCH, lpad_x=STICK_PAD_MIN)
+        state = ZERO_STATE._replace(buttons=SCButtons.LPADTOUCH, lpad_x=STICK_PAD_MIN)
         mapper.input(mapper.controller, ZERO_STATE, state)
         assert Keys.KEY_A in mapper.keyboard.pressed
         mapper.input(mapper.controller, state, ZERO_STATE)
         # - S
-        state = ZERO_STATE._replace(
-            buttons=SCButtons.LPADTOUCH, lpad_y=STICK_PAD_MIN)
+        state = ZERO_STATE._replace(buttons=SCButtons.LPADTOUCH, lpad_y=STICK_PAD_MIN)
         mapper.input(mapper.controller, ZERO_STATE, state)
         assert Keys.KEY_S in mapper.keyboard.pressed
         mapper.input(mapper.controller, state, ZERO_STATE)
         # - D
-        state = ZERO_STATE._replace(
-            buttons=SCButtons.LPADTOUCH, lpad_x=STICK_PAD_MAX)
+        state = ZERO_STATE._replace(buttons=SCButtons.LPADTOUCH, lpad_x=STICK_PAD_MAX)
         mapper.input(mapper.controller, ZERO_STATE, state)
         assert Keys.KEY_D in mapper.keyboard.pressed
         mapper.input(mapper.controller, state, ZERO_STATE)
@@ -174,12 +182,9 @@ class TestInputs(object):
         """
         Tests joystick camera, mapping trackball to right joystick
         """
-        mapper.profile.pads[Profile.RIGHT] = (parser.restart(
-            "ball(XY("
-            "	axis(Axes.ABS_RX),"
-            "	axis(Axes.ABS_RY)"
-            "))"
-        )).parse()
+        mapper.profile.pads[Profile.RIGHT] = (
+            parser.restart("ball(XY(" "	axis(Axes.ABS_RX)," "	axis(Axes.ABS_RY)" "))")
+        ).parse()
 
         # Create movement over right pad
         state = ZERO_STATE
@@ -209,9 +214,9 @@ class TestInputs(object):
         """
         Tests WSAD
         """
-        mapper.profile.buttons[SCButtons.A] = (parser.restart(
-            "mode(B, button(Keys.KEY_V), button(Keys.KEY_Y))"
-        )).parse()
+        mapper.profile.buttons[SCButtons.A] = (
+            parser.restart("mode(B, button(Keys.KEY_V), button(Keys.KEY_Y))")
+        ).parse()
 
         # Press single button
         state = ZERO_STATE._replace(buttons=SCButtons.A)
@@ -227,8 +232,7 @@ class TestInputs(object):
         assert Keys.KEY_V not in mapper.keyboard.pressed
 
         # Press button again
-        _state, state = state, state._replace(
-            buttons=SCButtons.B | SCButtons.A)
+        _state, state = state, state._replace(buttons=SCButtons.B | SCButtons.A)
         mapper.input(mapper.controller, _state, state)
         assert Keys.KEY_V in mapper.keyboard.pressed
         assert Keys.KEY_Y not in mapper.keyboard.pressed

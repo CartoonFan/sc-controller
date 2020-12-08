@@ -19,6 +19,7 @@ from scc.uinput import Keys, Scans
 
 import os
 import logging
+
 log = logging.getLogger("OSDModMapper")
 
 
@@ -50,10 +51,11 @@ class OSDModeKeyboard(object):
         self.mapper = mapper
         self.display = Gdk.Display.get_default()
         self.manager = self.display.get_device_manager()
-        self.device = [x for x in
-                       self.manager.list_devices(Gdk.DeviceType.MASTER)
-                       if x.get_source() == Gdk.InputSource.KEYBOARD
-                       ][0]
+        self.device = [
+            x
+            for x in self.manager.list_devices(Gdk.DeviceType.MASTER)
+            if x.get_source() == Gdk.InputSource.KEYBOARD
+        ][0]
 
     def pressEvent(self, keys):
         for k in keys:
@@ -85,10 +87,11 @@ class OSDModeMouse(object):
         self.mapper = mapper
         self.display = Gdk.Display.get_default()
         self.manager = self.display.get_device_manager()
-        self.device = [x for x in
-                       self.manager.list_devices(Gdk.DeviceType.MASTER)
-                       if x.get_source() == Gdk.InputSource.MOUSE
-                       ][0]
+        self.device = [
+            x
+            for x in self.manager.list_devices(Gdk.DeviceType.MASTER)
+            if x.get_source() == Gdk.InputSource.MOUSE
+        ][0]
 
     def synEvent(self, *a):
         pass
@@ -127,16 +130,20 @@ class OSDModeMouse(object):
 class OSDModeMappings(object):
 
     ICONS = {
-        'imgOsdmodeAct': SCButtons.A,
-        'imgOsdmodeClose': SCButtons.B,
-        'imgOsdmodeExit': SCButtons.C,
-        'imgOsdmodeSave': SCButtons.Y,
-        'imgOsdmodeOK': SCButtons.Y,
+        "imgOsdmodeAct": SCButtons.A,
+        "imgOsdmodeClose": SCButtons.B,
+        "imgOsdmodeExit": SCButtons.C,
+        "imgOsdmodeSave": SCButtons.Y,
+        "imgOsdmodeOK": SCButtons.Y,
     }
 
     MAIN_WINDOW_BUTTONS = {"vbOsdmodeExit", "vbOsdmodeSave"}
-    OTHER_WINDOW_BUTTONS = {"vbOsdmodeExit",
-                            "vbOsdmodeAct", "vbOsdmodeClose", "vbOsdmodeOK"}
+    OTHER_WINDOW_BUTTONS = {
+        "vbOsdmodeExit",
+        "vbOsdmodeAct",
+        "vbOsdmodeClose",
+        "vbOsdmodeOK",
+    }
 
     def __init__(self, app, mapper, window):
         self.app = app
@@ -145,18 +152,15 @@ class OSDModeMappings(object):
         self.parent = app.window
         self.first_window = None
         GLib.timeout_add(10, self.move_around)
-        self.app.window.connect(
-            "focus-in-event", self.on_main_window_focus_in_event)
-        self.app.window.connect(
-            "focus-out-event", self.on_main_window_focus_out_event)
+        self.app.window.connect("focus-in-event", self.on_main_window_focus_in_event)
+        self.app.window.connect("focus-out-event", self.on_main_window_focus_out_event)
         self.on_main_window_focus_in_event()
 
     def set_controller(self, c):
         config = c.load_gui_config(self.app.imagepath or {})
         for name in OSDModeMappings.ICONS:
             w = self.app.builder.get_object(name)
-            icon, trash = c.get_button_icon(
-                config, OSDModeMappings.ICONS[name])
+            icon, trash = c.get_button_icon(config, OSDModeMappings.ICONS[name])
             w.set_from_file(icon)
 
     def on_main_window_focus_in_event(self, *a):
@@ -175,7 +179,7 @@ class OSDModeMappings(object):
         pos = self.first_window.get_position()
         size = self.first_window.get_geometry()
         my_size = self.window.get_window().get_geometry()
-        tx = (pos.x + 0.5 * (size.width - my_size.width))
+        tx = pos.x + 0.5 * (size.width - my_size.width)
         ty = pos.y + size.height + 100
         return tx, ty
 
