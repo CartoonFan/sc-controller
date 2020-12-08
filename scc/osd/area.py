@@ -5,19 +5,13 @@ SC-Controller - OSD Menu
 Displays border around area.
 """
 from __future__ import unicode_literals
-from scc.tools import _, set_logging_level
 
-from gi.repository import Gtk, GLib, GdkX11
-from scc.constants import LEFT, RIGHT, STICK, STICK_PAD_MIN, STICK_PAD_MAX
-from scc.tools import point_in_gtkrect
-from scc.paths import get_share_path
+from gi.repository import Gtk, GdkX11
 from scc.lib import xwrappers as X
-from scc.menu_data import MenuData
-from scc.gui.daemon_manager import DaemonManager
 from scc.osd.timermanager import TimerManager
 from scc.osd import OSDWindow
 
-import os, sys, json, logging
+import logging
 log = logging.getLogger("osd.area")
 
 

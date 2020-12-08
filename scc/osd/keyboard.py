@@ -6,19 +6,17 @@ SC-Controller - OSD Menu
 Display menu that user can navigate through and print chosen item id to stdout
 """
 from __future__ import unicode_literals
-from scc.tools import _, set_logging_level
 
-from gi.repository import Gtk, Gdk, GdkX11, GObject, GLib, GdkPixbuf, cairo
+from gi.repository import Gtk, Gdk, GdkX11, GdkPixbuf
 from xml.etree import ElementTree as ET
-from scc.constants import LEFT, RIGHT, STICK, STICK_PAD_MIN, STICK_PAD_MAX
-from scc.constants import STICK_PAD_MIN_HALF, STICK_PAD_MAX_HALF, CPAD
+from scc.constants import LEFT, RIGHT, STICK, STICK_PAD_MAX
+from scc.constants import CPAD
 from scc.constants import SCButtons, ControllerFlags
-from scc.tools import point_in_gtkrect, circle_to_square, clamp
+from scc.tools import circle_to_square, clamp
 from scc.tools import find_profile, find_button_image
 from scc.paths import get_share_path, get_config_path
 from scc.parser import TalkingActionParser
 from scc.modifiers import ModeModifier
-from scc.menu_data import MenuData
 from scc.actions import Action
 from scc.profile import Profile
 from scc.config import Config
@@ -26,14 +24,13 @@ from scc.uinput import Keys
 from scc.lib import xwrappers as X
 from scc.gui.svg_widget import SVGWidget, SVGEditor
 from scc.gui.keycode_to_key import KEY_TO_KEYCODE
-from scc.gui.daemon_manager import DaemonManager, ControllerManager
-from scc.gui.gdk_to_key import KEY_TO_GDK
+from scc.gui.daemon_manager import DaemonManager
 from scc.osd.timermanager import TimerManager
 from scc.osd.slave_mapper import SlaveMapper
 from scc.osd import OSDWindow
 import scc.osd.osk_actions
 
-import os, sys, json, logging
+import os, sys, logging
 log = logging.getLogger("osd.keyboard")
 
 SPECIAL_KEYS = {

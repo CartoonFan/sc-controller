@@ -6,12 +6,10 @@ Works as OSD menu, but displays item in (as rectangluar as possible - and
 that's usually not very much) grid.
 """
 from __future__ import unicode_literals
-from scc.tools import _, set_logging_level
 
 from gi.repository import Gtk
 from scc.menu_data import Separator, Submenu
 from scc.osd.menu import Menu, MenuIcon
-from scc.osd import OSDWindow
 from scc.tools import find_icon
 
 import math, logging

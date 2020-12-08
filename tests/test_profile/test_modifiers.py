@@ -1,5 +1,5 @@
-from scc.uinput import Keys, Axes, Rels
-from scc.actions import ButtonAction, AxisAction, GyroAction
+from scc.uinput import Axes
+from scc.actions import AxisAction, GyroAction
 from scc.constants import SCButtons, HapticPos
 from scc.modifiers import *
 from . import parser

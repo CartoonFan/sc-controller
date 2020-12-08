@@ -12,11 +12,11 @@ from scc.actions import Action, MouseAction, XYAction, AxisAction, RangeOP
 from scc.actions import NoAction, WholeHapticAction, HapticEnabledAction
 from scc.actions import GyroAbsAction
 from scc.constants import STICK_PAD_MIN, STICK_PAD_MAX, STICK_PAD_MAX_HALF
-from scc.constants import CUT, ROUND, LINEAR, MINIMUM, FE_STICK, FE_TRIGGER
+from scc.constants import CUT, MINIMUM, FE_STICK
 from scc.constants import TRIGGER_MAX, LEFT, CPAD, RIGHT, STICK
 from scc.constants import FE_PAD, SCButtons, STICKTILT
 from scc.constants import HapticPos, ControllerFlags
-from scc.tools import nameof, clamp, quat2euler
+from scc.tools import nameof, clamp
 from scc.controller import HapticData
 from scc.uinput import Axes, Rels
 from math import pi as PI, sqrt, copysign, atan2, sin, cos

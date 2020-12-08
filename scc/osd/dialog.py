@@ -11,7 +11,7 @@ from gi.repository import Gtk, GdkX11
 from scc.gui.daemon_manager import DaemonManager
 from scc.osd import OSDWindow, StickController
 from scc.lib import xwrappers as X
-from scc.constants import DEFAULT, STICK
+from scc.constants import DEFAULT
 from scc.menu_data import MenuData
 from scc.config import Config
 

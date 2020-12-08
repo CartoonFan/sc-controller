@@ -5,13 +5,12 @@ SC-Controller - OSD Message
 Display message that just sits there
 """
 from __future__ import unicode_literals
-from scc.tools import _, set_logging_level
 
 from gi.repository import Gtk, GLib
 from scc.special_actions import OSDAction
 from scc.osd import OSDWindow
 
-import os, sys, logging
+import logging
 log = logging.getLogger("osd.message")
 
 

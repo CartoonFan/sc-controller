@@ -9,15 +9,7 @@ from __future__ import unicode_literals
 import logging
 import os
 import signal
-import socket
 import sys
-import threading
-import time
-
-from scc.config import Config
-from scc.lib import xwrappers as X
-from scc.paths import get_daemon_socket
-from scc.tools import find_profile
 from scc.tools import set_logging_level
 from scc.x11.autoswitcher import AutoSwitcher
 

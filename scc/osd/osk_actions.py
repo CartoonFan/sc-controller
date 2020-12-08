@@ -10,12 +10,10 @@ and its binding editor enables them to use with 'OSK.something'
 syntax.
 """
 from __future__ import unicode_literals
-
-from scc.lib import Enum
 from scc.constants import TRIGGER_HALF, LEFT, RIGHT
 from scc.actions import Action, SpecialAction
 
-import time, logging
+import logging
 log = logging.getLogger("OSDKeyActs")
 _ = lambda x : x
 
