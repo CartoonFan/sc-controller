@@ -1,7 +1,5 @@
 from scc.actions import Action
 
-import os
-
 class TestDocs(object):
 	"""
 	Tests every glade file in glade/ directory (and subdirectories) for known

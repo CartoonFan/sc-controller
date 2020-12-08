@@ -1,7 +1,7 @@
 from scc.uinput import Keys
-from scc.actions import ButtonAction, AxisAction
+from scc.actions import ButtonAction
 from scc.macros import *
-from . import _parses_as_itself, parser
+from . import _parses_as_itself
 import inspect
 
 class TestMacros(object):

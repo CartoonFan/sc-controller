@@ -1,7 +1,6 @@
-from scc.uinput import Keys, Axes, Rels
 from scc.constants import SCButtons, STICK
 from scc.special_actions import *
-from . import _parses_as_itself, parser
+from . import _parses_as_itself
 import inspect
 
 MENU_CLASSES = (MenuAction, HorizontalMenuAction, GridMenuAction,

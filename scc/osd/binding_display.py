@@ -8,15 +8,14 @@ application (list is generated using xdg) and start it.
 Reuses styles from OSD Menu and OSD Dialog
 """
 from __future__ import unicode_literals
-from scc.tools import _, set_logging_level
+from scc.tools import _
 
 from gi.repository import Gtk
 from scc.actions import DPadAction, AxisAction, MouseAction
 from scc.actions import Action, MultiAction, XYAction
 from scc.modifiers import ModeModifier, DoubleclickModifier
 from scc.paths import get_share_path, get_config_path
-from scc.menu_data import MenuData, MenuItem
-from scc.lib import xwrappers as X, IntEnum
+from scc.lib import IntEnum
 from scc.special_actions import MenuAction
 from scc.parser import TalkingActionParser
 from scc.constants import SCButtons
@@ -27,7 +26,7 @@ from scc.uinput import Rels
 from scc.gui.svg_widget import SVGWidget, SVGEditor
 from scc.gui.daemon_manager import DaemonManager
 from scc.osd import OSDWindow
-import os, sys, re, base64, logging
+import os, sys, base64, logging
 log = logging.getLogger("osd.binds")
 
 

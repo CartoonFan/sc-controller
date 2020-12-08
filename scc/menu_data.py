@@ -5,7 +5,7 @@ SC-Controller - Menu Data
 Container for list of menu items + required parsers
 """
 from __future__ import unicode_literals
-from scc.tools import _, set_logging_level
+from scc.tools import _
 from scc.actions import Action
 
 import json, os

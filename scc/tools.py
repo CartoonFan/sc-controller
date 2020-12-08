@@ -12,7 +12,7 @@ from scc.paths import get_profiles_path, get_default_profiles_path
 from scc.paths import get_menus_path, get_default_menus_path
 from scc.paths import get_button_images_path
 from math import pi as PI, sin, cos, atan2, sqrt
-import os, sys, ctypes, imp, shlex, gettext, logging
+import os, ctypes, imp, shlex, logging
 
 HAVE_POSIX1E = False
 try:

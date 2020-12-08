@@ -6,13 +6,11 @@ Frontier is my favorite.
 """
 from __future__ import unicode_literals
 
-from scc.actions import Action, NoAction, ButtonAction, MOUSE_BUTTONS
-from scc.constants import FE_STICK, FE_TRIGGER, FE_PAD
-from scc.constants import LEFT, RIGHT, STICK, SCButtons
+from scc.actions import Action, ButtonAction
 from scc.uinput import Keys
 
 
-import time, logging
+import logging
 log = logging.getLogger("Macros")
 _ = lambda x : x
 
