@@ -91,7 +91,9 @@ class RememberingDummy(Dummy):
 			self.pressed.add(k)
 	
 	
-	def releaseEvent(self, keys=[]):
+	def releaseEvent(self, keys=None):
+		if keys is None:
+			keys = []
 		for k in keys:
 			if k in self.pressed:
 				self.pressed.remove(k)

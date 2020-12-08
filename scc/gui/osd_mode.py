@@ -68,7 +68,9 @@ class OSDModeKeyboard(object):
 			Gtk.main_do_event(event)
 	
 	
-	def releaseEvent(self, keys=[]):
+	def releaseEvent(self, keys=None):
+		if keys is None:
+			keys = []
 		for k in keys:
 			event = Gdk.Event.new(Gdk.EventType.KEY_RELEASE)
 			event.time = Gtk.get_current_event_time()
