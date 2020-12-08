@@ -9,7 +9,7 @@ from scc.tools import _
 
 from scc.gui.ae import AEComponent
 
-import os, logging
+import logging
 log = logging.getLogger("AE.SA")
 
 __all__ = [ 'RecentListGenComponent' ]

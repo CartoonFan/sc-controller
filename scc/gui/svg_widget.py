@@ -6,13 +6,12 @@ Changes SVG on the fly and uptates that magnificent image on background with it.
 Also supports clicking on areas defined in SVG image.
 """
 from __future__ import unicode_literals
-from scc.tools import _
 
 from gi.repository import Gtk, Gdk, GObject, GdkPixbuf, Rsvg
 from xml.etree import ElementTree as ET
 from math import sin, cos, pi as PI
 from collections import OrderedDict
-import os, sys, re, logging
+import re, logging
 
 log = logging.getLogger("Background")
 ET.register_namespace('', "http://www.w3.org/2000/svg")

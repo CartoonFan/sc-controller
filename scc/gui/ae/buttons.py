@@ -7,7 +7,7 @@ Assigns emulated button to physical button
 from __future__ import unicode_literals
 from scc.tools import _
 
-from gi.repository import Gtk, Gdk, GLib
+from gi.repository import Gtk
 from scc.actions import Action, ButtonAction, MouseAction
 from scc.actions import AxisAction, MultiAction, NoAction
 from scc.macros import Macro, Cycle, PressAction, ReleaseAction
@@ -18,7 +18,7 @@ from scc.gui.parser import InvalidAction
 from scc.gui.chooser import Chooser
 from scc.gui.ae import AEComponent
 
-import os, logging
+import logging
 log = logging.getLogger("AE.Buttons")
 
 __all__ = [ 'ButtonsComponent' ]

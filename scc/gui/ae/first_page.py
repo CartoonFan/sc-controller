@@ -7,14 +7,12 @@ Provides links for quick settings.
 """
 from __future__ import unicode_literals
 from scc.tools import _
-
-from gi.repository import Gtk, Gdk, GLib
 from scc.actions import Action
 from scc.gui.ae import AEComponent
 from scc.tools import nameof
 
 
-import os, logging
+import logging
 log = logging.getLogger("AE.1st")
 
 __all__ = [ 'FirstPage' ]

@@ -8,7 +8,7 @@ by 'cemuhook' actions to them.
 from __future__ import unicode_literals
 from scc.tools import find_library
 from scc.lib.enum import IntEnum
-from ctypes import c_uint32, c_int, c_bool, c_char_p, c_size_t, c_float
+from ctypes import c_int, c_bool, c_char_p, c_size_t, c_float
 from ctypes import create_string_buffer
 import logging, socket
 log = logging.getLogger("CemuHook")
