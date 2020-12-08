@@ -158,7 +158,7 @@ def _loadLibrary():
         suffix = '.dll'
     else:
         dll_loader = ctypes.CDLL
-        suffix = system == 'Darwin' and '.dylib' or '.so'
+        suffix = '.dylib' if system == 'Darwin' else '.so'
     loader_kw = {}
     if sys.version_info[:2] >= (2, 6):
         loader_kw['use_errno'] = True
