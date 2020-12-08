@@ -1,13 +1,13 @@
-from scc.constants import STICK_PAD_MIN, STICK_PAD_MAX
+import time
+from collections import namedtuple
+
+from scc.constants import STICK_PAD_MAX, STICK_PAD_MIN, SCButtons
 from scc.drivers.fake import FakeController
-from scc.uinput import Dummy, Keys, Axes
-from scc.constants import SCButtons
+from scc.mapper import Mapper
 from scc.parser import ActionParser
 from scc.profile import Profile
 from scc.scheduler import Scheduler
-from scc.mapper import Mapper
-from collections import namedtuple
-import time
+from scc.uinput import Axes, Dummy, Keys
 
 """
 Tests various inputs for crashes and incorrect behaviour,

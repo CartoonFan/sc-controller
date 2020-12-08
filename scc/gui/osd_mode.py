@@ -9,16 +9,17 @@ keyboard. This mapper emulates input events on it using GTK methods.
 Mouse movement (but not buttons) are passed to uinput as usuall.
 """
 from __future__ import unicode_literals
-from gi.repository import Gtk, Gdk, GLib
 
-from scc.gui.gdk_to_key import KEY_TO_GDK, KEY_TO_KEYCODE
-from scc.gui.daemon_manager import ControllerManager
-from scc.osd.slave_mapper import SlaveMapper
-from scc.constants import SCButtons
-from scc.uinput import Keys, Scans
-
-import os
 import logging
+import os
+
+from gi.repository import Gdk, GLib, Gtk
+
+from scc.constants import SCButtons
+from scc.gui.daemon_manager import ControllerManager
+from scc.gui.gdk_to_key import KEY_TO_GDK, KEY_TO_KEYCODE
+from scc.osd.slave_mapper import SlaveMapper
+from scc.uinput import Keys, Scans
 
 log = logging.getLogger("OSDModMapper")
 
