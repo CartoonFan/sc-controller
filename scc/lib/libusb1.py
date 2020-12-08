@@ -48,6 +48,7 @@ import platform
 import os.path
 import sys
 
+
 class Enum(object):
     def __init__(self, member_dict, scope_dict=None):
         if scope_dict is None:
@@ -78,6 +79,7 @@ class Enum(object):
     def get(self, value, default=None):
         return self.reverse_dict.get(value, default)
 
+
 _desc_type_dict = {
     'b': c_uint8,
     'bcd': c_uint16,
@@ -87,6 +89,7 @@ _desc_type_dict = {
     'id': c_uint16,
     'w': c_uint16,
 }
+
 
 def newStruct(field_name_list):
     """
@@ -113,6 +116,7 @@ def newStruct(field_name_list):
     # pylint: enable=protected-access
     return result
 
+
 def newDescriptor(field_name_list):
     """
     Create a USB descriptor ctype structure, ie starting with bLength and
@@ -121,6 +125,7 @@ def newDescriptor(field_name_list):
     See newStruct().
     """
     return newStruct(['bLength', 'bDescriptorType'] + list(field_name_list))
+
 
 class USBError(Exception):
     value = None
@@ -134,8 +139,9 @@ class USBError(Exception):
         return '%s [%s]' % (libusb_error.get(self.value, 'Unknown error'),
                             self.value)
 
+
 if sys.version_info[0] == 3:
-    _string_item_to_int = lambda x: x
+    def _string_item_to_int(x): return x
     _empty_char_p = bytes()
 else:
     _string_item_to_int = ord
@@ -146,10 +152,14 @@ c_int_p = POINTER(c_int)
 
 LITTLE_ENDIAN = sys.byteorder == 'little'
 
+
 class timeval(Structure):
     _fields_ = [('tv_sec', c_long),
                 ('tv_usec', c_long)]
+
+
 timeval_p = POINTER(timeval)
+
 
 def _loadLibrary():
     system = platform.system()
@@ -175,11 +185,11 @@ def _loadLibrary():
             base_name = 'usb'
         elif system == 'Darwin':
             for libusb_path in (
-                    # macport standard path
-                    '/opt/local/lib/libusb-1.0.dylib',
-                    # fink standard path
-                    '/sw/lib/libusb-1.0.dylib',
-                ):
+                # macport standard path
+                '/opt/local/lib/libusb-1.0.dylib',
+                # fink standard path
+                '/sw/lib/libusb-1.0.dylib',
+            ):
                 if os.path.exists(libusb_path):
                     break
             else:
@@ -190,15 +200,20 @@ def _loadLibrary():
                 raise
         return dll_loader(libusb_path, **loader_kw)
 
+
 libusb = _loadLibrary()
 
 # libusb.h
+
+
 def bswap16(x):
     return ((x & 0xff) << 8) | (x >> 8)
+
 
 if LITTLE_ENDIAN:
     def libusb_cpu_to_le16(x):
         return x
+
     def libusb_le16_to_cpu(x):
         return x
 else:
@@ -279,10 +294,10 @@ LIBUSB_DT_DEVICE_SIZE = 18
 LIBUSB_DT_CONFIG_SIZE = 9
 LIBUSB_DT_INTERFACE_SIZE = 9
 LIBUSB_DT_ENDPOINT_SIZE = 7
-LIBUSB_DT_ENDPOINT_AUDIO_SIZE = 9 # Audio extension
+LIBUSB_DT_ENDPOINT_AUDIO_SIZE = 9  # Audio extension
 LIBUSB_DT_HUB_NONVAR_SIZE = 7
 
-LIBUSB_ENDPOINT_ADDRESS_MASK = 0x0f # in bEndpointAddress
+LIBUSB_ENDPOINT_ADDRESS_MASK = 0x0f  # in bEndpointAddress
 LIBUSB_ENDPOINT_DIR_MASK = 0x80
 # BBB
 USB_ENDPOINT_ADDRESS_MASK = LIBUSB_ENDPOINT_ADDRESS_MASK
@@ -296,7 +311,7 @@ libusb_endpoint_direction = Enum({
     'LIBUSB_ENDPOINT_OUT': 0x00
 })
 
-LIBUSB_TRANSFER_TYPE_MASK = 0x03 # in bmAttributes
+LIBUSB_TRANSFER_TYPE_MASK = 0x03  # in bmAttributes
 
 # Endpoint transfer type. Values for bits 0:1 of the endpoint attributes field.
 libusb_transfer_type = Enum({
@@ -353,8 +368,8 @@ libusb_request_type = Enum({
 # BBB
 # pylint: disable=bad-whitespace,undefined-variable
 LIBUSB_TYPE_STANDARD = LIBUSB_REQUEST_TYPE_STANDARD
-LIBUSB_TYPE_CLASS    = LIBUSB_REQUEST_TYPE_CLASS
-LIBUSB_TYPE_VENDOR   = LIBUSB_REQUEST_TYPE_VENDOR
+LIBUSB_TYPE_CLASS = LIBUSB_REQUEST_TYPE_CLASS
+LIBUSB_TYPE_VENDOR = LIBUSB_REQUEST_TYPE_VENDOR
 LIBUSB_TYPE_RESERVED = LIBUSB_REQUEST_TYPE_RESERVED
 # pylint: enable=bad-whitespace,undefined-variable
 
@@ -402,6 +417,8 @@ libusb_iso_usage_type = Enum({
 # A structure representing the standard USB device descriptor. This
 # descriptor is documented in section 9.6.1 of the USB 2.0 specification.
 # All multiple-byte fields are represented in host-endian format.
+
+
 class libusb_device_descriptor(Structure):
     _fields_ = [
         # Size of this descriptor (in bytes)
@@ -437,7 +454,10 @@ class libusb_device_descriptor(Structure):
         ('iSerialNumber', c_uint8),
         # Number of possible configurations
         ('bNumConfigurations', c_uint8)]
+
+
 libusb_device_descriptor_p = POINTER(libusb_device_descriptor)
+
 
 class libusb_endpoint_descriptor(Structure):
     _fields_ = [
@@ -451,7 +471,10 @@ class libusb_endpoint_descriptor(Structure):
         ('bSynchAddress', c_uint8),
         ('extra', c_void_p),
         ('extra_length', c_int)]
+
+
 libusb_endpoint_descriptor_p = POINTER(libusb_endpoint_descriptor)
+
 
 class libusb_interface_descriptor(Structure):
     _fields_ = [
@@ -467,12 +490,18 @@ class libusb_interface_descriptor(Structure):
         ('endpoint', libusb_endpoint_descriptor_p),
         ('extra', c_void_p),
         ('extra_length', c_int)]
+
+
 libusb_interface_descriptor_p = POINTER(libusb_interface_descriptor)
+
 
 class libusb_interface(Structure):
     _fields_ = [('altsetting', libusb_interface_descriptor_p),
                 ('num_altsetting', c_int)]
+
+
 libusb_interface_p = POINTER(libusb_interface)
+
 
 class libusb_config_descriptor(Structure):
     _fields_ = [
@@ -487,8 +516,11 @@ class libusb_config_descriptor(Structure):
         ('interface', libusb_interface_p),
         ('extra', c_void_p),
         ('extra_length', c_int)]
+
+
 libusb_config_descriptor_p = POINTER(libusb_config_descriptor)
 libusb_config_descriptor_p_p = POINTER(libusb_config_descriptor_p)
+
 
 class libusb_control_setup(Structure):
     _fields_ = [
@@ -497,6 +529,8 @@ class libusb_control_setup(Structure):
         ('wValue', c_uint16),
         ('wIndex', c_uint16),
         ('wLength', c_uint16)]
+
+
 libusb_control_setup_p = POINTER(libusb_control_setup)
 
 LIBUSB_CONTROL_SETUP_SIZE = sizeof(libusb_control_setup)
@@ -516,8 +550,12 @@ LIBUSB_CONTROL_SETUP_SIZE = sizeof(libusb_control_setup)
 # will be used.
 #
 # For more information, see \ref contexts.
+
+
 class libusb_context(Structure):
     pass
+
+
 libusb_context_p = POINTER(libusb_context)
 libusb_context_p_p = POINTER(libusb_context_p)
 
@@ -534,8 +572,12 @@ libusb_context_p_p = POINTER(libusb_context_p)
 # 1, and libusb_free_device_list() can optionally decrease the reference count
 # on all devices in the list. libusb_open() adds another reference which is
 # later destroyed by libusb_close().
+
+
 class libusb_device(Structure):
     pass
+
+
 libusb_device_p = POINTER(libusb_device)
 libusb_device_p_p = POINTER(libusb_device_p)
 libusb_device_p_p_p = POINTER(libusb_device_p_p)
@@ -546,10 +588,15 @@ libusb_device_p_p_p = POINTER(libusb_device_p_p)
 #
 # A device handle is used to perform I/O and other operations. When finished
 # with a device handle, you should call libusb_close().
+
+
 class libusb_device_handle(Structure):
     pass
+
+
 libusb_device_handle_p = POINTER(libusb_device_handle)
 libusb_device_handle_p_p = POINTER(libusb_device_handle_p)
+
 
 class libusb_version(Structure):
     _fields_ = [
@@ -560,6 +607,7 @@ class libusb_version(Structure):
         ('rc', c_char_p),
         ('describe', c_char_p),
     ]
+
 
 libusb_speed = Enum({
     # The OS doesn't report or know the device speed.
@@ -655,14 +703,21 @@ libusb_transfer_flags = Enum({
 })
 
 # Isochronous packet descriptor.
+
+
 class libusb_iso_packet_descriptor(Structure):
     _fields_ = [('length', c_uint),
                 ('actual_length', c_uint),
-                ('status', c_int)] # enum libusb_transfer_status
+                ('status', c_int)]  # enum libusb_transfer_status
+
+
 libusb_iso_packet_descriptor_p = POINTER(libusb_iso_packet_descriptor)
+
 
 class libusb_transfer(Structure):
     pass
+
+
 libusb_transfer_p = POINTER(libusb_transfer)
 
 libusb_transfer_cb_fn_p = CFUNCTYPE(None, libusb_transfer_p)
@@ -673,7 +728,7 @@ _libusb_transfer_fields = [
     ('endpoint', c_uchar),
     ('type', c_uchar),
     ('timeout', c_uint),
-    ('status', c_int), # enum libusb_transfer_status
+    ('status', c_int),  # enum libusb_transfer_status
     ('length', c_int),
     ('actual_length', c_int),
     ('callback', libusb_transfer_cb_fn_p),
@@ -683,8 +738,8 @@ _libusb_transfer_fields = [
     ('iso_packet_desc', libusb_iso_packet_descriptor)
 ]
 if 'FreeBSD' in platform.system() and getattr(
-        libusb, 'libusb_get_string_descriptor', None
-    ) is None:
+    libusb, 'libusb_get_string_descriptor', None
+) is None:
     # Old FreeBSD version has a slight ABI incompatibility.
     # Work around it unless libusb_get_string_descriptor is available, as it
     # is only available on fixed versions.
@@ -716,29 +771,30 @@ libusb_log_level = Enum({
     'LIBUSB_LOG_LEVEL_DEBUG': 4,
 })
 
-#int libusb_init(libusb_context **ctx);
+# int libusb_init(libusb_context **ctx);
 libusb_init = libusb.libusb_init
 libusb_init.argtypes = [libusb_context_p_p]
-#void libusb_exit(libusb_context *ctx);
+# void libusb_exit(libusb_context *ctx);
 libusb_exit = libusb.libusb_exit
 libusb_exit.argtypes = [libusb_context_p]
 libusb_exit.restype = None
-#void libusb_set_debug(libusb_context *ctx, int level);
+# void libusb_set_debug(libusb_context *ctx, int level);
 libusb_set_debug = libusb.libusb_set_debug
 libusb_set_debug.argtypes = [libusb_context_p, c_int]
 libusb_set_debug.restype = None
-#const struct libusb_version * libusb_get_version(void);
+# const struct libusb_version * libusb_get_version(void);
 try:
     libusb_get_version = libusb.libusb_get_version
 except AttributeError:
     _dummy_version = libusb_version(0, 0, 0, 0, _empty_char_p, _empty_char_p)
     _dummy_version_p = pointer(_dummy_version)
+
     def libusb_get_version():
         return _dummy_version_p
 else:
     libusb_get_version.argtypes = []
     libusb_get_version.restype = POINTER(libusb_version)
-#int libusb_has_capability(uint32_t capability);
+# int libusb_has_capability(uint32_t capability);
 try:
     libusb_has_capability = libusb.libusb_has_capability
 except AttributeError:
@@ -750,7 +806,7 @@ else:
 try:
     # Note: Should be equivalent to libusb_error.get (except libusb_error.get
     # one raises on unknown values).
-    #char *libusb_error_name(int errcode);
+    # char *libusb_error_name(int errcode);
     libusb_error_name = libusb.libusb_error_name
 except AttributeError:
     # pylint: disable=unused-argument
@@ -769,16 +825,19 @@ else:
 # more important stuff to work on.
 # For backward compatibility, expose libusb_strerror placeholder.
 # pylint: disable=unused-argument
+
+
 def libusb_strerror(errcode):
     return None
 # pylint: enable=unused-argument
 
-#ssize_t libusb_get_device_list(libusb_context *ctx,
+
+# ssize_t libusb_get_device_list(libusb_context *ctx,
 #        libusb_device ***list);
 libusb_get_device_list = libusb.libusb_get_device_list
 libusb_get_device_list.argtypes = [libusb_context_p, libusb_device_p_p_p]
 libusb_get_device_list.restype = c_ssize_t
-#void libusb_free_device_list(libusb_device **list, int unref_devices);
+# void libusb_free_device_list(libusb_device **list, int unref_devices);
 libusb_free_device_list = libusb.libusb_free_device_list
 libusb_free_device_list.argtypes = [libusb_device_p_p, c_int]
 libusb_free_device_list.restype = None
@@ -786,45 +845,45 @@ libusb_free_device_list.restype = None
 libusb_ref_device = libusb.libusb_ref_device
 libusb_ref_device.argtypes = [libusb_device_p]
 libusb_ref_device.restype = libusb_device_p
-#void libusb_unref_device(libusb_device *dev);
+# void libusb_unref_device(libusb_device *dev);
 libusb_unref_device = libusb.libusb_unref_device
 libusb_unref_device.argtypes = [libusb_device_p]
 libusb_unref_device.restype = None
 
-#int libusb_get_configuration(libusb_device_handle *dev, int *config);
+# int libusb_get_configuration(libusb_device_handle *dev, int *config);
 libusb_get_configuration = libusb.libusb_get_configuration
 libusb_get_configuration.argtypes = [libusb_device_handle_p, c_int_p]
-#int libusb_get_device_descriptor(libusb_device *dev,
+# int libusb_get_device_descriptor(libusb_device *dev,
 #        struct libusb_device_descriptor *desc);
 libusb_get_device_descriptor = libusb.libusb_get_device_descriptor
 libusb_get_device_descriptor.argtypes = [
     libusb_device_p, libusb_device_descriptor_p]
-#int libusb_get_active_config_descriptor(libusb_device *dev,
+# int libusb_get_active_config_descriptor(libusb_device *dev,
 #        struct libusb_config_descriptor **config);
 libusb_get_active_config_descriptor = libusb.libusb_get_active_config_descriptor
 libusb_get_active_config_descriptor.argtypes = [
     libusb_device_p, libusb_config_descriptor_p_p]
-#int libusb_get_config_descriptor(libusb_device *dev, uint8_t config_index,
+# int libusb_get_config_descriptor(libusb_device *dev, uint8_t config_index,
 #        struct libusb_config_descriptor **config);
 libusb_get_config_descriptor = libusb.libusb_get_config_descriptor
 libusb_get_config_descriptor.argtypes = [
     libusb_device_p, c_uint8, libusb_config_descriptor_p_p]
-#int libusb_get_config_descriptor_by_value(libusb_device *dev,
+# int libusb_get_config_descriptor_by_value(libusb_device *dev,
 #        uint8_t bConfigurationValue, struct libusb_config_descriptor **config);
 libusb_get_config_descriptor_by_value = \
     libusb.libusb_get_config_descriptor_by_value
 libusb_get_config_descriptor_by_value.argtypes = [
     libusb_device_p, c_uint8, libusb_config_descriptor_p_p]
-#void libusb_free_config_descriptor(struct libusb_config_descriptor *config);
+# void libusb_free_config_descriptor(struct libusb_config_descriptor *config);
 libusb_free_config_descriptor = libusb.libusb_free_config_descriptor
 libusb_free_config_descriptor.argtypes = [libusb_config_descriptor_p]
 libusb_free_config_descriptor.restype = None
-#uint8_t libusb_get_bus_number(libusb_device *dev);
+# uint8_t libusb_get_bus_number(libusb_device *dev);
 libusb_get_bus_number = libusb.libusb_get_bus_number
 libusb_get_bus_number.argtypes = [libusb_device_p]
 libusb_get_bus_number.restype = c_uint8
 try:
-    #uint8_t libusb_get_port_number(libusb_device *dev);
+    # uint8_t libusb_get_port_number(libusb_device *dev);
     libusb_get_port_number = libusb.libusb_get_port_number
 except AttributeError:
     pass
@@ -832,7 +891,7 @@ else:
     libusb_get_port_number.argtypes = [libusb_device_p]
     libusb_get_port_number.restype = c_uint8
 try:
-    #int libusb_get_port_numbers(libusb_device *dev,
+    # int libusb_get_port_numbers(libusb_device *dev,
     #       uint8_t* port_numbers, int port_numbers_len);
     libusb_get_port_numbers = libusb.libusb_get_port_numbers
 except AttributeError:
@@ -843,19 +902,19 @@ else:
     libusb_get_port_numbers.restype = c_int
 # Missing: libusb_get_port_path (deprecated since 1.0.16)
 try:
-    #libusb_device * LIBUSB_CALL libusb_get_parent(libusb_device *dev);
+    # libusb_device * LIBUSB_CALL libusb_get_parent(libusb_device *dev);
     libusb_get_parent = libusb.libusb_get_parent
 except AttributeError:
     pass
 else:
     libusb_get_parent.argtypes = [libusb_device_p]
     libusb_get_parent.restype = libusb_device_p
-#uint8_t libusb_get_device_address(libusb_device *dev);
+# uint8_t libusb_get_device_address(libusb_device *dev);
 libusb_get_device_address = libusb.libusb_get_device_address
 libusb_get_device_address.argtypes = [libusb_device_p]
 libusb_get_device_address.restype = c_uint8
 try:
-    #int libusb_get_device_speed(libusb_device *dev);
+    # int libusb_get_device_speed(libusb_device *dev);
     libusb_get_device_speed = libusb.libusb_get_device_speed
 except AttributeError:
     # Place holder
@@ -865,10 +924,10 @@ except AttributeError:
         # pylint: enable=undefined-variable
 else:
     libusb_get_device_speed.argtypes = [libusb_device_p]
-#int libusb_get_max_packet_size(libusb_device *dev, unsigned char endpoint);
+# int libusb_get_max_packet_size(libusb_device *dev, unsigned char endpoint);
 libusb_get_max_packet_size = libusb.libusb_get_max_packet_size
 libusb_get_max_packet_size.argtypes = [libusb_device_p, c_uchar]
-#int libusb_get_max_iso_packet_size(libusb_device *dev, unsigned char endpoint);
+# int libusb_get_max_iso_packet_size(libusb_device *dev, unsigned char endpoint);
 try:
     libusb_get_max_iso_packet_size = libusb.libusb_get_max_iso_packet_size
 except AttributeError:
@@ -882,10 +941,10 @@ except AttributeError:
 else:
     libusb_get_max_iso_packet_size.argtypes = [libusb_device_p, c_uchar]
 
-#int libusb_open(libusb_device *dev, libusb_device_handle **handle);
+# int libusb_open(libusb_device *dev, libusb_device_handle **handle);
 libusb_open = libusb.libusb_open
 libusb_open.argtypes = [libusb_device_p, libusb_device_handle_p_p]
-#void libusb_close(libusb_device_handle *dev_handle);
+# void libusb_close(libusb_device_handle *dev_handle);
 libusb_close = libusb.libusb_close
 libusb_close.argtypes = [libusb_device_handle_p]
 libusb_close.restype = None
@@ -894,46 +953,46 @@ libusb_get_device = libusb.libusb_get_device
 libusb_get_device.argtypes = [libusb_device_handle_p]
 libusb_get_device.restype = libusb_device_p
 
-#int libusb_set_configuration(libusb_device_handle *dev, int configuration);
+# int libusb_set_configuration(libusb_device_handle *dev, int configuration);
 libusb_set_configuration = libusb.libusb_set_configuration
 libusb_set_configuration.argtypes = [libusb_device_handle_p, c_int]
-#int libusb_claim_interface(libusb_device_handle *dev, int iface);
+# int libusb_claim_interface(libusb_device_handle *dev, int iface);
 libusb_claim_interface = libusb.libusb_claim_interface
 libusb_claim_interface.argtypes = [libusb_device_handle_p, c_int]
-#int libusb_release_interface(libusb_device_handle *dev, int iface);
+# int libusb_release_interface(libusb_device_handle *dev, int iface);
 libusb_release_interface = libusb.libusb_release_interface
 libusb_release_interface.argtypes = [libusb_device_handle_p, c_int]
 
-#libusb_device_handle *libusb_open_device_with_vid_pid(libusb_context *ctx,
+# libusb_device_handle *libusb_open_device_with_vid_pid(libusb_context *ctx,
 #        uint16_t vendor_id, uint16_t product_id);
 libusb_open_device_with_vid_pid = libusb.libusb_open_device_with_vid_pid
 libusb_open_device_with_vid_pid.argtypes = [
     libusb_context_p, c_uint16, c_uint16]
 libusb_open_device_with_vid_pid.restype = libusb_device_handle_p
 
-#int libusb_set_interface_alt_setting(libusb_device_handle *dev,
+# int libusb_set_interface_alt_setting(libusb_device_handle *dev,
 #        int interface_number, int alternate_setting);
 libusb_set_interface_alt_setting = libusb.libusb_set_interface_alt_setting
 libusb_set_interface_alt_setting.argtypes = [
     libusb_device_handle_p, c_int, c_int]
-#int libusb_clear_halt(libusb_device_handle *dev, unsigned char endpoint);
+# int libusb_clear_halt(libusb_device_handle *dev, unsigned char endpoint);
 libusb_clear_halt = libusb.libusb_clear_halt
 libusb_clear_halt.argtypes = [libusb_device_handle_p, c_uchar]
-#int libusb_reset_device(libusb_device_handle *dev);
+# int libusb_reset_device(libusb_device_handle *dev);
 libusb_reset_device = libusb.libusb_reset_device
 libusb_reset_device.argtypes = [libusb_device_handle_p]
 
-#int libusb_kernel_driver_active(libusb_device_handle *dev, int interface);
+# int libusb_kernel_driver_active(libusb_device_handle *dev, int interface);
 libusb_kernel_driver_active = libusb.libusb_kernel_driver_active
 libusb_kernel_driver_active.argtypes = [libusb_device_handle_p, c_int]
-#int libusb_detach_kernel_driver(libusb_device_handle *dev, int interface);
+# int libusb_detach_kernel_driver(libusb_device_handle *dev, int interface);
 libusb_detach_kernel_driver = libusb.libusb_detach_kernel_driver
 libusb_detach_kernel_driver.argtypes = [libusb_device_handle_p, c_int]
-#int libusb_attach_kernel_driver(libusb_device_handle *dev, int interface);
+# int libusb_attach_kernel_driver(libusb_device_handle *dev, int interface);
 libusb_attach_kernel_driver = libusb.libusb_attach_kernel_driver
 libusb_attach_kernel_driver.argtypes = [libusb_device_handle_p, c_int]
 try:
-    #int libusb_set_auto_detach_kernel_driver(
+    # int libusb_set_auto_detach_kernel_driver(
     #       libusb_device_handle *dev, int enable);
     libusb_set_auto_detach_kernel_driver = \
         libusb.libusb_set_auto_detach_kernel_driver
@@ -955,13 +1014,16 @@ else:
 # \param transfer a transfer
 # \returns pointer to the first byte of the data section
 
+
 def libusb_control_transfer_get_data(transfer_p):
     transfer = transfer_p.contents
     return string_at(transfer.buffer, transfer.length)[
         LIBUSB_CONTROL_SETUP_SIZE:]
 
+
 def libusb_control_transfer_get_setup(transfer_p):
     return cast(transfer_p.contents.buffer, libusb_control_setup_p)
+
 
 def libusb_fill_control_setup(
         setup_p, bmRequestType, bRequest, wValue, wIndex, wLength):
@@ -972,22 +1034,25 @@ def libusb_fill_control_setup(
     setup.wIndex = libusb_cpu_to_le16(wIndex)
     setup.wLength = libusb_cpu_to_le16(wLength)
 
-#struct libusb_transfer *libusb_alloc_transfer(int iso_packets);
+
+# struct libusb_transfer *libusb_alloc_transfer(int iso_packets);
 libusb_alloc_transfer = libusb.libusb_alloc_transfer
 libusb_alloc_transfer.argtypes = [c_int]
 libusb_alloc_transfer.restype = libusb_transfer_p
-#int libusb_submit_transfer(struct libusb_transfer *transfer);
+# int libusb_submit_transfer(struct libusb_transfer *transfer);
 libusb_submit_transfer = libusb.libusb_submit_transfer
 libusb_submit_transfer.argtypes = [libusb_transfer_p]
-#int libusb_cancel_transfer(struct libusb_transfer *transfer);
+# int libusb_cancel_transfer(struct libusb_transfer *transfer);
 libusb_cancel_transfer = libusb.libusb_cancel_transfer
 libusb_cancel_transfer.argtypes = [libusb_transfer_p]
-#void libusb_free_transfer(struct libusb_transfer *transfer);
+# void libusb_free_transfer(struct libusb_transfer *transfer);
 libusb_free_transfer = libusb.libusb_free_transfer
 libusb_free_transfer.argtypes = [libusb_transfer_p]
 libusb_free_transfer.restype = None
 
 # pylint: disable=redefined-builtin
+
+
 def libusb_fill_control_transfer(
         transfer_p, dev_handle, buffer, callback, user_data, timeout):
     transfer = transfer_p.contents
@@ -1009,6 +1074,8 @@ def libusb_fill_control_transfer(
 # pylint: enable=redefined-builtin
 
 # pylint: disable=redefined-builtin
+
+
 def libusb_fill_bulk_transfer(
         transfer_p, dev_handle, endpoint, buffer, length,
         callback, user_data, timeout):
@@ -1026,6 +1093,8 @@ def libusb_fill_bulk_transfer(
 # pylint: enable=redefined-builtin
 
 # pylint: disable=redefined-builtin
+
+
 def libusb_fill_interrupt_transfer(
         transfer_p, dev_handle, endpoint, buffer,
         length, callback, user_data, timeout):
@@ -1043,6 +1112,8 @@ def libusb_fill_interrupt_transfer(
 # pylint: enable=redefined-builtin
 
 # pylint: disable=redefined-builtin
+
+
 def libusb_fill_iso_transfer(
         transfer_p, dev_handle, endpoint, buffer, length,
         num_iso_packets, callback, user_data, timeout):
@@ -1060,9 +1131,11 @@ def libusb_fill_iso_transfer(
     transfer.callback = callback
 # pylint: enable=redefined-builtin
 
+
 def _get_iso_packet_list(transfer):
     list_type = libusb_iso_packet_descriptor * transfer.num_iso_packets
     return list_type.from_address(addressof(transfer.iso_packet_desc))
+
 
 def get_iso_packet_list(transfer_p):
     """
@@ -1071,8 +1144,10 @@ def get_iso_packet_list(transfer_p):
     """
     return _get_iso_packet_list(transfer_p.contents)
 
+
 def _get_iso_packet_buffer(transfer, offset, length):
     return string_at(transfer.buffer + offset, length)
+
 
 def get_iso_packet_buffer_list(transfer_p):
     """
@@ -1087,6 +1162,7 @@ def get_iso_packet_buffer_list(transfer_p):
         append(_get_iso_packet_buffer(transfer, offset, length))
         offset += length
     return result
+
 
 def get_extra(descriptor):
     """
@@ -1111,10 +1187,12 @@ def get_extra(descriptor):
             extra = extra[length:]
     return result
 
+
 def libusb_set_iso_packet_lengths(transfer_p, length):
     transfer = transfer_p.contents
     for iso_packet_desc in _get_iso_packet_list(transfer):
         iso_packet_desc.length = length
+
 
 def libusb_get_iso_packet_buffer(transfer_p, packet):
     transfer = transfer_p.contents
@@ -1127,6 +1205,7 @@ def libusb_get_iso_packet_buffer(transfer_p, packet):
     return _get_iso_packet_buffer(
         transfer, offset, iso_packet_desc_list[packet].length)
 
+
 def libusb_get_iso_packet_buffer_simple(transfer_p, packet):
     transfer = transfer_p.contents
     if packet >= transfer.num_iso_packets:
@@ -1136,7 +1215,8 @@ def libusb_get_iso_packet_buffer_simple(transfer_p, packet):
 
 # sync I/O
 
-#int libusb_control_transfer(libusb_device_handle *dev_handle,
+
+# int libusb_control_transfer(libusb_device_handle *dev_handle,
 #        uint8_t request_type, uint8_t request, uint16_t value, uint16_t index,
 #        unsigned char *data, uint16_t length, unsigned int timeout);
 libusb_control_transfer = libusb.libusb_control_transfer
@@ -1144,14 +1224,14 @@ libusb_control_transfer.argtypes = [libusb_device_handle_p, c_uint8, c_uint8,
                                     c_uint16, c_uint16, c_void_p, c_uint16,
                                     c_uint]
 
-#int libusb_bulk_transfer(libusb_device_handle *dev_handle,
+# int libusb_bulk_transfer(libusb_device_handle *dev_handle,
 #        unsigned char endpoint, unsigned char *data, int length,
 #        int *actual_length, unsigned int timeout);
 libusb_bulk_transfer = libusb.libusb_bulk_transfer
 libusb_bulk_transfer.argtypes = [libusb_device_handle_p, c_uchar, c_void_p,
                                  c_int, c_int_p, c_uint]
 
-#int libusb_interrupt_transfer(libusb_device_handle *dev_handle,
+# int libusb_interrupt_transfer(libusb_device_handle *dev_handle,
 #        unsigned char endpoint, unsigned char *data, int length,
 #        int *actual_length, unsigned int timeout);
 libusb_interrupt_transfer = libusb.libusb_interrupt_transfer
@@ -1159,6 +1239,8 @@ libusb_interrupt_transfer.argtypes = [libusb_device_handle_p, c_uchar,
                                       c_void_p, c_int, c_int_p, c_uint]
 
 # pylint: disable=undefined-variable
+
+
 def libusb_get_descriptor(dev, desc_type, desc_index, data, length):
     return libusb_control_transfer(dev, LIBUSB_ENDPOINT_IN,
                                    LIBUSB_REQUEST_GET_DESCRIPTOR,
@@ -1167,6 +1249,8 @@ def libusb_get_descriptor(dev, desc_type, desc_index, data, length):
 # pylint: enable=undefined-variable
 
 # pylint: disable=undefined-variable
+
+
 def libusb_get_string_descriptor(dev, desc_index, langid, data, length):
     return libusb_control_transfer(dev, LIBUSB_ENDPOINT_IN,
                                    LIBUSB_REQUEST_GET_DESCRIPTOR,
@@ -1174,7 +1258,8 @@ def libusb_get_string_descriptor(dev, desc_index, langid, data, length):
                                    langid, data, length, 1000)
 # pylint: enable=undefined-variable
 
-#int libusb_get_string_descriptor_ascii(libusb_device_handle *dev,
+
+# int libusb_get_string_descriptor_ascii(libusb_device_handle *dev,
 #        uint8_t index, unsigned char *data, int length);
 libusb_get_string_descriptor_ascii = libusb.libusb_get_string_descriptor_ascii
 libusb_get_string_descriptor_ascii.argtypes = [libusb_device_handle_p,
@@ -1182,38 +1267,38 @@ libusb_get_string_descriptor_ascii.argtypes = [libusb_device_handle_p,
 
 # polling and timeouts
 
-#int libusb_try_lock_events(libusb_context *ctx);
+# int libusb_try_lock_events(libusb_context *ctx);
 libusb_try_lock_events = libusb.libusb_try_lock_events
 libusb_try_lock_events.argtypes = [libusb_context_p]
-#void libusb_lock_events(libusb_context *ctx);
+# void libusb_lock_events(libusb_context *ctx);
 libusb_lock_events = libusb.libusb_lock_events
 libusb_lock_events.argtypes = [libusb_context_p]
-#void libusb_unlock_events(libusb_context *ctx);
+# void libusb_unlock_events(libusb_context *ctx);
 libusb_unlock_events = libusb.libusb_unlock_events
 libusb_unlock_events.argtypes = [libusb_context_p]
 libusb_unlock_events.restype = None
-#int libusb_event_handling_ok(libusb_context *ctx);
+# int libusb_event_handling_ok(libusb_context *ctx);
 libusb_event_handling_ok = libusb.libusb_event_handling_ok
 libusb_event_handling_ok.argtypes = [libusb_context_p]
-#int libusb_event_handler_active(libusb_context *ctx);
+# int libusb_event_handler_active(libusb_context *ctx);
 libusb_event_handler_active = libusb.libusb_event_handler_active
 libusb_event_handler_active.argtypes = [libusb_context_p]
-#void libusb_lock_event_waiters(libusb_context *ctx);
+# void libusb_lock_event_waiters(libusb_context *ctx);
 libusb_lock_event_waiters = libusb.libusb_lock_event_waiters
 libusb_lock_event_waiters.argtypes = [libusb_context_p]
 libusb_lock_event_waiters.restype = None
-#void libusb_unlock_event_waiters(libusb_context *ctx);
+# void libusb_unlock_event_waiters(libusb_context *ctx);
 libusb_unlock_event_waiters = libusb.libusb_unlock_event_waiters
 libusb_unlock_event_waiters.argtypes = []
 libusb_unlock_event_waiters.restype = None
-#int libusb_wait_for_event(libusb_context *ctx, struct timeval *tv);
+# int libusb_wait_for_event(libusb_context *ctx, struct timeval *tv);
 libusb_wait_for_event = libusb.libusb_wait_for_event
 libusb_wait_for_event.argtypes = [libusb_context_p, timeval_p]
 
-#int libusb_handle_events_timeout(libusb_context *ctx, struct timeval *tv);
+# int libusb_handle_events_timeout(libusb_context *ctx, struct timeval *tv);
 libusb_handle_events_timeout = libusb.libusb_handle_events_timeout
 libusb_handle_events_timeout.argtypes = [libusb_context_p, timeval_p]
-#int libusb_handle_events_timeout_completed(libusb_context *ctx,
+# int libusb_handle_events_timeout_completed(libusb_context *ctx,
 #   struct timeval *tv, int *completed);
 try:
     libusb_handle_events_timeout_completed = libusb.\
@@ -1224,10 +1309,10 @@ except AttributeError:
 else:
     libusb_handle_events_timeout_completed.argtypes = [
         libusb_context_p, timeval_p, c_int_p]
-#int libusb_handle_events(libusb_context *ctx);
+# int libusb_handle_events(libusb_context *ctx);
 libusb_handle_events = libusb.libusb_handle_events
 libusb_handle_events.argtypes = [libusb_context_p]
-#int libusb_handle_events_completed(libusb_context *ctx, int *completed);
+# int libusb_handle_events_completed(libusb_context *ctx, int *completed);
 try:
     libusb_handle_events_completed = libusb.libusb_handle_events_completed
 except AttributeError:
@@ -1235,29 +1320,32 @@ except AttributeError:
     pass
 else:
     libusb_handle_events_completed.argtypes = [libusb_context_p, c_int_p]
-#int libusb_handle_events_locked(libusb_context *ctx, struct timeval *tv);
+# int libusb_handle_events_locked(libusb_context *ctx, struct timeval *tv);
 libusb_handle_events_locked = libusb.libusb_handle_events_locked
 libusb_handle_events_locked.argtypes = [libusb_context_p, timeval_p]
-#int libusb_get_next_timeout(libusb_context *ctx, struct timeval *tv);
+# int libusb_get_next_timeout(libusb_context *ctx, struct timeval *tv);
 libusb_get_next_timeout = libusb.libusb_get_next_timeout
 libusb_get_next_timeout.argtypes = [libusb_context_p, timeval_p]
+
 
 class libusb_pollfd(Structure):
     _fields_ = [
         ('fd', c_int),
         ('events', c_short),
     ]
+
+
 libusb_pollfd_p = POINTER(libusb_pollfd)
 libusb_pollfd_p_p = POINTER(libusb_pollfd_p)
 
 libusb_pollfd_added_cb_p = CFUNCTYPE(None, c_int, c_short, py_object)
 libusb_pollfd_removed_cb_p = CFUNCTYPE(None, c_int, py_object)
 
-#const struct libusb_pollfd **libusb_get_pollfds(libusb_context *ctx);
+# const struct libusb_pollfd **libusb_get_pollfds(libusb_context *ctx);
 libusb_get_pollfds = libusb.libusb_get_pollfds
 libusb_get_pollfds.argtypes = [libusb_context_p]
 libusb_get_pollfds.restype = libusb_pollfd_p_p
-#void libusb_set_pollfd_notifiers(libusb_context *ctx,
+# void libusb_set_pollfd_notifiers(libusb_context *ctx,
 #        libusb_pollfd_added_cb added_cb, libusb_pollfd_removed_cb removed_cb,
 #        void *user_data);
 libusb_set_pollfd_notifiers = libusb.libusb_set_pollfd_notifiers
@@ -1266,7 +1354,7 @@ libusb_set_pollfd_notifiers.argtypes = [libusb_context_p,
                                         libusb_pollfd_removed_cb_p, py_object]
 libusb_set_pollfd_notifiers.restype = None
 
-#typedef int libusb_hotplug_callback_handle;
+# typedef int libusb_hotplug_callback_handle;
 libusb_hotplug_callback_handle = c_int
 
 libusb_hotplug_flag = Enum({
@@ -1280,12 +1368,12 @@ libusb_hotplug_event = Enum({
 
 LIBUSB_HOTPLUG_MATCH_ANY = -1
 
-#typedef int (*libusb_hotplug_callback_fn)(libusb_context *ctx,
+# typedef int (*libusb_hotplug_callback_fn)(libusb_context *ctx,
 #        libusb_device *device, libusb_hotplug_event event, void *user_data);
 libusb_hotplug_callback_fn_p = CFUNCTYPE(
     c_int, libusb_context_p, libusb_device_p, c_int, c_void_p)
 
-#int libusb_hotplug_register_callback(libusb_context *ctx,
+# int libusb_hotplug_register_callback(libusb_context *ctx,
 #        libusb_hotplug_event events, libusb_hotplug_flag flags,
 #        int vendor_id, int product_id, int dev_class,
 #        libusb_hotplug_callback_fn cb_fn, void *user_data,
@@ -1304,7 +1392,7 @@ else:
     ]
     libusb_hotplug_register_callback.restype = c_int
 
-#void libusb_hotplug_deregister_callback(libusb_context *ctx,
+# void libusb_hotplug_deregister_callback(libusb_context *ctx,
 #        libusb_hotplug_callback_handle handle);
 try:
     libusb_hotplug_deregister_callback = \
