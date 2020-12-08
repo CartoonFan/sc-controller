@@ -24,28 +24,10 @@ You should not need to import this if you use usb1 module.
 Declares all constants, data structures and exported symbols.
 Locates and loads libusb1 dynamic library.
 """
-from ctypes import (
-    Structure,
-    LittleEndianStructure,
-    CFUNCTYPE,
-    POINTER,
-    addressof,
-    sizeof,
-    cast,
-    c_short,
-    c_int,
-    c_uint,
-    c_size_t,
-    c_long,
-    c_uint8,
-    c_uint16,
-    c_uint32,
-    c_void_p,
-    c_char_p,
-    py_object,
-    string_at,
-    pointer,
-)
+from ctypes import (CFUNCTYPE, POINTER, LittleEndianStructure, Structure,
+                    addressof, c_char_p, c_int, c_long, c_short, c_size_t,
+                    c_uint, c_uint8, c_uint16, c_uint32, c_void_p, cast,
+                    pointer, py_object, sizeof, string_at)
 
 try:
     from ctypes import c_ssize_t
@@ -64,8 +46,8 @@ except ImportError:
             "Unsupported arch: sizeof(c_size_t) = %r" % (sizeof(c_size_t),)
         )
 import ctypes.util
-import platform
 import os.path
+import platform
 import sys
 
 
