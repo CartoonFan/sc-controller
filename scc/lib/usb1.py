@@ -13,7 +13,6 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
 # pylint: disable=invalid-name, too-many-locals, too-many-arguments
 # pylint: disable=too-many-public-methods, too-many-instance-attributes
 # pylint: disable=missing-docstring
@@ -44,81 +43,114 @@ SUPER_SPEED_OPERATION, so it is a valid python identifier.
 All LIBUSB_ERROR_* constants are available in this module as exception classes,
 subclassing USBError.
 """
-
-from ctypes import byref, create_string_buffer, c_int, sizeof, POINTER, \
-    cast, c_uint8, c_uint16, c_ubyte, string_at, c_void_p, cdll, addressof, \
-    c_char
-from ctypes.util import find_library
+import collections
+import contextlib
+import functools
+import inspect
 import sys
 import threading
 import warnings
 import weakref
-import collections
-import functools
-import contextlib
-import inspect
+from ctypes import addressof
+from ctypes import byref
+from ctypes import c_char
+from ctypes import c_int
+from ctypes import c_ubyte
+from ctypes import c_uint16
+from ctypes import c_uint8
+from ctypes import c_void_p
+from ctypes import cast
+from ctypes import cdll
+from ctypes import create_string_buffer
+from ctypes import POINTER
+from ctypes import sizeof
+from ctypes import string_at
+from ctypes.util import find_library
+
 import libusb1
+
 if sys.version_info[:2] >= (2, 6):
-# pylint: disable=wrong-import-order,ungrouped-imports
-    if sys.platform == 'win32':
+    # pylint: disable=wrong-import-order,ungrouped-imports
+    if sys.platform == "win32":
         from ctypes import get_last_error as get_errno
     else:
         from ctypes import get_errno
+
+
 # pylint: enable=wrong-import-order,ungrouped-imports
 else:
+
     def get_errno():
         raise NotImplementedError(
-            'Your python version does not support errno/last_error'
-        )
+            "Your python version does not support errno/last_error")
 
 __all__ = [
-    'USBContext', 'USBDeviceHandle', 'USBDevice', 'hasCapability',
-    'USBPoller', 'USBTransfer', 'USBTransferHelper', 'EVENT_CALLBACK_SET',
-    'USBPollerThread', 'USBEndpoint', 'USBInterfaceSetting', 'USBInterface',
-    'USBConfiguration', 'DoomedTransferError', 'getVersion', 'USBError',
+    "USBContext",
+    "USBDeviceHandle",
+    "USBDevice",
+    "hasCapability",
+    "USBPoller",
+    "USBTransfer",
+    "USBTransferHelper",
+    "EVENT_CALLBACK_SET",
+    "USBPollerThread",
+    "USBEndpoint",
+    "USBInterfaceSetting",
+    "USBInterface",
+    "USBConfiguration",
+    "DoomedTransferError",
+    "getVersion",
+    "USBError",
 ]
 # Bind libusb1 constants and libusb1.USBError to this module, so user does not
 # have to import two modules.
 USBError = libusb1.USBError
 STATUS_TO_EXCEPTION_DICT = {}
+
+
 def __bindConstants():
     global_dict = globals()
-    PREFIX = 'LIBUSB_'
+    PREFIX = "LIBUSB_"
     for name, value in libusb1.__dict__.items():
         if name.startswith(PREFIX):
             name = name[len(PREFIX):]
             # Gah.
-            if name == '5GBPS_OPERATION':
-                name = 'SUPER_SPEED_OPERATION'
+            if name == "5GBPS_OPERATION":
+                name = "SUPER_SPEED_OPERATION"
             assert name not in global_dict
             global_dict[name] = value
             __all__.append(name)
     # Finer-grained exceptions.
     for name, value in libusb1.libusb_error.forward_dict.items():
         if value:
-            assert name.startswith(PREFIX + 'ERROR_'), name
-            if name == 'LIBUSB_ERROR_IO':
-                name = 'ErrorIO'
+            assert name.startswith(PREFIX + "ERROR_"), name
+            if name == "LIBUSB_ERROR_IO":
+                name = "ErrorIO"
             else:
-                name = ''.join(x.capitalize() for x in name.split('_')[1:])
-            name = 'USB' + name
+                name = "".join(x.capitalize() for x in name.split("_")[1:])
+            name = "USB" + name
             assert name not in global_dict, name
             assert value not in STATUS_TO_EXCEPTION_DICT
             STATUS_TO_EXCEPTION_DICT[value] = global_dict[name] = type(
                 name,
                 (USBError, ),
-                {'value': value},
+                {"value": value},
             )
             __all__.append(name)
+
+
 __bindConstants()
 del __bindConstants
+
 
 def raiseUSBError(value):
     raise STATUS_TO_EXCEPTION_DICT.get(value, USBError)(value)
 
+
 def mayRaiseUSBError(value):
     if value < 0:
         raiseUSBError(value)
+
 
 try:
     namedtuple = collections.namedtuple
@@ -126,8 +158,8 @@ except AttributeError:
     Version = tuple
 else:
     Version = namedtuple(
-        'Version',
-        ['major', 'minor', 'micro', 'nano', 'rc', 'describe'],
+        "Version",
+        ["major", "minor", "micro", "nano", "rc", "describe"],
     )
 
 if sys.version_info[0] == 3:
@@ -137,16 +169,18 @@ if sys.version_info[0] == 3:
     long = int
     # pylint: enable=redefined-builtin
 else:
-    BYTE = '\x00'
+    BYTE = "\x00"
 # pylint: disable=undefined-variable
 CONTROL_SETUP = BYTE * CONTROL_SETUP_SIZE
 # pylint: enable=undefined-variable
 
-__libc_name = find_library('c')
+__libc_name = find_library("c")
 if __libc_name is None:
     # Of course, will leak memory.
     # Should we warn user ? How ?
-    _free = lambda x: None
+    def _free(x):
+        return None
+
 else:
     _free = getattr(cdll, __libc_name).free
 del __libc_name
@@ -164,6 +198,7 @@ except AttributeError:
 
         def pop(self):
             return self.__dict.popitem()[0]
+
 
 # Default string length
 # From a comment in libusb-1.0: "Some devices choke on size > 255"
@@ -185,7 +220,10 @@ EVENT_CALLBACK_SET = frozenset((
     # pylint: enable=undefined-variable
 ))
 
-DEFAULT_ASYNC_TRANSFER_ERROR_CALLBACK = lambda x: False
+
+def DEFAULT_ASYNC_TRANSFER_ERROR_CALLBACK(x):
+    return False
+
 
 def create_binary_buffer(init_or_size):
     """
@@ -202,9 +240,12 @@ def create_binary_buffer(init_or_size):
         result = create_string_buffer(init_or_size, len(init_or_size))
     return result
 
+
 class DoomedTransferError(Exception):
     """Exception raised when altering/submitting a doomed transfer."""
+
     pass
+
 
 class USBTransfer(object):
     """
@@ -219,6 +260,7 @@ class USBTransfer(object):
     change nothing for you, unless you are looking at underlying C transfer
     structure - which you should never have to.
     """
+
     # Prevent garbage collector from freeing the free function before our
     # instances, as we need it to property destruct them.
     __libusb_free_transfer = libusb1.libusb_free_transfer
@@ -244,8 +286,7 @@ class USBTransfer(object):
         """
         if iso_packets < 0:
             raise ValueError(
-                'Cannot request a negative number of iso packets.'
-            )
+                "Cannot request a negative number of iso packets.")
         self.__handle = handle
         self.__before_submit = before_submit
         self.__after_completion = after_completion
@@ -265,7 +306,7 @@ class USBTransfer(object):
         Raises if called on a submitted transfer.
         """
         if self.__submitted:
-            raise ValueError('Cannot close a submitted transfer')
+            raise ValueError("Cannot close a submitted transfer")
         self.doom()
         self.__initialized = False
         # Break possible external reference cycles
@@ -322,6 +363,7 @@ class USBTransfer(object):
             callback(self)
         if self.__doomed:
             self.close()
+
     # pylint: enable=unused-argument
 
     def setCallback(self, callback):
@@ -337,8 +379,16 @@ class USBTransfer(object):
         return self.__callback
 
     def setControl(
-            self, request_type, request, value, index, buffer_or_len,
-            callback=None, user_data=None, timeout=0):
+            self,
+            request_type,
+            request,
+            value,
+            index,
+            buffer_or_len,
+            callback=None,
+            user_data=None,
+            timeout=0,
+    ):
         """
         Setup transfer for control use.
 
@@ -358,9 +408,9 @@ class USBTransfer(object):
             Transfer timeout in milliseconds. 0 to disable.
         """
         if self.__submitted:
-            raise ValueError('Cannot alter a submitted transfer')
+            raise ValueError("Cannot alter a submitted transfer")
         if self.__doomed:
-            raise DoomedTransferError('Cannot reuse a doomed transfer')
+            raise DoomedTransferError("Cannot reuse a doomed transfer")
         if isinstance(buffer_or_len, (int, long)):
             length = buffer_or_len
             # pylint: disable=undefined-variable
@@ -372,17 +422,25 @@ class USBTransfer(object):
         self.__initialized = False
         self.__transfer_buffer = string_buffer
         self.__user_data = user_data
-        libusb1.libusb_fill_control_setup(
-            string_buffer, request_type, request, value, index, length)
+        libusb1.libusb_fill_control_setup(string_buffer, request_type, request,
+                                          value, index, length)
         libusb1.libusb_fill_control_transfer(
-            self.__transfer, self.__handle, string_buffer,
-            self.__ctypesCallbackWrapper, None, timeout)
+            self.__transfer,
+            self.__handle,
+            string_buffer,
+            self.__ctypesCallbackWrapper,
+            None,
+            timeout,
+        )
         self.__callback = callback
         self.__initialized = True
 
-    def setBulk(
-            self, endpoint, buffer_or_len, callback=None, user_data=None,
-            timeout=0):
+    def setBulk(self,
+                endpoint,
+                buffer_or_len,
+                callback=None,
+                user_data=None,
+                timeout=0):
         """
         Setup transfer for bulk use.
 
@@ -401,22 +459,32 @@ class USBTransfer(object):
             Transfer timeout in milliseconds. 0 to disable.
         """
         if self.__submitted:
-            raise ValueError('Cannot alter a submitted transfer')
+            raise ValueError("Cannot alter a submitted transfer")
         if self.__doomed:
-            raise DoomedTransferError('Cannot reuse a doomed transfer')
+            raise DoomedTransferError("Cannot reuse a doomed transfer")
         string_buffer = create_binary_buffer(buffer_or_len)
         self.__initialized = False
         self.__transfer_buffer = string_buffer
         self.__user_data = user_data
         libusb1.libusb_fill_bulk_transfer(
-            self.__transfer, self.__handle, endpoint, string_buffer,
-            sizeof(string_buffer), self.__ctypesCallbackWrapper, None, timeout)
+            self.__transfer,
+            self.__handle,
+            endpoint,
+            string_buffer,
+            sizeof(string_buffer),
+            self.__ctypesCallbackWrapper,
+            None,
+            timeout,
+        )
         self.__callback = callback
         self.__initialized = True
 
-    def setInterrupt(
-            self, endpoint, buffer_or_len, callback=None, user_data=None,
-            timeout=0):
+    def setInterrupt(self,
+                     endpoint,
+                     buffer_or_len,
+                     callback=None,
+                     user_data=None,
+                     timeout=0):
         """
         Setup transfer for interrupt use.
 
@@ -435,22 +503,35 @@ class USBTransfer(object):
             Transfer timeout in milliseconds. 0 to disable.
         """
         if self.__submitted:
-            raise ValueError('Cannot alter a submitted transfer')
+            raise ValueError("Cannot alter a submitted transfer")
         if self.__doomed:
-            raise DoomedTransferError('Cannot reuse a doomed transfer')
+            raise DoomedTransferError("Cannot reuse a doomed transfer")
         string_buffer = create_binary_buffer(buffer_or_len)
         self.__initialized = False
         self.__transfer_buffer = string_buffer
         self.__user_data = user_data
         libusb1.libusb_fill_interrupt_transfer(
-            self.__transfer, self.__handle, endpoint, string_buffer,
-            sizeof(string_buffer), self.__ctypesCallbackWrapper, None, timeout)
+            self.__transfer,
+            self.__handle,
+            endpoint,
+            string_buffer,
+            sizeof(string_buffer),
+            self.__ctypesCallbackWrapper,
+            None,
+            timeout,
+        )
         self.__callback = callback
         self.__initialized = True
 
     def setIsochronous(
-            self, endpoint, buffer_or_len, callback=None,
-            user_data=None, timeout=0, iso_transfer_length_list=None):
+            self,
+            endpoint,
+            buffer_or_len,
+            callback=None,
+            user_data=None,
+            timeout=0,
+            iso_transfer_length_list=None,
+    ):
         """
         Setup transfer for isochronous use.
 
@@ -473,61 +554,61 @@ class USBTransfer(object):
             raise ValueError otherwise.
         """
         if self.__submitted:
-            raise ValueError('Cannot alter a submitted transfer')
+            raise ValueError("Cannot alter a submitted transfer")
         num_iso_packets = self.__num_iso_packets
         if num_iso_packets == 0:
             raise TypeError(
-                'This transfer canot be used for isochronous I/O. '
-                'You must get another one with a non-zero iso_packets '
-                'parameter.'
-            )
+                "This transfer canot be used for isochronous I/O. "
+                "You must get another one with a non-zero iso_packets "
+                "parameter.")
         if self.__doomed:
-            raise DoomedTransferError('Cannot reuse a doomed transfer')
+            raise DoomedTransferError("Cannot reuse a doomed transfer")
         string_buffer = create_binary_buffer(buffer_or_len)
         buffer_length = sizeof(string_buffer)
         if iso_transfer_length_list is None:
             iso_length, remainder = divmod(buffer_length, num_iso_packets)
             if remainder:
                 raise ValueError(
-                    'Buffer size %i cannot be evenly distributed among %i '
-                    'transfers' % (
+                    "Buffer size %i cannot be evenly distributed among %i "
+                    "transfers" % (
                         buffer_length,
                         num_iso_packets,
-                    )
-                )
+                    ))
             iso_transfer_length_list = [iso_length] * num_iso_packets
         configured_iso_packets = len(iso_transfer_length_list)
         if configured_iso_packets > num_iso_packets:
-            raise ValueError(
-                'Too many ISO transfer lengths (%i), there are '
-                'only %i ISO transfers available' % (
-                    configured_iso_packets,
-                    num_iso_packets,
-                )
-            )
+            raise ValueError("Too many ISO transfer lengths (%i), there are "
+                             "only %i ISO transfers available" % (
+                                 configured_iso_packets,
+                                 num_iso_packets,
+                             ))
         if sum(iso_transfer_length_list) > buffer_length:
-            raise ValueError(
-                'ISO transfers too long (%i), there are only '
-                '%i bytes available' % (
-                    sum(iso_transfer_length_list),
-                    buffer_length,
-                )
-            )
+            raise ValueError("ISO transfers too long (%i), there are only "
+                             "%i bytes available" % (
+                                 sum(iso_transfer_length_list),
+                                 buffer_length,
+                             ))
         transfer_p = self.__transfer
         self.__initialized = False
         self.__transfer_buffer = string_buffer
         self.__user_data = user_data
         libusb1.libusb_fill_iso_transfer(
-            transfer_p, self.__handle, endpoint, string_buffer, buffer_length,
-            configured_iso_packets, self.__ctypesCallbackWrapper, None,
-            timeout)
+            transfer_p,
+            self.__handle,
+            endpoint,
+            string_buffer,
+            buffer_length,
+            configured_iso_packets,
+            self.__ctypesCallbackWrapper,
+            None,
+            timeout,
+        )
         for length, iso_packet_desc in zip(
                 iso_transfer_length_list,
                 libusb1.get_iso_packet_list(transfer_p)):
             if length <= 0:
                 raise ValueError(
-                    'Negative/null length transfers are not possible.'
-                )
+                    "Negative/null length transfers are not possible.")
             iso_packet_desc.length = length
         self.__callback = callback
         self.__initialized = True
@@ -607,8 +688,7 @@ class USBTransfer(object):
         if transfer.type != TRANSFER_TYPE_ISOCHRONOUS:
             # pylint: enable=undefined-variable
             raise TypeError(
-                'This method cannot be called on non-iso transfers.'
-            )
+                "This method cannot be called on non-iso transfers.")
         return libusb1.get_iso_packet_buffer_list(transfer_p)
 
     def getISOSetupList(self):
@@ -630,16 +710,12 @@ class USBTransfer(object):
         if transfer.type != TRANSFER_TYPE_ISOCHRONOUS:
             # pylint: enable=undefined-variable
             raise TypeError(
-                'This method cannot be called on non-iso transfers.'
-            )
-        return [
-            {
-                'length': x.length,
-                'actual_length': x.actual_length,
-                'status': x.status,
-            }
-            for x in libusb1.get_iso_packet_list(transfer_p)
-        ]
+                "This method cannot be called on non-iso transfers.")
+        return [{
+            "length": x.length,
+            "actual_length": x.actual_length,
+            "status": x.status,
+        } for x in libusb1.get_iso_packet_list(transfer_p)]
 
     def iterISO(self):
         """
@@ -655,8 +731,7 @@ class USBTransfer(object):
         if transfer.type != TRANSFER_TYPE_ISOCHRONOUS:
             # pylint: enable=undefined-variable
             raise TypeError(
-                'This method cannot be called on non-iso transfers.'
-            )
+                "This method cannot be called on non-iso transfers.")
         buffer_position = transfer.buffer
         for iso_transfer in libusb1.get_iso_packet_list(transfer_p):
             yield (
@@ -674,23 +749,21 @@ class USBTransfer(object):
         Note: disallowed on control transfers (use setControl).
         """
         if self.__submitted:
-            raise ValueError('Cannot alter a submitted transfer')
+            raise ValueError("Cannot alter a submitted transfer")
         transfer = self.__transfer.contents
         # pylint: disable=undefined-variable
         if transfer.type == TRANSFER_TYPE_CONTROL:
             # pylint: enable=undefined-variable
             raise ValueError(
-                'To alter control transfer buffer, use setControl'
-            )
+                "To alter control transfer buffer, use setControl")
         buff = create_binary_buffer(buffer_or_len)
         # pylint: disable=undefined-variable
-        if transfer.type == TRANSFER_TYPE_ISOCHRONOUS and \
-                sizeof(buff) != transfer.length:
+        if (transfer.type == TRANSFER_TYPE_ISOCHRONOUS
+                and sizeof(buff) != transfer.length):
             # pylint: enable=undefined-variable
             raise ValueError(
-                'To alter isochronous transfer buffer length, use '
-                'setIsochronous'
-            )
+                "To alter isochronous transfer buffer length, use "
+                "setIsochronous")
         self.__transfer_buffer = buff
         transfer.buffer = cast(buff, c_void_p)
         transfer.length = sizeof(buff)
@@ -706,13 +779,12 @@ class USBTransfer(object):
         Submit transfer for asynchronous handling.
         """
         if self.__submitted:
-            raise ValueError('Cannot submit a submitted transfer')
+            raise ValueError("Cannot submit a submitted transfer")
         if not self.__initialized:
             raise ValueError(
-                'Cannot submit a transfer until it has been initialized'
-            )
+                "Cannot submit a transfer until it has been initialized")
         if self.__doomed:
-            raise DoomedTransferError('Cannot submit doomed transfer')
+            raise DoomedTransferError("Cannot submit doomed transfer")
         self.__before_submit(self)
         self.__submitted = True
         result = libusb1.libusb_submit_transfer(self.__transfer)
@@ -736,6 +808,7 @@ class USBTransfer(object):
         if result:
             raise self.__USBError(result)
 
+
 class USBTransferHelper(object):
     """
     Simplifies subscribing to the same transfer over and over, and callback
@@ -756,6 +829,7 @@ class USBTransferHelper(object):
     have an error status. You can check individual packet status by calling
     getISOSetupList on transfer object in your callback.
     """
+
     def __init__(self, transfer=None):
         """
         Create a transfer callback dispatcher.
@@ -803,7 +877,7 @@ class USBTransferHelper(object):
             TRANSFER_OVERFLOW
         """
         if event not in EVENT_CALLBACK_SET:
-            raise ValueError('Unknown event %r.' % (event, ))
+            raise ValueError("Unknown event %r." % (event, ))
         self.__event_callback_dict[event] = callback
 
     def setDefaultCallback(self, callback):
@@ -824,8 +898,8 @@ class USBTransferHelper(object):
         """
         Callback to set on transfers.
         """
-        if self.getEventCallback(transfer.getStatus(), self.__errorCallback)(
-                transfer):
+        if self.getEventCallback(transfer.getStatus(),
+                                 self.__errorCallback)(transfer):
             try:
                 transfer.submit()
             except DoomedTransferError:
@@ -839,6 +913,7 @@ class USBTransferHelper(object):
         # Deprecated: to drop
         return self.__transfer.isSubmitted()
 
+
 class USBPollerThread(threading.Thread):
     """
     Implements libusb1 documentation about threaded, asynchronous
@@ -851,6 +926,7 @@ class USBPollerThread(threading.Thread):
 
     See http://libusb.sourceforge.net/api-1.0/mtasync.html .
     """
+
     def __init__(self, context, poller, exc_callback=None):
         """
         Create a poller thread for given context.
@@ -883,6 +959,7 @@ class USBPollerThread(threading.Thread):
     @staticmethod
     def exceptionHandler(exc):
         raise exc
+
     # pylint: enable=method-hidden
 
     def run(self):
@@ -926,6 +1003,7 @@ class USBPollerThread(threading.Thread):
         self.__fd_set.discard(fd)
         self.__poller.unregister(fd)
 
+
 class USBPoller(object):
     """
     Class allowing integration of USB event polling in a file-descriptor
@@ -936,6 +1014,7 @@ class USBPoller(object):
     will result in unnecessarily long pauses in some threads. Opening and/or
     closing devices while polling can cause race conditions to occur.
     """
+
     def __init__(self, context, poller):
         """
         Create a poller for given context.
@@ -996,8 +1075,7 @@ class USBPoller(object):
         """
         if fd in self.__fd_set:
             raise ValueError(
-                'This fd is a special USB event fd, it cannot be polled.'
-            )
+                "This fd is a special USB event fd, it cannot be polled.")
         self.__poller.register(fd, events)
 
     def unregister(self, fd):
@@ -1007,21 +1085,23 @@ class USBPoller(object):
         """
         if fd in self.__fd_set:
             raise ValueError(
-                'This fd is a special USB event fd, it must stay registered.'
-            )
+                "This fd is a special USB event fd, it must stay registered.")
         self.__poller.unregister(fd)
 
     # pylint: disable=unused-argument
     def _registerFD(self, fd, events, user_data=None):
         self.register(fd, events)
         self.__fd_set.add(fd)
+
     # pylint: enable=unused-argument
 
     # pylint: disable=unused-argument
     def _unregisterFD(self, fd, user_data=None):
         self.__fd_set.discard(fd)
         self.unregister(fd)
+
     # pylint: enable=unused-argument
+
 
 class _ReleaseInterface(object):
     def __init__(self, handle, interface):
@@ -1035,10 +1115,12 @@ class _ReleaseInterface(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self._handle.releaseInterface(self._interface)
 
+
 class USBDeviceHandle(object):
     """
     Represents an opened USB device.
     """
+
     __handle = None
     __libusb_close = libusb1.libusb_close
     __USBError = USBError
@@ -1135,9 +1217,11 @@ class USBDeviceHandle(object):
         Get the current configuration number for this device.
         """
         configuration = c_int()
-        mayRaiseUSBError(libusb1.libusb_get_configuration(
-            self.__handle, byref(configuration),
-        ))
+        mayRaiseUSBError(
+            libusb1.libusb_get_configuration(
+                self.__handle,
+                byref(configuration),
+            ))
         return configuration.value
 
     def setConfiguration(self, configuration):
@@ -1145,8 +1229,7 @@ class USBDeviceHandle(object):
         Set the configuration number for this device.
         """
         mayRaiseUSBError(
-            libusb1.libusb_set_configuration(self.__handle, configuration),
-        )
+            libusb1.libusb_set_configuration(self.__handle, configuration), )
 
     def claimInterface(self, interface):
         """
@@ -1159,8 +1242,7 @@ class USBDeviceHandle(object):
             # handle.releaseInterface(0) gets automatically called
         """
         mayRaiseUSBError(
-            libusb1.libusb_claim_interface(self.__handle, interface),
-        )
+            libusb1.libusb_claim_interface(self.__handle, interface), )
         return _ReleaseInterface(self, interface)
 
     def releaseInterface(self, interface):
@@ -1168,16 +1250,18 @@ class USBDeviceHandle(object):
         Release interface, allowing another process to use it.
         """
         mayRaiseUSBError(
-            libusb1.libusb_release_interface(self.__handle, interface),
-        )
+            libusb1.libusb_release_interface(self.__handle, interface), )
 
     def setInterfaceAltSetting(self, interface, alt_setting):
         """
         Set interface's alternative setting (both parameters are integers).
         """
-        mayRaiseUSBError(libusb1.libusb_set_interface_alt_setting(
-            self.__handle, interface, alt_setting,
-        ))
+        mayRaiseUSBError(
+            libusb1.libusb_set_interface_alt_setting(
+                self.__handle,
+                interface,
+                alt_setting,
+            ))
 
     def clearHalt(self, endpoint):
         """
@@ -1211,16 +1295,14 @@ class USBDeviceHandle(object):
         Ask kernel driver to detach from given interface number.
         """
         mayRaiseUSBError(
-            libusb1.libusb_detach_kernel_driver(self.__handle, interface),
-        )
+            libusb1.libusb_detach_kernel_driver(self.__handle, interface), )
 
     def attachKernelDriver(self, interface):
         """
         Ask kernel driver to re-attach to given interface number.
         """
         mayRaiseUSBError(
-            libusb1.libusb_attach_kernel_driver(self.__handle, interface),
-        )
+            libusb1.libusb_attach_kernel_driver(self.__handle, interface), )
 
     def setAutoDetachKernelDriver(self, enable):
         """
@@ -1228,9 +1310,11 @@ class USBDeviceHandle(object):
         enable (bool)
             True to enable auto-detach, False to disable it.
         """
-        mayRaiseUSBError(libusb1.libusb_set_auto_detach_kernel_driver(
-            self.__handle, bool(enable),
-        ))
+        mayRaiseUSBError(
+            libusb1.libusb_set_auto_detach_kernel_driver(
+                self.__handle,
+                bool(enable),
+            ))
 
     def getSupportedLanguageList(self):
         """
@@ -1244,7 +1328,11 @@ class USBDeviceHandle(object):
         """
         descriptor_string = create_binary_buffer(STRING_LENGTH)
         result = libusb1.libusb_get_string_descriptor(
-            self.__handle, 0, 0, descriptor_string, sizeof(descriptor_string),
+            self.__handle,
+            0,
+            0,
+            descriptor_string,
+            sizeof(descriptor_string),
         )
         # pylint: disable=undefined-variable
         if result == ERROR_PIPE:
@@ -1270,15 +1358,19 @@ class USBDeviceHandle(object):
         """
         descriptor_string = create_binary_buffer(STRING_LENGTH)
         try:
-            mayRaiseUSBError(libusb1.libusb_get_string_descriptor(
-                self.__handle, descriptor, lang_id, descriptor_string,
-                sizeof(descriptor_string),
-            ))
+            mayRaiseUSBError(
+                libusb1.libusb_get_string_descriptor(
+                    self.__handle,
+                    descriptor,
+                    lang_id,
+                    descriptor_string,
+                    sizeof(descriptor_string),
+                ))
         # pylint: disable=undefined-variable
         except USBErrorNotFound:
             # pylint: enable=undefined-variable
             return None
-        return descriptor_string.value.decode('UTF-16-LE')
+        return descriptor_string.value.decode("UTF-16-LE")
 
     def getRawDescriptor(self, descriptor, desc_index, length):
         """
@@ -1289,14 +1381,14 @@ class USBDeviceHandle(object):
         """
         data = (c_uint8 * length)()
         try:
-            mayRaiseUSBError(libusb1.libusb_get_descriptor(
-                self.__handle, descriptor, desc_index, data, length
-            ))
+            mayRaiseUSBError(
+                libusb1.libusb_get_descriptor(self.__handle, descriptor,
+                                              desc_index, data, length))
         # pylint: disable=undefined-variable
         except USBErrorNotFound:
             # pylint: enable=undefined-variable
             return None
-        return [ x for x in data ]
+        return [x for x in data]
 
     def getASCIIStringDescriptor(self, descriptor):
         """
@@ -1307,29 +1399,43 @@ class USBDeviceHandle(object):
         """
         descriptor_string = create_binary_buffer(STRING_LENGTH)
         try:
-            mayRaiseUSBError(libusb1.libusb_get_string_descriptor_ascii(
-                self.__handle, descriptor, descriptor_string,
-                sizeof(descriptor_string),
-            ))
+            mayRaiseUSBError(
+                libusb1.libusb_get_string_descriptor_ascii(
+                    self.__handle,
+                    descriptor,
+                    descriptor_string,
+                    sizeof(descriptor_string),
+                ))
         # pylint: disable=undefined-variable
         except USBErrorNotFound:
             # pylint: enable=undefined-variable
             return None
-        return descriptor_string.value.decode('ASCII')
+        return descriptor_string.value.decode("ASCII")
 
     # Sync I/O
 
-    def _controlTransfer(
-            self, request_type, request, value, index, data, length, timeout):
+    def _controlTransfer(self, request_type, request, value, index, data,
+                         length, timeout):
         result = libusb1.libusb_control_transfer(
-            self.__handle, request_type, request, value, index, data, length,
+            self.__handle,
+            request_type,
+            request,
+            value,
+            index,
+            data,
+            length,
             timeout,
         )
         mayRaiseUSBError(result)
         return result
 
-    def controlWrite(
-            self, request_type, request, value, index, data, timeout=0):
+    def controlWrite(self,
+                     request_type,
+                     request,
+                     value,
+                     index,
+                     data,
+                     timeout=0):
         """
         Synchronous control write.
         request_type: request type bitmask (bmRequestType), see
@@ -1348,8 +1454,13 @@ class USBDeviceHandle(object):
         return self._controlTransfer(request_type, request, value, index, data,
                                      sizeof(data), timeout)
 
-    def controlRead(
-            self, request_type, request, value, index, length, timeout=0):
+    def controlRead(self,
+                    request_type,
+                    request,
+                    value,
+                    index,
+                    length,
+                    timeout=0):
         """
         Synchronous control read.
         timeout: in milliseconds, how long to wait for data. Set to 0 to
@@ -1363,15 +1474,27 @@ class USBDeviceHandle(object):
         # pylint: enable=undefined-variable
         data = create_binary_buffer(length)
         transferred = self._controlTransfer(
-            request_type, request, value, index, data, length, timeout,
+            request_type,
+            request,
+            value,
+            index,
+            data,
+            length,
+            timeout,
         )
         return data.raw[:transferred]
 
     def _bulkTransfer(self, endpoint, data, length, timeout):
         transferred = c_int()
-        mayRaiseUSBError(libusb1.libusb_bulk_transfer(
-            self.__handle, endpoint, data, length, byref(transferred), timeout,
-        ))
+        mayRaiseUSBError(
+            libusb1.libusb_bulk_transfer(
+                self.__handle,
+                endpoint,
+                data,
+                length,
+                byref(transferred),
+                timeout,
+            ))
         return transferred.value
 
     def bulkWrite(self, endpoint, data, timeout=0):
@@ -1410,9 +1533,15 @@ class USBDeviceHandle(object):
 
     def _interruptTransfer(self, endpoint, data, length, timeout):
         transferred = c_int()
-        mayRaiseUSBError(libusb1.libusb_interrupt_transfer(
-            self.__handle, endpoint, data, length, byref(transferred), timeout,
-        ))
+        mayRaiseUSBError(
+            libusb1.libusb_interrupt_transfer(
+                self.__handle,
+                endpoint,
+                data,
+                length,
+                byref(transferred),
+                timeout,
+            ))
         return transferred.value
 
     def interruptWrite(self, endpoint, data, timeout=0):
@@ -1456,11 +1585,14 @@ class USBDeviceHandle(object):
           allocate.
         """
         result = USBTransfer(
-            self.__handle, iso_packets,
-            self.__inflight_add, self.__inflight_remove,
+            self.__handle,
+            iso_packets,
+            self.__inflight_add,
+            self.__inflight_remove,
         )
         self.__transfer_set.add(result)
         return result
+
 
 class USBConfiguration(object):
     def __init__(self, context, config):
@@ -1469,7 +1601,7 @@ class USBConfiguration(object):
         Call USBDevice methods to get instances of this class.
         """
         if not isinstance(config, libusb1.libusb_config_descriptor):
-            raise TypeError('Unexpected descriptor type.')
+            raise TypeError("Unexpected descriptor type.")
         self.__config = config
         self.__context = context
 
@@ -1519,10 +1651,11 @@ class USBConfiguration(object):
         Returns an USBInterface instance.
         """
         if not isinstance(interface, int):
-            raise TypeError('interface parameter must be an integer')
+            raise TypeError("interface parameter must be an integer")
         if not 0 <= interface < self.getNumInterfaces():
-            raise IndexError('No such interface: %r' % (interface, ))
+            raise IndexError("No such interface: %r" % (interface, ))
         return USBInterface(self.__context, self.__config.interface[interface])
+
 
 class USBInterface(object):
     def __init__(self, context, interface):
@@ -1531,7 +1664,7 @@ class USBInterface(object):
         Call USBConfiguration methods to get instances of this class.
         """
         if not isinstance(interface, libusb1.libusb_interface):
-            raise TypeError('Unexpected descriptor type.')
+            raise TypeError("Unexpected descriptor type.")
         self.__interface = interface
         self.__context = context
 
@@ -1548,8 +1681,8 @@ class USBInterface(object):
         context = self.__context
         alt_setting_list = self.__interface.altsetting
         for alt_setting_num in xrange(self.getNumSettings()):
-            yield USBInterfaceSetting(
-                context, alt_setting_list[alt_setting_num])
+            yield USBInterfaceSetting(context,
+                                      alt_setting_list[alt_setting_num])
 
     # BBB
     iterSettings = __iter__
@@ -1559,11 +1692,12 @@ class USBInterface(object):
         Returns an USBInterfaceSetting instance.
         """
         if not isinstance(alt_setting, int):
-            raise TypeError('alt_setting parameter must be an integer')
+            raise TypeError("alt_setting parameter must be an integer")
         if not 0 <= alt_setting < self.getNumSettings():
-            raise IndexError('No such setting: %r' % (alt_setting, ))
-        return USBInterfaceSetting(
-            self.__context, self.__interface.altsetting[alt_setting])
+            raise IndexError("No such setting: %r" % (alt_setting, ))
+        return USBInterfaceSetting(self.__context,
+                                   self.__interface.altsetting[alt_setting])
+
 
 class USBInterfaceSetting(object):
     def __init__(self, context, alt_setting):
@@ -1572,7 +1706,7 @@ class USBInterfaceSetting(object):
         Call USBDevice or USBInterface methods to get instances of this class.
         """
         if not isinstance(alt_setting, libusb1.libusb_interface_descriptor):
-            raise TypeError('Unexpected descriptor type.')
+            raise TypeError("Unexpected descriptor type.")
         self.__alt_setting = alt_setting
         self.__context = context
 
@@ -1631,16 +1765,17 @@ class USBInterfaceSetting(object):
         Returns an USBEndpoint instance.
         """
         if not isinstance(endpoint, int):
-            raise TypeError('endpoint parameter must be an integer')
+            raise TypeError("endpoint parameter must be an integer")
         if not 0 <= endpoint < self.getNumEndpoints():
-            raise ValueError('No such endpoint: %r' % (endpoint, ))
-        return USBEndpoint(
-            self.__context, self.__alt_setting.endpoint[endpoint])
+            raise ValueError("No such endpoint: %r" % (endpoint, ))
+        return USBEndpoint(self.__context,
+                           self.__alt_setting.endpoint[endpoint])
+
 
 class USBEndpoint(object):
     def __init__(self, context, endpoint):
         if not isinstance(endpoint, libusb1.libusb_endpoint_descriptor):
-            raise TypeError('Unexpected descriptor type.')
+            raise TypeError("Unexpected descriptor type.")
         self.__endpoint = endpoint
         self.__context = context
 
@@ -1665,6 +1800,7 @@ class USBEndpoint(object):
     def getExtra(self):
         return libusb1.get_extra(self.__endpoint)
 
+
 class USBDevice(object):
     """
     Represents a USB device.
@@ -1687,8 +1823,8 @@ class USBDevice(object):
         self.device_p = device_p
         # Fetch device descriptor
         device_descriptor = libusb1.libusb_device_descriptor()
-        result = libusb1.libusb_get_device_descriptor(
-            device_p, byref(device_descriptor))
+        result = libusb1.libusb_get_device_descriptor(device_p,
+                                                      byref(device_descriptor))
         mayRaiseUSBError(result)
         self.device_descriptor = device_descriptor
         if can_load_configuration:
@@ -1702,7 +1838,7 @@ class USBDevice(object):
                     device_p, configuration_id, byref(config))
                 # pylint: disable=undefined-variable
                 if result == ERROR_NOT_FOUND:
-                # pylint: enable=undefined-variable
+                    # pylint: enable=undefined-variable
                     # Some devices (ex windows' root hubs) tell they have
                     # one configuration, but they have no configuration
                     # descriptor.
@@ -1729,13 +1865,12 @@ class USBDevice(object):
         # pylint: enable=redefined-outer-name
         descriptor_list = self.__configuration_descriptor_list
         while descriptor_list:
-            self.__libusb_free_config_descriptor(
-                byref(descriptor_list.pop()),
-            )
+            self.__libusb_free_config_descriptor(byref(
+                descriptor_list.pop()), )
         self.device_p = None
 
     def __str__(self):
-        return 'Bus %03i Device %03i: ID %04x:%04x' % (
+        return "Bus %03i Device %03i: ID %04x:%04x" % (
             self.getBusNumber(),
             self.getDeviceAddress(),
             self.getVendorID(),
@@ -1746,13 +1881,15 @@ class USBDevice(object):
         return len(self.__configuration_descriptor_list)
 
     def __getitem__(self, index):
-        return USBConfiguration(
-            self.__context, self.__configuration_descriptor_list[index])
+        return USBConfiguration(self.__context,
+                                self.__configuration_descriptor_list[index])
 
     def __key(self):
         return (
-            id(self.__context), self.getBusNumber(),
-            self.getDeviceAddress(), self.getVendorID(),
+            id(self.__context),
+            self.getBusNumber(),
+            self.getDeviceAddress(),
+            self.getVendorID(),
             self.getProductID(),
         )
 
@@ -1800,8 +1937,8 @@ class USBDevice(object):
         Get the port number of each hub toward device.
         """
         port_list = (c_uint8 * PATH_MAX_DEPTH)()
-        result = libusb1.libusb_get_port_numbers(
-            self.device_p, port_list, len(port_list))
+        result = libusb1.libusb_get_port_numbers(self.device_p, port_list,
+                                                 len(port_list))
         mayRaiseUSBError(result)
         return list(port_list[:result])
 
@@ -1865,7 +2002,8 @@ class USBDevice(object):
         See https://libusb.org/ticket/77 . You should instead consult the
         endpoint descriptor of current configuration and alternate setting.
         """
-        result = libusb1.libusb_get_max_iso_packet_size(self.device_p, endpoint)
+        result = libusb1.libusb_get_max_iso_packet_size(
+            self.device_p, endpoint)
         mayRaiseUSBError(result)
         return result
 
@@ -1954,8 +2092,10 @@ class USBDevice(object):
         self.__close_set.add(result)
         return result
 
+
 _zero_tv = libusb1.timeval(0, 0)
 _zero_tv_p = byref(_zero_tv)
+
 
 class USBContext(object):
     """
@@ -1964,6 +2104,7 @@ class USBContext(object):
     Provides methods to enumerate & look up USB devices.
     Also provides access to global (device-independent) libusb1 functions.
     """
+
     __libusb_exit = libusb1.libusb_exit
     __context_p = None
     __added_cb = None
@@ -1984,7 +2125,7 @@ class USBContext(object):
                     # BBB
                     warnings.warn(
                         'Use "with USBContext() as context:" for safer cleanup'
-                        ' on interpreter shutdown. See also USBContext.open().',
+                        " on interpreter shutdown. See also USBContext.open().",
                         DeprecationWarning,
                     )
                     self.open()
@@ -1996,7 +2137,9 @@ class USBContext(object):
                     self.__context_refcount -= 1
                     if not self.__context_refcount:
                         self.__context_cond.notifyAll()
+
         if inspect.isgeneratorfunction(func):
+
             def wrapper(self, *args, **kw):
                 with refcount(self):
                     if self.__context_p:
@@ -2004,15 +2147,19 @@ class USBContext(object):
                         for value in func(self, *args, **kw):
                             # pylint: enable=not-callable
                             yield value
+
         else:
+
             def wrapper(self, *args, **kw):
                 with refcount(self):
                     if self.__context_p:
                         # pylint: disable=not-callable
                         return func(self, *args, **kw)
                         # pylint: enable=not-callable
+
         functools.update_wrapper(wrapper, func)
         return wrapper
+
     # pylint: enable=no-self-argument,protected-access
 
     def __init__(self):
@@ -2107,8 +2254,8 @@ class USBContext(object):
         """
         device_p_p = libusb1.libusb_device_p_p()
         libusb_device_p = libusb1.libusb_device_p
-        device_list_len = libusb1.libusb_get_device_list(self.__context_p,
-                                                         byref(device_p_p))
+        device_list_len = libusb1.libusb_get_device_list(
+            self.__context_p, byref(device_p_p))
         mayRaiseUSBError(device_list_len)
         try:
             for device_p in device_p_p[:device_list_len]:
@@ -2118,7 +2265,8 @@ class USBContext(object):
                     # it doesn't copy pointer value (=pointed memory address) ?
                     # At least, it's not so convenient and forces using such
                     # weird code.
-                    device = USBDevice(self, libusb_device_p(device_p.contents))
+                    device = USBDevice(self,
+                                       libusb_device_p(device_p.contents))
                 except USBError:
                     if not skip_on_error:
                         raise
@@ -2140,14 +2288,14 @@ class USBContext(object):
             DEPRECATED. Alias for skip_on_error.
         """
         return list(
-            self.getDeviceIterator(
-                skip_on_error=skip_on_access_error or skip_on_error,
-            ),
-        )
+            self.getDeviceIterator(skip_on_error=skip_on_access_error
+                                   or skip_on_error, ), )
 
-    def getByVendorIDAndProductID(
-            self, vendor_id, product_id,
-            skip_on_access_error=False, skip_on_error=False):
+    def getByVendorIDAndProductID(self,
+                                  vendor_id,
+                                  product_id,
+                                  skip_on_access_error=False,
+                                  skip_on_error=False):
         """
         Get the first USB device matching given vendor and product ids.
         Returns an USBDevice instance, or None if no present device match.
@@ -2156,16 +2304,17 @@ class USBContext(object):
         skip_on_access_error (bool)
             (see getDeviceList)
         """
-        for device in self.getDeviceIterator(
-                skip_on_error=skip_on_access_error or skip_on_error,
-            ):
-            if device.getVendorID() == vendor_id and \
-                    device.getProductID() == product_id:
+        for device in self.getDeviceIterator(skip_on_error=skip_on_access_error
+                                             or skip_on_error, ):
+            if (device.getVendorID() == vendor_id
+                    and device.getProductID() == product_id):
                 return device
 
-    def openByVendorIDAndProductID(
-            self, vendor_id, product_id,
-            skip_on_access_error=False, skip_on_error=False):
+    def openByVendorIDAndProductID(self,
+                                   vendor_id,
+                                   product_id,
+                                   skip_on_access_error=False,
+                                   skip_on_error=False):
         """
         Get the first USB device matching given vendor and product ids.
         Returns an USBDeviceHandle instance, or None if no present device
@@ -2176,9 +2325,11 @@ class USBContext(object):
             (see getDeviceList)
         """
         result = self.getByVendorIDAndProductID(
-            vendor_id, product_id,
+            vendor_id,
+            product_id,
             skip_on_access_error=skip_on_access_error,
-            skip_on_error=skip_on_error)
+            skip_on_error=skip_on_error,
+        )
         if result is not None:
             return result.open()
 
@@ -2197,7 +2348,7 @@ class USBContext(object):
             else:
                 # Assume not implemented
                 raise NotImplementedError(
-                    'Your libusb does not seem to implement pollable FDs')
+                    "Your libusb does not seem to implement pollable FDs")
         try:
             result = []
             append = result.append
@@ -2219,9 +2370,7 @@ class USBContext(object):
         See libusb1 documentation for details (there is a timeout, so it's
         not "really" blocking).
         """
-        mayRaiseUSBError(
-            libusb1.libusb_handle_events(self.__context_p),
-        )
+        mayRaiseUSBError(libusb1.libusb_handle_events(self.__context_p), )
 
     # TODO: handleEventsCompleted
 
@@ -2240,15 +2389,17 @@ class USBContext(object):
         real_tv = libusb1.timeval(tv_s, int((tv - tv_s) * 1000000))
         mayRaiseUSBError(
             libusb1.libusb_handle_events_timeout(
-                self.__context_p, byref(real_tv),
-            ),
-        )
+                self.__context_p,
+                byref(real_tv),
+            ), )
 
     # TODO: handleEventsTimeoutCompleted
 
     @_validContext
-    def setPollFDNotifiers(
-            self, added_cb=None, removed_cb=None, user_data=None):
+    def setPollFDNotifiers(self,
+                           added_cb=None,
+                           removed_cb=None,
+                           user_data=None):
         """
         Give libusb1 methods to call when it should add/remove file descriptor
         for polling.
@@ -2268,8 +2419,8 @@ class USBContext(object):
         self.__added_cb = added_cb
         self.__removed_cb = removed_cb
         self.__poll_cb_user_data = user_data
-        self.__libusb_set_pollfd_notifiers(
-            self.__context_p, added_cb, removed_cb, user_data)
+        self.__libusb_set_pollfd_notifiers(self.__context_p, added_cb,
+                                           removed_cb, user_data)
 
     @_validContext
     def getNextTimeout(self):
@@ -2280,8 +2431,8 @@ class USBContext(object):
         this class with a polling mechanism.
         """
         timeval = libusb1.timeval()
-        result = libusb1.libusb_get_next_timeout(
-            self.__context_p, byref(timeval))
+        result = libusb1.libusb_get_next_timeout(self.__context_p,
+                                                 byref(timeval))
         if result == 0:
             return None
         elif result == 1:
@@ -2356,9 +2507,11 @@ class USBContext(object):
         See libusb_handle_events_locked doc.
         """
         # XXX: does tv parameter need to be exposed ?
-        mayRaiseUSBError(libusb1.libusb_handle_events_locked(
-            self.__context_p, _zero_tv_p,
-        ))
+        mayRaiseUSBError(
+            libusb1.libusb_handle_events_locked(
+                self.__context_p,
+                _zero_tv_p,
+            ))
 
     @_validContext
     def eventHandlerActive(self):
@@ -2376,7 +2529,8 @@ class USBContext(object):
 
     @_validContext
     def hotplugRegisterCallback(
-            self, callback,
+            self,
+            callback,
             # pylint: disable=undefined-variable
             events=HOTPLUG_EVENT_DEVICE_ARRIVED | HOTPLUG_EVENT_DEVICE_LEFT,
             flags=HOTPLUG_ENUMERATE,
@@ -2384,7 +2538,7 @@ class USBContext(object):
             product_id=HOTPLUG_MATCH_ANY,
             dev_class=HOTPLUG_MATCH_ANY,
             # pylint: enable=undefined-variable
-        ):
+    ):
         """
         Registers an hotplug callback.
         On success, returns an opaque value which can be passed to
@@ -2400,6 +2554,7 @@ class USBContext(object):
         Callback must return whether it must be unregistered (any true value
         to be unregistered, any false value to be kept registered).
         """
+
         def wrapped_callback(context_p, device_p, event, _):
             assert addressof(context_p.contents) == addressof(
                 self.__context_p.contents), (context_p, self.__context_p)
@@ -2419,12 +2574,21 @@ class USBContext(object):
             if unregister:
                 del self.__hotplug_callback_dict[handle]
             return unregister
+
         handle = c_int()
         callback_p = libusb1.libusb_hotplug_callback_fn_p(wrapped_callback)
-        mayRaiseUSBError(libusb1.libusb_hotplug_register_callback(
-            self.__context_p, events, flags, vendor_id, product_id, dev_class,
-            callback_p, None, byref(handle),
-        ))
+        mayRaiseUSBError(
+            libusb1.libusb_hotplug_register_callback(
+                self.__context_p,
+                events,
+                flags,
+                vendor_id,
+                product_id,
+                dev_class,
+                callback_p,
+                None,
+                byref(handle),
+            ))
         handle = handle.value
         # Keep strong references
         assert handle not in self.__hotplug_callback_dict, (
@@ -2444,7 +2608,9 @@ class USBContext(object):
         del self.__hotplug_callback_dict[handle]
         libusb1.libusb_hotplug_deregister_callback(self.__context_p, handle)
 
+
 del USBContext._validContext
+
 
 def getVersion():
     """
@@ -2468,6 +2634,7 @@ def getVersion():
         version.describe,
     )
 
+
 def hasCapability(capability):
     """
     Tests feature presence.
@@ -2480,13 +2647,15 @@ def hasCapability(capability):
     """
     return libusb1.libusb_has_capability(capability)
 
+
 class LibUSBContext(USBContext):
     """
     Backward-compatibility alias for USBContext.
     """
+
     def __init__(self):
         warnings.warn(
-            'LibUSBContext is being renamed to USBContext',
+            "LibUSBContext is being renamed to USBContext",
             DeprecationWarning,
         )
         super(LibUSBContext, self).__init__()
