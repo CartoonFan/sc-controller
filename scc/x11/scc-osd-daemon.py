@@ -30,9 +30,10 @@ from gi.repository import Gtk, Gdk, GdkX11, GLib
 from scc.tools import _, set_logging_level
 
 import gi
-gi.require_version('Gtk', '3.0')
-gi.require_version('Rsvg', '2.0')
-gi.require_version('GdkX11', '3.0')
+
+gi.require_version("Gtk", "3.0")
+gi.require_version("Rsvg", "2.0")
+gi.require_version("GdkX11", "3.0")
 
 
 log = logging.getLogger("osd.daemon")
@@ -69,7 +70,7 @@ class OSDDaemon(object):
         if name.endswith(".sccprofile") and not name.startswith("."):
             # Ignore .mod and hidden files
             name = name[0:-11]
-            recents = self.config['recent_profiles']
+            recents = self.config["recent_profiles"]
             if len(recents) and recents[0] == name:
                 # Already first in recent list
                 return
@@ -85,9 +86,9 @@ class OSDDaemon(object):
             while name in recents:
                 recents.remove(name)
             recents.insert(0, name)
-            if len(recents) > self.config['recent_max']:
-                recents = recents[0:self.config['recent_max']]
-            self.config['recent_profiles'] = recents
+            if len(recents) > self.config["recent_max"]:
+                recents = recents[0 : self.config["recent_max"]]
+            self.config["recent_profiles"] = recents
             self.config.save()
             log.debug("Updated recent profile list")
             self.clear_messages()
@@ -106,7 +107,7 @@ class OSDDaemon(object):
             self.quit(1)
 
         if not self._registered:
-            self.daemon.request('Register: osd', success, failure)
+            self.daemon.request("Register: osd", success, failure)
 
     def on_menu_closed(self, m):
         """ Called after OSD menu is hidden from screen """
@@ -114,10 +115,10 @@ class OSDDaemon(object):
         if m.get_exit_code() == 0:
             # 0 means that user selected item and confirmed selection
             self.daemon.request(
-                'Selected: %s' % (shjoin([
-                    m.get_menuid(), m.get_selected_item_id()
-                ])),
-                lambda *a: False, lambda *a: False)
+                "Selected: %s" % (shjoin([m.get_menuid(), m.get_selected_item_id()])),
+                lambda *a: False,
+                lambda *a: False,
+            )
 
     def on_message_closed(self, m):
         hsh = m.hash()
@@ -132,11 +133,11 @@ class OSDDaemon(object):
         """ Called after on-screen keyboard is hidden from the screen """
         self._window = None
         if gd.get_exit_code() == 0:
-            self.daemon.request('Gestured: %s' % (gd.get_gesture(), ),
-                                lambda *a: False, lambda *a: False)
-        else:
             self.daemon.request(
-                'Gestured: x', lambda *a: False, lambda *a: False)
+                "Gestured: %s" % (gd.get_gesture(),), lambda *a: False, lambda *a: False
+            )
+        else:
+            self.daemon.request("Gestured: x", lambda *a: False, lambda *a: False)
 
     @staticmethod
     def _is_menu_message(m):
@@ -168,8 +169,7 @@ class OSDDaemon(object):
                 # TODO: Do this only for default position once changing
                 # TODO: is allowed
                 if len(self._visible_messages):
-                    height = self._visible_messages.values()[
-                        0].get_size().height
+                    height = self._visible_messages.values()[0].get_size().height
                     x, y = m.position
                     while y in [i.position[1] for i in self._visible_messages.values()]:
                         y -= height + 5
@@ -180,30 +180,31 @@ class OSDDaemon(object):
         elif message.startswith("OSD: keyboard"):
             if self._window:
                 log.warning(
-                    "Another OSD is already visible - refusing to show keyboard")
+                    "Another OSD is already visible - refusing to show keyboard"
+                )
             else:
                 args = shsplit(message)[1:]
                 self._window = Keyboard(self.config)
-                self._window.connect('destroy', self.on_keyboard_closed)
+                self._window.connect("destroy", self.on_keyboard_closed)
                 self._window.parse_argumets(args)
                 self._window.show()
                 self._window.use_daemon(self.daemon)
         elif message.startswith("OSD: gesture"):
             if self._window:
                 log.warning(
-                    "Another OSD is already visible - refusing to show keyboard")
+                    "Another OSD is already visible - refusing to show keyboard"
+                )
             else:
                 args = shsplit(message)[1:]
                 self._window = GestureDisplay(self.config)
                 self._window.parse_argumets(args)
                 self._window.use_daemon(self.daemon)
                 self._window.show()
-                self._window.connect('destroy', self.on_gesture_recognized)
+                self._window.connect("destroy", self.on_gesture_recognized)
         elif self._is_menu_message(message):
             args = shsplit(message)[1:]
             if self._window:
-                log.warning(
-                    "Another OSD is already visible - refusing to show menu")
+                log.warning("Another OSD is already visible - refusing to show menu")
             else:
                 if message.startswith("OSD: hmenu"):
                     self._window = HorizontalMenu()
@@ -217,7 +218,7 @@ class OSDDaemon(object):
                     self._window = Dialog()
                 else:
                     self._window = Menu()
-                self._window.connect('destroy', self.on_menu_closed)
+                self._window.connect("destroy", self.on_menu_closed)
                 self._window.use_config(self.config)
                 try:
                     if self._window.parse_argumets(args):
@@ -233,12 +234,11 @@ class OSDDaemon(object):
         elif message.startswith("OSD: area"):
             args = shsplit(message)[1:]
             if self._window:
-                log.warning(
-                    "Another OSD is already visible - refusing to show area")
+                log.warning("Another OSD is already visible - refusing to show area")
             else:
                 args = shsplit(message)[1:]
                 self._window = Area()
-                self._window.connect('destroy', self.on_keyboard_closed)
+                self._window.connect("destroy", self.on_keyboard_closed)
                 if self._window.parse_argumets(args):
                     self._window.show()
                 else:
@@ -264,7 +264,11 @@ class OSDDaemon(object):
         """
         to_destroy = [] + self._visible_messages.values()
         for m in to_destroy:
-            if not only_long_lasting or m.timeout <= 0 or m.timeout > OSDAction.DEFAULT_TIMEOUT * 2:
+            if (
+                not only_long_lasting
+                or m.timeout <= 0
+                or m.timeout > OSDAction.DEFAULT_TIMEOUT * 2
+            ):
                 m.destroy()
 
     def _check_colorconfig_change(self):
@@ -272,11 +276,11 @@ class OSDDaemon(object):
         Checks if OSD color configuration is changed and re-applies CSS
         if needed.
         """
-        h = sum([hash(self.config['osd_colors'][x])
-                 for x in self.config['osd_colors']])
-        h += sum([hash(self.config['osk_colors'][x])
-                  for x in self.config['osk_colors']])
-        h += hash(self.config['osd_style'])
+        h = sum([hash(self.config["osd_colors"][x]) for x in self.config["osd_colors"]])
+        h += sum(
+            [hash(self.config["osk_colors"][x]) for x in self.config["osk_colors"]]
+        )
+        h += hash(self.config["osd_style"])
         if self._hash_of_colors != h:
             self._hash_of_colors = h
             OSDWindow._apply_css(self.config)
@@ -287,7 +291,8 @@ class OSDDaemon(object):
 
     def run(self):
         on_wayland = "WAYLAND_DISPLAY" in os.environ or not isinstance(
-            Gdk.Display.get_default(), GdkX11.X11Display)
+            Gdk.Display.get_default(), GdkX11.X11Display
+        )
         if on_wayland:
             log.error("Cannot run on Wayland")
             self.exit_code = 8
@@ -295,19 +300,20 @@ class OSDDaemon(object):
         self.daemon = DaemonManager()
         self.config = Config()
         self._check_colorconfig_change()
-        self.daemon.connect('alive', self.on_daemon_connected)
-        self.daemon.connect('dead', self.on_daemon_died)
-        self.daemon.connect('profile-changed', self.on_profile_changed)
-        self.daemon.connect('reconfigured', self.on_daemon_reconfigured)
-        self.daemon.connect('unknown-msg', self.on_unknown_message)
+        self.daemon.connect("alive", self.on_daemon_connected)
+        self.daemon.connect("dead", self.on_daemon_died)
+        self.daemon.connect("profile-changed", self.on_profile_changed)
+        self.daemon.connect("reconfigured", self.on_daemon_reconfigured)
+        self.daemon.connect("unknown-msg", self.on_unknown_message)
         self.mainloop.run()
 
 
 if __name__ == "__main__":
     from scc.tools import init_logging
     from scc.paths import get_share_path
+
     init_logging(suffix=" OSD")
-    set_logging_level('debug' in sys.argv, 'debug' in sys.argv)
+    set_logging_level("debug" in sys.argv, "debug" in sys.argv)
 
     d = OSDDaemon()
     d.run()
