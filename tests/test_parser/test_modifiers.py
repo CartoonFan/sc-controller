@@ -161,9 +161,9 @@ class TestModifiers(object):
         """
         # Without default
         a = _parse_compressed("""mode(
-			A, axis(ABS_X),
-			B, axis(ABS_Y)
-		)""")
+            A, axis(ABS_X),
+            B, axis(ABS_Y)
+        )""")
         if not isinstance(a, ModeModifier):
             raise AssertionError
         if not isinstance(a.mods[SCButtons.A], AxisAction):
@@ -173,10 +173,10 @@ class TestModifiers(object):
 
         # With default
         a = _parse_compressed("""mode(
-			A, axis(ABS_X),
-			B, axis(ABS_Y),
-			button(KEY_A)
-		)""")
+            A, axis(ABS_X),
+            B, axis(ABS_Y),
+            button(KEY_A)
+        )""")
         if not isinstance(a, ModeModifier):
             raise AssertionError
         if not isinstance(a.mods[SCButtons.A], AxisAction):

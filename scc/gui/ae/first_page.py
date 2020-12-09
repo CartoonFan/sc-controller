@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
 SC-Controller - Action Editor - First Page
@@ -73,46 +72,46 @@ MARKUP_GYRO = """
 
 
 class FirstPage(AEComponent):
-	GLADE = "ae/first_page.glade"
-	NAME = "first_page"
-	CTXS = 0
-	PRIORITY = 999
-	
-	def __init__(self, app, editor):
-		AEComponent.__init__(self, app, editor)
-	
-	def load(self):
-		if AEComponent.load(self):
-			markup = ""
-			if self.editor.get_mode() == Action.AC_PAD:
-				markup = MARKUP_PAD
-			elif self.editor.get_mode() == Action.AC_STICK:
-				markup = MARKUP_STICK
-			elif self.editor.get_mode() == Action.AC_GYRO:
-				markup = MARKUP_GYRO
-			elif self.editor.get_mode() == Action.AC_TRIGGER:
-				markup = MARKUP_TRIGGER
-			else:
-				markup = MARKUP_BUTTON
-			
-			long_names = {
-				'LPAD' : _("Left Pad"),
-				'RPAD' : _("Right Pad"),
-				'LGRIP' : _("Left Grip"),
-				'RGRIP' : _("Right Grip"),
-				'LB' : _("Left Bumper"),
-				'RB' : _("Right Bumper"),
-				'LEFT' : _("Left Trigger"),
-				'RIGHT' : _("Right Trigger"),
-				'STICK' : _("Stick"),
-			}
-			
-			markup = markup % {
-				'what' : long_names.get(nameof(self.editor.get_id()),
-								nameof(self.editor.get_id()).title())
-			}
-			self.builder.get_object("lblMarkup").set_markup(markup.strip(" \r\n\t"))
-			return True
-	
-	def on_lblMarkup_activate_link(self, trash, link):
-		self.editor.on_link(link)
+    GLADE = "ae/first_page.glade"
+    NAME = "first_page"
+    CTXS = 0
+    PRIORITY = 999
+    
+    def __init__(self, app, editor):
+        AEComponent.__init__(self, app, editor)
+    
+    def load(self):
+        if AEComponent.load(self):
+            markup = ""
+            if self.editor.get_mode() == Action.AC_PAD:
+                markup = MARKUP_PAD
+            elif self.editor.get_mode() == Action.AC_STICK:
+                markup = MARKUP_STICK
+            elif self.editor.get_mode() == Action.AC_GYRO:
+                markup = MARKUP_GYRO
+            elif self.editor.get_mode() == Action.AC_TRIGGER:
+                markup = MARKUP_TRIGGER
+            else:
+                markup = MARKUP_BUTTON
+            
+            long_names = {
+                'LPAD' : _("Left Pad"),
+                'RPAD' : _("Right Pad"),
+                'LGRIP' : _("Left Grip"),
+                'RGRIP' : _("Right Grip"),
+                'LB' : _("Left Bumper"),
+                'RB' : _("Right Bumper"),
+                'LEFT' : _("Left Trigger"),
+                'RIGHT' : _("Right Trigger"),
+                'STICK' : _("Stick"),
+            }
+            
+            markup = markup % {
+                'what' : long_names.get(nameof(self.editor.get_id()),
+                                nameof(self.editor.get_id()).title())
+            }
+            self.builder.get_object("lblMarkup").set_markup(markup.strip(" \r\n\t"))
+            return True
+    
+    def on_lblMarkup_activate_link(self, trash, link):
+        self.editor.on_link(link)
