@@ -6,7 +6,6 @@ Pythonified linux asm-generic/ioctl.h .
 https://github.com/vpelletier/python-ioctl-opt
 Licensed under GPL 2.0
 """
-
 import ctypes
 
 _IOC_NRBITS = 8

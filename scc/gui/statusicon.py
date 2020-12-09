@@ -9,9 +9,12 @@ from __future__ import unicode_literals
 import logging
 import os
 
-from gi.repository import GLib, GObject, Gtk
+from gi.repository import GLib
+from gi.repository import GObject
+from gi.repository import Gtk
 
-from scc.gui.dwsnc import IS_GNOME, IS_UNITY
+from scc.gui.dwsnc import IS_GNOME
+from scc.gui.dwsnc import IS_UNITY
 from scc.tools import _  # gettext function
 
 log = logging.getLogger("StatusIcon")

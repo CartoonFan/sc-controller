@@ -1,9 +1,9 @@
 import inspect
 
-from scc.constants import STICK, SCButtons
-from scc.special_actions import *
-
 from . import _parses_as_itself
+from scc.constants import SCButtons
+from scc.constants import STICK
+from scc.special_actions import *
 
 MENU_CLASSES = (
     MenuAction,
