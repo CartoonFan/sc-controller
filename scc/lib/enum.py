@@ -198,7 +198,7 @@ class EnumMeta(type):
                                                         first_enum)
         # save enum items into separate mapping so they don't get baked into
         # the new class
-        members = dict((k, classdict[k]) for k in classdict._member_names)
+        members = {k: classdict[k] for k in classdict._member_names}
         for name in classdict._member_names:
             del classdict[name]
 
@@ -832,7 +832,7 @@ def _convert(cls, name, module, filter, source=None):
         source = vars(source)
     else:
         source = module_globals
-    members = dict((name, value) for name, value in source.items() if filter(name))
+    members = {name: value for name, value in source.items() if filter(name)}
     cls = cls(name, members, module=module)
     cls.__reduce_ex__ = _reduce_ex_by_name
     module_globals.update(cls.__members__)
