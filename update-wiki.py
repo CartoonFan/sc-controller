@@ -45,13 +45,13 @@ def main():
     try_run("git reset master")
 
     merge(
-        '../docs/actions.md',
-        'Custom-Action-Examples-and-Explanations.md',
+        "../docs/actions.md",
+        "Custom-Action-Examples-and-Explanations.md",
         '# <a name="actions">',
-        '# <a name="examples2">'
+        '# <a name="examples2">',
     )
 
-    try_run("git commit -a -m \"Updated wiki from docs\"")
+    try_run('git commit -a -m "Updated wiki from docs"')
 
 
 if __name__ == "__main__":
