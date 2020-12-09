@@ -383,10 +383,10 @@ class AxisActionComponent(AEComponent, TimerManager):
 		if "window-" in key:
 			cls = WinAreaAction
 			self.relative_area = False
-		elif "screensize" == key:
+		elif key == "screensize":
 			cls = RelAreaAction
 			self.relative_area = True
-		elif "windowsize" == key:
+		elif key == "windowsize":
 			cls = RelWinAreaAction
 			self.relative_area = True
 		else: # "screen" in key
