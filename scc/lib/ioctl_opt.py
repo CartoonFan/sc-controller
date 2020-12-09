@@ -6,7 +6,6 @@ Pythonified linux asm-generic/ioctl.h .
 https://github.com/vpelletier/python-ioctl-opt
 Licensed under GPL 2.0
 """
-
 import ctypes
 
 _IOC_NRBITS = 8
@@ -28,41 +27,60 @@ IOC_NONE = 0
 IOC_WRITE = 1
 IOC_READ = 2
 
+
 def IOC(dir, type, nr, size):
-    assert dir <= _IOC_DIRMASK, dir
-    assert type <= _IOC_TYPEMASK, type
-    assert nr <= _IOC_NRMASK, nr
-    assert size <= _IOC_SIZEMASK, size
-    return (dir << _IOC_DIRSHIFT) | (type << _IOC_TYPESHIFT) | (nr << _IOC_NRSHIFT) | (size << _IOC_SIZESHIFT)
+    if dir > _IOC_DIRMASK:
+        raise AssertionError(dir)
+    if type > _IOC_TYPEMASK:
+        raise AssertionError(type)
+    if nr > _IOC_NRMASK:
+        raise AssertionError(nr)
+    if size > _IOC_SIZEMASK:
+        raise AssertionError(size)
+    return ((dir << _IOC_DIRSHIFT)
+            | (type << _IOC_TYPESHIFT)
+            | (nr << _IOC_NRSHIFT)
+            | (size << _IOC_SIZESHIFT))
+
 
 def IOC_TYPECHECK(t):
     result = ctypes.sizeof(t)
-    assert result <= _IOC_SIZEMASK, result
+    if result > _IOC_SIZEMASK:
+        raise AssertionError(result)
     return result
+
 
 def IO(type, nr):
     return IOC(IOC_NONE, type, nr, 0)
 
+
 def IOR(type, nr, size):
     return IOC(IOC_READ, type, nr, IOC_TYPECHECK(size))
+
 
 def IOW(type, nr, size):
     return IOC(IOC_WRITE, type, nr, IOC_TYPECHECK(size))
 
+
 def IORW(type, nr, size):
     return IOC(IOC_READ | IOC_WRITE, type, nr, IOC_TYPECHECK(size))
+
 
 def IOC_DIR(nr):
     return (nr >> _IOC_DIRSHIFT) & _IOC_DIRMASK
 
+
 def IOC_TYPE(nr):
     return (nr >> _IOC_TYPESHIFT) & _IOC_TYPEMASK
+
 
 def IOC_NR(nr):
     return (nr >> _IOC_NRSHIFT) & _IOC_NRMASK
 
+
 def IOC_SIZE(nr):
     return (nr >> _IOC_SIZESHIFT) & _IOC_SIZEMASK
+
 
 IOC_IN = IOC_WRITE << _IOC_DIRSHIFT
 IOC_OUT = IOC_READ << _IOC_DIRSHIFT

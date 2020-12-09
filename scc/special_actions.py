@@ -79,7 +79,8 @@ class ShellCommandAction(Action, SpecialAction):
     def __init__(self, command):
         if type(command) == str:
             command = command.decode("unicode_escape")
-        assert type(command) == unicode
+        if type(command) != unicode:
+            raise AssertionError
         Action.__init__(self, command)
         self.command = command
 

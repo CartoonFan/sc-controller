@@ -164,7 +164,8 @@ class TestInputs(object):
         state = ZERO_STATE._replace(buttons=SCButtons.LPADTOUCH,
                                     lpad_x=STICK_PAD_MIN)
         mapper.input(mapper.controller, ZERO_STATE, state)
-        assert Keys.KEY_A in mapper.keyboard.pressed
+        if Keys.KEY_A not in mapper.keyboard.pressed:
+            raise AssertionError
         mapper.input(mapper.controller, state, ZERO_STATE)
         # - S
         state = ZERO_STATE._replace(buttons=SCButtons.LPADTOUCH,
@@ -224,7 +225,8 @@ class TestInputs(object):
         # Press single button
         state = ZERO_STATE._replace(buttons=SCButtons.A)
         mapper.input(mapper.controller, ZERO_STATE, state)
-        assert Keys.KEY_Y in mapper.keyboard.pressed
+        if Keys.KEY_Y not in mapper.keyboard.pressed:
+            raise AssertionError
         mapper.input(mapper.controller, state, ZERO_STATE)
         assert Keys.KEY_Y not in mapper.keyboard.pressed
 
