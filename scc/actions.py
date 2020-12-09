@@ -451,7 +451,7 @@ class RangeOP(object):
 			raise ValueError("'%s' is not trigger nor axis" % (nameof(what), ))
 	
 	def cmp_or(self, mapper):
-		return any([ x(mapper) for x in self.children ])
+		return any(x(mapper) for x in self.children)
 	
 	def cmp_gt(self, mapper):
 		if mapper.state is None:
@@ -2101,7 +2101,7 @@ class RingAction(MultichildAction):
 	def describe(self, context):
 		if self.name: return self.name
 		lines = [ x.describe(Action.AC_BUTTON) for x in self.actions if x ]
-		if any(["\n" in l for l in lines ]):
+		if any("\n" in l for l in lines):
 		    return " / ".join([ l for l in lines ])
 		return "\n".join([ l for l in lines ])
 	

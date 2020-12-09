@@ -92,14 +92,14 @@ class ModeshiftEditor(Editor):
 		model = cbButtonChooser.get_model()
 		model.clear()
 		for item, text in self.BUTTONS:
-			if any([ x[0] == item for x in self.actions[self.current_page] ]):
+			if any(x[0] == item for x in self.actions[self.current_page]):
 				# Skip already added buttons
 				continue
 			if type(item) in (str, unicode):
 				# Special case for soft pull items
 				button = getattr(SCButtons, item.split(" ")[-1])
-				if any([ (isinstance(x, RangeOP) and x.what == button)
-							for x in self.actions[self.current_page] ]):
+				if any((isinstance(x, RangeOP) and x.what == button)
+							for x in self.actions[self.current_page]):
 					# Skip already added soft pulls
 					continue
 			
