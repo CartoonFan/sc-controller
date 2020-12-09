@@ -99,7 +99,8 @@ class RememberingDummy(Dummy):
 
     def pressEvent(self, keys):
         for k in keys:
-            assert k not in self.pressed
+            if k in self.pressed:
+                raise AssertionError
             self.pressed.add(k)
 
     def releaseEvent(self, keys=None):
@@ -120,9 +121,11 @@ class TestInputs(object):
             parser.restart("button(Keys.KEY_ENTER)")).parse()
         state = ZERO_STATE._replace(buttons=SCButtons.A)
         mapper.input(mapper.controller, ZERO_STATE, state)
-        assert Keys.KEY_ENTER in mapper.keyboard.pressed
+        if Keys.KEY_ENTER not in mapper.keyboard.pressed:
+            raise AssertionError
         mapper.input(mapper.controller, state, state._replace(buttons=0))
-        assert Keys.KEY_ENTER not in mapper.keyboard.pressed
+        if Keys.KEY_ENTER in mapper.keyboard.pressed:
+            raise AssertionError
 
     @input_test
     def test_trackball(self, mapper):
@@ -141,13 +144,15 @@ class TestInputs(object):
             new_state = state._replace(buttons=SCButtons.LPADTOUCH, lpad_x=x)
             mapper.input(mapper.controller, state, new_state)
             state = new_state
-        assert mapper.mouse.scroll_x == -21000.0
+        if mapper.mouse.scroll_x != -21000.0:
+            raise AssertionError
         # Release left pad
         mapper.input(mapper.controller, state, ZERO_STATE)
         # 'Wait' for 2s
         for x in xrange(20):
             mapper.input(mapper.controller, ZERO_STATE, ZERO_STATE)
-        assert int(mapper.mouse.scroll_x) == -24479
+        if int(mapper.mouse.scroll_x) != -24479:
+            raise AssertionError
 
     @input_test
     def test_dpad(self, mapper):
@@ -171,13 +176,15 @@ class TestInputs(object):
         state = ZERO_STATE._replace(buttons=SCButtons.LPADTOUCH,
                                     lpad_y=STICK_PAD_MIN)
         mapper.input(mapper.controller, ZERO_STATE, state)
-        assert Keys.KEY_S in mapper.keyboard.pressed
+        if Keys.KEY_S not in mapper.keyboard.pressed:
+            raise AssertionError
         mapper.input(mapper.controller, state, ZERO_STATE)
         # - D
         state = ZERO_STATE._replace(buttons=SCButtons.LPADTOUCH,
                                     lpad_x=STICK_PAD_MAX)
         mapper.input(mapper.controller, ZERO_STATE, state)
-        assert Keys.KEY_D in mapper.keyboard.pressed
+        if Keys.KEY_D not in mapper.keyboard.pressed:
+            raise AssertionError
         mapper.input(mapper.controller, state, ZERO_STATE)
 
     @input_test
@@ -197,22 +204,26 @@ class TestInputs(object):
             new_state = state._replace(buttons=SCButtons.RPADTOUCH, rpad_x=x)
             mapper.input(mapper.controller, state, new_state)
             state = new_state
-        assert mapper.gamepad.axes[Axes.ABS_RX] == 3000
+        if mapper.gamepad.axes[Axes.ABS_RX] != 3000:
+            raise AssertionError
         # Release left pad
         mapper._tick_rate = 0.001
         mapper.input(mapper.controller, state, ZERO_STATE)
         # 'Wait' for 1s
         for x in xrange(100):
             mapper.input(mapper.controller, ZERO_STATE, ZERO_STATE)
-        assert mapper.gamepad.axes[Axes.ABS_RX] == 3510
+        if mapper.gamepad.axes[Axes.ABS_RX] != 3510:
+            raise AssertionError
         # 'Wait' for another 0.5s
         for x in xrange(50):
             mapper.input(mapper.controller, ZERO_STATE, ZERO_STATE)
-        assert mapper.gamepad.axes[Axes.ABS_RX] == 1570
+        if mapper.gamepad.axes[Axes.ABS_RX] != 1570:
+            raise AssertionError
         # 'Wait' for long time so stick recenters
         for x in xrange(100):
             mapper.input(mapper.controller, ZERO_STATE, ZERO_STATE)
-        assert mapper.gamepad.axes[Axes.ABS_RX] == 0
+        if mapper.gamepad.axes[Axes.ABS_RX] != 0:
+            raise AssertionError
 
     @input_test
     def test_modeshift(self, mapper):
@@ -228,33 +239,43 @@ class TestInputs(object):
         if Keys.KEY_Y not in mapper.keyboard.pressed:
             raise AssertionError
         mapper.input(mapper.controller, state, ZERO_STATE)
-        assert Keys.KEY_Y not in mapper.keyboard.pressed
+        if Keys.KEY_Y in mapper.keyboard.pressed:
+            raise AssertionError
 
         # Press modeshifting button
         state = ZERO_STATE._replace(buttons=SCButtons.B)
         mapper.input(mapper.controller, ZERO_STATE, state)
-        assert Keys.KEY_Y not in mapper.keyboard.pressed
-        assert Keys.KEY_V not in mapper.keyboard.pressed
+        if Keys.KEY_Y in mapper.keyboard.pressed:
+            raise AssertionError
+        if Keys.KEY_V in mapper.keyboard.pressed:
+            raise AssertionError
 
         # Press button again
         _state, state = state, state._replace(buttons=SCButtons.B
                                               | SCButtons.A)
         mapper.input(mapper.controller, _state, state)
-        assert Keys.KEY_V in mapper.keyboard.pressed
-        assert Keys.KEY_Y not in mapper.keyboard.pressed
+        if Keys.KEY_V not in mapper.keyboard.pressed:
+            raise AssertionError
+        if Keys.KEY_Y in mapper.keyboard.pressed:
+            raise AssertionError
 
         # Release modeshifting button
         _state, state = state, state._replace(buttons=SCButtons.A)
         mapper.input(mapper.controller, _state, state)
-        assert Keys.KEY_V in mapper.keyboard.pressed
-        assert Keys.KEY_Y not in mapper.keyboard.pressed
+        if Keys.KEY_V not in mapper.keyboard.pressed:
+            raise AssertionError
+        if Keys.KEY_Y in mapper.keyboard.pressed:
+            raise AssertionError
 
         # Release original button and press it again
         _state, state = state, state._replace(buttons=0)
         mapper.input(mapper.controller, _state, state)
-        assert Keys.KEY_V not in mapper.keyboard.pressed
-        assert Keys.KEY_Y not in mapper.keyboard.pressed
+        if Keys.KEY_V in mapper.keyboard.pressed:
+            raise AssertionError
+        if Keys.KEY_Y in mapper.keyboard.pressed:
+            raise AssertionError
 
         _state, state = state, state._replace(buttons=SCButtons.A)
         mapper.input(mapper.controller, _state, state)
-        assert Keys.KEY_Y in mapper.keyboard.pressed
+        if Keys.KEY_Y not in mapper.keyboard.pressed:
+            raise AssertionError
