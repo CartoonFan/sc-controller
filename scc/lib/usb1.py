@@ -2562,7 +2562,7 @@ class USBContext(object):
 
         def wrapped_callback(context_p, device_p, event, _):
             if addressof(context_p.contents) != addressof(
-                self.__context_p.contents):
+                    self.__context_p.contents):
                 raise AssertionError(context_p, self.__context_p)
             device = USBDevice(
                 self,
