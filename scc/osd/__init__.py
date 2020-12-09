@@ -171,15 +171,8 @@ class OSDWindow(Gtk.Window):
         width, height = self.get_window_size()
         geometry = self.get_active_screen_geometry()
         if geometry:
-            if x < 0:
-                x = x + geometry.x + geometry.width - width
-            else:
-                x = x + geometry.x
-            if y < 0:
-                y = y + geometry.y + geometry.height - height
-            else:
-                y = geometry.y + y
-        
+            x = x + geometry.x + geometry.width - width if x < 0 else x + geometry.x
+            y = y + geometry.y + geometry.height - height if y < 0 else geometry.y + y
         return x, y
     
     

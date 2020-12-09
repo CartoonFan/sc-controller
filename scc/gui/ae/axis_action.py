@@ -80,41 +80,44 @@ class AxisActionComponent(AEComponent, TimerManager):
     
     
     def set_action(self, mode, action):
-        if self.handles(mode, action):
-            cb = self.builder.get_object("cbAxisOutput")
-            if isinstance(action, AreaAction):
-                self.load_area_action(action)
-                self.set_cb(cb, "area", 2)
-                self.update_osd_area(action)
-                return
-            self.update_osd_area(None)
-            if isinstance(action, MouseAction):
+        if not self.handles(mode, action):
+            return
+        cb = self.builder.get_object("cbAxisOutput")
+        if isinstance(action, AreaAction):
+            self.load_area_action(action)
+            self.set_cb(cb, "area", 2)
+            self.update_osd_area(action)
+            return
+        self.update_osd_area(None)
+        if isinstance(action, MouseAction):
+            self.load_mouse_action(action)
+        elif isinstance(action, CircularModifier):
+            self.load_circular_action(action)
+        elif isinstance(action, ButtonAction):
+            self.load_button_action(action)
+        elif isinstance(action, XYAction):
+            if self.editor.friction > 0:
                 self.load_mouse_action(action)
-            elif isinstance(action, CircularModifier):
-                self.load_circular_action(action)
-            elif isinstance(action, ButtonAction):
-                self.load_button_action(action)
-            elif isinstance(action, XYAction):
-                if self.editor.friction > 0:
-                    self.load_mouse_action(action)
-                else:
-                    p = [ None, None ]
-                    for x in (0, 1):
-                        if len(action.actions[0].strip().parameters) >= x:
-                            if len(action.actions[x].strip().parameters) > 0:
-                                p[x] = action.actions[x].strip().parameters[0]
-                    if p[0] == Axes.ABS_X and p[1] == Axes.ABS_Y:
-                        self.set_cb(cb, "lstick", 2)
-                    elif p[0] == Axes.ABS_RX and p[1] == Axes.ABS_RY:
-                        if isinstance(action, RelXYAction):
-                            self.set_cb(cb, "rstick_rel", 2)
-                        else:
-                            self.set_cb(cb, "rstick", 2)
-                    elif p[0] == Rels.REL_HWHEEL and p[1] == Rels.REL_WHEEL:
-                        self.set_cb(cb, "wheel_pad", 2)
-                        self.set_cb(cb, "wheel_stick", 2)
             else:
-                self.set_cb(cb, "none", 2)
+                p = [ None, None ]
+                for x in (0, 1):
+                    if (
+                        len(action.actions[0].strip().parameters) >= x
+                        and len(action.actions[x].strip().parameters) > 0
+                    ):
+                        p[x] = action.actions[x].strip().parameters[0]
+                if p[0] == Axes.ABS_X and p[1] == Axes.ABS_Y:
+                    self.set_cb(cb, "lstick", 2)
+                elif p[0] == Axes.ABS_RX and p[1] == Axes.ABS_RY:
+                    if isinstance(action, RelXYAction):
+                        self.set_cb(cb, "rstick_rel", 2)
+                    else:
+                        self.set_cb(cb, "rstick", 2)
+                elif p[0] == Rels.REL_HWHEEL and p[1] == Rels.REL_WHEEL:
+                    self.set_cb(cb, "wheel_pad", 2)
+                    self.set_cb(cb, "wheel_stick", 2)
+        else:
+            self.set_cb(cb, "none", 2)
     
     
     def update_osd_area(self, action):
@@ -415,9 +418,11 @@ class AxisActionComponent(AEComponent, TimerManager):
         if isinstance(action, XYAction):
             p = [ None, None ]
             for x in (0, 1):
-                if len(action.actions[0].strip().parameters) >= x:
-                    if len(action.actions[x].strip().parameters) > 0:
-                        p[x] = action.actions[x].strip().parameters[0]
+                if (
+                    len(action.actions[0].strip().parameters) >= x
+                    and len(action.actions[x].strip().parameters) > 0
+                ):
+                    p[x] = action.actions[x].strip().parameters[0]
             if p[0] == Axes.ABS_X and p[1] == Axes.ABS_Y:
                 return True
             elif p[0] == Axes.ABS_RX and p[1] == Axes.ABS_RY:

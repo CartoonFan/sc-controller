@@ -90,10 +90,7 @@ class VDFProfile(Profile):
             return MultiAction.make(*[ self.parse_action(x) for x in lst_or_str ])
         # Split string into binding type, name and parameters
         binding, params = lst_or_str.split(" ", 1)
-        if "," in params:
-            params, name = params.split(",", 1)
-        else:
-            params, name = params, None
+        params, name = params.split(",", 1) if "," in params else (params, None)
         params = params.split(" ")
         if name:
             name = name.strip()
@@ -138,7 +135,7 @@ class VDFProfile(Profile):
                 cpa = ChangeProfileAction("action_set:%s" % (id,))
                 self.action_set_switches.add(cpa)
                 return cpa
-            
+
             log.warning("Ignoring controller_action '%s' binding" % (params[0],))
             return NoAction()
         elif binding == "mouse_wheel":
@@ -248,7 +245,7 @@ class VDFProfile(Profile):
             normal, double, hold = act_actions
             if not double and not hold:
                 return normal
-            if hold and not double:
+            if not double:
                 return HoldModifier(hold, normal)
             action = DoubleclickModifier(double, normal)
             action.holdaction = hold
@@ -284,19 +281,15 @@ class VDFProfile(Profile):
         Parses output (group) from vdf profile.
         Returns Action.
         """
-        if not "mode" in group:
+        if "mode" not in group:
             raise ParseError("Group without mode")
         mode = group["mode"]
         inputs = VDFProfile.get_inputs(group)
-        
+
         settings = group["settings"] if "settings" in group else {}
         for o in ("output_trigger", "output_joystick"):
             if o in settings:
-                if int(settings[o]) <= 1:
-                    side = Profile.LEFT
-                else:
-                    side = Profile.RIGHT
-        
+                side = Profile.LEFT if int(settings[o]) <= 1 else Profile.RIGHT
         if mode == "dpad":
             keys = []
             for k in ("dpad_north", "dpad_south", "dpad_east", "dpad_west"):
@@ -338,20 +331,18 @@ class VDFProfile(Profile):
         elif mode == "touch_menu":
             # Touch menu is converted to GridMenu
             items = []
-            next_item_id = 1
-            for k in inputs:
+            for next_item_id, k in enumerate(inputs, start=1):
                 action = self.parse_button(inputs[k])
                 items.append(MenuItem(
                     "item_%s" % (next_item_id,),
                     action.describe(Action.AC_BUTTON),
                     action
                 ))
-                next_item_id += 1
             # Menu is stored in profile, with generated ID
             menu_id = "menu_%s" % (self.next_menu_id,)
             self.next_menu_id += 1
             self.menus[menu_id] = MenuData(*items)
-            
+
             action = GridMenuAction(menu_id,
                 'LEFT' if side == Profile.LEFT else 'RIGHT',
                 SCButtons.LPAD if side == Profile.LEFT else SCButtons.RPAD
@@ -379,12 +370,12 @@ class VDFProfile(Profile):
             if "click" in inputs:
                 actions.append(TriggerAction(TRIGGER_CLICK,
                     self.parse_button(inputs["click"])))
-            
+
             if side == Profile.LEFT:
                 actions.append(AxisAction(Axes.ABS_Z))
             else:
                 actions.append(AxisAction(Axes.ABS_RZ))
-            
+
             action = MultiAction.make(*actions)
         elif mode == "mouse_region":
             # Read value and assume dafaults
@@ -404,11 +395,11 @@ class VDFProfile(Profile):
             x2 = min(1.0, x + (w * VDFProfile.REGION_IMPORT_FACTOR))
             y1 = max(0.0, y - (h * VDFProfile.REGION_IMPORT_FACTOR))
             y2 = min(1.0, y + (h * VDFProfile.REGION_IMPORT_FACTOR))
-            
+
             action = RelAreaAction(x1, y1, x2, y2)
         else:
             raise ParseError("Unknown mode: '%s'" % (group["mode"],))
-        
+
         action = VDFProfile.parse_modifiers(group, action, side)
         return action
     
@@ -439,9 +430,11 @@ class VDFProfile(Profile):
     def parse_input_binding(self, data, group_id, binding):
         group = VDFProfile.find_group(data, group_id)
         if group and "mode" in group:
-            if binding.startswith("switch"):
-                self.parse_switches(group)
-            elif binding.startswith("button_diamond"):
+            if (
+                binding.startswith("switch")
+                or not binding.startswith("switch")
+                and binding.startswith("button_diamond")
+            ):
                 self.parse_switches(group)
             else:
                 if binding.startswith("right_"):
@@ -520,19 +513,19 @@ class VDFProfile(Profile):
     def _load_preset(data, profile, preset):
         profile.modeshifts = {}
         profile.modeshift_buttons = {}
-        if not 'group_source_bindings' in preset:
+        if 'group_source_bindings' not in preset:
             # Empty preset
             return
-            
+
         gsb = preset['group_source_bindings']
         for group_id in gsb:
             binding = gsb[group_id]
             if not binding.endswith("inactive"):
                 profile.parse_input_binding(data, group_id, binding)
-        
+
         if "switch_bindings" in preset:
             profile.parse_switches(preset['switch_bindings'])
-        
+
         for b in profile.modeshift_buttons:
             if profile.modeshift_buttons[b] in profile.modeshifts:
                 # Should be always

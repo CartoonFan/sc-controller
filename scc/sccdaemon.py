@@ -88,15 +88,14 @@ class SCCDaemon(Daemon):
                         to_init.append(mod)
                 else:
                     log.warn("Skipping disabled driver '%s'", modname)
-        
+
         from scc.drivers import MOD_INIT_ORDER as order
         index_fn = lambda n: order.index(n) if n in order else 1024
         sort_fn = lambda m: index_fn(m.__name__)
-        
+
         for mod in sorted(to_init, key=sort_fn):
-            if getattr(mod, "init")(self, cfg):
-                if hasattr(mod, "start"):
-                    self._to_start.add(getattr(mod, "start"))
+            if getattr(mod, "init")(self, cfg) and hasattr(mod, "start"):
+                self._to_start.add(getattr(mod, "start"))
     
     
     def init_default_mapper(self):
@@ -586,7 +585,7 @@ class SCCDaemon(Daemon):
         """
         with self.lock:
             self.errors = [ (_id, error) for (_id, error) in self.errors if _id != id ]
-            if len(self.errors) == 0:
+            if not self.errors:
                 self._send_to_all(b"Ready.\n")
     
     
@@ -607,7 +606,7 @@ class SCCDaemon(Daemon):
         Sends info about current profile using provided method.
         Returns True if mapper is default_mapper.
         """
-        mapper = mapper if mapper else controller.mapper
+        mapper = mapper or controller.mapper
         if controller:
             method(("Controller profile: %s %s\n" % (
                 controller.get_id(),
@@ -1009,13 +1008,11 @@ class SCCDaemon(Daemon):
         # TODO: Probably move to mapper
         is_locked = (lambda a: isinstance(a, LockedAction) or
             (isinstance(a, ObservingAction) and isinstance(a.original_action, LockedAction)))
-        
+
         if what == STICK:
             if is_locked(mapper.profile.buttons[SCButtons.STICKPRESS]):
                 return False
-            if is_locked(mapper.profile.stick):
-                return False
-            return True
+            return not is_locked(mapper.profile.stick)
         if what == SCButtons.LT:
             return not is_locked(mapper.profile.triggers[LEFT])
         if what == SCButtons.RT:
@@ -1045,10 +1042,10 @@ class SCCDaemon(Daemon):
             r = callback(mapper.profile.buttons[what], *args)
             mapper.profile.buttons[what] = r
         elif what in (LEFT, RIGHT):
-            if what == LEFT:
-                mapper.buttons &= ~SCButtons.LPADTOUCH
-            else:
-                mapper.buttons &= ~SCButtons.RPADTOUCH
+            mapper.buttons &= (
+                ~SCButtons.LPADTOUCH if what == LEFT else ~SCButtons.RPADTOUCH
+            )
+
             a = callback(mapper.profile.pads[what], *args)
             a.whole(mapper, 0, 0, what)
             mapper.profile.pads[what] = a

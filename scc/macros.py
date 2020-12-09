@@ -68,15 +68,14 @@ class Macro(Action):
                 # Repeating
                 self._current = [] + self.actions
                 mapper.schedule(self._release.delay_after, self.timer)
-                self._release = None
             elif len(self._current) == 0:
                 # Finished
                 self._current = None
-                self._release = None
             else:
                 # Schedule for next action
                 mapper.schedule(self._release.delay_after, self.timer)
-                self._release = None
+
+            self._release = None
     
     
     def cancel(self, mapper):
@@ -152,23 +151,24 @@ class Type(Macro):
         params = []
         shift = False
         for letter in string:
-            if (letter >= 'a' and letter <= 'z') or (letter >= '0' and letter <= '9'):
-                if hasattr(Keys, ("KEY_" + letter).upper()):
-                    if shift:
-                        params.append(ReleaseAction(Keys.KEY_LEFTSHIFT))
-                        shift = False
-                    params.append(ButtonAction(getattr(Keys, ("KEY_" + letter).upper())))
-                    continue
+            if (
+                (letter >= 'a' and letter <= 'z')
+                or (letter >= '0' and letter <= '9')
+            ) and hasattr(Keys, ("KEY_" + letter).upper()):
+                if shift:
+                    params.append(ReleaseAction(Keys.KEY_LEFTSHIFT))
+                    shift = False
+                params.append(ButtonAction(getattr(Keys, ("KEY_" + letter).upper())))
+                continue
             if letter == ' ':
                 params.append(ButtonAction(Keys.KEY_SPACE))
                 continue
-            if letter >= 'A' and letter <= 'Z':
-                if hasattr(Keys, "KEY_" + letter):
-                    if not shift:
-                        params.append(PressAction(Keys.KEY_LEFTSHIFT))
-                        shift = True
-                    params.append(ButtonAction(getattr(Keys, "KEY_" + letter)))
-                    continue
+            if letter >= 'A' and letter <= 'Z' and hasattr(Keys, "KEY_" + letter):
+                if not shift:
+                    params.append(PressAction(Keys.KEY_LEFTSHIFT))
+                    shift = True
+                params.append(ButtonAction(getattr(Keys, "KEY_" + letter)))
+                continue
             raise ValueError("Invalid character for type(): '%s'" % (letter,))
         Macro.__init__(self, *params)
         self.letters = string
@@ -371,7 +371,10 @@ class TapAction(PressAction):
     
     
     def _rel_tap_press(self, mapper):
-        if not self.button in mapper.pressed or mapper.pressed[self.button] < self.COUNTER_VAL:
+        if (
+            self.button not in mapper.pressed
+            or mapper.pressed[self.button] < self.COUNTER_VAL
+        ):
             # Something else tried to _release_ button in meanwhile, bail out
             mapper.pressed[self.button] = 1
             ButtonAction._button_release(mapper, self.button)
@@ -380,7 +383,7 @@ class TapAction(PressAction):
             # Something else pressed button in meanwhile, bail out
             mapper.pressed[self.button] = 1
             return self._bailout()
-        
+
         a, self._lst = self._lst[0], self._lst[1:]
         if a:
             mapper.pressed[self.button] = 0

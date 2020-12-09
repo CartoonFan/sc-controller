@@ -119,15 +119,14 @@ def get_raw_report_descriptor(devfile):
 
 # Convert items to unsigned char, short, or int
 def _it2u(it):
-    if len(it) == 2:    # unsigned char
-        n = it[1]
+    if len(it) == 2:# unsigned char
+        return it[1]
     elif len(it) == 3:  # unsigned short
-        n = int('{:02x}{:02x}'.format(it[2], it[1]), 16)
+        return int('{:02x}{:02x}'.format(it[2], it[1]), 16)
     elif len(it) == 5:  # unsigned int
-        n = int('{:02x}{:02x}{:02x}{:02x}'.format(it[4], it[3], it[2], it[1]), 16)
+        return int('{:02x}{:02x}{:02x}{:02x}'.format(it[4], it[3], it[2], it[1]), 16)
     else:
-        n = 0
-    return n
+        return 0
 
 
 # Convert items to signed char, short, or int
@@ -158,7 +157,7 @@ def parse_item(it, page):
         isize = it[1]
         itag = it[3] * 256 + it[2]
         raise ValueError("Not implemented: long item!!")
-    
+
     if itype == 0x00:                   # main items
         item = enum_or_reserved(MainItem, itag)
         if item == MainItem.Collection:
@@ -172,7 +171,7 @@ def parse_item(it, page):
             )
         # EndCollection or reserved
         return item,
-    elif itype == 0x04:                 # global items
+    elif itype == 0x04:             # global items
         item = enum_or_reserved(GlobalItem, itag)
         if item == GlobalItem.UsagePage:
             page = enum_or_reserved(UsagePage, _it2u(it))
@@ -194,8 +193,7 @@ def parse_item(it, page):
             if len(it) > 3:
                 if it[3] & 0x0F: return item, unit_type, Unit.Temperature
                 if it[3] & 0xF0: return item, unit_type, Unit.Current
-            if len(it) > 4:
-                if it[4] & 0x0F: return item, unit_type, Unit.LuminousIntensity
+            if len(it) > 4 and it[4] & 0x0F: return item, unit_type, Unit.LuminousIntensity
             return item, unit_type, ReservedItem(it[1])
         elif item in (GlobalItem.LogicalMaximum, GlobalItem.PhysicalMaximum):
             # unsigned values
@@ -208,7 +206,7 @@ def parse_item(it, page):
             return item, it[1]
         else:
             return item
-    elif itype == 0x08:                 # local items
+    elif itype == 0x08:             # local items
         item = enum_or_reserved(LocalItem, itag)
         if item == LocalItem.Usage:
             if page is SensorPage and isize == 2:   # sensor page & usage size is 2
@@ -223,7 +221,7 @@ def parse_item(it, page):
                     if it[1] & 0xf0 == 0x50:
                         return (item, enum_or_reserved(ModifierI2a, mdf),
                                 enum_or_reserved(MotionSensor, it[1]))
-                    elif it[1] & 0xf0 == 0x70 or it[1] & 0xf0 == 0x80:
+                    elif it[1] & 0xF0 in [0x70, 0x80]:
                         return (item, enum_or_reserved(ModifierI2a, mdf),
                                 enum_or_reserved(OrientationSensor, it[1]))
                     elif it[1] & 0xf0 == 0xD0:
@@ -294,14 +292,11 @@ def parse_report_descriptor(data, flat_list=False):
             col, stack = stack[0], stack[:-1]
         elif item[0] is GlobalItem.UsagePage:
             page = item[1]
-            if item[1] in page_to_enum:
-                page = page_to_enum[item[1]]
-            else:
-                page = GenericDesktopPage
+            page = page_to_enum[item[1]] if item[1] in page_to_enum else GenericDesktopPage
             col.append(item)
         else:
             col.append(item)
-    
+
     return rv
 
 

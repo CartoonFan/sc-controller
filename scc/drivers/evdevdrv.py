@@ -336,18 +336,15 @@ def parse_axis(axis):
     if (max >= 0 and min >= 0):
         offset = 1
     if max > min:
-        scale = (-2.0 / (min-max)) if min != max else 1.0
-        deadzone = abs(float(deadzone) * scale)
         offset *= -1.0
-    else:
-        scale = (-2.0 / (min-max)) if min != max else 1.0
-        deadzone = abs(float(deadzone) * scale)
+    scale = (-2.0 / (min-max)) if min != max else 1.0
+    deadzone = abs(float(deadzone) * scale)
     if axis in TRIGGERS:
         clamp_min = TRIGGER_MIN
         clamp_max = TRIGGER_MAX
         offset += 1.0
         scale *= 0.5
-    
+
     return AxisCalibrationData(scale, offset, center, clamp_min, clamp_max, deadzone)
 
 

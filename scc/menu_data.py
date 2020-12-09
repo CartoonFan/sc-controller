@@ -56,8 +56,7 @@ class MenuData(object):
         """
         for item in self:
             if hasattr(item, "action") and item.action:
-                for i in item.action.get_all_actions():
-                    yield i
+                yield from item.action.get_all_actions()
     
     
     def get_by_id(self, id):
@@ -77,10 +76,7 @@ class MenuData(object):
     
     def encode(self):
         """ Returns menu data as dict storable in json (profile) file """
-        rv = []
-        for i in self:
-            rv.append(i.encode())
-        return rv
+        return [i.encode() for i in self]
     
     
     @staticmethod
