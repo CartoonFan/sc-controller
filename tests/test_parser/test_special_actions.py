@@ -19,8 +19,8 @@ class TestSpecialActions(object):
 					# tests merged together under weird names
 					continue
 				method_name = "test_%s" % (cls.COMMAND,)
-				assert hasattr(self, method_name), \
-					"There is no test for %s" % (cls.COMMAND)
+				if not hasattr(self, method_name):
+					raise AssertionError("There is no test for %s" % (cls.COMMAND))
 	
 	
 	def test_profile(self):
@@ -28,7 +28,8 @@ class TestSpecialActions(object):
 		Tests if ChangeProfileAction can be converted to string and parsed
 		back to same action.
 		"""
-		assert _parses_as_itself(ChangeProfileAction("profile"))
+		if not _parses_as_itself(ChangeProfileAction("profile")):
+			raise AssertionError
 	
 	
 	def test_shell(self):
@@ -36,7 +37,8 @@ class TestSpecialActions(object):
 		Tests if ShellAction can be converted to string and parsed
 		back to same action.
 		"""
-		assert _parses_as_itself(ShellCommandAction("ls -la"))
+		if not _parses_as_itself(ShellCommandAction("ls -la")):
+			raise AssertionError
 	
 	
 	def test_turnoff(self):
@@ -44,7 +46,8 @@ class TestSpecialActions(object):
 		Tests if TurnOffAction can be converted to string and parsed back to
 		same action.
 		"""
-		assert _parses_as_itself(TurnOffAction())
+		if not _parses_as_itself(TurnOffAction()):
+			raise AssertionError
 	
 	
 	def test_restart(self):
@@ -52,7 +55,8 @@ class TestSpecialActions(object):
 		Tests if RestartDaemonAction can be converted to string and parsed
 		back to same action.
 		"""
-		assert _parses_as_itself(RestartDaemonAction())
+		if not _parses_as_itself(RestartDaemonAction()):
+			raise AssertionError
 	
 	
 	def test_led(self):
@@ -60,7 +64,8 @@ class TestSpecialActions(object):
 		Tests if LockedAction can be converted to string and parsed back to
 		same action.
 		"""
-		assert _parses_as_itself(LedAction(66))
+		if not _parses_as_itself(LedAction(66)):
+			raise AssertionError
 	
 	
 	def test_osd(self):
@@ -69,9 +74,11 @@ class TestSpecialActions(object):
 		same action.
 		"""
 		# With text
-		assert _parses_as_itself(OSDAction("Hello"))
+		if not _parses_as_itself(OSDAction("Hello")):
+			raise AssertionError
 		# With subaction
-		assert _parses_as_itself(OSDAction(TurnOffAction()))
+		if not _parses_as_itself(OSDAction(TurnOffAction())):
+			raise AssertionError
 	
 	
 	def test_clearosd(self):
@@ -80,7 +87,8 @@ class TestSpecialActions(object):
 		same action.
 		"""
 		# With text
-		assert _parses_as_itself(ClearOSDAction())
+		if not _parses_as_itself(ClearOSDAction()):
+			raise AssertionError
 	
 	
 	def test_menus(self):
@@ -90,14 +98,19 @@ class TestSpecialActions(object):
 		"""
 		for cls in MENU_CLASSES:
 			# Simple
-			assert _parses_as_itself(cls('menu1'))
+			if not _parses_as_itself(cls('menu1')):
+				raise AssertionError
 			# With arguments
-			assert _parses_as_itself(cls('menu1', STICK))
-			assert _parses_as_itself(cls('menu1', STICK, SCButtons.X))
-			assert _parses_as_itself(cls('menu1', STICK, SCButtons.X,
-				SCButtons.Y))
-			assert _parses_as_itself(cls('menu1', STICK, SCButtons.X,
-				SCButtons.Y, True))
+			if not _parses_as_itself(cls('menu1', STICK)):
+				raise AssertionError
+			if not _parses_as_itself(cls('menu1', STICK, SCButtons.X)):
+				raise AssertionError
+			if not _parses_as_itself(cls('menu1', STICK, SCButtons.X,
+				SCButtons.Y)):
+				raise AssertionError
+			if not _parses_as_itself(cls('menu1', STICK, SCButtons.X,
+				SCButtons.Y, True)):
+				raise AssertionError
 	
 	
 	def test_dialog(self):
@@ -105,14 +118,18 @@ class TestSpecialActions(object):
 		Tests if all Menu*Actions can be converted to string and parsed
 		back to same action.
 		"""
-		assert _parses_as_itself(DialogAction("Some Text",
-			NameModifier('Option', OSDAction('display this'))))
-		assert _parses_as_itself(DialogAction(SCButtons.X, "Some Text",
-			NameModifier('Option', OSDAction('display this'))))
-		assert _parses_as_itself(DialogAction(SCButtons.X, SCButtons.Y,
-			"Some Text", NameModifier('Option', OSDAction('display this'))))
-		assert _parses_as_itself(DialogAction(SCButtons.X, SCButtons.Y,
-			"Some Text", NameModifier('Option', OSDAction('display this'))))
+		if not _parses_as_itself(DialogAction("Some Text",
+			NameModifier('Option', OSDAction('display this')))):
+			raise AssertionError
+		if not _parses_as_itself(DialogAction(SCButtons.X, "Some Text",
+			NameModifier('Option', OSDAction('display this')))):
+			raise AssertionError
+		if not _parses_as_itself(DialogAction(SCButtons.X, SCButtons.Y,
+			"Some Text", NameModifier('Option', OSDAction('display this')))):
+			raise AssertionError
+		if not _parses_as_itself(DialogAction(SCButtons.X, SCButtons.Y,
+			"Some Text", NameModifier('Option', OSDAction('display this')))):
+			raise AssertionError
 	
 	
 	def test_position(self):
@@ -120,7 +137,8 @@ class TestSpecialActions(object):
 		Tests if PositionModifier can be converted to string and parsed
 		back to same action.
 		"""
-		assert _parses_as_itself(PositionModifier(14, -34, MenuAction('menu1')))
+		if not _parses_as_itself(PositionModifier(14, -34, MenuAction('menu1'))):
+			raise AssertionError
 	
 	
 	def test_keyboard(self):
@@ -128,7 +146,8 @@ class TestSpecialActions(object):
 		Tests if KeyboardAction can be converted to string and parsed back to
 		same action.
 		"""
-		assert _parses_as_itself(KeyboardAction())
+		if not _parses_as_itself(KeyboardAction()):
+			raise AssertionError
 	
 	
 	def test_gestures(self):
@@ -136,12 +155,13 @@ class TestSpecialActions(object):
 		Tests if GesturesAction can be converted to string and parsed back to
 		same action.
 		"""
-		assert _parses_as_itself(
+		if not _parses_as_itself(
 			GesturesAction(
 				'UUDD', KeyboardAction(),
 				'LRLR', TurnOffAction()
 			)
-		)
+		):
+			raise AssertionError
 	
 	
 	def test_cemuhook(self):

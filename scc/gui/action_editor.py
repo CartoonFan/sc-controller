@@ -242,7 +242,8 @@ class ActionEditor(Editor):
 			exMore = self.builder.get_object("exMore")
 			rvMore = self.builder.get_object("rvMore")
 			ntbMore = self.builder.get_object("ntbMore")
-			assert exMore.get_visible()
+			if not exMore.get_visible():
+				raise AssertionError
 			exMore.set_expanded(True)
 			rvMore.set_reveal_child(True)
 			if "#" in link:

@@ -87,7 +87,8 @@ class Daemon(object):
 		if pid:
 			# Check if PID coresponds to running daemon process and fail if yes
 			try:
-				assert os.path.exists("/proc")	# Just in case of BSD...
+				if not os.path.exists("/proc"):
+					raise AssertionError
 				cmdline = file("/proc/%s/cmdline" % (pid,), "r").read().replace("\x00", " ").strip()
 				if sys.argv[0] in cmdline:
 					raise Exception("already running")

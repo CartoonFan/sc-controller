@@ -13,8 +13,8 @@ class TestMacros(object):
 		for cls in Action.ALL.values():
 			if "/macros.py" in inspect.getfile(cls):
 				method_name = "test_%s" % (cls.COMMAND,)
-				assert hasattr(self, method_name), \
-					"There is no test for %s" % (cls.COMMAND)
+				if not hasattr(self, method_name):
+					raise AssertionError("There is no test for %s" % (cls.COMMAND))
 	
 	
 	def test_macro(self):
@@ -22,11 +22,12 @@ class TestMacros(object):
 		Tests if Macro can be converted to string and parsed back to
 		same action.
 		"""
-		assert _parses_as_itself(Macro(
+		if not _parses_as_itself(Macro(
 			ButtonAction(Keys.BTN_LEFT),
 			ButtonAction(Keys.BTN_RIGHT),
 			ButtonAction(Keys.BTN_MIDDLE)
-		))
+		)):
+			raise AssertionError
 	
 	
 	def test_type(self):
@@ -34,7 +35,8 @@ class TestMacros(object):
 		Tests if Type macro can be converted to string and parsed back to
 		same action.
 		"""
-		assert _parses_as_itself(Type("ilovecandy"))
+		if not _parses_as_itself(Type("ilovecandy")):
+			raise AssertionError
 	
 	
 	def test_cycle(self):
@@ -42,11 +44,12 @@ class TestMacros(object):
 		Tests if Cycle can be converted to string and parsed back to
 		same action.
 		"""
-		assert _parses_as_itself(Cycle(
+		if not _parses_as_itself(Cycle(
 			ButtonAction(Keys.BTN_LEFT),
 			ButtonAction(Keys.BTN_RIGHT),
 			ButtonAction(Keys.BTN_MIDDLE)
-		))
+		)):
+			raise AssertionError
 	
 	
 	def test_repeat(self):
@@ -54,12 +57,14 @@ class TestMacros(object):
 		Tests if Repeat can be converted to string and parsed back to
 		same action.
 		"""
-		assert _parses_as_itself(Repeat(ButtonAction(Keys.BTN_LEFT)))
-		assert _parses_as_itself(Repeat(Macro(
+		if not _parses_as_itself(Repeat(ButtonAction(Keys.BTN_LEFT))):
+			raise AssertionError
+		if not _parses_as_itself(Repeat(Macro(
 			ButtonAction(Keys.BTN_LEFT),
 			ButtonAction(Keys.BTN_RIGHT),
 			ButtonAction(Keys.BTN_MIDDLE)
-		)))
+		))):
+			raise AssertionError
 	
 	
 	def test_sleep(self):
@@ -67,7 +72,8 @@ class TestMacros(object):
 		Tests if SleepAction can be converted to string and parsed back to
 		same action.
 		"""
-		assert _parses_as_itself(SleepAction(1.5))
+		if not _parses_as_itself(SleepAction(1.5)):
+			raise AssertionError
 	
 	
 	def test_press(self):
@@ -75,7 +81,8 @@ class TestMacros(object):
 		Tests if PressAction can be converted to string and
 		parsed back to same action.
 		"""
-		assert _parses_as_itself(PressAction(Keys.BTN_LEFT))
+		if not _parses_as_itself(PressAction(Keys.BTN_LEFT)):
+			raise AssertionError
 	
 	
 	def test_release(self):
@@ -83,7 +90,8 @@ class TestMacros(object):
 		Tests if ReleaseAction can be converted to string
 		and parsed back to same action.
 		"""
-		assert _parses_as_itself(ReleaseAction(Keys.BTN_LEFT))
+		if not _parses_as_itself(ReleaseAction(Keys.BTN_LEFT)):
+			raise AssertionError
 	
 	
 	def test_tap(self):
@@ -91,4 +99,5 @@ class TestMacros(object):
 		Tests if TapAction can be converted to string
 		and parsed back to same action.
 		"""
-		assert _parses_as_itself(TapAction(Keys.BTN_LEFT))
+		if not _parses_as_itself(TapAction(Keys.BTN_LEFT)):
+			raise AssertionError

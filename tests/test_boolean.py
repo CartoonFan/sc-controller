@@ -6,7 +6,8 @@ class TestBoolean(object):
 		"""
 		Tests if None can be used as False boolean value.
 		"""
-		assert not NoAction()
+		if NoAction():
+			raise AssertionError
 		if NoAction():
 			raise Exception("NoAction is True :(")
 	
@@ -16,7 +17,8 @@ class TestBoolean(object):
 		Tests if random action works as True boolean value.
 		"""
 		a = Action()
-		assert a
+		if not a:
+			raise AssertionError
 		if a:
 			return
 		raise Exception("Action is False :(")

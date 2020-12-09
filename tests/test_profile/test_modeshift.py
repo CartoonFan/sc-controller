@@ -28,15 +28,22 @@ class TestModeshift(object):
 			}
 		})
 		
-		assert a.to_string() == STR
-		assert isinstance(a, ModeModifier)
-		assert isinstance(a.default, RotateInputModifier)
+		if a.to_string() != STR:
+			raise AssertionError
+		if not isinstance(a, ModeModifier):
+			raise AssertionError
+		if not isinstance(a.default, RotateInputModifier):
+			raise AssertionError
 		sens = a.default.action
-		assert isinstance(sens, SensitivityModifier)
-		assert tuple(sens.speeds) == (2.0, 2.0, 1.0)
+		if not isinstance(sens, SensitivityModifier):
+			raise AssertionError
+		if tuple(sens.speeds) != (2.0, 2.0, 1.0):
+			raise AssertionError
 		ball = sens.action
-		assert isinstance(ball, BallModifier)
-		assert ball.friction == 0.552
+		if not isinstance(ball, BallModifier):
+			raise AssertionError
+		if ball.friction != 0.552:
+			raise AssertionError
 	
 	
 	def test_146_2(self):
@@ -57,12 +64,19 @@ class TestModeshift(object):
 			},
 		})
 		
-		assert a.to_string() == STR
-		assert isinstance(a, ModeModifier)
-		assert isinstance(a.default, RotateInputModifier)
+		if a.to_string() != STR:
+			raise AssertionError
+		if not isinstance(a, ModeModifier):
+			raise AssertionError
+		if not isinstance(a.default, RotateInputModifier):
+			raise AssertionError
 		sens = a.default.action
-		assert isinstance(sens, SensitivityModifier)
-		assert tuple(sens.speeds) == (2.0, 2.0, 1.0)
+		if not isinstance(sens, SensitivityModifier):
+			raise AssertionError
+		if tuple(sens.speeds) != (2.0, 2.0, 1.0):
+			raise AssertionError
 		lgrip = a.mods[SCButtons.LGRIP]
-		assert isinstance(lgrip, BallModifier)
-		assert isinstance(lgrip.action, XYAction)
+		if not isinstance(lgrip, BallModifier):
+			raise AssertionError
+		if not isinstance(lgrip.action, XYAction):
+			raise AssertionError

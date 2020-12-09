@@ -9,10 +9,12 @@ def _parses_as_itself(action):
 	"""
 	# Simple
 	a_str = action.to_string()
-	assert parser.restart(a_str).parse().to_string() == a_str
+	if parser.restart(a_str).parse().to_string() != a_str:
+		raise AssertionError
 	# Multiline
 	m_str = action.to_string(True)
-	assert parser.restart(m_str).parse().to_string() == a_str
+	if parser.restart(m_str).parse().to_string() != a_str:
+		raise AssertionError
 	return True
 
 def _parse_compressed(a_str):

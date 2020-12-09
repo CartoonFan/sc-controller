@@ -16,15 +16,17 @@ class TestActions(object):
 					# tests merged together under weird names
 					continue
 				method_name = "test_%s" % (cls.COMMAND,)
-				assert hasattr(self, method_name), \
-					"There is no test for %s" % (cls.COMMAND)
+				if not hasattr(self, method_name):
+					raise AssertionError("There is no test for %s" % (cls.COMMAND))
 	
 	def test_none(self):
 		"""
 		Tests if everything what should parse as NoAction parses as NoAction.
 		"""
-		assert not parser.restart("None").parse()
-		assert not parser.restart("None()").parse()
+		if parser.restart("None").parse():
+			raise AssertionError
+		if parser.restart("None()").parse():
+			raise AssertionError
 	
 	
 	def test_axis(self):
@@ -33,9 +35,11 @@ class TestActions(object):
 		same action.
 		"""	
 		# With no optional parameters
-		assert _parses_as_itself(AxisAction(Axes.ABS_X))
+		if not _parses_as_itself(AxisAction(Axes.ABS_X)):
+			raise AssertionError
 		# With min and max set
-		assert _parses_as_itself(AxisAction(Axes.ABS_X, -10, 10.0))
+		if not _parses_as_itself(AxisAction(Axes.ABS_X, -10, 10.0)):
+			raise AssertionError
 	
 	
 	def test_raxis(self):
@@ -44,9 +48,11 @@ class TestActions(object):
 		same action.
 		"""	
 		# With no optional parameters
-		assert _parses_as_itself(RAxisAction(Axes.ABS_X))
+		if not _parses_as_itself(RAxisAction(Axes.ABS_X)):
+			raise AssertionError
 		# With min and max set
-		assert _parses_as_itself(RAxisAction(Axes.ABS_X, -10, 10.0))
+		if not _parses_as_itself(RAxisAction(Axes.ABS_X, -10, 10.0)):
+			raise AssertionError
 	
 	
 	def test_hats(self):
@@ -54,10 +60,14 @@ class TestActions(object):
 		Tests if every Hat* actions can be converted to string and parsed back to
 		same action.
 		"""	
-		assert _parses_as_itself(HatUpAction(Axes.ABS_X))
-		assert _parses_as_itself(HatDownAction(Axes.ABS_X))
-		assert _parses_as_itself(HatLeftAction(Axes.ABS_X))
-		assert _parses_as_itself(HatRightAction(Axes.ABS_X))
+		if not _parses_as_itself(HatUpAction(Axes.ABS_X)):
+			raise AssertionError
+		if not _parses_as_itself(HatDownAction(Axes.ABS_X)):
+			raise AssertionError
+		if not _parses_as_itself(HatLeftAction(Axes.ABS_X)):
+			raise AssertionError
+		if not _parses_as_itself(HatRightAction(Axes.ABS_X)):
+			raise AssertionError
 
 
 	def test_mouse(self):
@@ -66,9 +76,11 @@ class TestActions(object):
 		same action.
 		"""
 		# With axis specified
-		assert _parses_as_itself(MouseAction(Rels.REL_WHEEL))
+		if not _parses_as_itself(MouseAction(Rels.REL_WHEEL)):
+			raise AssertionError
 		# Without axis (when used as trackbal)
-		assert _parses_as_itself(MouseAction())
+		if not _parses_as_itself(MouseAction()):
+			raise AssertionError
 	
 	
 	def test_mouseabs(self):
@@ -77,9 +89,11 @@ class TestActions(object):
 		same action.
 		"""
 		# With axis specified
-		assert _parses_as_itself(MouseAbsAction(Rels.REL_X))
+		if not _parses_as_itself(MouseAbsAction(Rels.REL_X)):
+			raise AssertionError
 		# Without axis (when used on pad directly)
-		assert _parses_as_itself(MouseAbsAction())
+		if not _parses_as_itself(MouseAbsAction()):
+			raise AssertionError
 	
 	
 	def test_area(self):
@@ -87,7 +101,8 @@ class TestActions(object):
 		Tests if AreaAction can be converted to string and
 		parsed back to same action.
 		"""
-		assert _parses_as_itself(AreaAction(10, 10, 50, 50))
+		if not _parses_as_itself(AreaAction(10, 10, 50, 50)):
+			raise AssertionError
 	
 	
 	def test_relarea(self):
@@ -95,7 +110,8 @@ class TestActions(object):
 		Tests if RelAreaAction can be converted to string
 		and parsed back to same action.
 		"""
-		assert _parses_as_itself(RelAreaAction(10, 10, 50, 50))
+		if not _parses_as_itself(RelAreaAction(10, 10, 50, 50)):
+			raise AssertionError
 	
 	
 	def test_winarea(self):
@@ -103,7 +119,8 @@ class TestActions(object):
 		Tests if WinAreaAction can be converted to string
 		and parsed back to same action.
 		"""
-		assert _parses_as_itself(WinAreaAction(10, 10, 50, 50))
+		if not _parses_as_itself(WinAreaAction(10, 10, 50, 50)):
+			raise AssertionError
 	
 	
 	def test_relwinarea(self):
@@ -111,7 +128,8 @@ class TestActions(object):
 		Tests if RelWinAreaAction can be converted to
 		string and parsed back to same action.
 		"""
-		assert _parses_as_itself(RelWinAreaAction(10, 10, 50, 50))
+		if not _parses_as_itself(RelWinAreaAction(10, 10, 50, 50)):
+			raise AssertionError
 	
 	
 	def test_gyro(self):
@@ -120,9 +138,12 @@ class TestActions(object):
 		parsed back to same action.
 		"""
 		# With one, two and three axes set
-		assert _parses_as_itself(GyroAction(Axes.ABS_X))
-		assert _parses_as_itself(GyroAction(Axes.ABS_X, Axes.ABS_Y))
-		assert _parses_as_itself(GyroAction(Axes.ABS_X, Axes.ABS_Y, Axes.ABS_Z))
+		if not _parses_as_itself(GyroAction(Axes.ABS_X)):
+			raise AssertionError
+		if not _parses_as_itself(GyroAction(Axes.ABS_X, Axes.ABS_Y)):
+			raise AssertionError
+		if not _parses_as_itself(GyroAction(Axes.ABS_X, Axes.ABS_Y, Axes.ABS_Z)):
+			raise AssertionError
 	
 	
 	def test_gyroabs(self):
@@ -130,9 +151,12 @@ class TestActions(object):
 		Tests if GyroAbsAction can be converted to string and
 		parsed back to same action.
 		"""
-		assert _parses_as_itself(GyroAbsAction(Axes.ABS_X))
-		assert _parses_as_itself(GyroAbsAction(Axes.ABS_X, Axes.ABS_Y))
-		assert _parses_as_itself(GyroAbsAction(Axes.ABS_X, Axes.ABS_Y, Axes.ABS_Z))
+		if not _parses_as_itself(GyroAbsAction(Axes.ABS_X)):
+			raise AssertionError
+		if not _parses_as_itself(GyroAbsAction(Axes.ABS_X, Axes.ABS_Y)):
+			raise AssertionError
+		if not _parses_as_itself(GyroAbsAction(Axes.ABS_X, Axes.ABS_Y, Axes.ABS_Z)):
+			raise AssertionError
 	
 	
 	def test_resetgyro(self):
@@ -140,7 +164,8 @@ class TestActions(object):
 		Tests if ResetGyroAction can be converted to string and
 		parsed back to same action.
 		"""
-		assert _parses_as_itself(ResetGyroAction())
+		if not _parses_as_itself(ResetGyroAction()):
+			raise AssertionError
 	
 	
 	def test_tilt(self):
@@ -149,12 +174,14 @@ class TestActions(object):
 		parsed back to same action.
 		"""
 		# With only one button
-		assert _parses_as_itself(TiltAction( ButtonAction(Keys.KEY_D) ))
+		if not _parses_as_itself(TiltAction( ButtonAction(Keys.KEY_D) )):
+			raise AssertionError
 		# With all buttons
-		assert _parses_as_itself(TiltAction(
+		if not _parses_as_itself(TiltAction(
 			ButtonAction(Keys.KEY_D), ButtonAction(Keys.KEY_U),
 			ButtonAction(Keys.KEY_L), ButtonAction(Keys.KEY_R)
-		))
+		)):
+			raise AssertionError
 	
 	
 	def test_trackball(self):
@@ -162,7 +189,8 @@ class TestActions(object):
 		Tests if TrackballAction can be converted to string and parsed
 		back to same action.
 		"""
-		assert _parses_as_itself(TrackballAction())
+		if not _parses_as_itself(TrackballAction()):
+			raise AssertionError
 	
 	
 	def test_button(self):
@@ -171,13 +199,17 @@ class TestActions(object):
 		same action.
 		"""
 		# Simple
-		assert _parses_as_itself(ButtonAction(Keys.BTN_LEFT))
+		if not _parses_as_itself(ButtonAction(Keys.BTN_LEFT)):
+			raise AssertionError
 		# Two buttons
-		assert _parses_as_itself(ButtonAction(Keys.BTN_LEFT, Keys.BTN_RIGHT))
+		if not _parses_as_itself(ButtonAction(Keys.BTN_LEFT, Keys.BTN_RIGHT)):
+			raise AssertionError
 		# With one trigger setting
-		assert _parses_as_itself(ButtonAction(Keys.BTN_LEFT, Keys.BTN_RIGHT, 10))
+		if not _parses_as_itself(ButtonAction(Keys.BTN_LEFT, Keys.BTN_RIGHT, 10)):
+			raise AssertionError
 		# With two trigger settings
-		assert _parses_as_itself(ButtonAction(Keys.BTN_LEFT, Keys.BTN_RIGHT, 10, 90))
+		if not _parses_as_itself(ButtonAction(Keys.BTN_LEFT, Keys.BTN_RIGHT, 10, 90)):
+			raise AssertionError
 
 
 	def test_multiaction(self):
@@ -185,11 +217,12 @@ class TestActions(object):
 		Tests if MultiAction can be converted to string and parsed back to
 		same action.
 		"""
-		assert _parses_as_itself(MultiAction(
+		if not _parses_as_itself(MultiAction(
 			ButtonAction(Keys.BTN_LEFT),
 			ButtonAction(Keys.BTN_RIGHT),
 			ButtonAction(Keys.BTN_MIDDLE)
-		))
+		)):
+			raise AssertionError
 
 
 	def test_dpad(self):
@@ -198,19 +231,21 @@ class TestActions(object):
 		parsed back to same action.
 		"""
 		# Default diagonal rage
-		assert _parses_as_itself(DPadAction(
+		if not _parses_as_itself(DPadAction(
 			ButtonAction(Keys.BTN_LEFT),
 			ButtonAction(Keys.BTN_RIGHT),
 			ButtonAction(Keys.BTN_MIDDLE),
 			ButtonAction(Keys.KEY_A)
-		))
+		)):
+			raise AssertionError
 		# Modified diagonal rage
-		assert _parses_as_itself(DPadAction(33,
+		if not _parses_as_itself(DPadAction(33,
 			ButtonAction(Keys.BTN_RIGHT),
 			ButtonAction(Keys.KEY_A),
 			ButtonAction(Keys.BTN_LEFT),
 			ButtonAction(Keys.BTN_MIDDLE),
-		))
+		)):
+			raise AssertionError
 	
 	
 	def test_ring(self):
@@ -218,7 +253,7 @@ class TestActions(object):
 		Tests if DPadAction can be converted to string and
 		parsed back to same action.
 		"""
-		assert _parses_as_itself(RingAction(0.1,
+		if not _parses_as_itself(RingAction(0.1,
 			DPadAction(
 				ButtonAction(Keys.BTN_LEFT),
 				ButtonAction(Keys.BTN_RIGHT),
@@ -229,7 +264,8 @@ class TestActions(object):
 				AxisAction(Axes.ABS_X),
 				AxisAction(Axes.ABS_Y)
 			)
-		))
+		)):
+			raise AssertionError
 	
 	
 	def test_dpad8(self):
@@ -238,7 +274,7 @@ class TestActions(object):
 		parsed back to same action.
 		"""
 		# Default diagonal rage
-		assert _parses_as_itself(DPad8Action(
+		if not _parses_as_itself(DPad8Action(
 			ButtonAction(Keys.BTN_LEFT),
 			ButtonAction(Keys.BTN_RIGHT),
 			ButtonAction(Keys.BTN_MIDDLE),
@@ -247,9 +283,10 @@ class TestActions(object):
 			ButtonAction(Keys.KEY_C),
 			ButtonAction(Keys.KEY_D),
 			ButtonAction(Keys.KEY_E)
-		))
+		)):
+			raise AssertionError
 		# Modified diagonal rage
-		assert _parses_as_itself(DPad8Action(61,
+		if not _parses_as_itself(DPad8Action(61,
 			ButtonAction(Keys.BTN_RIGHT),
 			ButtonAction(Keys.KEY_C),
 			ButtonAction(Keys.KEY_A),
@@ -258,7 +295,8 @@ class TestActions(object):
 			ButtonAction(Keys.KEY_B),
 			ButtonAction(Keys.KEY_D),
 			ButtonAction(Keys.BTN_MIDDLE),
-		))
+		)):
+			raise AssertionError
 	
 	
 	def test_XY(self):
@@ -266,10 +304,11 @@ class TestActions(object):
 		Tests if XYAciton can be converted to string and parsed back to
 		same action.
 		"""
-		assert _parses_as_itself(XYAction(
+		if not _parses_as_itself(XYAction(
 			AxisAction(Axes.ABS_X),
 			AxisAction(Axes.ABS_Y)
-		))
+		)):
+			raise AssertionError
 	
 	
 	def test_relXY(self):
@@ -277,10 +316,11 @@ class TestActions(object):
 		Tests if relXYAciton can be converted to string and parsed back to
 		same action.
 		"""
-		assert _parses_as_itself(RelXYAction(
+		if not _parses_as_itself(RelXYAction(
 			AxisAction(Axes.ABS_RX),
 			AxisAction(Axes.ABS_RY)
-		))
+		)):
+			raise AssertionError
 	
 	
 	def test_trigger(self):
@@ -288,8 +328,9 @@ class TestActions(object):
 		Tests if TriggerAction can be converted to string and parsed back to
 		same action.
 		"""
-		assert _parses_as_itself(TriggerAction(
+		if not _parses_as_itself(TriggerAction(
 			15, 234,
 			ButtonAction(Keys.KEY_A)
-		))
+		)):
+			raise AssertionError
 

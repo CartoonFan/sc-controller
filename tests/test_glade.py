@@ -28,7 +28,8 @@ def _check_ids(el, filename, parent_id):
 					child.attrib['class'],
 					parent_id
 				)
-			assert 'id' in child.attrib and child.attrib['id'], msg
+			if not ('id' in child.attrib and child.attrib['id']):
+				raise AssertionError(msg)
 			for subel in child:
 				if subel.tag == "child":
 					_check_ids(subel, filename, child.attrib['id'])

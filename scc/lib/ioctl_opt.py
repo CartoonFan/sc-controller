@@ -29,15 +29,20 @@ IOC_WRITE = 1
 IOC_READ = 2
 
 def IOC(dir, type, nr, size):
-    assert dir <= _IOC_DIRMASK, dir
-    assert type <= _IOC_TYPEMASK, type
-    assert nr <= _IOC_NRMASK, nr
-    assert size <= _IOC_SIZEMASK, size
+    if dir > _IOC_DIRMASK:
+        raise AssertionError(dir)
+    if type > _IOC_TYPEMASK:
+        raise AssertionError(type)
+    if nr > _IOC_NRMASK:
+        raise AssertionError(nr)
+    if size > _IOC_SIZEMASK:
+        raise AssertionError(size)
     return (dir << _IOC_DIRSHIFT) | (type << _IOC_TYPESHIFT) | (nr << _IOC_NRSHIFT) | (size << _IOC_SIZESHIFT)
 
 def IOC_TYPECHECK(t):
     result = ctypes.sizeof(t)
-    assert result <= _IOC_SIZEMASK, result
+    if result > _IOC_SIZEMASK:
+        raise AssertionError(result)
     return result
 
 def IO(type, nr):

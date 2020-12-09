@@ -357,7 +357,8 @@ class StatusIconProxy(StatusIcon):
 					continue
 		
 			# At least the dummy backend should have been loaded at this point...
-			assert self._status_fb
+			if not self._status_fb:
+				raise AssertionError
 		
 		# Update fallback icon
 		self.set(self._icon, self._text)

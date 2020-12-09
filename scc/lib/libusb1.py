@@ -770,9 +770,11 @@ if ("FreeBSD" in platform.system()
     # Old FreeBSD version has a slight ABI incompatibility.
     # Work around it unless libusb_get_string_descriptor is available, as it
     # is only available on fixed versions.
-    assert _libusb_transfer_fields[2][0] == "endpoint"
+    if _libusb_transfer_fields[2][0] != "endpoint":
+        raise AssertionError
     _libusb_transfer_fields[2] = ("endpoint", c_uint32)
-    assert _libusb_transfer_fields[11][0] == "num_iso_packets"
+    if _libusb_transfer_fields[11][0] != "num_iso_packets":
+        raise AssertionError
     _libusb_transfer_fields.insert(11, ("os_priv", c_void_p))
 
 # pylint: disable=protected-access

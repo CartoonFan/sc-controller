@@ -117,20 +117,24 @@ def __bindConstants():
             # Gah.
             if name == "5GBPS_OPERATION":
                 name = "SUPER_SPEED_OPERATION"
-            assert name not in global_dict
+            if name in global_dict:
+                raise AssertionError
             global_dict[name] = value
             __all__.append(name)
     # Finer-grained exceptions.
     for name, value in libusb1.libusb_error.forward_dict.items():
         if value:
-            assert name.startswith(PREFIX + "ERROR_"), name
+            if not name.startswith(PREFIX + "ERROR_"):
+                raise AssertionError(name)
             if name == "LIBUSB_ERROR_IO":
                 name = "ErrorIO"
             else:
                 name = "".join(x.capitalize() for x in name.split("_")[1:])
             name = "USB" + name
-            assert name not in global_dict, name
-            assert value not in STATUS_TO_EXCEPTION_DICT
+            if name in global_dict:
+                raise AssertionError(name)
+            if value in STATUS_TO_EXCEPTION_DICT:
+                raise AssertionError
             STATUS_TO_EXCEPTION_DICT[value] = global_dict[name] = type(
                 name,
                 (USBError, ),
@@ -2199,7 +2203,8 @@ class USBContext(object):
         cause issues particularly hard to debug (ex: interpreter hangs on
         exit).
         """
-        assert self.__context_refcount == 0
+        if self.__context_refcount != 0:
+            raise AssertionError
         mayRaiseUSBError(libusb1.libusb_init(byref(self.__context_p)))
         return self
 
@@ -2556,8 +2561,9 @@ class USBContext(object):
         """
 
         def wrapped_callback(context_p, device_p, event, _):
-            assert addressof(context_p.contents) == addressof(
-                self.__context_p.contents), (context_p, self.__context_p)
+            if addressof(context_p.contents) != addressof(
+                self.__context_p.contents):
+                raise AssertionError(context_p, self.__context_p)
             device = USBDevice(
                 self,
                 device_p,
@@ -2591,10 +2597,11 @@ class USBContext(object):
             ))
         handle = handle.value
         # Keep strong references
-        assert handle not in self.__hotplug_callback_dict, (
-            handle,
-            self.__hotplug_callback_dict,
-        )
+        if handle in self.__hotplug_callback_dict:
+            raise AssertionError(
+                handle,
+                self.__hotplug_callback_dict,
+            )
         self.__hotplug_callback_dict[handle] = (callback_p, wrapped_callback)
         return handle
 

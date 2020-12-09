@@ -10,8 +10,10 @@ def _is_axis_with_value(a, value=Axes.ABS_X):
 	Common part of all tests; Check if parsed action
 	is AxisAction with given value as parameter.
 	"""
-	assert isinstance(a, AxisAction)
-	assert a.id == value
+	if not isinstance(a, AxisAction):
+		raise AssertionError
+	if a.id != value:
+		raise AssertionError
 	return True
 
 
@@ -24,8 +26,8 @@ class TestModifiers(object):
 		for cls in Action.ALL.values():
 			if "/modifiers.py" in inspect.getfile(cls):
 				method_name = "test_%s" % (cls.COMMAND,)
-				assert hasattr(self, method_name), \
-					"There is no test for %s modifier" % (cls.COMMAND)
+				if not hasattr(self, method_name):
+					raise AssertionError("There is no test for %s modifier" % (cls.COMMAND))
 	
 	
 	def test_name(self):
@@ -38,9 +40,12 @@ class TestModifiers(object):
 		})
 		
 		# NameModifier is lost in parsing
-		assert not isinstance(a, NameModifier)
-		assert a.name == 'hithere'
-		assert _is_axis_with_value(a)
+		if isinstance(a, NameModifier):
+			raise AssertionError
+		if a.name != 'hithere':
+			raise AssertionError
+		if not _is_axis_with_value(a):
+			raise AssertionError
 	
 	
 	def test_click(self):
@@ -52,8 +57,10 @@ class TestModifiers(object):
 			'click' : True
 		})
 		
-		assert isinstance(a, ClickModifier)
-		assert _is_axis_with_value(a.action)
+		if not isinstance(a, ClickModifier):
+			raise AssertionError
+		if not _is_axis_with_value(a.action):
+			raise AssertionError
 	
 	
 	def test_pressed(self):
@@ -61,8 +68,10 @@ class TestModifiers(object):
 		Tests if PressedModifier is parsed correctly from json.
 		"""
 		a = parser.from_json_data({ 'action' : "pressed(axis(ABS_X))" })
-		assert isinstance(a, PressedModifier)
-		assert _is_axis_with_value(a.action)
+		if not isinstance(a, PressedModifier):
+			raise AssertionError
+		if not _is_axis_with_value(a.action):
+			raise AssertionError
 	
 	
 	def test_released(self):
@@ -70,8 +79,10 @@ class TestModifiers(object):
 		Tests if ReleasedModifier is parsed correctly from json.
 		"""
 		a = parser.from_json_data({ 'action' : "released(axis(ABS_X))" })
-		assert isinstance(a, ReleasedModifier)
-		assert _is_axis_with_value(a.action)
+		if not isinstance(a, ReleasedModifier):
+			raise AssertionError
+		if not _is_axis_with_value(a.action):
+			raise AssertionError
 	
 	
 	def test_touched(self):
@@ -79,7 +90,8 @@ class TestModifiers(object):
 		Tests if TouchedModifier is parsed correctly from json.
 		"""
 		a = parser.from_json_data({ 'action' : "touched(button(KEY_A))" })
-		assert isinstance(a, TouchedModifier)
+		if not isinstance(a, TouchedModifier):
+			raise AssertionError
 	
 	
 	def test_untouched(self):
@@ -87,7 +99,8 @@ class TestModifiers(object):
 		Tests if UntouchedModifier is parsed correctly from json.
 		"""
 		a = parser.from_json_data({ 'action' : "untouched(button(KEY_A))" })
-		assert isinstance(a, UntouchedModifier)
+		if not isinstance(a, UntouchedModifier):
+			raise AssertionError
 	
 	
 	def test_circular(self):
@@ -98,7 +111,8 @@ class TestModifiers(object):
 			'action' : "axis(ABS_X)",
 			'circular' : True
 		})
-		assert isinstance(a, CircularModifier)
+		if not isinstance(a, CircularModifier):
+			raise AssertionError
 	
 	
 	def test_circularabs(self):
@@ -109,7 +123,8 @@ class TestModifiers(object):
 			'action' : "axis(ABS_X)",
 			'circularabs' : True
 		})
-		assert isinstance(a, CircularAbsModifier)
+		if not isinstance(a, CircularAbsModifier):
+			raise AssertionError
 	
 	
 	def test_ball(self):
@@ -121,8 +136,10 @@ class TestModifiers(object):
 			'ball' : True
 		})
 		
-		assert isinstance(a, BallModifier)
-		assert _is_axis_with_value(a.action)
+		if not isinstance(a, BallModifier):
+			raise AssertionError
+		if not _is_axis_with_value(a.action):
+			raise AssertionError
 	
 	
 	def test_smooth(self):
@@ -134,10 +151,14 @@ class TestModifiers(object):
 			'smooth' : [ 5, 0.3 ]
 		})
 		
-		assert isinstance(a, SmoothModifier)
-		assert a.level == 5
-		assert a.multiplier == 0.3
-		assert _is_axis_with_value(a.action)
+		if not isinstance(a, SmoothModifier):
+			raise AssertionError
+		if a.level != 5:
+			raise AssertionError
+		if a.multiplier != 0.3:
+			raise AssertionError
+		if not _is_axis_with_value(a.action):
+			raise AssertionError
 	
 	
 	def test_deadzone(self):
@@ -150,9 +171,12 @@ class TestModifiers(object):
 			'deadzone' : { 'upper' : 300 }
 		})
 		
-		assert isinstance(a, DeadzoneModifier)
-		assert a.upper == 300
-		assert _is_axis_with_value(a.action)
+		if not isinstance(a, DeadzoneModifier):
+			raise AssertionError
+		if a.upper != 300:
+			raise AssertionError
+		if not _is_axis_with_value(a.action):
+			raise AssertionError
 		
 		# Two parameters
 		a = parser.from_json_data({
@@ -160,9 +184,12 @@ class TestModifiers(object):
 			'deadzone' : { 'upper' : 300, 'lower' : 50 }
 		})
 		
-		assert isinstance(a, DeadzoneModifier)
-		assert a.lower == 50
-		assert _is_axis_with_value(a.action)
+		if not isinstance(a, DeadzoneModifier):
+			raise AssertionError
+		if a.lower != 50:
+			raise AssertionError
+		if not _is_axis_with_value(a.action):
+			raise AssertionError
 	
 	
 	def test_sens(self):
@@ -174,9 +201,12 @@ class TestModifiers(object):
 			'action' : "axis(ABS_X)",
 			'sensitivity' : [ 2.0, 3.0, 4.0 ]
 		})
-		assert isinstance(a, SensitivityModifier)
-		assert a.speeds == [ 2.0, 3.0, 4.0 ]
-		assert _is_axis_with_value(a.action)
+		if not isinstance(a, SensitivityModifier):
+			raise AssertionError
+		if a.speeds != [ 2.0, 3.0, 4.0 ]:
+			raise AssertionError
+		if not _is_axis_with_value(a.action):
+			raise AssertionError
 		
 		# Hold and doubleclick
 		a = parser.from_json_data({
@@ -191,9 +221,12 @@ class TestModifiers(object):
 			"action" : "axis(ABS_Z)",
 			'sensitivity' : [ 10.0, ]
 		}).compress()
-		assert isinstance(a.holdaction, MouseAction) and a.holdaction.get_speed() == ( 3.0, 4.0 )
-		assert isinstance(a.action, GyroAction) and a.action.get_speed() == ( 7.0, 8.0, 9.0 )
-		assert isinstance(a.normalaction, AxisAction) and a.normalaction.get_speed() == ( 10.0, )
+		if not (isinstance(a.holdaction, MouseAction) and a.holdaction.get_speed() == ( 3.0, 4.0 )):
+			raise AssertionError
+		if not (isinstance(a.action, GyroAction) and a.action.get_speed() == ( 7.0, 8.0, 9.0 )):
+			raise AssertionError
+		if not (isinstance(a.normalaction, AxisAction) and a.normalaction.get_speed() == ( 10.0, )):
+			raise AssertionError
 		
 		# Modeshift
 		a = parser.from_json_data({
@@ -214,10 +247,14 @@ class TestModifiers(object):
 			"action" : "axis(ABS_Z)",
 			'sensitivity' : [ 12.0, ]
 		}).compress()
-		assert isinstance(a.mods[SCButtons.A], MouseAction) and a.mods[SCButtons.A].get_speed() == ( 3.0, 4.0 )
-		assert isinstance(a.mods[SCButtons.B], AxisAction) and a.mods[SCButtons.B].get_speed() == ( 7.0, )
-		assert isinstance(a.mods[SCButtons.X], GyroAction) and a.mods[SCButtons.X].get_speed() == ( 8.0, 9.0, 10.0 )
-		assert isinstance(a.default, AxisAction) and a.default.get_speed() == ( 12.0, )
+		if not (isinstance(a.mods[SCButtons.A], MouseAction) and a.mods[SCButtons.A].get_speed() == ( 3.0, 4.0 )):
+			raise AssertionError
+		if not (isinstance(a.mods[SCButtons.B], AxisAction) and a.mods[SCButtons.B].get_speed() == ( 7.0, )):
+			raise AssertionError
+		if not (isinstance(a.mods[SCButtons.X], GyroAction) and a.mods[SCButtons.X].get_speed() == ( 8.0, 9.0, 10.0 )):
+			raise AssertionError
+		if not (isinstance(a.default, AxisAction) and a.default.get_speed() == ( 12.0, )):
+			raise AssertionError
 	
 	
 	def test_feedback(self):
@@ -230,9 +267,12 @@ class TestModifiers(object):
 			'feedback' : [ "BOTH" ]
 		})
 		
-		assert isinstance(a, FeedbackModifier)
-		assert a.haptic.get_position() == HapticPos.BOTH
-		assert _is_axis_with_value(a.action)
+		if not isinstance(a, FeedbackModifier):
+			raise AssertionError
+		if a.haptic.get_position() != HapticPos.BOTH:
+			raise AssertionError
+		if not _is_axis_with_value(a.action):
+			raise AssertionError
 		
 		# All parameters
 		a = parser.from_json_data({
@@ -240,12 +280,18 @@ class TestModifiers(object):
 			'feedback' : [ "RIGHT", 1024, 8, 2048 ]
 		})
 		
-		assert isinstance(a, FeedbackModifier)
-		assert a.haptic.get_position() == HapticPos.RIGHT
-		assert a.haptic.get_amplitude() == 1024
-		assert a.haptic.get_frequency() == 8
-		assert a.haptic.get_period() == 2048
-		assert _is_axis_with_value(a.action)
+		if not isinstance(a, FeedbackModifier):
+			raise AssertionError
+		if a.haptic.get_position() != HapticPos.RIGHT:
+			raise AssertionError
+		if a.haptic.get_amplitude() != 1024:
+			raise AssertionError
+		if a.haptic.get_frequency() != 8:
+			raise AssertionError
+		if a.haptic.get_period() != 2048:
+			raise AssertionError
+		if not _is_axis_with_value(a.action):
+			raise AssertionError
 	
 	
 	def test_rotate(self):
@@ -257,9 +303,12 @@ class TestModifiers(object):
 			'rotate' : 33.14
 		})
 		
-		assert isinstance(a, RotateInputModifier)
-		assert a.angle == 33.14
-		assert _is_axis_with_value(a.action)
+		if not isinstance(a, RotateInputModifier):
+			raise AssertionError
+		if a.angle != 33.14:
+			raise AssertionError
+		if not _is_axis_with_value(a.action):
+			raise AssertionError
 	
 	
 	def test_mode(self):
@@ -275,10 +324,14 @@ class TestModifiers(object):
 			}
 		})
 		
-		assert isinstance(a, ModeModifier)
-		assert _is_axis_with_value(a.mods[SCButtons.A],  Axes.ABS_X)
-		assert _is_axis_with_value(a.mods[SCButtons.B],  Axes.ABS_Y)
-		assert _is_axis_with_value(a.mods[SCButtons.LT], Axes.ABS_Z)
+		if not isinstance(a, ModeModifier):
+			raise AssertionError
+		if not _is_axis_with_value(a.mods[SCButtons.A],  Axes.ABS_X):
+			raise AssertionError
+		if not _is_axis_with_value(a.mods[SCButtons.B],  Axes.ABS_Y):
+			raise AssertionError
+		if not _is_axis_with_value(a.mods[SCButtons.LT], Axes.ABS_Z):
+			raise AssertionError
 		
 		# With default
 		a = parser.from_json_data({
@@ -289,10 +342,14 @@ class TestModifiers(object):
 			}
 		})
 		
-		assert isinstance(a, ModeModifier)
-		assert _is_axis_with_value(a.default,  Axes.ABS_RX)
-		assert _is_axis_with_value(a.mods[SCButtons.X], Axes.ABS_X)
-		assert _is_axis_with_value(a.mods[SCButtons.RT], Axes.ABS_Z)
+		if not isinstance(a, ModeModifier):
+			raise AssertionError
+		if not _is_axis_with_value(a.default,  Axes.ABS_RX):
+			raise AssertionError
+		if not _is_axis_with_value(a.mods[SCButtons.X], Axes.ABS_X):
+			raise AssertionError
+		if not _is_axis_with_value(a.mods[SCButtons.RT], Axes.ABS_Z):
+			raise AssertionError
 	
 	
 	def test_doubleclick(self):
@@ -306,10 +363,14 @@ class TestModifiers(object):
 			}
 		})
 		
-		assert isinstance(a, DoubleclickModifier)
-		assert _is_axis_with_value(a.normalaction,  Axes.ABS_RX)
-		assert _is_axis_with_value(a.action, Axes.ABS_X)
-		assert not a.holdaction
+		if not isinstance(a, DoubleclickModifier):
+			raise AssertionError
+		if not _is_axis_with_value(a.normalaction,  Axes.ABS_RX):
+			raise AssertionError
+		if not _is_axis_with_value(a.action, Axes.ABS_X):
+			raise AssertionError
+		if a.holdaction:
+			raise AssertionError
 	
 	
 	def test_hold(self):
@@ -323,7 +384,11 @@ class TestModifiers(object):
 			}
 		})
 		
-		assert isinstance(a, HoldModifier)
-		assert _is_axis_with_value(a.normalaction,  Axes.ABS_RX)
-		assert _is_axis_with_value(a.holdaction, Axes.ABS_X)
-		assert not a.action
+		if not isinstance(a, HoldModifier):
+			raise AssertionError
+		if not _is_axis_with_value(a.normalaction,  Axes.ABS_RX):
+			raise AssertionError
+		if not _is_axis_with_value(a.holdaction, Axes.ABS_X):
+			raise AssertionError
+		if a.action:
+			raise AssertionError
