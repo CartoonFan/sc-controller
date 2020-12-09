@@ -113,9 +113,7 @@ class BindingEditor(object):
         Returns None if id is not known.
         """
         before = NoAction()
-        if id in BUTTONS:
-            return profile.buttons[id]
-        elif id in PRESSABLE:
+        if id in BUTTONS or id in PRESSABLE:
             return profile.buttons[id]
         elif id in TRIGGERS:
             # TODO: Use LT and RT in profile as well
@@ -153,7 +151,11 @@ class BindingEditor(object):
             # Type is subclass of Macro
             e = ActionEditor(self.app, self.on_action_chosen)
             e.set_title(title)
-        elif isinstance(action, Macro) and not (is_button_togle(action) or is_button_repeat(action)):
+        elif (
+            isinstance(action, Macro)
+            and not is_button_togle(action)
+            and not is_button_repeat(action)
+        ):
             e = MacroEditor(self.app, self.on_action_chosen)
             e.set_title(_("Macro for %s") % (title,))
         else:

@@ -122,20 +122,20 @@ class Dialog(OSDWindow):
             return False
         if not self.config:
             self.config = Config()
-        
+
         try:
             self.items = MenuData.from_args(self.args.items)
             self._menuid = None
         except ValueError:
             print >>sys.stderr, '%s: error: invalid number of arguments' % (sys.argv[0])
             return False
-        
+
         self._text.set_label(self.args.text)
-        
+
         if self.args.feedback_amplitude:
             side = "LEFT"
             self.feedback = side, int(self.args.feedback_amplitude)
-        
+
         # Create buttons that are displayed on screen
         items = self.items.generate(self)
         self.items = []
@@ -144,10 +144,10 @@ class Dialog(OSDWindow):
             if item.widget is not None:
                 self.items.append(item)
         self.pack_items(self.parent, self.items)
-        if len(self.items) == 0:
+        if not self.items:
             print >>sys.stderr, '%s: error: no items in menu' % (sys.argv[0])
             return False
-        
+
         return True
     
     
@@ -169,9 +169,12 @@ class Dialog(OSDWindow):
             self._selected.widget.set_name(self._selected.widget.get_name()
                 .replace("-selected", ""))
         if self.items[index].id:
-            if self._selected != self.items[index]:
-                if self.feedback and self.controller:
-                    self.controller.feedback(*self.feedback)
+            if (
+                self._selected != self.items[index]
+                and self.feedback
+                and self.controller
+            ):
+                self.controller.feedback(*self.feedback)
             self._selected = self.items[index]
             self._selected.widget.set_name(
                     self._selected.widget.get_name() + "-selected")
@@ -260,7 +263,7 @@ class Dialog(OSDWindow):
                 continue
             if self.select(i): break
             i += direction
-            if start < 0: start = 0
+            start = max(start, 0)
     
     
     def on_stick_direction(self, trash, x, y):

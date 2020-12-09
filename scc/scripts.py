@@ -112,7 +112,7 @@ def cmd_set_profile(argv0, argv):
     Usage: scc set-profile [controller_id] "profile name"
     """
     from scc.tools import find_profile
-    
+
     if len(argv) < 1:
         show_help(command = "set_profile", out=sys.stderr)
         return 1
@@ -125,15 +125,13 @@ def cmd_set_profile(argv0, argv):
             return 1
         print >>s, "Controller: %s" % (argv[0],)
         if not check_error(s): return 1
-        print >>s, "Profile: %s" % (profile,)
-        if not check_error(s): return 1
     else:
         profile = find_profile(argv[0])
         if profile is None:
             print >>sys.stderr, "Unknown profile:", argv[0]
             return 1
-        print >>s, "Profile: %s" % (profile,)
-        if not check_error(s): return 1
+    print >>s, "Profile: %s" % (profile,)
+    if not check_error(s): return 1
     return 0
 
 
@@ -336,7 +334,7 @@ def run_osd_tool(tool, argv0, argv):
 
 def show_help(command = None, out=sys.stdout):
     names = [ x[4:] for x in globals() if x.startswith("cmd_") ]
-    max_len = max([ len(x) for x in names ])
+    max_len = max(len(x) for x in names)
     if command in names:
         if "help_" + command in globals():
             return globals()["help_" + command]()
@@ -350,7 +348,7 @@ def show_help(command = None, out=sys.stdout):
                     if line.startswith("\t"): line = line[1:]
                     print >>out, line
                 return 0
-    
+
     print >>out, "Usage: %s <command> [ arguments ]" % (sys.argv[0], )
     print >>out, ""
     print >>out, "List of commands:"
