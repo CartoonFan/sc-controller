@@ -98,7 +98,8 @@ class MacroEditor(Editor):
         action_data = None
 
         # Buttons
-        button_up, button_down, button_clear = Gtk.Button(), Gtk.Button(), Gtk.Button()
+        button_up, button_down, button_clear = Gtk.Button(), Gtk.Button(
+        ), Gtk.Button()
         b = Gtk.Button.new_with_label(action.describe(self.mode))
 
         # Action button
@@ -131,7 +132,8 @@ class MacroEditor(Editor):
                 button_action=b,
             )
 
-            c.connect("changed", self.on_buttonaction_type_change, i - 1, action_data)
+            c.connect("changed", self.on_buttonaction_type_change, i - 1,
+                      action_data)
             grActions.attach(c, 0, i, 1, 1)
             grActions.attach(b, 1, i, 1, 1)
         elif isinstance(action, SleepAction):
@@ -139,7 +141,8 @@ class MacroEditor(Editor):
             l = Gtk.Label("")
             l.set_xalign(0.0)
             l.set_size_request(100, -1)
-            s = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 5, 5000, 5)
+            s = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 5, 5000,
+                                         5)
             s.set_draw_value(False)
             s.set_value(action.delay * 1000)
             action_data = ActionData(
@@ -179,20 +182,18 @@ class MacroEditor(Editor):
 
         # Move Up button
         button_up.set_image(
-            Gtk.Image.new_from_stock("gtk-go-up", Gtk.IconSize.SMALL_TOOLBAR)
-        )
+            Gtk.Image.new_from_stock("gtk-go-up", Gtk.IconSize.SMALL_TOOLBAR))
         button_up.set_relief(Gtk.ReliefStyle.NONE)
 
         # Move Down button
         button_down.set_image(
-            Gtk.Image.new_from_stock("gtk-go-down", Gtk.IconSize.SMALL_TOOLBAR)
-        )
+            Gtk.Image.new_from_stock("gtk-go-down",
+                                     Gtk.IconSize.SMALL_TOOLBAR))
         button_down.set_relief(Gtk.ReliefStyle.NONE)
 
         # Clear button
         button_clear.set_image(
-            Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.SMALL_TOOLBAR)
-        )
+            Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.SMALL_TOOLBAR))
         button_clear.set_relief(Gtk.ReliefStyle.NONE)
 
         # Pack
@@ -247,12 +248,12 @@ class MacroEditor(Editor):
         if cb.get_active() == 0:
             if isinstance(action, ButtonAction):
                 self.actions[i] = action_data._replace(
-                    action=ButtonAction(action.button)
-                )
+                    action=ButtonAction(action.button))
         elif cb.get_active() == 1:
             self.actions[i] = action_data._replace(action=PressAction(action))
         else:
-            self.actions[i] = action_data._replace(action=ReleaseAction(action))
+            self.actions[i] = action_data._replace(
+                action=ReleaseAction(action))
         self.update_action_field()
 
     def _clear_grid(self):
@@ -275,10 +276,10 @@ class MacroEditor(Editor):
         label = action_data.label
         action.delay = value / 1000.0
         if ms < 1000:
-            label.set_markup(_("<b>Delay: %sms</b>") % (ms,))
+            label.set_markup(_("<b>Delay: %sms</b>") % (ms, ))
         else:
             s = ms / 1000.0
-            label.set_markup(_("<b>Delay: %0.2fs</b>") % (s,))
+            label.set_markup(_("<b>Delay: %0.2fs</b>") % (s, ))
         self.update_action_field()
 
     def on_actionb_clicked(self, button, i, action_data):
@@ -368,7 +369,8 @@ class MacroEditor(Editor):
         cbMacroType = self.builder.get_object("cbMacroType")
         self.id = id
         self.mode = mode
-        self.set_title("Macro for %s" % (id.name if id in SCButtons else str(id),))
+        self.set_title("Macro for %s" %
+                       (id.name if id in SCButtons else str(id), ))
         if isinstance(action, Cycle):
             cbMacroType.set_active(2)
         elif action.repeat:
@@ -394,4 +396,4 @@ ActionData = namedtuple(
     "action, button_up, button_down, button_clear, button_action,"
     "combo, label, scale",
 )
-ActionData.__new__.__defaults__ = (None,) * len(ActionData._fields)
+ActionData.__new__.__defaults__ = (None, ) * len(ActionData._fields)
