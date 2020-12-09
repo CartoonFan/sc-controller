@@ -1,5 +1,4 @@
 """Python Enumerations"""
-
 """
 Copyright (c) 2013, Ethan Furman.
 All rights reserved.
