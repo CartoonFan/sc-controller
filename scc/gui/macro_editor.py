@@ -43,7 +43,7 @@ class MacroEditor(Editor):
 		# Reenable them if action type is set to anything else.
 		sens = cbMacroType.get_active() != 2
 		for ad in self.actions:
-			if isinstance(ad.action, ButtonAction) or isinstance(ad.action, PressAction):
+			if isinstance(ad.action, (ButtonAction, PressAction)):
 				if sens:
 					ad.combo.set_sensitive(True)
 				else:
@@ -100,7 +100,7 @@ class MacroEditor(Editor):
 		b.set_property("margin-left", 10)
 		b.set_property("margin-right", 10)
 		
-		if isinstance(action, ButtonAction) or isinstance(action, PressAction):
+		if isinstance(action, (ButtonAction, PressAction)):
 			# Combobox
 			c = Gtk.ComboBox()
 			c.set_model(model)
