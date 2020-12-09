@@ -110,7 +110,7 @@ class Action(object):
         """
         dct = Action.ALL
         if prefix:
-            if not prefix in Action.ALL:
+            if prefix not in Action.ALL:
                 Action.ALL[prefix] = {}
             dct = Action.ALL[prefix]
         if action_cls.COMMAND is not None:
@@ -118,7 +118,7 @@ class Action(object):
             if hasattr(action_cls, "ALIASES"):
                 for a in action_cls.ALIASES:
                     dct[a] = action_cls
-        
+
         if hasattr(action_cls, "decode"):
             keys = (action_cls.COMMAND,)
             if hasattr(action_cls, "PROFILE_KEYS"):
@@ -133,10 +133,9 @@ class Action(object):
         Unregisters prefix (as in Prefix.COMMAND) recognized by parser.
         Returns True on sucess, False if there is no such prefix registered.
         """
-        if prefix in Action.ALL:
-            if type(Action.ALL) == dict:
-                del Action.ALL[prefix]
-                return True
+        if prefix in Action.ALL and type(Action.ALL) == dict:
+            del Action.ALL[prefix]
+            return True
         return False
     
     
@@ -174,8 +173,7 @@ class Action(object):
         """
         yield self
         for c in self.get_child_actions():
-            for cc in c.get_all_actions():
-                yield cc
+            yield from c.get_all_actions()
     
     
     def get_compatible_modifiers(self):
@@ -814,10 +812,7 @@ class MouseAction(WholeHapticAction, Action):
         WholeHapticAction.__init__(self)
         self._mouse_axis = axis or None
         self._old_pos = None
-        if speed:
-            self.speed = (speed, speed)
-        else:
-            self.speed = (1.0, 1.0)
+        self.speed = (speed, speed) if speed else (1.0, 1.0)
     
     
     def get_compatible_modifiers(self):
@@ -1037,15 +1032,15 @@ class AreaAction(Action, SpecialAction, OSDEnabledAction):
         
         Overrided by subclasses.
         """
-        if self.needs_query_screen:
-            screen = X.get_screen_size(mapper.get_xdisplay())
-            x1, y1, x2, y2 = self.coords
-            if x1 < 0 : x1 = screen[0] + x1
-            if y1 < 0 : y1 = screen[1] + y1
-            if x2 < 0 : x2 = screen[0] + x2
-            if y2 < 0 : y2 = screen[1] + y2
-            return x1, y1, x2, y2
-        return self.coords
+        if not self.needs_query_screen:
+            return self.coords
+        screen = X.get_screen_size(mapper.get_xdisplay())
+        x1, y1, x2, y2 = self.coords
+        if x1 < 0 : x1 = screen[0] + x1
+        if y1 < 0 : y1 = screen[1] + y1
+        if x2 < 0 : x2 = screen[0] + x2
+        if y2 < 0 : y2 = screen[1] + y2
+        return x1, y1, x2, y2
     
     
     def transform_osd_coords(self, mapper):
@@ -1126,15 +1121,15 @@ class WinAreaAction(AreaAction):
     COMMAND = "winarea"
     
     def transform_coords(self, mapper):
-        if self.needs_query_screen:
-            w_size = X.get_window_size(mapper.get_xdisplay(), mapper.get_current_window())
-            x1, y1, x2, y2 = self.coords
-            if x1 < 0 : x1 = w_size[0] + x1
-            if y1 < 0 : y1 = w_size[1] + y1
-            if x2 < 0 : x2 = w_size[0] + x2
-            if y2 < 0 : y2 = w_size[1] + y2
-            return x1, y1, x2, y2
-        return self.coords
+        if not self.needs_query_screen:
+            return self.coords
+        w_size = X.get_window_size(mapper.get_xdisplay(), mapper.get_current_window())
+        x1, y1, x2, y2 = self.coords
+        if x1 < 0 : x1 = w_size[0] + x1
+        if y1 < 0 : y1 = w_size[1] + y1
+        if x2 < 0 : x2 = w_size[0] + x2
+        if y2 < 0 : y2 = w_size[1] + y2
+        return x1, y1, x2, y2
     
     
     def transform_osd_coords(self, mapper):
@@ -1322,20 +1317,20 @@ class MultichildAction(Action):
     
     
     def to_string(self, multiline=False, pad=0, prefixparams=""):
-        if multiline:
-            rv = [ (" " * pad) + self.COMMAND + "(" + prefixparams.strip() ]
-            pad += 2
-            for a in strip_none(*self.actions):
-                rv += [ a.to_string(True, pad) + ","]
-            if rv[-1].endswith(","):
-                rv[-1] = rv[-1][0:-1]
-            pad -= 2
-            rv += [ (" " * pad) + ")" ]
-            return "\n".join(rv)
-        return self.COMMAND + "(" + prefixparams + (", ".join([
-            x.to_string() if x is not None else "None"
-            for x in strip_none(*self.actions)
-        ])) + ")"
+        if not multiline:
+            return self.COMMAND + "(" + prefixparams + (", ".join([
+                x.to_string() if x is not None else "None"
+                for x in strip_none(*self.actions)
+            ])) + ")"
+        rv = [ (" " * pad) + self.COMMAND + "(" + prefixparams.strip() ]
+        pad += 2
+        for a in strip_none(*self.actions):
+            rv += [ a.to_string(True, pad) + ","]
+        if rv[-1].endswith(","):
+            rv[-1] = rv[-1][0:-1]
+        pad -= 2
+        rv += [ (" " * pad) + ")" ]
+        return "\n".join(rv)
 
 
 class TiltAction(MultichildAction):
@@ -1491,10 +1486,12 @@ class ButtonAction(HapticEnabledAction, Action):
                 return _("Wheel UP")
             return _("Wheel DOWN")
         else:
-            rv = [ ]
-            for x in (self.button, self.button2):
-                if x:
-                    rv.append(ButtonAction.describe_button(x, context=context))
+            rv = [
+                ButtonAction.describe_button(x, context=context)
+                for x in (self.button, self.button2)
+                if x
+            ]
+
             return ", ".join(rv)
     
     
@@ -1725,7 +1722,7 @@ class MultiAction(MultichildAction):
         """
         a = [ a for a in a if a.strip() ]   # 8-)
         # (^^ NoAction is eveluated as False)
-        if len(a) == 0:
+        if not a:
             return NoAction()
         if len(a) == 1:
             return a[0]
@@ -1764,7 +1761,7 @@ class MultiAction(MultichildAction):
             if s in strings: continue
             actions.append(x)
             strings.append(s)
-        if len(actions) == 0:
+        if not actions:
             # Impossible
             return NoAction()
         if len(actions) == 1:
@@ -1810,19 +1807,13 @@ class MultiAction(MultichildAction):
         """ Returns True if all child actions are ButtonActions """
         if len(self.actions) == 0:
             return False
-        for x in self.actions:
-            if not isinstance(x, ButtonAction):
-                return False
-        return True
+        return all(isinstance(x, ButtonAction) for x in self.actions)
     
     
     def describe(self, context):
         if self.name: return self.name
         if self.is_key_combination():
-            rv = []
-            for a in self.actions:
-                if isinstance(a, ButtonAction):
-                    rv.append(a.describe_short())
+            rv = [a.describe_short() for a in self.actions if isinstance(a, ButtonAction)]
             return "+".join(rv)
         if len(self.actions) >= 2 and isinstance(self.actions[1], RingAction):
             # Special case, should be multiline
@@ -1928,10 +1919,9 @@ class DPadAction(MultichildAction, HapticEnabledAction):
         """ Called when decoding profile from json """
         args = [ parser.from_json_data(x) for x in data[DPadAction.COMMAND] ]
         if len(args) > 4:
-            a = DPad8Action(*args)
+            return DPad8Action(*args)
         else:
-            a = DPadAction(*args)
-        return a
+            return DPadAction(*args)
     
     
     def to_string(self, multiline=False, pad=0, prefixparams=""):
@@ -2184,9 +2174,13 @@ class XYAction(WholeHapticAction, Action):
             | self.x.get_compatible_modifiers()
             | self.y.get_compatible_modifiers()
         )
-        if isinstance(self.x, AxisAction) and isinstance(self.y, AxisAction):
-            if self.x.get_axis() in (Axes.ABS_X, Axes.ABS_Y, Axes.ABS_RX, Axes.ABS_RY):
-                mods = (mods | Action.MOD_BALL) & ~Action.MOD_SMOOTH
+        if (
+            isinstance(self.x, AxisAction)
+            and isinstance(self.y, AxisAction)
+            and self.x.get_axis()
+            in (Axes.ABS_X, Axes.ABS_Y, Axes.ABS_RX, Axes.ABS_RY)
+        ):
+            mods = (mods | Action.MOD_BALL) & ~Action.MOD_SMOOTH
         return mods
     
     
@@ -2270,13 +2264,9 @@ class XYAction(WholeHapticAction, Action):
                     x - self._old_pos[0], y - self._old_pos[1])
             if is_close != was_close:
                 mapper.send_feedback(self.big_click)
-            
+
             self._old_distance = distance
-            if mapper.is_touched(what):
-                self._old_pos = x, y
-            else:
-                self._old_pos = None
-        
+            self._old_pos = (x, y) if mapper.is_touched(what) else None
         if mapper.controller_flags() & ControllerFlags.HAS_RSTICK and what == RIGHT:
             self.x.axis(mapper, x, what)
             self.y.axis(mapper, y, what)
@@ -2292,11 +2282,14 @@ class XYAction(WholeHapticAction, Action):
     def describe(self, context):
         if self.name: return self.name
         rv = []
-        if isinstance(self.x, AxisAction) and isinstance(self.y, AxisAction):
-            if (self.x.id, self.y.id) in AxisAction.AXES_PAIRS:
-                # Special cases for default stick bindings
-                desc, trash, trash = AxisAction.get_axis_description(self.x.id)
-                return desc
+        if (
+            isinstance(self.x, AxisAction)
+            and isinstance(self.y, AxisAction)
+            and (self.x.id, self.y.id) in AxisAction.AXES_PAIRS
+        ):
+            # Special cases for default stick bindings
+            desc, trash, trash = AxisAction.get_axis_description(self.x.id)
+            return desc
         if self.x: rv.append(self.x.describe(context))
         if self.y: rv.append(self.y.describe(context))
         if context in (Action.AC_STICK, Action.AC_PAD):
@@ -2480,24 +2473,23 @@ class HipfireAction(Action, HapticEnabledAction):
         self.mode = HipfireAction.DEFAULT_MODE
         self.timeout = HipfireAction.DEFAULT_TIMEOUT
 
-        if len(params) >= 2:
-            if type(params[0]) in (int, float):
-                self.partialpress_level = int(params[0])
-                if type(params[1]) in (int, float):
-                    self.fullpress_level = int(params[1])
-                    params = params[2:]
-                else:
-                    params = params[1:]
-
-            self.partialpress_action = params[0]
-            self.fullpress_action = params[1]
-            if len(params) >= 3:
-                self.mode = params[2]
-            if len(params) == 4:
-                self.timeout = params[3]
-        else:
+        if len(params) < 2:
             raise TypeError("Invalid number of parameters")
 
+        if type(params[0]) in (int, float):
+            self.partialpress_level = int(params[0])
+            if type(params[1]) in (int, float):
+                self.fullpress_level = int(params[1])
+                params = params[2:]
+            else:
+                params = params[1:]
+
+        self.partialpress_action = params[0]
+        self.fullpress_action = params[1]
+        if len(params) >= 3:
+            self.mode = params[2]
+        if len(params) == 4:
+            self.timeout = params[3]
         if self.mode not in (HIPFIRE_NORMAL, HIPFIRE_EXCLUSIVE, HIPFIRE_SENSIBLE):
             raise ValueError("Invalid hipfire mode")
         self.partialpress_active = False

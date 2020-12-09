@@ -76,10 +76,11 @@ class AutoSwitcher(object):
         if action is not None:
             cmpwith = action.to_string()
         for c in conds.keys():
-            if action is None or conds[c].to_string() == cmpwith:
-                if c.matches(title, wm_class):
-                    del conds[c]
-                    count += 1
+            if (action is None or conds[c].to_string() == cmpwith) and c.matches(
+                title, wm_class
+            ):
+                del conds[c]
+                count += 1
         log.debug("Removed %s autoswitcher conditions", count)
     
     

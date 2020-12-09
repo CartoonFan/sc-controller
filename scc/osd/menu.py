@@ -162,14 +162,14 @@ class Menu(OSDWindow):
     def _get_on_screen_position(w):
         a = w.get_allocation()
         parent = w.get_parent()
-        if parent:
-            if isinstance(parent, Menu) and parent.get_window() is not None:
-                x, y = parent.get_window().get_position()
-            else:
-                x, y = Menu._get_on_screen_position(parent)
-            return a.x + x, a.y + y
-        else:
+        if not parent:
             return a.x, a.y
+
+        if isinstance(parent, Menu) and parent.get_window() is not None:
+            x, y = parent.get_window().get_position()
+        else:
+            x, y = Menu._get_on_screen_position(parent)
+        return a.x + x, a.y + y
     
     
     def parse_menu(self):
@@ -244,11 +244,9 @@ class Menu(OSDWindow):
             widget = Gtk.Button.new_with_label(item.label)
             widget.set_relief(Gtk.ReliefStyle.NONE)
             widget.set_name("osd-menu-separator")
-            return widget
         elif isinstance(item, Separator):
             widget = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
             widget.set_name("osd-menu-separator")
-            return widget
         else:
             widget = Gtk.Button.new_with_label(item.label)
             widget.set_relief(Gtk.ReliefStyle.NONE)
@@ -271,7 +269,7 @@ class Menu(OSDWindow):
                 widget.set_name("osd-menu-dummy")
             else:
                 widget.set_name("osd-menu-item")
-            
+
             if isinstance(item.icon, Gio.FileIcon):
                 icon_file = item.icon.get_file().get_path()
                 has_colors = True
@@ -282,7 +280,7 @@ class Menu(OSDWindow):
                 has_colors = True
             else:
                 icon_file, has_colors = find_icon(item.icon, self.PREFER_BW_ICONS)
-            
+
             if icon_file:
                 icon = MenuIcon(icon_file, has_colors)
                 label = widget.get_children()[0]
@@ -292,8 +290,9 @@ class Menu(OSDWindow):
                 box.pack_start(icon,  False, True, 0)
                 box.pack_start(label, True, True, 10)
                 widget.add(box)
-                
-            return widget
+
+
+        return widget
     
     
     def select(self, index):
@@ -301,9 +300,12 @@ class Menu(OSDWindow):
             self._selected.widget.set_name(self._selected.widget.get_name()
                 .replace("-selected", ""))
         if self.items[index].id:
-            if self._selected != self.items[index]:
-                if self.feedback and self.controller:
-                    self.controller.feedback(*self.feedback)
+            if (
+                self._selected != self.items[index]
+                and self.feedback
+                and self.controller
+            ):
+                self.controller.feedback(*self.feedback)
             self._selected = self.items[index]
             self._selected.widget.set_name(
                     self._selected.widget.get_name() + "-selected")
@@ -455,7 +457,7 @@ class Menu(OSDWindow):
                 # Not a separator
                 break
             i += direction
-            if start < 0: start = 0
+            start = max(start, 0)
     
     
     def on_submenu_closed(self, *a):
@@ -524,20 +526,23 @@ class Menu(OSDWindow):
             if self._use_cursor:
                 # Special case, both confirm_with and cancel_with
                 # can be set to STICK
-                if self._cancel_with == STICK and self._control_with == STICK:
-                    if self._control_equals_cancel(daemon, x, y):
-                        return
-                
+                if (
+                    self._cancel_with == STICK
+                    and self._control_with == STICK
+                    and self._control_equals_cancel(daemon, x, y)
+                ):
+                    return
+
                 pad_w = self.cursor.get_allocation().width * 0.5
                 pad_h = self.cursor.get_allocation().height * 0.5
                 max_w = self.get_allocation().width - 2 * pad_w
                 max_h = self.get_allocation().height - 2 * pad_h
-                
+
                 x, y = circle_to_square(x / (STICK_PAD_MAX * 2.0), y / (STICK_PAD_MAX * 2.0))
                 x = clamp(pad_w, (pad_w + max_w) * 0.5 + x * max_w, max_w - pad_w)
                 y = clamp(pad_h, (pad_h + max_h) * 0.5 + y * max_h * -1, max_h - pad_h)
                 self.f.move(self.cursor, int(x), int(y))
-                
+
                 for i in self.items:
                     if point_in_gtkrect(i.widget.get_allocation(), x, y):
                         self.select(self.items.index(i))

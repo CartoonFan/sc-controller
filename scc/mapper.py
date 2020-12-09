@@ -349,21 +349,21 @@ class Mapper(object):
         # Store states
         self.old_state = old_state
         self.old_buttons = self.buttons
-        
+
         self.state = state
         self.buttons = state.buttons
-        
+
         if self.buttons & SCButtons.LPAD and not self.buttons & (SCButtons.LPADTOUCH | STICKTILT):
             self.buttons = (self.buttons & ~SCButtons.LPAD) | SCButtons.STICKPRESS
-        
+
         fe = self.force_event
         self.force_event = set()
-        
+
         # Check buttons
         xor = self.old_buttons ^ self.buttons
         btn_rem = xor & self.old_buttons
         btn_add = xor & self.buttons
-        
+
         try:
             if btn_add or btn_rem:
                 # At least one button was pressed
@@ -372,8 +372,8 @@ class Mapper(object):
                         self.profile.buttons[x].button_press(self)
                     elif x & btn_rem:
                         self.profile.buttons[x].button_release(self)
-            
-            
+
+
             # Check stick
             if self.controller.flags & ControllerFlags.SEPARATE_STICK:
                 if FE_STICK in fe or self.old_state.stick_x != state.stick_x or self.old_state.stick_y != state.stick_y:
@@ -381,19 +381,21 @@ class Mapper(object):
             elif not self.buttons & SCButtons.LPADTOUCH:
                 if FE_STICK in fe or self.old_state.lpad_x != state.lpad_x or self.old_state.lpad_y != state.lpad_y:
                     self.profile.stick.whole(self, state.lpad_x, state.lpad_y, STICK)
-            
+
             # Check gyro
             if controller.get_gyro_enabled():
                 self.profile.gyro.gyro(self, state.gpitch, state.gyaw, state.groll, state.q1, state.q2, state.q3, state.q4)
-            
+
             # Check triggers
-            if FE_TRIGGER in fe or state.ltrig != self.old_state.ltrig:
-                if LEFT in self.profile.triggers:
-                    self.profile.triggers[LEFT].trigger(self, state.ltrig, self.old_state.ltrig)
-            if FE_TRIGGER in fe or state.rtrig != self.old_state.rtrig:
-                if RIGHT in self.profile.triggers:
-                    self.profile.triggers[RIGHT].trigger(self, state.rtrig, self.old_state.rtrig)
-            
+            if (
+                FE_TRIGGER in fe or state.ltrig != self.old_state.ltrig
+            ) and LEFT in self.profile.triggers:
+                self.profile.triggers[LEFT].trigger(self, state.ltrig, self.old_state.ltrig)
+            if (
+                FE_TRIGGER in fe or state.rtrig != self.old_state.rtrig
+            ) and RIGHT in self.profile.triggers:
+                self.profile.triggers[RIGHT].trigger(self, state.rtrig, self.old_state.rtrig)
+
             # Check pads
             # RPAD
             if controller.flags & ControllerFlags.HAS_RSTICK:
@@ -401,7 +403,7 @@ class Mapper(object):
                     self.profile.pads[RIGHT].whole(self, state.rpad_x, state.rpad_y, RIGHT)
             elif FE_PAD in fe or self.buttons & SCButtons.RPADTOUCH or SCButtons.RPADTOUCH & btn_rem:
                 self.profile.pads[RIGHT].whole(self, state.rpad_x, state.rpad_y, RIGHT)
-            
+
             # LPAD
             if self.controller.flags & ControllerFlags.SEPARATE_STICK:
                 if FE_PAD in fe or self.old_state.lpad_x != state.lpad_x or self.old_state.lpad_y != state.lpad_y:
@@ -421,25 +423,30 @@ class Mapper(object):
                     if self.lpad_touched:
                         self.lpad_touched = False
                         self.profile.pads[LEFT].whole(self, 0, 0, LEFT)
-                    
+
             # CPAD (touchpad on DS4 controller)
-            if controller.flags & ControllerFlags.HAS_CPAD:
-                if ((FE_PAD in fe)
-                        or (self.old_state.cpad_x != state.cpad_x)
-                        or (self.old_state.cpad_y != state.cpad_y)
-                        or ((self.old_buttons & SCButtons.CPADTOUCH) and not (self.buttons & SCButtons.CPADTOUCH))
-                    ):
-                    if self.buttons & SCButtons.CPADTOUCH:
-                        self.profile.pads[CPAD].whole(self, state.cpad_x, state.cpad_y, CPAD)
-                    elif self.old_buttons & SCButtons.CPADTOUCH:
-                        self.profile.pads[CPAD].whole(self, 0, 0, CPAD)
+            if controller.flags & ControllerFlags.HAS_CPAD and (
+                (
+                    (FE_PAD in fe)
+                    or (self.old_state.cpad_x != state.cpad_x)
+                    or (self.old_state.cpad_y != state.cpad_y)
+                    or (
+                        (self.old_buttons & SCButtons.CPADTOUCH)
+                        and not (self.buttons & SCButtons.CPADTOUCH)
+                    )
+                )
+            ):
+                if self.buttons & SCButtons.CPADTOUCH:
+                    self.profile.pads[CPAD].whole(self, state.cpad_x, state.cpad_y, CPAD)
+                elif self.old_buttons & SCButtons.CPADTOUCH:
+                    self.profile.pads[CPAD].whole(self, 0, 0, CPAD)
         except Exception:
             # Log error but don't crash here, it breaks too many things at once
             if hasattr(self, "_testing"):
                 raise
             log.error("Error while processing controller event")
             log.error(traceback.format_exc())
-        
+
         # TODO: Is it important to run scheduled stuff before generate_events?
         self.scheduler.run()
         self.generate_events()

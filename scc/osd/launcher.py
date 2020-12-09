@@ -92,21 +92,19 @@ class Launcher(OSDWindow):
     
     @staticmethod
     def name_to_keys(appinfo):
-        name = "".join([
+        return "".join([
             Launcher.CHAR_TO_NUMBER[x]
             for x in appinfo.get_display_name().upper()
             if x in Launcher.VALID_CHARS
         ])
-        return name
     
     
     @staticmethod
     def string_to_keys_and_spaces(string):
-        name = "".join([
+        return "".join([
             Launcher.CHAR_TO_NUMBER[x] if x in Launcher.VALID_CHARS else " "
             for x in string.upper()
         ])
-        return name
     
     
     def create_parent(self):
@@ -391,7 +389,7 @@ class Launcher(OSDWindow):
                 continue
             if self.select(i): break
             i += direction
-            if start < 0: start = 0
+            start = max(start, 0)
     
     
     def on_stick_direction(self, trash, x, y):

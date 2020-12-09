@@ -105,8 +105,8 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
         """
         if name is None:
             return
-        
-        
+
+
         if name.endswith(".mod"): name = name[0:-4]
         if name.endswith(".sccprofile"): name = name[0:-11]
         if "/" in name : name = os.path.split(name)[-1]
@@ -114,25 +114,26 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
         if type(name) == unicode:
             # GTK can't handle this
             name = name.encode("utf-8")
-        
+
         active = self._combo.get_active_iter()
         giofile = None
         for row in self._model:
-            if self._model.get_value(row.iter, 1) is not None:
-                if name == self._model.get_value(row.iter, 0):
-                    giofile = self._model.get_value(row.iter, 1)
-                    if active == row.iter:
-                        # Already selected
-                        break
-                    self._combo.set_active_iter(row.iter)
+            if self._model.get_value(
+                row.iter, 1
+            ) is not None and name == self._model.get_value(row.iter, 0):
+                giofile = self._model.get_value(row.iter, 1)
+                if active == row.iter:
+                    # Already selected
                     break
+                self._combo.set_active_iter(row.iter)
+                break
         if giofile is None and create:
             path = find_profile(name)
             if path:
                 giofile = Gio.File.new_for_path(path)
                 self._model.insert(0, (name, giofile, None))
                 self._combo.set_active(0)
-        
+
         return giofile != None
     
     
