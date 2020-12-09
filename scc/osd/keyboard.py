@@ -166,8 +166,7 @@ class KeyboardImage(Gtk.DrawingArea):
             buf = GdkPixbuf.Pixbuf.new_from_file_at_size(path, size, size)
             buf = self.increase_contrast(buf)
             self._button_images[x] = buf
-        i = self._button_images[x]
-        return i
+        return self._button_images[x]
     
     
     def on_draw(self, self2, ctx):
@@ -300,7 +299,7 @@ class Keyboard(OSDWindow, TimerManager):
         if not os.path.exists(self.kbimage):
             # Prefer image in ~/.config/scc, but load default one as fallback
             self.kbimage = os.path.join(get_share_path(), "images", 'keyboard.svg')
-        
+
         TimerManager.__init__(self)
         OSDWindow.__init__(self, "osd-keyboard")
         self.daemon = None
@@ -314,35 +313,33 @@ class Keyboard(OSDWindow, TimerManager):
         self.group = None
         self.limits = {}
         self.background = None
-        
+
         cursor = os.path.join(get_share_path(), "images", 'menu-cursor.svg')
-        self.cursors = {}
-        self.cursors[LEFT] = Gtk.Image.new_from_file(cursor)
+        self.cursors = {LEFT: Gtk.Image.new_from_file(cursor)}
         self.cursors[LEFT].set_name("osd-keyboard-cursor")
         self.cursors[RIGHT] = Gtk.Image.new_from_file(cursor)
         self.cursors[RIGHT].set_name("osd-keyboard-cursor")
         self.cursors[CPAD] = Gtk.Image.new_from_file(cursor)
         self.cursors[CPAD].set_name("osd-keyboard-cursor")
-        
+
         self._eh_ids = []
         self._controller = None
         self._stick = 0, 0
         self._hovers = { self.cursors[LEFT]: None, self.cursors[RIGHT]: None }
         self._pressed = { self.cursors[LEFT]: None, self.cursors[RIGHT]: None }
         self._pressed_areas = {}
-        
+
         self.c = Gtk.Box()
         self.c.set_name("osd-keyboard-container")
-        
+
         self.f = Gtk.Fixed()
     
     
     def _create_background(self):
         self.background = KeyboardImage(self.args.image)
         self.recolor()
-        
-        self.limits = {}
-        self.limits[LEFT]  = self.background.get_limit("LIMIT_LEFT")
+
+        self.limits = {LEFT: self.background.get_limit("LIMIT_LEFT")}
         self.limits[RIGHT] = self.background.get_limit("LIMIT_RIGHT")
         self.limits[CPAD] = self.background.get_limit("LIMIT_CPAD")
         self._pack()
@@ -468,9 +465,7 @@ class Keyboard(OSDWindow, TimerManager):
     
     
     def parse_argumets(self, argv):
-        if not OSDWindow.parse_argumets(self, argv):
-            return False
-        return True
+        return bool(OSDWindow.parse_argumets(self, argv))
     
     
     def _cononect_handlers(self):
@@ -501,7 +496,6 @@ class Keyboard(OSDWindow, TimerManager):
     def on_daemon_connected(self, *a):
         def success(*a):
             log.info("Sucessfully locked input")
-            pass
         
         c = self.choose_controller(self.daemon)
         if c is None or not c.is_connected():
@@ -611,35 +605,34 @@ class Keyboard(OSDWindow, TimerManager):
         h = limit[3] - (cursor.get_allocation().height * 0.5)
         x = x / float(STICK_PAD_MAX)
         y = y / float(STICK_PAD_MAX) * -1.0
-        
+
         x, y = circle_to_square(x, y)
-        
+
         x = clamp(
             cursor.get_allocation().width * 0.5,
             (limit[0] + w * 0.5) + x * w * 0.5,
             self.get_allocation().width - cursor.get_allocation().width
             )
-        
+
         y = clamp(
             cursor.get_allocation().height * 0.5,
             (limit[1] + h * 0.5) + y * h * 0.5,
             self.get_allocation().height - cursor.get_allocation().height
             )
-        
+
         cursor.position = int(x), int(y)
         self.f.move(cursor,
             x - cursor.get_allocation().width * 0.5,
             y - cursor.get_allocation().height * 0.5)
         for button in self.background.buttons:
-            if button.contains(x, y):
-                if button != self._hovers[cursor]:
-                    self._hovers[cursor] = button
-                    if self._pressed[cursor] is not None:
-                        self.mapper.keyboard.releaseEvent([ self._pressed[cursor] ])
-                        self.key_from_cursor(cursor, True)
-                    if not self.timer_active('update'):
-                        self.timer('update', 0.01, self.update_background)
-                    break
+            if button.contains(x, y) and button != self._hovers[cursor]:
+                self._hovers[cursor] = button
+                if self._pressed[cursor] is not None:
+                    self.mapper.keyboard.releaseEvent([ self._pressed[cursor] ])
+                    self.key_from_cursor(cursor, True)
+                if not self.timer_active('update'):
+                    self.timer('update', 0.01, self.update_background)
+                break
     
     
     def update_background(self, *whatever):
@@ -647,8 +640,8 @@ class Keyboard(OSDWindow, TimerManager):
         Updates hilighted keys on bacgkround image.
         """
         self.background.hilight(
-            set([ a for a in self._hovers.values() if a ]),
-            set([ a for a in self._pressed_areas.values() if a ])
+            {a for a in self._hovers.values() if a},
+            {a for a in self._pressed_areas.values() if a},
         )
     
     

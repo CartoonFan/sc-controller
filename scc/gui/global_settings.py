@@ -311,12 +311,10 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         cbShowOSD = self.builder.get_object("cbShowOSD")
         cbEnableStatusIcon = self.builder.get_object("cbEnableStatusIcon")
         cbMinimizeToStatusIcon = self.builder.get_object("cbMinimizeToStatusIcon")
-        conds = []
-        for row in tvItems.get_model():
-            conds.append({
+        conds = [{
                 'condition' : row[0].condition.encode(),
                 'action' : row[0].action.to_string()
-            })
+            } for row in tvItems.get_model()]
         # Apply status icon settings
         if self.app.config['gui']['enable_status_icon'] != cbEnableStatusIcon.get_active():
             self.app.config['gui']['enable_status_icon'] = cbEnableStatusIcon.get_active()
@@ -336,7 +334,7 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         self.app.config['gui']['minimize_on_start'] = self.builder.get_object("cbMinimizeOnStart").get_active()
         self.app.config['gui']['autokill_daemon'] = self.builder.get_object("cbAutokillDaemon").get_active()
         self.app.config['gui']['news']['enabled'] = self.builder.get_object("cbNewRelease").get_active()
-        
+
         # Save
         self.app.save_config()
     
@@ -375,8 +373,10 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         self.app.config["drivers"][drv] = cb.get_active()
         if cb.get_active() and drv in self.DRIVER_DEPS:
             # Driver has dependencies, make sure at least one of them is active
-            one_active = any([ self.app.config["drivers"].get(x)
-                                    for x in self.DRIVER_DEPS[drv] ])
+            one_active = any(
+                self.app.config["drivers"].get(x) for x in self.DRIVER_DEPS[drv]
+            )
+
             if not one_active:
                 # Nothing is, make everything active just to be sure
                 self._recursing = True
@@ -385,20 +385,24 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
                     if w : w.set_active(True)
                     self.app.config["drivers"][x] = True
                 self._recursing = False
-        
-        if not cb.get_active() and any([ drv in x for x in self.DRIVER_DEPS.values() ]):
+
+        if not cb.get_active() and any(
+            drv in x for x in self.DRIVER_DEPS.values()
+        ):
             # Something depends on this driver,
             # disable anything that has no dependent drivers active
             self._recursing = True
             for x, deps in self.DRIVER_DEPS.items():
                 w = self.builder.get_object("cbEnableDriver_%s" % (x, ))
-                one_active = any([ self.app.config["drivers"].get(y)
-                                        for y in self.DRIVER_DEPS[x] ])
+                one_active = any(
+                    self.app.config["drivers"].get(y) for y in self.DRIVER_DEPS[x]
+                )
+
                 if not one_active and w:
                     w.set_active(False)
                     self.app.config["drivers"][x] = False
             self._recursing = False
-        
+
         self.save_config()
         self._needs_restart()
     

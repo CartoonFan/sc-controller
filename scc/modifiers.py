@@ -147,9 +147,8 @@ class NameModifier(Modifier):
         # Inversion of strip.
         # For action that has name, returns NameModifier wrapping around that
         # action. For everything else returns original action.
-        if not isinstance(action, NameModifier):
-            if action and action.name:
-                return NameModifier(action.name, action)
+        if not isinstance(action, NameModifier) and action and action.name:
+            return NameModifier(action.name, action)
         return action
     
     
@@ -796,7 +795,7 @@ class ModeModifier(Modifier):
         self.shell_commands = {}
         self.shell_timeout = 0.5
         self.timeout = DoubleclickModifier.DEAFAULT_TIMEOUT
-        
+
         # ShellCommandAction cannot be imported normally, it would create
         # import cycle of hell
         ShellCommandAction = Action.ALL['shell']
@@ -819,10 +818,7 @@ class ModeModifier(Modifier):
                 raise ValueError("Invalid parameter for 'mode': %s" % (i,))
         self.make_checks()
         if self.default is None:
-            if isinstance(button, ShellCommandAction):
-                self.default = button
-            else:
-                self.default = NoAction()
+            self.default = button if isinstance(button, ShellCommandAction) else NoAction()
     
     
     def make_checks(self):
@@ -1083,16 +1079,16 @@ class ModeModifier(Modifier):
             mapper.force_event.add(FE_STICK)
         else:
             sel = self.select(mapper)
-            if sel is not self.old_action:
-                mapper.set_button(what, False)
-                if self.old_action:
-                    self.old_action.whole(mapper, 0, 0, what)
-                self.old_action = sel
-                rv = sel.whole(mapper, x, y, what)
-                mapper.set_button(what, True)
-                return rv
-            else:
+            if sel is self.old_action:
                 return sel.whole(mapper, x, y, what)
+
+            mapper.set_button(what, False)
+            if self.old_action:
+                self.old_action.whole(mapper, 0, 0, what)
+            self.old_action = sel
+            rv = sel.whole(mapper, x, y, what)
+            mapper.set_button(what, True)
+            return rv
 
 
 class DoubleclickModifier(Modifier, HapticEnabledAction):
@@ -1181,24 +1177,24 @@ class DoubleclickModifier(Modifier, HapticEnabledAction):
                 NameModifier.unstrip(self.normalaction).to_string(multiline, pad),
                 timeout
             )
-        elif self.action and self.normalaction and not self.holdaction:
+        elif self.action and self.normalaction:
             return "doubleclick(%s, %s%s)" % (
                 NameModifier.unstrip(self.action).to_string(multiline, pad),
                 NameModifier.unstrip(self.normalaction).to_string(multiline, pad),
                 timeout
             )
-        elif not self.action and self.normalaction and self.holdaction:
+        elif self.normalaction and self.holdaction:
             return "hold(%s, %s%s)" % (
                 NameModifier.unstrip(self.holdaction).to_string(multiline, pad),
                 NameModifier.unstrip(self.normalaction).to_string(multiline, pad),
                 timeout
             )
-        elif not self.action and not self.normalaction and self.holdaction:
+        elif not self.action and self.holdaction:
             return "hold(None, %s%s)" % (
                 NameModifier.unstrip(self.holdaction).to_string(multiline, pad),
                 timeout
             )
-        elif self.action and not self.normalaction and not self.holdaction:
+        elif self.action and not self.holdaction:
             return "doubleclick(None, %s%s)" % (
                 NameModifier.unstrip(self.action).to_string(multiline, pad),
                 timeout
@@ -1241,7 +1237,7 @@ class DoubleclickModifier(Modifier, HapticEnabledAction):
             self.waiting_task = None
             if self.pressed:
                 # Timeouted while button is still pressed
-                self.active = self.holdaction if self.holdaction else self.normalaction
+                self.active = self.holdaction or self.normalaction
                 if self.haptic:
                     mapper.send_feedback(self.haptic)
                 self.active.button_press(mapper)
@@ -1510,7 +1506,7 @@ class SmoothModifier(Modifier):
         if mapper.is_touched(what):
             if self._last_pos is None:
                 # Just pressed - fill deque with current position
-                for i in self._range:
+                for _ in self._range:
                     self._deq_x.append(x)
                     self._deq_y.append(y)
                 x, y = self._get_pos()

@@ -45,11 +45,11 @@ class RingEditor(Editor, ComboSetter):
         """
         if isinstance(obj, RingAction):
             return True
-        if isinstance(obj, MultiAction):
-            if len(obj.actions) >= 2:
-                if isinstance(obj.actions[1], RingAction):
-                    return True
-        return False
+        return (
+            isinstance(obj, MultiAction)
+            and len(obj.actions) >= 2
+            and isinstance(obj.actions[1], RingAction)
+        )
     
     
     def on_adjRadius_value_changed(self, scale, *a):

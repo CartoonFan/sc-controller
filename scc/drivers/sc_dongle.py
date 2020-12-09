@@ -184,13 +184,13 @@ class SCController(Controller):
     
     
     def input(self, idata):
-        old_state, self._old_state = self._old_state, idata
         if self.mapper:
+            old_state, self._old_state = self._old_state, idata
             #if idata.buttons & SCButtons.LPAD:
             #   # STICKPRESS button may signalize pressing stick instead
             #   if (idata.buttons & STICKPRESS) and not (idata.buttons & STICKTILT):
             #       idata = ControllerInput.replace(buttons=idata.buttons & ~SCButtons.LPAD)
-            
+
             if self._input_rotation_l:
                 lx, ly = idata.lpad_x, idata.lpad_y
                 if idata.buttons & SCButtons.LPADTOUCH:
@@ -200,7 +200,7 @@ class SCController(Controller):
                 s, c = sin(self._input_rotation_r), cos(self._input_rotation_r)
                 rx = int(idata.rpad_x * c - idata.rpad_y * s)
                 ry = int(idata.rpad_x * s + idata.rpad_y * c)
-                
+
                 # TODO: This is awfull :(
                 idata = ControllerInput(
                         idata.type, idata.status, idata.seq, idata.buttons,
@@ -209,7 +209,7 @@ class SCController(Controller):
                         idata.gpitch, idata.groll, idata.gyaw,
                         idata.q1, idata.q2, idata.q3, idata.q4
                 )
-            
+
             self.mapper.input(self, old_state, idata)
     
     
