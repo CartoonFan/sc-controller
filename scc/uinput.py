@@ -552,7 +552,7 @@ class Keyboard(UInput):
 		for i in new:
 			self.scanEvent(Scans[i])
 			self.keyEvent(i, 1)
-		if len(new):
+		if new:
 			self.synEvent()
 			self._pressed |= set(new)
 
@@ -565,14 +565,14 @@ class Keyboard(UInput):
 		@param list of Keys keys		keys to release, give None or empty list
 										to release all
 		"""
-		if keys and len(keys):
+		if keys and keys:
 			rem = [k for k in keys if k in self._pressed]
 		else:
 			rem = list(self._pressed)
 		for i in rem:
 			self.scanEvent(Scans[i])
 			self.keyEvent(i, 0)
-		if len(rem):
+		if rem:
 			self.synEvent()
 			self._pressed -= set(rem)
 

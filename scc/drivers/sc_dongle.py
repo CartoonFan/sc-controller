@@ -116,7 +116,7 @@ class Dongle(USBDevice):
 		elif tup.status == SCStatus.INPUT:
 			if endpoint not in self._controllers:
 				self._add_controller(endpoint)
-			elif len(self._no_serial):
+			elif self._no_serial:
 				for x in self._no_serial:
 					x.read_serial()
 				self._no_serial = []

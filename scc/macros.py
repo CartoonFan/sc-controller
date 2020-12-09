@@ -33,7 +33,7 @@ class Macro(Action):
 		self._current = None
 		self._release = None
 		for p in parameters:
-			if type(p) == float and len(self.actions):
+			if type(p) == float and self.actions:
 				self.actions[-1].delay_after = p
 			elif isinstance(p, Macro):
 				self.actions += p.actions
@@ -331,7 +331,7 @@ class TapAction(PressAction):
 
 	
 	def button_press(self, mapper):
-		if len(self._lst):
+		if self._lst:
 			# Still executing from scheduler
 			return
 		
@@ -389,7 +389,7 @@ class TapAction(PressAction):
 		else:
 			mapper.pressed[self.button] = 1
 			ButtonAction._button_release(mapper, self.button)
-		if len(self._lst):
+		if self._lst:
 			mapper.pressed[self.button] = self.COUNTER_VAL
 			mapper.schedule(self.PAUSE, self._rel_tap_press)
 	

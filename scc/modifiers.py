@@ -98,7 +98,7 @@ class Modifier(Action):
 		required_count = len(argspec.args) - len(argspec.defaults) - 1
 		l = list(self.parameters[0:-1])
 		d = list(argspec.defaults)[0:len(l)]
-		while len(d) and len(l) > required_count and d[-1] == l[-1]:
+		while d and len(l) > required_count and d[-1] == l[-1]:
 			d, l = d[:-1], l[:-1]
 		return l
 	
@@ -874,7 +874,7 @@ class ModeModifier(Modifier):
 		# Returns default action or action assigned to first modifier
 		if self.default:
 			return self.default.strip()
-		if len(self.mods):
+		if self.mods:
 			return self.mods.values()[0].strip()
 		# Empty ModeModifier
 		return NoAction()

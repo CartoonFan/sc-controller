@@ -122,7 +122,7 @@ class Mapper(object):
 	
 	def sync(self):
 		""" Syncs generated events """
-		if len(self.syn_list):
+		if self.syn_list:
 			for dev in self.syn_list:
 				dev.synEvent()
 			self.syn_list = set()
@@ -449,10 +449,10 @@ class Mapper(object):
 	
 	def generate_events(self):
 		# Generate events - keys
-		if len(self.keypress_list):
+		if self.keypress_list:
 			self.keyboard.pressEvent(self.keypress_list)
 			self.keypress_list = []
-		if len(self.keyrelease_list):
+		if self.keyrelease_list:
 			self.keyboard.releaseEvent(self.keyrelease_list)
 			self.keyrelease_list = []
 		# Generate events - mouse
