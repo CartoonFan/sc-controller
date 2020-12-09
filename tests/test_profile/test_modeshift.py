@@ -1,4 +1,3 @@
-
 from . import parser
 from scc.constants import SCButtons
 from scc.modifiers import *
