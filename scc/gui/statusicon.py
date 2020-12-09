@@ -57,7 +57,6 @@ class StatusIcon(GObject.GObject):
 
     def __init__(self, icon_path, popupmenu, force=False):
         GObject.GObject.__init__(self)
-        self.__icon_path = os.path.normpath(os.path.abspath(icon_path))
         self.__popupmenu = popupmenu
         self.__active = True
         self.__visible = False
