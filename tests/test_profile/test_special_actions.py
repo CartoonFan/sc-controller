@@ -1,9 +1,7 @@
-from scc.uinput import Keys, Axes, Rels
 from scc.constants import SCButtons, HapticPos
 from scc.special_actions import *
 from scc.actions import ButtonAction
 from . import parser
-import inspect
 
 MENU_CLASSES = (MenuAction, HorizontalMenuAction, GridMenuAction,
 	RadialMenuAction, QuickMenuAction)

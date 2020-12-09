@@ -1,5 +1,5 @@
 #!/usr/bin/env python2
-import sys, os, subprocess
+import sys, os
 
 def try_run(cmd):
 	if os.system(cmd) != 0:
