@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
-import sys
 import os
+import sys
 
 
 def try_run(cmd):

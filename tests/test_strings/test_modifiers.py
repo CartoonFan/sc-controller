@@ -1,8 +1,10 @@
-from scc.actions import AxisAction
-from scc.uinput import Axes
-from scc.modifiers import *
-from . import _parses_as
 import inspect
+
+from scc.actions import AxisAction
+from scc.modifiers import *
+from scc.uinput import Axes
+
+from . import _parses_as
 
 
 class TestModifiers(object):
