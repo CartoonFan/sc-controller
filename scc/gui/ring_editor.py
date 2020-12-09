@@ -29,7 +29,7 @@ class RingEditor(Editor, ComboSetter):
 	
 	def setup_widgets(self):
 		Editor.setup_widgets(self)
-		b = lambda a : self.builder.get_object(a)
+		b = self.builder.get_object
 		self.action_widgets = (
 			# Order goes: Action Button, Clear Button
 			( b('btInner'),		b('btClearInner') ),

@@ -69,7 +69,7 @@ class ModeshiftEditor(Editor):
 		cbButtonChooser = self.builder.get_object("cbButtonChooser")
 		cbButtonChooser.set_row_separator_func( lambda model, iter : model.get_value(iter, 0) is None )
 		
-		b = lambda a : self.builder.get_object(a)
+		b = self.builder.get_object
 		self.action_widgets = (
 			# Order goes: Grid, 1st Action Button, Clear Button
 			# 1st group, 'pressed'
