@@ -1,4 +1,3 @@
-import inspect
 
 from . import parser
 from scc.constants import SCButtons

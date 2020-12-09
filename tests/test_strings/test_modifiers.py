@@ -1,4 +1,3 @@
-import inspect
 
 from . import _parses_as
 from scc.actions import AxisAction
