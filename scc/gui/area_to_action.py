@@ -108,7 +108,7 @@ def action_to_area(action):
 	"""
 	cls = action.__class__
 	if cls == RAxisAction : cls = AxisAction
-	if not cls in _CLS_TO_AREA:
+	if cls not in _CLS_TO_AREA:
 		return None
 	for area, pars in _CLS_TO_AREA[cls]:
 		if len(pars) > len(action.parameters):

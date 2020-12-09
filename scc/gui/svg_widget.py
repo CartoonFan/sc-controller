@@ -191,7 +191,7 @@ class SVGWidget(Gtk.EventBox):
 	def hilight(self, buttons):
 		""" Hilights specified button, if same ID is found in svg """
 		cache_id = "|".join([ "%s:%s" % (x, buttons[x]) for x in buttons ])
-		if not cache_id in self.cache:
+		if cache_id not in self.cache:
 			# Ok, this is close to madness, but probably better than drawing
 			# 200 images by hand;
 			if len(buttons) == 0:
