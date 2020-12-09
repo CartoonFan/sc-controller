@@ -160,17 +160,16 @@ class RingEditor(Editor, ComboSetter):
 		cbMode = self.builder.get_object("cbMode")
 		key = cbMode.get_model().get_value(cbMode.get_active_iter(), 0)
 		if key == "inner":
-			return MultiAction(
-				self.actions[1],
-				RingAction(self.radius, self.actions[0], NoAction())
-			)
-		elif key == "outer":
-			return MultiAction(
-				self.actions[0],
-				RingAction(self.radius, NoAction(), self.actions[1])
-			)
-		else:
-			return RingAction(self.radius, *self.actions)
+		    return MultiAction(
+		    	self.actions[1],
+		    	RingAction(self.radius, self.actions[0], NoAction())
+		    )
+		if key == "outer":
+		    return MultiAction(
+		    	self.actions[0],
+		    	RingAction(self.radius, NoAction(), self.actions[1])
+		    )
+		return RingAction(self.radius, *self.actions)
 	
 	
 	def _update(self):

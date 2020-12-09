@@ -1083,11 +1083,10 @@ class ActionEditor(Editor):
 	
 	def on_sclFriction_format_value(self, scale, value):
 		if value <= 0:
-			return "%0.3f" % (0,)
-		elif value >= 6:
-			return "%0.3f" % (1000.00,)
-		else:
-			return "%0.3f" % ((10.0**value)/1000.0)
+		    return "%0.3f" % (0,)
+		if value >= 6:
+		    return "%0.3f" % (1000.00,)
+		return "%0.3f" % ((10.0**value)/1000.0)
 	
 	
 	def on_btClearFriction_clicked(self, *a):

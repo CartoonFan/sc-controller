@@ -109,20 +109,19 @@ class VDFProfile(Profile):
 			# Special cases, as dpad is apparently button on Windows
 			b = params[0].strip().lower()
 			if b == "dpad_up":
-				return HatUpAction(Axes.ABS_HAT0Y)
-			elif b == "dpad_down":
-				return HatDownAction(Axes.ABS_HAT0Y)
-			elif b == "dpad_left":
-				return HatLeftAction(Axes.ABS_HAT0X)
-			elif b == "dpad_right":
-				return HatRightAction(Axes.ABS_HAT0X)
-			elif b == "trigger_left":
-				return AxisAction(Axes.ABS_Z)
-			elif b == "trigger_right":
-				return AxisAction(Axes.ABS_RZ)
-			else:
-				b = VDFProfile.convert_button_name(b)
-				return ButtonAction(b).set_name(name)
+			    return HatUpAction(Axes.ABS_HAT0Y)
+			if b == "dpad_down":
+			    return HatDownAction(Axes.ABS_HAT0Y)
+			if b == "dpad_left":
+			    return HatLeftAction(Axes.ABS_HAT0X)
+			if b == "dpad_right":
+			    return HatRightAction(Axes.ABS_HAT0X)
+			if b == "trigger_left":
+			    return AxisAction(Axes.ABS_Z)
+			if b == "trigger_right":
+			    return AxisAction(Axes.ABS_RZ)
+			b = VDFProfile.convert_button_name(b)
+			return ButtonAction(b).set_name(name)
 		elif binding in ("mode_shift"):
 			if button is None:
 				log.warning("Ignoring modeshift assigned to no button: '%s'" % (lst_or_str,))
@@ -145,9 +144,8 @@ class VDFProfile(Profile):
 			return NoAction()
 		elif binding == "mouse_wheel":
 			if params[0].lower() == "scroll_down":
-				return MouseAction(Rels.REL_WHEEL, -1)
-			else:
-				return MouseAction(Rels.REL_WHEEL, 1)
+			    return MouseAction(Rels.REL_WHEEL, -1)
+			return MouseAction(Rels.REL_WHEEL, 1)
 		elif binding == "game_action":
 			log.warning("Ignoring game_action binding: '%s'" % (lst_or_str,))
 			return NoAction()
@@ -250,13 +248,12 @@ class VDFProfile(Profile):
 				act_actions.append(a)
 			normal, double, hold = act_actions
 			if not double and not hold:
-				return normal
-			elif hold and not double:
-				return HoldModifier(hold, normal)
-			else:
-				action = DoubleclickModifier(double, normal)
-				action.holdaction = hold
-				return action
+			    return normal
+			if hold and not double:
+			    return HoldModifier(hold, normal)
+			action = DoubleclickModifier(double, normal)
+			action.holdaction = hold
+			return action
 		else:
 			log.warning("Failed to parse button definition: %s" % (bdef,))
 	

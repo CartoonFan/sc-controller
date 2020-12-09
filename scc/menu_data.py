@@ -230,9 +230,8 @@ class Separator(MenuItem):
 	
 	def describe(self):
 		if self.label:
-			return _("----[ %s ]----") % (self.label,)
-		else:
-			return _("---- Separator ----")
+		    return _("----[ %s ]----") % (self.label,)
+		return _("---- Separator ----")
 	
 	
 	def encode(self):

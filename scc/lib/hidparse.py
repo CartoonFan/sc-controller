@@ -162,17 +162,16 @@ def parse_item(it, page):
 	if itype == 0x00:					# main items
 		item = enum_or_reserved(MainItem, itag)
 		if item == MainItem.Collection:
-			col_type = enum_or_reserved(Collection, it[1])
-			return item, col_type
-		elif item in (MainItem.Input, MainItem.Output, MainItem.Feature):
-			return (item,
-				ItemType.Constant if it[1] & 0x1 else ItemType.Data,
-				ItemLength.Variable if it[1] & 0x2 else ItemLength.Array,
-				ItemBase.Relative if it[1] & 0x4 else ItemBase.Absolute,
-			)
-		else:
-			# EndCollection or reserved
-			return item,
+		    col_type = enum_or_reserved(Collection, it[1])
+		    return item, col_type
+		if item in (MainItem.Input, MainItem.Output, MainItem.Feature):
+		    return (item,
+		    	ItemType.Constant if it[1] & 0x1 else ItemType.Data,
+		    	ItemLength.Variable if it[1] & 0x2 else ItemLength.Array,
+		    	ItemBase.Relative if it[1] & 0x4 else ItemBase.Absolute,
+		    )
+		# EndCollection or reserved
+		return item,
 	elif itype == 0x04:					# global items
 		item = enum_or_reserved(GlobalItem, itag)
 		if item == GlobalItem.UsagePage:

@@ -77,11 +77,10 @@ class OSKCursorAction(Action, SpecialAction):
 	
 	def describe(self, context):
 		if self.side == LEFT:
-			return _("Move LEFT Cursor")
-		elif self.side == RIGHT:
-			return _("Move RIGHT Cursor")
-		else:
-			return _("Move Cursor")
+		    return _("Move LEFT Cursor")
+		if self.side == RIGHT:
+		    return _("Move RIGHT Cursor")
+		return _("Move Cursor")
 	
 	
 	def to_string(self, multiline=False, pad=0):
@@ -116,9 +115,8 @@ class OSKPressAction(OSKAction):
 		if context == Action.AC_OSK:
 			return _("Press Key")
 		if self.side == LEFT:
-			return _("Press Key Under LEFT Cursor")
-		else:
-			return _("Press Key Under RIGHT Cursor")	
+		    return _("Press Key Under LEFT Cursor")
+		return _("Press Key Under RIGHT Cursor")	
 	
 	
 	def button_press(self, mapper):

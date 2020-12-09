@@ -126,13 +126,12 @@ class BindingEditor(object):
 			return profile.gyro
 		elif id in STICKS + PADS:
 			if id in STICKS:
-				return profile.stick
-			elif id == Profile.LPAD:
-				return profile.pads[Profile.LEFT]
-			elif id == Profile.RPAD:
-				return profile.pads[Profile.RIGHT]
-			else:
-				return profile.pads[Profile.CPAD]
+			    return profile.stick
+			if id == Profile.LPAD:
+			    return profile.pads[Profile.LEFT]
+			if id == Profile.RPAD:
+			    return profile.pads[Profile.RIGHT]
+			return profile.pads[Profile.CPAD]
 		return None
 	
 	
