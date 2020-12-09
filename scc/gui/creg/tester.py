@@ -27,11 +27,11 @@ class Tester(GObject.GObject):
 	"""
 
 	__gsignals__ = {
-		b"error"		: (GObject.SignalFlags.RUN_FIRST, None, (int, )),
-		b"ready"		: (GObject.SignalFlags.RUN_FIRST, None, ()),
-		b"finished"		: (GObject.SignalFlags.RUN_FIRST, None, ()),
-		b"axis"			: (GObject.SignalFlags.RUN_FIRST, None, (int, int)),
-		b"button"		: (GObject.SignalFlags.RUN_FIRST, None, (int, bool)),
+		b"error": (GObject.SignalFlags.RUN_FIRST, None, (int, )),
+		b"ready": (GObject.SignalFlags.RUN_FIRST, None, ()),
+		b"finished": (GObject.SignalFlags.RUN_FIRST, None, ()),
+		b"axis": (GObject.SignalFlags.RUN_FIRST, None, (int, int)),
+		b"button": (GObject.SignalFlags.RUN_FIRST, None, (int, bool)),
 	}
 	
 	def __init__(self, driver, device_id):
@@ -78,7 +78,7 @@ class Tester(GObject.GObject):
 	def _on_read(self, stream, result):
 		try:
 			data = stream.read_bytes_finish(result).get_data()
-		except Exception, e:
+		except Exception as e:
 			log.exception(e)
 			self.subprocess.send_signal(2)
 			if not self.errorred:
@@ -91,7 +91,7 @@ class Tester(GObject.GObject):
 				line, self.buffer = self.buffer.split("\n", 1)
 				try:
 					self._on_line(line)
-				except Exception, e:
+				except Exception as e:
 					log.exception(e)
 			self.subprocess.get_stdout_pipe().read_bytes_async(
 				32, 0, None, self._on_read)

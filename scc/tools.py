@@ -4,7 +4,7 @@ SC-Controller - tools
 
 Various stuff that I don't care to fit anywhere else.
 """
-from __future__ import unicode_literals
+
 
 from scc.paths import get_controller_icons_path, get_default_controller_icons_path
 from scc.paths import get_menuicons_path, get_default_menuicons_path
@@ -50,10 +50,10 @@ def init_logging(prefix="", suffix=""):
 	old_log = logging.Logger._log
 	def _log(self, level, msg, args, exc_info=None, extra=None):
 		args = tuple([
-			(str(c).decode("utf-8") if type(c) is str else c)
+			(str(c).decode("utf-8") if isinstance(c, str) else c)
 			for c in args
 		])
-		msg = msg if type(msg) is unicode else str(msg).decode("utf-8")
+		msg = msg if isinstance(msg, str) else str(msg).decode("utf-8")
 		old_log(self, level, msg, args, exc_info, extra)
 	logging.Logger._log = _log
 
@@ -92,9 +92,9 @@ def quat2euler(q0, q1, q2, q3):
 	yn = 2 * (q1 * q2 + q0 * q3)
 	zn = qq3 + qq2 - qq0 - qq1
 	
-	pitch = atan2(xb , xa)
-	yaw   = atan2(xn , sqrt(1 - xn**2))
-	roll  = atan2(yn , zn)
+	pitch = atan2(xb, xa)
+	yaw   = atan2(xn, sqrt(1 - xn**2))
+	roll  = atan2(yn, zn)
 	return pitch, yaw, roll
 
 
@@ -123,7 +123,7 @@ def nameof(e):
 
 def shjoin(lst):
 	""" Joins list into shell-escaped, utf-8 encoded string """
-	s = [ unicode(x).encode("utf-8") for x in lst ]
+	s = [ str(x).encode("utf-8") for x in lst ]
 	#   - escape quotes
 	s = [ x.encode('string_escape') if (b'"' in x or b"'" in x) else x for x in s ]
 	#   - quote strings with spaces

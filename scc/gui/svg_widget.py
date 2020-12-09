@@ -5,7 +5,7 @@ SC-Controller - Background
 Changes SVG on the fly and uptates that magnificent image on background with it.
 Also supports clicking on areas defined in SVG image.
 """
-from __future__ import unicode_literals
+
 
 from gi.repository import Gtk, Gdk, GObject, GdkPixbuf, Rsvg
 from xml.etree import ElementTree as ET
@@ -23,11 +23,11 @@ class SVGWidget(Gtk.EventBox):
 	
 	__gsignals__ = {
 			# Raised when mouse is over defined area
-			b"hover"	: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+			b"hover": (GObject.SignalFlags.RUN_FIRST, None, (object,)),
 			# Raised when mouse leaves all defined areas
-			b"leave"	: (GObject.SignalFlags.RUN_FIRST, None, ()),
+			b"leave": (GObject.SignalFlags.RUN_FIRST, None, ()),
 			# Raised user clicks on defined area
-			b"click"	: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+			b"click": (GObject.SignalFlags.RUN_FIRST, None, (object,)),
 	}
 	
 	
@@ -164,7 +164,7 @@ class SVGWidget(Gtk.EventBox):
 		Returns x, y, width and height of rect element relative to document root.
 		element can be specified by it's id.
 		"""
-		if type(element) in (str, unicode):
+		if type(element) in (str, str):
 			tree = ET.fromstring(self.current_svg.encode("utf-8"))
 			SVGEditor.update_parents(tree)
 			element = SVGEditor.get_element(tree, element)
@@ -268,10 +268,10 @@ class SVGEditor(object):
 	IDENTITY = ( (1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0) )
 	
 	def __init__(self, svgw):
-		if type(svgw) == str:
+		if isinstance(svgw, str):
 			self._svgw = None
 			self._tree = ET.fromstring(svgw)
-		elif type(svgw) == unicode:
+		elif isinstance(svgw, str):
 			self._svgw = None
 			self._tree = ET.fromstring(svgw.encode("utf-8"))
 		else:
@@ -334,7 +334,7 @@ class SVGEditor(object):
 		Returns self.
 		"""
 		
-		if type(e) in (str, unicode):
+		if type(e) in (str, str):
 			e = SVGEditor.get_element(self, e)
 		if e is not None:
 			e.parent.remove(e)
@@ -496,7 +496,7 @@ class SVGEditor(object):
 	def matrixmul(X, Y, *a):
 		if len(a) > 0:
 			return SVGEditor.matrixmul(SVGEditor.matrixmul(X, Y), a[0], *a[1:])
-		return [[ sum(a*b for a,b in zip(x,y)) for y in zip(*Y) ] for x in X ]
+		return [[ sum(a*b for a, b in zip(x, y)) for y in zip(*Y) ] for x in X ]
 	
 	
 	@staticmethod
@@ -617,7 +617,7 @@ class SVGEditor(object):
 				elif op == "matrix":
 					m = [ float(x) for x in values.split(",") ][0:6]
 					while len(m) < 6: m.append(0.0)
-					a,b,c,d,e,f = m
+					a, b, c, d, e, f = m
 					matrix = SVGEditor.matrixmul(matrix,
 						[ [ a, c, e], [b, d, f], [0, 0, 1] ]
 					)

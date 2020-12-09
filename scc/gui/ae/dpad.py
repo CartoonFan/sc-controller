@@ -5,9 +5,9 @@ SC-Controller - Action Editor - "DPAD or Menu"
 
 Setups DPAD emulation or menu display
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
-from scc.actions import HatUpAction, HatDownAction, HatLeftAction,HatRightAction
+from scc.actions import HatUpAction, HatDownAction, HatLeftAction, HatRightAction
 from scc.actions import Action, NoAction, DPadAction, DPad8Action, ButtonAction
 from scc.constants import STICK, SAME, DEFAULT, SCButtons
 from scc.uinput import Keys, Axes
@@ -73,9 +73,9 @@ class DPADComponent(AEComponent, MenuActionCofC, BindingEditor):
 	
 	
 	def update_button_desc(self, action):
-		for i in xrange(0, len(action.actions)):
+		for i in range(0, len(action.actions)):
 			self.actions[i] = action.actions[i]
-		for i in xrange(0, 8):
+		for i in range(0, 8):
 			self.set_button_desc(i)
 	
 	

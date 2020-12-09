@@ -1,8 +1,7 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Input Display
 """
-from __future__ import unicode_literals
+
 from scc.tools import _, set_logging_level
 
 from gi.repository import Gtk, GLib
@@ -103,9 +102,9 @@ class InputDisplay(OSDWindow):
 	def on_daemon_event_observer(self, daemon, what, data):
 		if what in (LEFT, RIGHT, STICK):
 			widget, area = {
-				LEFT  : (self.lpadTest,  "LPADTEST"),
-				RIGHT : (self.rpadTest,  "RPADTEST"),
-				STICK : (self.stickTest, "STICKTEST"),
+				LEFT: (self.lpadTest,  "LPADTEST"),
+				RIGHT: (self.rpadTest,  "RPADTEST"),
+				STICK: (self.stickTest, "STICKTEST"),
 			}[what]
 			# Check if stick or pad is released
 			if data[0] == data[1] == 0:
@@ -141,11 +140,11 @@ class InputDisplay(OSDWindow):
 				else:
 					self.hilights[self.OBSERVE_COLOR].remove(what)
 				self._update_background()
-			except KeyError, e:
+			except KeyError as e:
 				# Non fatal
 				pass
 		else:
-			print "event", what
+			print("event", what)
 	
 	
 	def _update_background(self):

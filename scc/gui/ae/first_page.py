@@ -4,7 +4,7 @@ SC-Controller - Action Editor - First Page
 
 Provides links for quick settings.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 from scc.actions import Action
 from scc.gui.ae import AEComponent
@@ -95,15 +95,15 @@ class FirstPage(AEComponent):
                 markup = MARKUP_BUTTON
             
             long_names = {
-                'LPAD' : _("Left Pad"),
-                'RPAD' : _("Right Pad"),
-                'LGRIP' : _("Left Grip"),
-                'RGRIP' : _("Right Grip"),
-                'LB' : _("Left Bumper"),
-                'RB' : _("Right Bumper"),
-                'LEFT' : _("Left Trigger"),
-                'RIGHT' : _("Right Trigger"),
-                'STICK' : _("Stick"),
+                'LPAD': _("Left Pad"),
+                'RPAD': _("Right Pad"),
+                'LGRIP': _("Left Grip"),
+                'RGRIP': _("Right Grip"),
+                'LB': _("Left Bumper"),
+                'RB': _("Right Bumper"),
+                'LEFT': _("Left Trigger"),
+                'RIGHT': _("Right Trigger"),
+                'STICK': _("Stick"),
             }
             
             markup = markup % {

@@ -4,7 +4,7 @@ SC-Controller - Profile
 
 Handles mapping profile stored in json file
 """
-from __future__ import unicode_literals
+
 
 from scc.constants import LEFT, RIGHT, CPAD, WHOLE, STICK, GYRO
 from scc.constants import SCButtons
@@ -56,19 +56,19 @@ class Profile(object):
 	def save_fileobj(self, fileobj):
 		""" Saves profile into file-like object. Returns self """
 		data = {
-			"_"				: (self.description if "\n" not in self.description
+			"_": (self.description if "\n" not in self.description
 								else self.description.strip("\n").split("\n")),
-			'buttons'		: {},
-			'stick'			: self.stick,
-			'gyro'			: self.gyro,
-			'trigger_left'	: self.triggers[Profile.LEFT],
-			'trigger_right'	: self.triggers[Profile.RIGHT],
-			"pad_left"		: self.pads[Profile.LEFT],
-			"pad_right"		: self.pads[Profile.RIGHT],
-			"cpad"			: self.pads[Profile.CPAD],
-			"menus"			: { id : self.menus[id].encode() for id in self.menus },
-			"is_template"	: self.is_template,
-			"version"		: Profile.VERSION,
+			'buttons': {},
+			'stick': self.stick,
+			'gyro': self.gyro,
+			'trigger_left': self.triggers[Profile.LEFT],
+			'trigger_right': self.triggers[Profile.RIGHT],
+			"pad_left": self.pads[Profile.LEFT],
+			"pad_right": self.pads[Profile.RIGHT],
+			"cpad": self.pads[Profile.CPAD],
+			"menus": { id : self.menus[id].encode() for id in self.menus },
+			"is_template": self.is_template,
+			"version": Profile.VERSION,
 		}
 		
 		for i in self.buttons:
@@ -107,7 +107,7 @@ class Profile(object):
 		# (stored in key "_", so it's serialized on top of JSON file)
 		if "_" not in data:
 			self.description = ""
-		elif type(data["_"]) == list:
+		elif isinstance(data["_"], list):
 			self.description = "\n".join(data["_"])
 		else:
 			self.description = data["_"]
@@ -145,15 +145,15 @@ class Profile(object):
 			# New format
 			# Triggers
 			self.triggers = {
-				Profile.LEFT	: self.parser.from_json_data(data, "trigger_left"),
-				Profile.RIGHT	: self.parser.from_json_data(data, "trigger_right"),
+				Profile.LEFT: self.parser.from_json_data(data, "trigger_left"),
+				Profile.RIGHT: self.parser.from_json_data(data, "trigger_right"),
 			}
 			
 			# Pads
 			self.pads = {
-				Profile.LEFT	: self.parser.from_json_data(data, "pad_left"),
-				Profile.RIGHT	: self.parser.from_json_data(data, "pad_right"),
-				Profile.CPAD	: self.parser.from_json_data(data, "cpad"),
+				Profile.LEFT: self.parser.from_json_data(data, "pad_left"),
+				Profile.RIGHT: self.parser.from_json_data(data, "pad_right"),
+				Profile.CPAD: self.parser.from_json_data(data, "cpad"),
 			}
 		
 		# Menus
@@ -237,7 +237,7 @@ class Profile(object):
 				dct[x] = dct[x].compress()
 		self.stick = self.stick.compress()
 		self.gyro = self.gyro.compress()
-		for menu in self.menus.values():
+		for menu in list(self.menus.values()):
 			menu.compress()
 	
 	

@@ -3,7 +3,7 @@ SC-Controller - Controller Registration data
 
 Dummy container classes
 """
-from __future__ import unicode_literals
+
 
 from scc.constants import STICK_PAD_MAX, STICK_PAD_MIN
 from scc.gui.creg.constants import AXIS_TO_BUTTON

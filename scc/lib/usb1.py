@@ -67,7 +67,7 @@ from ctypes import sizeof
 from ctypes import string_at
 from ctypes.util import find_library
 
-import libusb1
+from . import libusb1
 
 if sys.version_info[:2] >= (2, 6):
     # pylint: disable=wrong-import-order,ungrouped-imports
@@ -111,7 +111,7 @@ STATUS_TO_EXCEPTION_DICT = {}
 def __bindConstants():
     global_dict = globals()
     PREFIX = "LIBUSB_"
-    for name, value in libusb1.__dict__.items():
+    for name, value in list(libusb1.__dict__.items()):
         if name.startswith(PREFIX):
             name = name[len(PREFIX):]
             # Gah.
@@ -122,7 +122,7 @@ def __bindConstants():
             global_dict[name] = value
             __all__.append(name)
     # Finer-grained exceptions.
-    for name, value in libusb1.libusb_error.forward_dict.items():
+    for name, value in list(libusb1.libusb_error.forward_dict.items()):
         if value:
             if not name.startswith(PREFIX + "ERROR_"):
                 raise AssertionError(name)
@@ -238,7 +238,7 @@ def create_binary_buffer(init_or_size):
     # - int or long is a length
     # - str or unicode is an initialiser
     # Testing the latter confuses 2to3, so test the former.
-    if isinstance(init_or_size, (int, long)):
+    if isinstance(init_or_size, int):
         result = create_string_buffer(init_or_size)
     else:
         result = create_string_buffer(init_or_size, len(init_or_size))
@@ -401,7 +401,7 @@ class USBTransfer(object):
             raise ValueError("Cannot alter a submitted transfer")
         if self.__doomed:
             raise DoomedTransferError("Cannot reuse a doomed transfer")
-        if isinstance(buffer_or_len, (int, long)):
+        if isinstance(buffer_or_len, int):
             length = buffer_or_len
             # pylint: disable=undefined-variable
             string_buffer = create_binary_buffer(length + CONTROL_SETUP_SIZE)
@@ -1335,7 +1335,7 @@ class USBDeviceHandle(object):
         langid_list = cast(descriptor_string, POINTER(c_uint16))
         result = []
         append = result.append
-        for offset in xrange(1, length / 2):
+        for offset in range(1, length / 2):
             append(libusb1.libusb_le16_to_cpu(langid_list[offset]))
         return result
 
@@ -1630,7 +1630,7 @@ class USBConfiguration(object):
         """
         context = self.__context
         interface_list = self.__config.interface
-        for interface_num in xrange(self.getNumInterfaces()):
+        for interface_num in range(self.getNumInterfaces()):
             yield USBInterface(context, interface_list[interface_num])
 
     # BBB
@@ -1670,7 +1670,7 @@ class USBInterface(object):
         """
         context = self.__context
         alt_setting_list = self.__interface.altsetting
-        for alt_setting_num in xrange(self.getNumSettings()):
+        for alt_setting_num in range(self.getNumSettings()):
             yield USBInterfaceSetting(context,
                                       alt_setting_list[alt_setting_num])
 
@@ -1744,7 +1744,7 @@ class USBInterfaceSetting(object):
         """
         context = self.__context
         endpoint_list = self.__alt_setting.endpoint
-        for endpoint_num in xrange(self.getNumEndpoints()):
+        for endpoint_num in range(self.getNumEndpoints()):
             yield USBEndpoint(context, endpoint_list[endpoint_num])
 
     # BBB
@@ -1820,7 +1820,7 @@ class USBDevice(object):
             self.__configuration_descriptor_list = descriptor_list = []
             append = descriptor_list.append
             device_p = self.device_p
-            for configuration_id in xrange(
+            for configuration_id in range(
                     self.device_descriptor.bNumConfigurations):
                 config = libusb1.libusb_config_descriptor_p()
                 result = libusb1.libusb_get_config_descriptor(
@@ -1887,7 +1887,7 @@ class USBDevice(object):
 
     def __eq__(self, other):
         # pylint: disable=unidiomatic-typecheck
-        return type(self) == type(other) and (
+        return isinstance(self, type(other)) and (
             # pylint: enable=unidiomatic-typecheck
             self.device_p == other.device_p or
             # pylint: disable=protected-access

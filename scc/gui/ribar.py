@@ -4,7 +4,7 @@ SC-Controller - RIBar
 
 Infobar wrapped in Revealer, looks better than sounds.
 """
-from __future__ import unicode_literals
+
 from gi.repository import Gtk, GLib, GObject
 
 
@@ -20,8 +20,8 @@ class RIBar(Gtk.Revealer):
 			Emitted when an action widget (button) is clicked
 	"""
 	__gsignals__ = {
-			b"response"	: (GObject.SignalFlags.RUN_FIRST, None, (int,)),
-			b"close"	: (GObject.SignalFlags.RUN_FIRST, None, ()),
+			b"response": (GObject.SignalFlags.RUN_FIRST, None, (int,)),
+			b"close": (GObject.SignalFlags.RUN_FIRST, None, ()),
 		}
 	
 	### Initialization

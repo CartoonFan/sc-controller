@@ -123,7 +123,7 @@ class HapticData(object):
 		data = tuple([ int(x) for x in (position, amplitude, period, count) ])
 		if data[0] not in (HapticPos.LEFT, HapticPos.RIGHT, HapticPos.BOTH):
 			raise ValueError("Invalid position")
-		for i in (1,2,3):
+		for i in (1, 2, 3):
 			if data[i] > 0x8000 or data[i] < 0:
 				raise ValueError("Value out of range: %s", data[i])
 		# frequency is multiplied by 1000 just so I don't have big numbers everywhere;

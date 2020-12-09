@@ -4,7 +4,7 @@ SC-Controller - Action Editor - Axis Component
 
 Handles specific XYActions
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 from scc.actions import ButtonAction, MultiAction
 from scc.actions import Action, AxisAction, MouseAction

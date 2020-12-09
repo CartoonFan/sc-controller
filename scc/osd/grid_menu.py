@@ -5,7 +5,7 @@ SC-Controller - Grid OSD Menu
 Works as OSD menu, but displays item in (as rectangluar as possible - and
 that's usually not very much) grid.
 """
-from __future__ import unicode_literals
+
 
 from gi.repository import Gtk
 from scc.menu_data import Separator, Submenu
@@ -50,7 +50,7 @@ class GridMenu(Menu):
 		if x != 0:
 			self.next_item(-x)
 		elif y != 0:
-			for i in xrange(0, self.ipr):
+			for i in range(0, self.ipr):
 				self.next_item(y)
 	
 	

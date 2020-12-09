@@ -3,7 +3,7 @@ SC Controller - Macros
 
 Frontier is my favorite.
 """
-from __future__ import unicode_literals
+
 
 from scc.actions import Action, ButtonAction
 from scc.uinput import Keys
@@ -32,7 +32,7 @@ class Macro(Action):
         self._current = None
         self._release = None
         for p in parameters:
-            if type(p) == float and self.actions:
+            if isinstance(p, float) and self.actions:
                 self.actions[-1].delay_after = p
             elif isinstance(p, Macro):
                 self.actions += p.actions

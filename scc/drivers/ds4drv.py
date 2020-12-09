@@ -115,10 +115,10 @@ class DS4Controller(HIDController):
 		)
 		
 		if test_mode:
-			for x in xrange(BUTTON_COUNT):
+			for x in range(BUTTON_COUNT):
 				self._decoder.buttons.button_map[x] = x
 		else:
-			for x in xrange(BUTTON_COUNT):
+			for x in range(BUTTON_COUNT):
 				self._decoder.buttons.button_map[x] = 64
 			for x, sc in enumerate(DS4Controller.BUTTON_MAP):
 				self._decoder.buttons.button_map[x] = self.button_to_bit(sc)
@@ -222,12 +222,12 @@ class DS4EvdevController(EvdevController):
 		17: { "axis": "lpad_y", "deadzone": 0, "max": -1, "min": 1 }
 	}
 	GYRO_MAP = {
-		EvdevController.ECODES.ABS_RX : ('gpitch', 0.01),
-		EvdevController.ECODES.ABS_RY : ('gyaw', 0.01),
-		EvdevController.ECODES.ABS_RZ : ('groll', 0.01),
-		EvdevController.ECODES.ABS_X : (None, 1),		# 'q2'
-		EvdevController.ECODES.ABS_Y : (None, 1),		# 'q3'
-		EvdevController.ECODES.ABS_Z : (None, -1),		# 'q1'
+		EvdevController.ECODES.ABS_RX: ('gpitch', 0.01),
+		EvdevController.ECODES.ABS_RY: ('gyaw', 0.01),
+		EvdevController.ECODES.ABS_RZ: ('groll', 0.01),
+		EvdevController.ECODES.ABS_X: (None, 1),		# 'q2'
+		EvdevController.ECODES.ABS_Y: (None, 1),		# 'q3'
+		EvdevController.ECODES.ABS_Z: (None, -1),		# 'q1'
 	}
 	flags = ( ControllerFlags.EUREL_GYROS
 			| ControllerFlags.HAS_RSTICK

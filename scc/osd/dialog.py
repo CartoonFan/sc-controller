@@ -4,7 +4,7 @@ SC-Controller - OSD Dialog
 Display dialog with text and set of items that user can navigate through and
 prints chosen item id to stdout
 """
-from __future__ import unicode_literals
+
 
 from gi.repository import Gtk, GdkX11
 from scc.gui.daemon_manager import DaemonManager

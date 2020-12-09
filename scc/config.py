@@ -4,7 +4,7 @@ SC-Controller - Config
 
 Handles loading, storing and querying config file
 """
-from __future__ import unicode_literals
+
 
 from scc.paths import get_config_path
 from scc.profile import Encoder
@@ -26,7 +26,7 @@ class Config(object):
 			"XBox Controller with High Precision Camera",
 			"XBox Controller"
 		],
-		"drivers" : {				# Map of drivers with values of True, Flase
+		"drivers": {				# Map of drivers with values of True, Flase
 									# or additional driver config where needed.
 									# Anything but False means enabled here.
 			"sc_dongle": True,
@@ -37,7 +37,7 @@ class Config(object):
 			"evdevdrv": True,
 			"ds4drv": True,			# At least one of hiddrv or evdevdrv has to be enabled as well
 		},
-		"fix_xinput" : True,		# If True, attempt is done to deatach emulated controller 
+		"fix_xinput": True,		# If True, attempt is done to deatach emulated controller 
 									# from 'Virtual core pointer' core device.
 		"gui": {
 			# GUI-only settings
@@ -55,13 +55,13 @@ class Config(object):
 		# output - modifies emulated controller
 		# Changing this may be usefull, but can break a lot of things
 		"output": {
-			'vendor'	: '0x045e',
-			'product'	: '0x028e',
-			'version'	: '0x110',
-			'name'		: "Microsoft X-Box 360 pad",
-			'buttons'	: 11,
-			'rumble'	: True,
-			'axes'	: [
+			'vendor': '0x045e',
+			'product': '0x028e',
+			'version': '0x110',
+			'name': "Microsoft X-Box 360 pad",
+			'buttons': 11,
+			'rumble': True,
+			'axes': [
 				(-32768, 32767),	# Axes.ABS_X
 				(-32768, 32767),	# Axes.ABS_Y
 				(-32768, 32767),	# Axes.ABS_RX
@@ -76,7 +76,7 @@ class Config(object):
 		# ~/.config/scc can ask daemon to send notifications about all
 		# (or only some) inputs.
 		# This enables GUI to display which physical button was pressed to user.
-		"enable_sniffing" : False,
+		"enable_sniffing": False,
 		# Style and colors used by OSD
 		"osd_style": "Classic.gtkstyle.css",
 		"osd_colors": {
@@ -100,7 +100,7 @@ class Config(object):
 			"text" : "16BF24"
 		},
 		# Colors used by gesture display. Unlike OSD and OSK, these are RGBA
-		"gesture_colors" : {
+		"gesture_colors": {
 			"background": "160c00ff",
 			"grid": "004000ff",
 			"line": "ffffff1a",
@@ -108,7 +108,7 @@ class Config(object):
 		# TODO: Config for opacity
 		"windows_opacity": 0.95,
 		# See drivers/sc_dongle.py, read_serial method
-		"ignore_serials" : True,
+		"ignore_serials": True,
 	}
 	
 	CONTROLLER_DEFAULTS = {
@@ -135,7 +135,7 @@ class Config(object):
 		""" (Re)loads configuration. Works as load(), but handles exceptions """
 		try:
 			self.load()
-		except Exception, e:
+		except Exception as e:
 			log.warning("Failed to load configuration; Creating new one.")
 			log.warning("Reason: %s", (e,))
 			self.create()
@@ -155,7 +155,7 @@ class Config(object):
 			if d not in values:
 				values[d] = defaults[d]
 				rv = True
-			if type(values[d]) == dict:
+			if isinstance(values[d], dict):
 				rv = self._check_dict(values[d], defaults[d]) or rv
 		return rv
 	
