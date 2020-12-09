@@ -1,7 +1,9 @@
+import inspect
+
 from scc.constants import SCButtons
 from scc.modifiers import *
+
 from . import parser
-import inspect
 
 
 class TestModeshift(object):

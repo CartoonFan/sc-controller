@@ -1,9 +1,11 @@
-from scc.uinput import Axes
-from scc.actions import AxisAction, GyroAction
-from scc.constants import SCButtons, HapticPos
-from scc.modifiers import *
-from . import parser
 import inspect
+
+from scc.actions import AxisAction, GyroAction
+from scc.constants import HapticPos, SCButtons
+from scc.modifiers import *
+from scc.uinput import Axes
+
+from . import parser
 
 
 def _is_axis_with_value(a, value=Axes.ABS_X):

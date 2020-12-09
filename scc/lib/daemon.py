@@ -5,12 +5,12 @@
 # Adapted from http://www.jejik.com/files/examples/daemon3x.py
 # thanks to the original author
 
-import sys
-import os
-import time
 import atexit
+import os
 import signal
+import sys
 import syslog
+import time
 
 
 class Daemon(object):

@@ -1,5 +1,5 @@
-import xml.etree.cElementTree as ET
 import os
+import xml.etree.cElementTree as ET
 
 
 def _get_files():

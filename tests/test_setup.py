@@ -1,5 +1,6 @@
-import scc
 import pkgutil
+
+import scc
 
 
 class TestSetup(object):

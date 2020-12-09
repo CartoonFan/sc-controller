@@ -1,8 +1,10 @@
-from scc.uinput import Keys
+import inspect
+
 from scc.actions import ButtonAction
 from scc.macros import *
+from scc.uinput import Keys
+
 from . import _parses_as_itself
-import inspect
 
 
 class TestMacros(object):

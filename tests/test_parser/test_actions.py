@@ -1,7 +1,9 @@
-from scc.uinput import Keys, Axes, Rels
-from scc.actions import *
-from . import _parses_as_itself, parser
 import inspect
+
+from scc.actions import *
+from scc.uinput import Axes, Keys, Rels
+
+from . import _parses_as_itself, parser
 
 
 class TestActions(object):

@@ -1,6 +1,7 @@
-from scc.parser import ActionParser
-from scc.actions import Action
 import sys
+
+from scc.actions import Action
+from scc.parser import ActionParser
 
 parser = ActionParser()
 

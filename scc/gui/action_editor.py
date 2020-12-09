@@ -5,34 +5,33 @@ SC-Controller - Action Editor
 Also doubles as Menu Item Editor in some cases
 """
 from __future__ import unicode_literals
-from scc.tools import _
 
-from gi.repository import Gtk, GLib
-from scc.actions import Action, NoAction, RingAction, TriggerAction
-from scc.special_actions import OSDAction
-from scc.modifiers import SmoothModifier, NameModifier, BallModifier
-from scc.modifiers import ClickModifier, ModeModifier
-from scc.modifiers import SensitivityModifier, FeedbackModifier
-from scc.modifiers import DeadzoneModifier, RotateInputModifier
-from scc.constants import HapticPos, SCButtons
-from scc.constants import CUT, ROUND, LINEAR, MINIMUM
-from scc.profile import Profile
-from scc.macros import Macro
-from scc.tools import nameof
-from scc.gui.controller_widget import PRESSABLE, TRIGGERS, PADS
-from scc.gui.controller_widget import STICKS, GYROS
-from scc.gui.modeshift_editor import ModeshiftEditor
-from scc.gui.parser import InvalidAction, GuiActionParser
-from scc.gui.simple_chooser import SimpleChooser
-from scc.gui.macro_editor import MacroEditor
-from scc.gui.ring_editor import RingEditor
-from scc.gui.dwsnc import headerbar
-from scc.gui.ae import AEComponent
-from scc.gui.editor import Editor
+import importlib
 import logging
 import math
-import importlib
 import types
+
+from gi.repository import GLib, Gtk
+
+from scc.actions import Action, NoAction, RingAction, TriggerAction
+from scc.constants import CUT, LINEAR, MINIMUM, ROUND, HapticPos, SCButtons
+from scc.gui.ae import AEComponent
+from scc.gui.controller_widget import GYROS, PADS, PRESSABLE, STICKS, TRIGGERS
+from scc.gui.dwsnc import headerbar
+from scc.gui.editor import Editor
+from scc.gui.macro_editor import MacroEditor
+from scc.gui.modeshift_editor import ModeshiftEditor
+from scc.gui.parser import GuiActionParser, InvalidAction
+from scc.gui.ring_editor import RingEditor
+from scc.gui.simple_chooser import SimpleChooser
+from scc.macros import Macro
+from scc.modifiers import (BallModifier, ClickModifier, DeadzoneModifier,
+                           FeedbackModifier, ModeModifier, NameModifier,
+                           RotateInputModifier, SensitivityModifier,
+                           SmoothModifier)
+from scc.profile import Profile
+from scc.special_actions import OSDAction
+from scc.tools import _, nameof
 
 log = logging.getLogger("ActionEditor")
 
