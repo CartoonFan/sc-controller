@@ -11,10 +11,16 @@ from collections import namedtuple
 
 from gi.repository import Gtk
 
-from scc.actions import Action, ButtonAction, NoAction
+from scc.actions import Action
+from scc.actions import ButtonAction
+from scc.actions import NoAction
 from scc.constants import SCButtons
 from scc.gui.editor import Editor
-from scc.macros import Cycle, Macro, PressAction, ReleaseAction, SleepAction
+from scc.macros import Cycle
+from scc.macros import Macro
+from scc.macros import PressAction
+from scc.macros import ReleaseAction
+from scc.macros import SleepAction
 from scc.tools import _
 
 log = logging.getLogger("MacroEditor")
