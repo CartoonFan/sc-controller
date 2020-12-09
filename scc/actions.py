@@ -362,7 +362,7 @@ class Action(object):
 		required_count = len(argspec.args) - len(argspec.defaults) - 1
 		d = list(argspec.defaults)
 		l = list(self.parameters)
-		while len(d) and len(l) > required_count and d[-1] == l[-1]:
+		while d and len(l) > required_count and d[-1] == l[-1]:
 			d, l = d[:-1], l[:-1]
 		return l
 	
@@ -2707,7 +2707,7 @@ class NoAction(Action):
 
 def strip_none(*lst):
 	""" Returns lst without trailing None's and NoActions """
-	while len(lst) and (lst[-1] is None or isinstance(lst[-1], NoAction)):
+	while lst and (lst[-1] is None or isinstance(lst[-1], NoAction)):
 		lst = lst[0:-1]
 	return lst
 

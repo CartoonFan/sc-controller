@@ -74,7 +74,7 @@ class OSDDaemon(object):
             # Ignore .mod and hidden files
             name = name[0:-11]
             recents = self.config["recent_profiles"]
-            if len(recents) and recents[0] == name:
+            if recents and recents[0] == name:
                 # Already first in recent list
                 return
 
@@ -169,7 +169,7 @@ class OSDDaemon(object):
             else:
                 # TODO: Do this only for default position once changing
                 # TODO: is allowed
-                if len(self._visible_messages):
+                if self._visible_messages:
                     height = self._visible_messages.values()[0].get_size(
                     ).height
                     x, y = m.position
