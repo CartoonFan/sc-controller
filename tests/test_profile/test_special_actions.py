@@ -76,7 +76,8 @@ class TestSpecialActions(object):
         Tests if all Menu*Actions are parsed correctly from json.
         """
         # Simple
-        a = parser.from_json_data({"action": "dialog('title', osd('something'))"})
+        a = parser.from_json_data(
+            {"action": "dialog('title', osd('something'))"})
         assert isinstance(a, DialogAction)
         assert a.text == "title"
         assert len(a.options) == 1
@@ -84,12 +85,11 @@ class TestSpecialActions(object):
         assert a.options[0].text == "something"
 
         # Complete
-        a = parser.from_json_data(
-            {
-                "action": "dialog(X, Y, 'title', "
-                "name('button', osd('something')), name('item', osd('something else')))"
-            }
-        )
+        a = parser.from_json_data({
+            "action":
+            "dialog(X, Y, 'title', "
+            "name('button', osd('something')), name('item', osd('something else')))"
+        })
         assert a.confirm_with == SCButtons.X
         assert a.cancel_with == SCButtons.Y
         assert isinstance(a, DialogAction)
@@ -103,7 +103,7 @@ class TestSpecialActions(object):
         Tests if all Menu*Actions are parsed correctly from json.
         """
         for cls in MENU_CLASSES:
-            a_str = "%s('some.menu', LEFT, X, Y, True)" % (cls.COMMAND,)
+            a_str = "%s('some.menu', LEFT, X, Y, True)" % (cls.COMMAND, )
             a = parser.from_json_data({"action": a_str})
             assert isinstance(a, cls)
             assert a.control_with == HapticPos.LEFT
@@ -115,9 +115,10 @@ class TestSpecialActions(object):
         """
         Tests if PositionModifier is parsed correctly from json.
         """
-        a = parser.from_json_data(
-            {"action": "menu('some.menu', LEFT, X, Y, True)", "position": [-10, 10]}
-        ).compress()
+        a = parser.from_json_data({
+            "action": "menu('some.menu', LEFT, X, Y, True)",
+            "position": [-10, 10]
+        }).compress()
 
         assert isinstance(a, MenuAction)
         assert a.x == -10
@@ -136,21 +137,28 @@ class TestSpecialActions(object):
         Tests if GesturesAction is parsed correctly from json.
         """
         # Simple
-        a = parser.from_json_data(
-            {"gestures": {"UD": {"action": "turnoff"}, "LR": {"action": "keyboard"}}}
-        )
+        a = parser.from_json_data({
+            "gestures": {
+                "UD": {
+                    "action": "turnoff"
+                },
+                "LR": {
+                    "action": "keyboard"
+                }
+            }
+        })
         assert isinstance(a, GesturesAction)
         assert isinstance(a.gestures["UD"], TurnOffAction)
         assert isinstance(a.gestures["LR"], KeyboardAction)
         # With OSD
-        a = parser.from_json_data(
-            {
-                "gestures": {
-                    "UD": {"action": "turnoff"},
+        a = parser.from_json_data({
+            "gestures": {
+                "UD": {
+                    "action": "turnoff"
                 },
-                "osd": True,
-            }
-        )
+            },
+            "osd": True,
+        })
         assert isinstance(a, OSDAction)
         assert isinstance(a.action, GesturesAction)
         assert isinstance(a.action.gestures["UD"], TurnOffAction)
