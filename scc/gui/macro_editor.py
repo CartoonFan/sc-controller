@@ -15,6 +15,7 @@ from scc.constants import SCButtons
 from gi.repository import Gtk
 from collections import namedtuple
 import logging
+
 log = logging.getLogger("MacroEditor")
 
 
@@ -105,7 +106,7 @@ class MacroEditor(Editor):
             c.set_size_request(100, -1)
             renderer = Gtk.CellRendererText()
             c.pack_start(renderer, True)
-            c.add_attribute(renderer, 'text', 1)
+            c.add_attribute(renderer, "text", 1)
             if isinstance(action, ReleaseAction):
                 c.set_active(2)
                 b.set_label(action.describe_short())
@@ -114,67 +115,83 @@ class MacroEditor(Editor):
                 b.set_label(action.describe_short())
             else:
                 c.set_active(0)
-            action_data = ActionData(action=action, button_up=button_up,
-                                     button_down=button_down, button_clear=button_clear,
-                                     combo=c, button_action=b)
+            action_data = ActionData(
+                action=action,
+                button_up=button_up,
+                button_down=button_down,
+                button_clear=button_clear,
+                combo=c,
+                button_action=b,
+            )
 
-            c.connect('changed', self.on_buttonaction_type_change,
-                      i - 1, action_data)
-            grActions.attach(c,			0, i, 1, 1)
-            grActions.attach(b,			1, i, 1, 1)
+            c.connect("changed", self.on_buttonaction_type_change, i - 1, action_data)
+            grActions.attach(c, 0, i, 1, 1)
+            grActions.attach(b, 1, i, 1, 1)
         elif isinstance(action, SleepAction):
             # Label and scale
             l = Gtk.Label("")
             l.set_xalign(0.0)
             l.set_size_request(100, -1)
-            s = Gtk.Scale.new_with_range(
-                Gtk.Orientation.HORIZONTAL, 5, 5000, 5)
+            s = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 5, 5000, 5)
             s.set_draw_value(False)
             s.set_value(action.delay * 1000)
-            action_data = ActionData(action=action, button_up=button_up,
-                                     button_down=button_down, button_clear=button_clear,
-                                     label=l, scale=s)
+            action_data = ActionData(
+                action=action,
+                button_up=button_up,
+                button_down=button_down,
+                button_clear=button_clear,
+                label=l,
+                scale=s,
+            )
 
-            s.connect('change_value', self.on_change_delay, action_data)
-            grActions.attach(l,			0, i, 1, 1)
-            grActions.attach(s,			1, i, 1, 1)
+            s.connect("change_value", self.on_change_delay, action_data)
+            grActions.attach(l, 0, i, 1, 1)
+            grActions.attach(s, 1, i, 1, 1)
             self.on_change_delay(s, None, action.delay * 1000, action_data)
         else:
             # Placeholder
             l = Gtk.Label("")
             l.set_size_request(100, -1)
 
-            action_data = ActionData(action=action, button_up=button_up,
-                                     button_down=button_down, button_clear=button_clear,
-                                     label=l, button_action=b)
+            action_data = ActionData(
+                action=action,
+                button_up=button_up,
+                button_down=button_down,
+                button_clear=button_clear,
+                label=l,
+                button_action=b,
+            )
 
-            grActions.attach(l,			0, i, 1, 1)
-            grActions.attach(b,			1, i, 1, 1)
+            grActions.attach(l, 0, i, 1, 1)
+            grActions.attach(b, 1, i, 1, 1)
 
-        b.connect('clicked',			self.on_actionb_clicked, i - 1, action_data)
-        button_clear.connect('clicked',	self.on_clearb_clicked, action_data)
-        button_up.connect('clicked',	self.on_moveb_clicked, -1, action_data)
-        button_down.connect('clicked',	self.on_moveb_clicked,  1, action_data)
+        b.connect("clicked", self.on_actionb_clicked, i - 1, action_data)
+        button_clear.connect("clicked", self.on_clearb_clicked, action_data)
+        button_up.connect("clicked", self.on_moveb_clicked, -1, action_data)
+        button_down.connect("clicked", self.on_moveb_clicked, 1, action_data)
 
         # Move Up button
-        button_up.set_image(Gtk.Image.new_from_stock(
-            "gtk-go-up", Gtk.IconSize.SMALL_TOOLBAR))
+        button_up.set_image(
+            Gtk.Image.new_from_stock("gtk-go-up", Gtk.IconSize.SMALL_TOOLBAR)
+        )
         button_up.set_relief(Gtk.ReliefStyle.NONE)
 
         # Move Down button
-        button_down.set_image(Gtk.Image.new_from_stock(
-            "gtk-go-down", Gtk.IconSize.SMALL_TOOLBAR))
+        button_down.set_image(
+            Gtk.Image.new_from_stock("gtk-go-down", Gtk.IconSize.SMALL_TOOLBAR)
+        )
         button_down.set_relief(Gtk.ReliefStyle.NONE)
 
         # Clear button
-        button_clear.set_image(Gtk.Image.new_from_stock(
-            "gtk-delete", Gtk.IconSize.SMALL_TOOLBAR))
+        button_clear.set_image(
+            Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.SMALL_TOOLBAR)
+        )
         button_clear.set_relief(Gtk.ReliefStyle.NONE)
 
         # Pack
-        grActions.attach(button_up,		2, i, 1, 1)
-        grActions.attach(button_down,	3, i, 1, 1)
-        grActions.attach(button_clear,	4, i, 1, 1)
+        grActions.attach(button_up, 2, i, 1, 1)
+        grActions.attach(button_down, 3, i, 1, 1)
+        grActions.attach(button_clear, 4, i, 1, 1)
 
         # Disable 'up' button on 1st aciton
         if len(self.actions) == 0:
@@ -223,12 +240,12 @@ class MacroEditor(Editor):
         if cb.get_active() == 0:
             if isinstance(action, ButtonAction):
                 self.actions[i] = action_data._replace(
-                    action=ButtonAction(action.button))
+                    action=ButtonAction(action.button)
+                )
         elif cb.get_active() == 1:
             self.actions[i] = action_data._replace(action=PressAction(action))
         else:
-            self.actions[i] = action_data._replace(
-                action=ReleaseAction(action))
+            self.actions[i] = action_data._replace(action=ReleaseAction(action))
         self.update_action_field()
 
     def _clear_grid(self):
@@ -259,6 +276,7 @@ class MacroEditor(Editor):
 
     def on_actionb_clicked(self, button, i, action_data):
         """ Handler clicking on action name """
+
         def on_chosen(id, action):
             readd = [x.action for x in self.actions]
             readd[i] = action
@@ -266,6 +284,7 @@ class MacroEditor(Editor):
             self.update_action_field()
 
         from scc.gui.action_editor import ActionEditor  # Cannot be imported @ top
+
         ae = ActionEditor(self.app, on_chosen)
         ae.set_title(_("Edit Action"))
         ae.set_input(self.id, action_data.action, mode=self.mode)
@@ -292,6 +311,7 @@ class MacroEditor(Editor):
     def on_btCustomActionEditor_clicked(self, *a):
         """ Handler for 'Custom Editor' button """
         from scc.gui.action_editor import ActionEditor  # Can't be imported on top
+
         e = ActionEditor(self.app, self.ac_callback)
         e.set_input(self.id, self._make_action(), mode=self.mode)
         e.hide_action_buttons()
@@ -339,8 +359,7 @@ class MacroEditor(Editor):
         cbMacroType = self.builder.get_object("cbMacroType")
         self.id = id
         self.mode = mode
-        self.set_title("Macro for %s" %
-                       (id.name if id in SCButtons else str(id),))
+        self.set_title("Macro for %s" % (id.name if id in SCButtons else str(id),))
         if isinstance(action, Cycle):
             cbMacroType.set_active(2)
         elif action.repeat:
@@ -361,7 +380,9 @@ class MacroEditor(Editor):
         self.builder.get_object("entName").set_text("")
 
 
-ActionData = namedtuple('ActionData',
-                        'action, button_up, button_down, button_clear, button_action,'
-                        'combo, label, scale')
+ActionData = namedtuple(
+    "ActionData",
+    "action, button_up, button_down, button_clear, button_action,"
+    "combo, label, scale",
+)
 ActionData.__new__.__defaults__ = (None,) * len(ActionData._fields)
