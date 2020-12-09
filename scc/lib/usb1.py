@@ -354,20 +354,6 @@ class USBTransfer(object):
                 # Transfer was not submitted, we can free it.
                 self.__libusb_free_transfer(self.__transfer)
 
-    # pylint: disable=unused-argument
-    def __callbackWrapper(self, transfer_p):
-        """
-        Makes it possible for user-provided callback to alter transfer when
-        fired (ie, mark transfer as not submitted upon call).
-        """
-        self.__submitted = False
-        self.__after_completion(self)
-        callback = self.__callback
-        if callback is not None:
-            callback(self)
-        if self.__doomed:
-            self.close()
-
     # pylint: enable=unused-argument
 
     def setCallback(self, callback):
