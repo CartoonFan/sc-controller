@@ -250,10 +250,9 @@ class SleepAction(Action):
 	def describe(self, context):
 		if self.name: return self.name
 		if self.delay < 1.0:
-			return _("Wait %sms") % (int(self.delay*1000),)
-		else:
-			s = ("%0.2f" % (self.delay,)).strip(".0")
-			return _("Wait %ss") % (s,)
+		    return _("Wait %sms") % (int(self.delay*1000),)
+		s = ("%0.2f" % (self.delay,)).strip(".0")
+		return _("Wait %ss") % (s,)
 	
 	
 	def to_string(self, multiline=False, pad=0):

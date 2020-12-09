@@ -181,9 +181,8 @@ class ClickModifier(Modifier):
 	
 	def describe(self, context):
 		if context in (Action.AC_STICK, Action.AC_PAD):
-			return _("(if pressed)") + "\n" + self.action.describe(context)
-		else:
-			return _("(if pressed)") + " " + self.action.describe(context)
+		    return _("(if pressed)") + "\n" + self.action.describe(context)
+		return _("(if pressed)") + " " + self.action.describe(context)
 	
 	
 	def to_string(self, multiline=False, pad=0):
@@ -291,9 +290,8 @@ class TouchedModifier(Modifier):
 	
 	def describe(self, context):
 		if context in (Action.AC_STICK, Action.AC_PAD):
-			return _("(when %s)" % (self.COMMAND,)) + "\n" + self.action.describe(context)
-		else:
-			return _("(when %s)" % (self.COMMAND,)) + " " + self.action.describe(context)
+		    return _("(when %s)" % (self.COMMAND,)) + "\n" + self.action.describe(context)
+		return _("(when %s)" % (self.COMMAND,)) + " " + self.action.describe(context)
 	
 	
 	def strip(self):
@@ -331,9 +329,8 @@ class PressedModifier(Modifier):
 	
 	def describe(self, context):
 		if context in (Action.AC_STICK, Action.AC_PAD):
-			return _("(when pressed)") + "\n" + self.action.describe(context)
-		else:
-			return _("(when pressed)") + " " + self.action.describe(context)
+		    return _("(when pressed)") + "\n" + self.action.describe(context)
+		return _("(when pressed)") + " " + self.action.describe(context)
 	
 	
 	def strip(self):
@@ -363,9 +360,8 @@ class ReleasedModifier(PressedModifier):
 	
 	def describe(self, context):
 		if context in (Action.AC_STICK, Action.AC_PAD):
-			return _("(when released)") + "\n" + self.action.describe(context)
-		else:
-			return _("(when released)") + " " + self.action.describe(context)
+		    return _("(when released)") + "\n" + self.action.describe(context)
+		return _("(when released)") + " " + self.action.describe(context)
 	
 	
 	def button_press(self, mapper):
@@ -498,12 +494,11 @@ class BallModifier(Modifier, WholeHapticAction):
 	@staticmethod
 	def decode(data, a, *b):
 		if data[BallModifier.COMMAND] is True:
-			# backwards compatibility
-			return BallModifier(a)
-		else:
-			args = list(data[BallModifier.COMMAND])
-			args.append(a)
-			return BallModifier(*args)
+		    # backwards compatibility
+		    return BallModifier(a)
+		args = list(data[BallModifier.COMMAND])
+		args.append(a)
+		return BallModifier(*args)
 	
 	
 	def describe(self, context):
@@ -515,9 +510,8 @@ class BallModifier(Modifier, WholeHapticAction):
 			if isinstance(self.action.x, AxisAction) and isinstance(self.action.y, AxisAction):
 				x, y = self.action.x.parameters[0], self.action.y.parameters[0]
 				if x == Axes.ABS_X and y == Axes.ABS_Y:
-					return _("Mouse-like LStick")
-				else:
-					return _("Mouse-like RStick")
+				    return _("Mouse-like LStick")
+				return _("Mouse-like RStick")
 			if isinstance(self.action.x, MouseAction) and isinstance(self.action.y, MouseAction):
 				x, y = self.action.x.parameters[0], self.action.y.parameters[0]
 				if x in (Rels.REL_HWHEEL, Rels.REL_WHEEL) and y in (Rels.REL_HWHEEL, Rels.REL_WHEEL):
@@ -591,9 +585,8 @@ class BallModifier(Modifier, WholeHapticAction):
 	
 	def get_haptic(self):
 		if self.action and hasattr(self.action, "get_haptic"):
-			return self.action.get_haptic()
-		else:
-			return WholeHapticAction.get_haptic(self)
+		    return self.action.get_haptic()
+		return WholeHapticAction.get_haptic(self)
 	
 	
 	def compress(self):
@@ -744,9 +737,8 @@ class DeadzoneModifier(Modifier):
 	def describe(self, context):
 		dsc = self.action.describe(context)
 		if "\n" in dsc:
-			return "%s\n(with deadzone)" % (dsc,)
-		else:
-			return "%s (with deadzone)" % (dsc,)
+		    return "%s\n(with deadzone)" % (dsc,)
+		return "%s (with deadzone)" % (dsc,)
 	
 	
 	def to_string(self, multiline=False, pad=0):
@@ -1048,14 +1040,13 @@ class ModeModifier(Modifier):
 	
 	def trigger(self, mapper, position, old_position):
 		if position < ModeModifier.MIN_TRIGGER:
-			for b in self.held_triggers:
-				b.trigger(mapper, 0, self.held_triggers[b])
-			self.held_triggers = {}
-			return False
-		else:
-			sel = self.select(mapper)
-			self.held_triggers[sel] = position
-			return sel.trigger(mapper, position, old_position)
+		    for b in self.held_triggers:
+		        b.trigger(mapper, 0, self.held_triggers[b])
+		    self.held_triggers = {}
+		    return False
+		sel = self.select(mapper)
+		self.held_triggers[sel] = position
+		return sel.trigger(mapper, position, old_position)
 	
 	
 	def axis(self, mapper, position, what):
@@ -1573,9 +1564,8 @@ class CircularModifier(Modifier, HapticEnabledAction):
 	
 	def get_haptic(self):
 		if isinstance(self.action, HapticEnabledAction):
-			return self.action.get_haptic()
-		else:
-			return HapticEnabledAction.get_haptic(self)
+		    return self.action.get_haptic()
+		return HapticEnabledAction.get_haptic(self)
 	
 	
 	@staticmethod

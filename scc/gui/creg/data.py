@@ -62,9 +62,8 @@ class AxisData(object):
 			r = (STICK_PAD_MAX - STICK_PAD_MIN) / (self.max - self.min)
 			v = (self.pos - self.min) * r
 			if self.invert:
-				return changed, STICK_PAD_MAX - v
-			else:
-				return changed, v + STICK_PAD_MIN
+			    return changed, STICK_PAD_MAX - v
+			return changed, v + STICK_PAD_MIN
 		except ZeroDivisionError:
 			return changed, 0
 

@@ -213,8 +213,7 @@ class SpecialActionComponent(AEComponent, MenuActionCofC):
 	
 	def on_sclOSDTimeout_format_value(self, scale, value):
 		if value > 60.0:
-			return _("forever")
-		elif value < 1:
-			return "%sms" % int(value * 1000)
-		else:
-			return "%ss" % value
+		    return _("forever")
+		if value < 1:
+		    return "%sms" % int(value * 1000)
+		return "%ss" % value

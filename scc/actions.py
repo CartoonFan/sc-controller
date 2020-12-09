@@ -655,10 +655,9 @@ class AxisAction(Action):
 						return "%s %s" % (axis, neg)
 		if context in (Action.AC_TRIGGER, Action.AC_STICK, Action.AC_PAD):
 			if self.id in AxisAction.Z: # Trigger
-				return axis
-			else:
-				xy = "X" if self.id in AxisAction.X else "Y"
-				return "%s %s" % (axis, xy)
+			    return axis
+			xy = "X" if self.id in AxisAction.X else "Y"
+			return "%s %s" % (axis, xy)
 		return axis
 	
 	
@@ -744,9 +743,8 @@ class HatAction(AxisAction):
 		if self.name: return self.name
 		axis, neg, pos = AxisAction.get_axis_description(self.id)
 		if "up" in self.COMMAND or "left" in self.COMMAND:
-			return "%s %s" % (axis, neg)
-		else:
-			return "%s %s" % (axis, pos)
+		    return "%s %s" % (axis, neg)
+		return "%s %s" % (axis, pos)
 	
 	
 	def to_string(self, multiline=False, pad=0):
@@ -848,13 +846,12 @@ class MouseAction(WholeHapticAction, Action):
 	def describe(self, context):
 		if self.name: return self.name
 		if self._mouse_axis == Rels.REL_WHEEL:
-			return _("Wheel")
-		elif self._mouse_axis == Rels.REL_HWHEEL:
-			return _("Horizontal Wheel")
-		elif self._mouse_axis in (PITCH, YAW, ROLL, None):
-			return _("Mouse")
-		else:
-			return _("Mouse %s") % (self._mouse_axis.name.split("_", 1)[-1],)
+		    return _("Wheel")
+		if self._mouse_axis == Rels.REL_HWHEEL:
+		    return _("Horizontal Wheel")
+		if self._mouse_axis in (PITCH, YAW, ROLL, None):
+		    return _("Mouse")
+		return _("Mouse %s") % (self._mouse_axis.name.split("_", 1)[-1],)
 	
 	
 	def button_press(self, mapper):
@@ -977,13 +974,12 @@ class MouseAbsAction(Action):
 	def describe(self, context):
 		if self.name: return self.name
 		if self._mouse_axis == Rels.REL_WHEEL:
-			return _("Wheel")
-		elif self._mouse_axis == Rels.REL_HWHEEL:
-			return _("Horizontal Wheel")
-		elif self._mouse_axis in (PITCH, YAW, ROLL, None):
-			return _("Mouse")
-		else:
-			return _("Mouse %s") % (self._mouse_axis.name.split("_", 1)[-1],)
+		    return _("Wheel")
+		if self._mouse_axis == Rels.REL_HWHEEL:
+		    return _("Horizontal Wheel")
+		if self._mouse_axis in (PITCH, YAW, ROLL, None):
+		    return _("Mouse")
+		return _("Mouse %s") % (self._mouse_axis.name.split("_", 1)[-1],)
 	
 	
 	def axis(self, mapper, position, what):
@@ -1490,18 +1486,17 @@ class ButtonAction(HapticEnabledAction, Action):
 	
 	def describe(self, context):
 		if self.name:
-			return self.name
-		elif self.button is Rels.REL_WHEEL:
+		    return self.name
+		if self.button is Rels.REL_WHEEL:
 			if len(self.parameters) < 2 or self.parameters[1] > 0:
-				return _("Wheel UP")
-			else:
-				return _("Wheel DOWN")
+			    return _("Wheel UP")
+			return _("Wheel DOWN")
 		else:
-			rv = [ ]
-			for x in (self.button, self.button2):
-				if x:
-					rv.append(ButtonAction.describe_button(x, context=context))
-			return ", ".join(rv)
+		    rv = [ ]
+		    for x in (self.button, self.button2):
+		        if x:
+		            rv.append(ButtonAction.describe_button(x, context=context))
+		    return ", ".join(rv)
 	
 	
 	@staticmethod
@@ -1771,12 +1766,11 @@ class MultiAction(MultichildAction):
 			actions.append(x)
 			strings.append(s)
 		if len(actions) == 0:
-			# Impossible
-			return NoAction()
-		elif len(actions) == 1:
-			return actions[0]
-		else:
-			return MultiAction.make(*actions)
+		    # Impossible
+		    return NoAction()
+		if len(actions) == 1:
+		    return actions[0]
+		return MultiAction.make(*actions)
 	
 	
 	def compress(self):
@@ -2108,16 +2102,14 @@ class RingAction(MultichildAction):
 		if self.name: return self.name
 		lines = [ x.describe(Action.AC_BUTTON) for x in self.actions if x ]
 		if any(["\n" in l for l in lines ]):
-			return " / ".join([ l for l in lines ])
-		else:
-			return "\n".join([ l for l in lines ])
+		    return " / ".join([ l for l in lines ])
+		return "\n".join([ l for l in lines ])
 	
 	
 	def to_string(self, multiline=False, pad=0):
 		if self.radius != RingAction.DEFAULT_RADIUS:
-			return MultichildAction.to_string(self, multiline, pad, "%s, " % (self.radius,))
-		else:
-			return MultichildAction.to_string(self, multiline, pad)
+		    return MultichildAction.to_string(self, multiline, pad, "%s, " % (self.radius,))
+		return MultichildAction.to_string(self, multiline, pad)
 	
 	
 	def whole(self, mapper, x, y, what):
@@ -2315,16 +2307,15 @@ class XYAction(WholeHapticAction, Action):
 	
 	def to_string(self, multiline=False, pad=0):
 		if multiline:
-			rv = [ (" " * pad) + self.COMMAND + "(" ]
-			rv += self.x.to_string(True, pad + 2).split("\n")
-			rv += [ (" " * pad) + "," ]
-			rv += self.y.to_string(True, pad + 2).split("\n")
-			rv += [ (" " * pad) + ")" ]
-			return "\n".join(rv)
-		elif self.y:
-			return self.COMMAND + "(" + (", ".join([ x.to_string() for x in (self.x, self.y) ])) + ")"
-		else:
-			return self.COMMAND + "(" + self.x.to_string() + ")"
+		    rv = [ (" " * pad) + self.COMMAND + "(" ]
+		    rv += self.x.to_string(True, pad + 2).split("\n")
+		    rv += [ (" " * pad) + "," ]
+		    rv += self.y.to_string(True, pad + 2).split("\n")
+		    rv += [ (" " * pad) + ")" ]
+		    return "\n".join(rv)
+		if self.y:
+		    return self.COMMAND + "(" + (", ".join([ x.to_string() for x in (self.x, self.y) ])) + ")"
+		return self.COMMAND + "(" + self.x.to_string() + ")"
 	
 	
 	def __str__(self):

@@ -355,13 +355,12 @@ class MenuAction(Action, SpecialAction, HapticEnabledAction):
                 if self.size == 0:
                     return "%s%s('%s')" % (" " * pad, self.COMMAND,
                                            self.menu_id)
-                else:
-                    return "%s%s('%s', %s)" % (
-                        " " * pad,
-                        self.COMMAND,
-                        self.menu_id,
-                        self.size,
-                    )
+                return "%s%s('%s', %s)" % (
+                    " " * pad,
+                    self.COMMAND,
+                    self.menu_id,
+                    self.size,
+                )
 
         return "%s%s(%s)" % (
             " " * pad,
@@ -771,8 +770,7 @@ class GesturesAction(Action, OSDEnabledAction, SpecialAction):
 
         if best_gesture is not None:
             return self.gestures[best_gesture]
-        else:
-            return None
+        return None
 
     def find_gesture_action(self, gesture_string):
         action = None

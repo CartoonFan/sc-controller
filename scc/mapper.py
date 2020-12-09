@@ -225,13 +225,12 @@ class Mapper(object):
 		'what' should be LEFT or RIGHT (from scc.constants)
 		"""
 		if what == LEFT:
-			return self.buttons & SCButtons.LPADTOUCH
-		elif what == RIGHT:
-			return self.buttons & SCButtons.RPADTOUCH
-		elif what == CPAD:
-			return self.buttons & SCButtons.CPADTOUCH
-		else:
-			return False
+		    return self.buttons & SCButtons.LPADTOUCH
+		if what == RIGHT:
+		    return self.buttons & SCButtons.RPADTOUCH
+		if what == CPAD:
+		    return self.buttons & SCButtons.CPADTOUCH
+		return False
 	
 	
 	def was_touched(self, what):
@@ -244,13 +243,12 @@ class Mapper(object):
 		not is_touched() and was_touched() -> pad was just released
 		"""
 		if what == LEFT:
-			return self.old_buttons & SCButtons.LPADTOUCH
-		elif what == RIGHT:
-			return self.old_buttons & SCButtons.RPADTOUCH
-		elif what == CPAD:
-			return self.old_buttons & SCButtons.CPADTOUCH
-		else:
-			return False
+		    return self.old_buttons & SCButtons.LPADTOUCH
+		if what == RIGHT:
+		    return self.old_buttons & SCButtons.RPADTOUCH
+		if what == CPAD:
+		    return self.old_buttons & SCButtons.CPADTOUCH
+		return False
 	
 	
 	def is_pressed(self, button):

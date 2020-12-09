@@ -347,12 +347,11 @@ class AxisActionComponent(AEComponent, TimerManager):
 		Constructs Circular Modifier
 		"""
 		if self.circular_axis and any(self.circular_buttons):
-			return CircularModifier(MultiAction(
-				self.circular_axis, ButtonAction(*self.circular_buttons)))
-		elif any(self.circular_buttons):
-			return CircularModifier(ButtonAction(*self.circular_buttons))
-		else:
-			return CircularModifier(self.circular_axis)
+		    return CircularModifier(MultiAction(
+		    	self.circular_axis, ButtonAction(*self.circular_buttons)))
+		if any(self.circular_buttons):
+		    return CircularModifier(ButtonAction(*self.circular_buttons))
+		return CircularModifier(self.circular_axis)
 	
 	
 	def make_area_action(self):
