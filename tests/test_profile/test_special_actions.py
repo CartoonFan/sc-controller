@@ -137,7 +137,7 @@ class TestSpecialActions(object):
                 raise AssertionError
             if a.cancel_with != SCButtons.Y:
                 raise AssertionError
-            if a.show_with_release != True:
+            if a.show_with_release is True:
                 raise AssertionError
 
     def test_position(self):
