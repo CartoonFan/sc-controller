@@ -2,7 +2,6 @@ from scc.actions import Action, NoAction
 
 
 class TestBoolean(object):
-
     def test_noaction_is_false(self):
         """
         Tests if None can be used as False boolean value.

@@ -5,7 +5,6 @@ import inspect
 
 
 class TestActions(object):
-
     def test_tests(self):
         """
         Tests if this class has test for every Action defined in acitons.py.
@@ -18,8 +17,7 @@ class TestActions(object):
                     continue
                 method_name = "test_%s" % (cls.COMMAND,)
                 if not hasattr(self, method_name):
-                    raise AssertionError(
-                        "There is no test for %s" % (cls.COMMAND))
+                    raise AssertionError("There is no test for %s" % (cls.COMMAND))
 
     def test_none(self):
         """
@@ -166,10 +164,14 @@ class TestActions(object):
         if not _parses_as_itself(TiltAction(ButtonAction(Keys.KEY_D))):
             raise AssertionError
         # With all buttons
-        if not _parses_as_itself(TiltAction(
-                ButtonAction(Keys.KEY_D), ButtonAction(Keys.KEY_U),
-                ButtonAction(Keys.KEY_L), ButtonAction(Keys.KEY_R)
-        )):
+        if not _parses_as_itself(
+            TiltAction(
+                ButtonAction(Keys.KEY_D),
+                ButtonAction(Keys.KEY_U),
+                ButtonAction(Keys.KEY_L),
+                ButtonAction(Keys.KEY_R),
+            )
+        ):
             raise AssertionError
 
     def test_trackball(self):
@@ -203,11 +205,13 @@ class TestActions(object):
         Tests if MultiAction can be converted to string and parsed back to
         same action.
         """
-        if not _parses_as_itself(MultiAction(
+        if not _parses_as_itself(
+            MultiAction(
                 ButtonAction(Keys.BTN_LEFT),
                 ButtonAction(Keys.BTN_RIGHT),
-                ButtonAction(Keys.BTN_MIDDLE)
-        )):
+                ButtonAction(Keys.BTN_MIDDLE),
+            )
+        ):
             raise AssertionError
 
     def test_dpad(self):
@@ -216,20 +220,25 @@ class TestActions(object):
         parsed back to same action.
         """
         # Default diagonal rage
-        if not _parses_as_itself(DPadAction(
+        if not _parses_as_itself(
+            DPadAction(
                 ButtonAction(Keys.BTN_LEFT),
                 ButtonAction(Keys.BTN_RIGHT),
                 ButtonAction(Keys.BTN_MIDDLE),
-                ButtonAction(Keys.KEY_A)
-        )):
+                ButtonAction(Keys.KEY_A),
+            )
+        ):
             raise AssertionError
         # Modified diagonal rage
-        if not _parses_as_itself(DPadAction(33,
-                                            ButtonAction(Keys.BTN_RIGHT),
-                                            ButtonAction(Keys.KEY_A),
-                                            ButtonAction(Keys.BTN_LEFT),
-                                            ButtonAction(Keys.BTN_MIDDLE),
-                                            )):
+        if not _parses_as_itself(
+            DPadAction(
+                33,
+                ButtonAction(Keys.BTN_RIGHT),
+                ButtonAction(Keys.KEY_A),
+                ButtonAction(Keys.BTN_LEFT),
+                ButtonAction(Keys.BTN_MIDDLE),
+            )
+        ):
             raise AssertionError
 
     def test_ring(self):
@@ -237,18 +246,18 @@ class TestActions(object):
         Tests if DPadAction can be converted to string and
         parsed back to same action.
         """
-        if not _parses_as_itself(RingAction(0.1,
-                                            DPadAction(
-                                                ButtonAction(Keys.BTN_LEFT),
-                                                ButtonAction(Keys.BTN_RIGHT),
-                                                ButtonAction(Keys.BTN_MIDDLE),
-                                                ButtonAction(Keys.KEY_A)
-                                            ),
-                                            XYAction(
-                                                AxisAction(Axes.ABS_X),
-                                                AxisAction(Axes.ABS_Y)
-                                            )
-                                            )):
+        if not _parses_as_itself(
+            RingAction(
+                0.1,
+                DPadAction(
+                    ButtonAction(Keys.BTN_LEFT),
+                    ButtonAction(Keys.BTN_RIGHT),
+                    ButtonAction(Keys.BTN_MIDDLE),
+                    ButtonAction(Keys.KEY_A),
+                ),
+                XYAction(AxisAction(Axes.ABS_X), AxisAction(Axes.ABS_Y)),
+            )
+        ):
             raise AssertionError
 
     def test_dpad8(self):
@@ -257,7 +266,8 @@ class TestActions(object):
         parsed back to same action.
         """
         # Default diagonal rage
-        if not _parses_as_itself(DPad8Action(
+        if not _parses_as_itself(
+            DPad8Action(
                 ButtonAction(Keys.BTN_LEFT),
                 ButtonAction(Keys.BTN_RIGHT),
                 ButtonAction(Keys.BTN_MIDDLE),
@@ -265,20 +275,24 @@ class TestActions(object):
                 ButtonAction(Keys.KEY_B),
                 ButtonAction(Keys.KEY_C),
                 ButtonAction(Keys.KEY_D),
-                ButtonAction(Keys.KEY_E)
-        )):
+                ButtonAction(Keys.KEY_E),
+            )
+        ):
             raise AssertionError
         # Modified diagonal rage
-        if not _parses_as_itself(DPad8Action(61,
-                                             ButtonAction(Keys.BTN_RIGHT),
-                                             ButtonAction(Keys.KEY_C),
-                                             ButtonAction(Keys.KEY_A),
-                                             ButtonAction(Keys.BTN_LEFT),
-                                             ButtonAction(Keys.KEY_E),
-                                             ButtonAction(Keys.KEY_B),
-                                             ButtonAction(Keys.KEY_D),
-                                             ButtonAction(Keys.BTN_MIDDLE),
-                                             )):
+        if not _parses_as_itself(
+            DPad8Action(
+                61,
+                ButtonAction(Keys.BTN_RIGHT),
+                ButtonAction(Keys.KEY_C),
+                ButtonAction(Keys.KEY_A),
+                ButtonAction(Keys.BTN_LEFT),
+                ButtonAction(Keys.KEY_E),
+                ButtonAction(Keys.KEY_B),
+                ButtonAction(Keys.KEY_D),
+                ButtonAction(Keys.BTN_MIDDLE),
+            )
+        ):
             raise AssertionError
 
     def test_XY(self):
@@ -286,10 +300,9 @@ class TestActions(object):
         Tests if XYAciton can be converted to string and parsed back to
         same action.
         """
-        if not _parses_as_itself(XYAction(
-                AxisAction(Axes.ABS_X),
-                AxisAction(Axes.ABS_Y)
-        )):
+        if not _parses_as_itself(
+            XYAction(AxisAction(Axes.ABS_X), AxisAction(Axes.ABS_Y))
+        ):
             raise AssertionError
 
     def test_relXY(self):
@@ -297,10 +310,9 @@ class TestActions(object):
         Tests if relXYAciton can be converted to string and parsed back to
         same action.
         """
-        if not _parses_as_itself(RelXYAction(
-                AxisAction(Axes.ABS_RX),
-                AxisAction(Axes.ABS_RY)
-        )):
+        if not _parses_as_itself(
+            RelXYAction(AxisAction(Axes.ABS_RX), AxisAction(Axes.ABS_RY))
+        ):
             raise AssertionError
 
     def test_trigger(self):
@@ -308,8 +320,5 @@ class TestActions(object):
         Tests if TriggerAction can be converted to string and parsed back to
         same action.
         """
-        if not _parses_as_itself(TriggerAction(
-                15, 234,
-                ButtonAction(Keys.KEY_A)
-        )):
+        if not _parses_as_itself(TriggerAction(15, 234, ButtonAction(Keys.KEY_A))):
             raise AssertionError

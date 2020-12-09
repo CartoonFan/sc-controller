@@ -27,14 +27,14 @@ def _check_ids(el, filename, parent_id):
         if child.tag == "object":
             msg = "Widget has no ID in %s; class %s; Parent id: %s" % (
                 filename,
-                child.attrib['class'],
-                parent_id
+                child.attrib["class"],
+                parent_id,
             )
-            if not ('id' in child.attrib and child.attrib['id']):
+            if not ("id" in child.attrib and child.attrib["id"]):
                 raise AssertionError(msg)
             for subel in child:
                 if subel.tag == "child":
-                    _check_ids(subel, filename, child.attrib['id'])
+                    _check_ids(subel, filename, child.attrib["id"])
 
 
 class TestGlade(object):

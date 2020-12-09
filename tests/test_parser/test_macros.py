@@ -6,7 +6,6 @@ import inspect
 
 
 class TestMacros(object):
-
     def test_tests(self):
         """
         Tests if this class has test for each known macro-related action defined.
@@ -15,19 +14,20 @@ class TestMacros(object):
             if "/macros.py" in inspect.getfile(cls):
                 method_name = "test_%s" % (cls.COMMAND,)
                 if not hasattr(self, method_name):
-                    raise AssertionError(
-                        "There is no test for %s" % (cls.COMMAND))
+                    raise AssertionError("There is no test for %s" % (cls.COMMAND))
 
     def test_macro(self):
         """
         Tests if Macro can be converted to string and parsed back to
         same action.
         """
-        if not _parses_as_itself(Macro(
+        if not _parses_as_itself(
+            Macro(
                 ButtonAction(Keys.BTN_LEFT),
                 ButtonAction(Keys.BTN_RIGHT),
-                ButtonAction(Keys.BTN_MIDDLE)
-        )):
+                ButtonAction(Keys.BTN_MIDDLE),
+            )
+        ):
             raise AssertionError
 
     def test_type(self):
@@ -43,11 +43,13 @@ class TestMacros(object):
         Tests if Cycle can be converted to string and parsed back to
         same action.
         """
-        if not _parses_as_itself(Cycle(
+        if not _parses_as_itself(
+            Cycle(
                 ButtonAction(Keys.BTN_LEFT),
                 ButtonAction(Keys.BTN_RIGHT),
-                ButtonAction(Keys.BTN_MIDDLE)
-        )):
+                ButtonAction(Keys.BTN_MIDDLE),
+            )
+        ):
             raise AssertionError
 
     def test_repeat(self):
@@ -57,11 +59,15 @@ class TestMacros(object):
         """
         if not _parses_as_itself(Repeat(ButtonAction(Keys.BTN_LEFT))):
             raise AssertionError
-        if not _parses_as_itself(Repeat(Macro(
-                ButtonAction(Keys.BTN_LEFT),
-                ButtonAction(Keys.BTN_RIGHT),
-                ButtonAction(Keys.BTN_MIDDLE)
-        ))):
+        if not _parses_as_itself(
+            Repeat(
+                Macro(
+                    ButtonAction(Keys.BTN_LEFT),
+                    ButtonAction(Keys.BTN_RIGHT),
+                    ButtonAction(Keys.BTN_MIDDLE),
+                )
+            )
+        ):
             raise AssertionError
 
     def test_sleep(self):
