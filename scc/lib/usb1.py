@@ -1767,7 +1767,6 @@ class USBEndpoint(object):
         if not isinstance(endpoint, libusb1.libusb_endpoint_descriptor):
             raise TypeError("Unexpected descriptor type.")
         self.__endpoint = endpoint
-        self.__context = context
 
     def getAddress(self):
         return self.__endpoint.bEndpointAddress
@@ -2409,7 +2408,6 @@ class USBContext(object):
             user_data = self.__null_pointer
         self.__added_cb = added_cb
         self.__removed_cb = removed_cb
-        self.__poll_cb_user_data = user_data
         self.__libusb_set_pollfd_notifiers(self.__context_p, added_cb,
                                            removed_cb, user_data)
 
