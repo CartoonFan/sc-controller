@@ -1,6 +1,5 @@
 # Used to generate some icons
 # Requires inkscape and imagemagick pacages
-
 import colorsys
 import subprocess
 from xml.etree import ElementTree as ET

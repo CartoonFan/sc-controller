@@ -7,19 +7,25 @@ import json
 import logging
 import os
 import sys
-from math import atan2, cos
+from math import atan2
+from math import cos
 from math import pi as PI
 from math import sin
 
 from scc.config import Config
-from scc.constants import STICK, STICK_PAD_MAX
-from scc.gui.svg_widget import SVGEditor, SVGWidget
+from scc.constants import STICK
+from scc.constants import STICK_PAD_MAX
+from scc.gui.svg_widget import SVGEditor
+from scc.gui.svg_widget import SVGWidget
 from scc.lib import xwrappers as X
-from scc.menu_data import Separator, Submenu
+from scc.menu_data import Separator
+from scc.menu_data import Submenu
 from scc.osd import OSDWindow
-from scc.osd.menu import Menu, MenuIcon
+from scc.osd.menu import Menu
+from scc.osd.menu import MenuIcon
 from scc.paths import get_share_path
-from scc.tools import degdiff, find_icon
+from scc.tools import degdiff
+from scc.tools import find_icon
 
 log = logging.getLogger("osd.menu")
 

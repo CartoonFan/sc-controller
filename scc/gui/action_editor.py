@@ -8,27 +8,47 @@ import importlib
 import logging
 import math
 
-from gi.repository import GLib, Gtk
+from gi.repository import GLib
+from gi.repository import Gtk
 
-from scc.actions import Action, NoAction, RingAction, TriggerAction
-from scc.constants import CUT, LINEAR, MINIMUM, ROUND, HapticPos, SCButtons
+from scc.actions import Action
+from scc.actions import NoAction
+from scc.actions import RingAction
+from scc.actions import TriggerAction
+from scc.constants import CUT
+from scc.constants import HapticPos
+from scc.constants import LINEAR
+from scc.constants import MINIMUM
+from scc.constants import ROUND
+from scc.constants import SCButtons
 from scc.gui.ae import AEComponent
-from scc.gui.controller_widget import GYROS, PADS, PRESSABLE, STICKS, TRIGGERS
+from scc.gui.controller_widget import GYROS
+from scc.gui.controller_widget import PADS
+from scc.gui.controller_widget import PRESSABLE
+from scc.gui.controller_widget import STICKS
+from scc.gui.controller_widget import TRIGGERS
 from scc.gui.dwsnc import headerbar
 from scc.gui.editor import Editor
 from scc.gui.macro_editor import MacroEditor
 from scc.gui.modeshift_editor import ModeshiftEditor
-from scc.gui.parser import GuiActionParser, InvalidAction
+from scc.gui.parser import GuiActionParser
+from scc.gui.parser import InvalidAction
 from scc.gui.ring_editor import RingEditor
 from scc.gui.simple_chooser import SimpleChooser
 from scc.macros import Macro
-from scc.modifiers import (BallModifier, ClickModifier, DeadzoneModifier,
-                           FeedbackModifier, ModeModifier, NameModifier,
-                           RotateInputModifier, SensitivityModifier,
-                           SmoothModifier)
+from scc.modifiers import BallModifier
+from scc.modifiers import ClickModifier
+from scc.modifiers import DeadzoneModifier
+from scc.modifiers import FeedbackModifier
+from scc.modifiers import ModeModifier
+from scc.modifiers import NameModifier
+from scc.modifiers import RotateInputModifier
+from scc.modifiers import SensitivityModifier
+from scc.modifiers import SmoothModifier
 from scc.profile import Profile
 from scc.special_actions import OSDAction
-from scc.tools import _, nameof
+from scc.tools import _
+from scc.tools import nameof
 
 log = logging.getLogger("ActionEditor")
 
