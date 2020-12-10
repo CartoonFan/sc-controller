@@ -1,6 +1,5 @@
 # Used to generate some icons
 # Requires inkscape and imagemagick pacages
-
 import colorsys
 import os
 import subprocess

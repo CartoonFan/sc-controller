@@ -3,19 +3,44 @@ Imports VDF profile and converts it to Profile object.
 """
 import logging
 
-from scc.actions import (Action, AxisAction, ButtonAction, DPadAction,
-                         HatDownAction, HatLeftAction, HatRightAction,
-                         HatUpAction, MouseAction, MultiAction, NoAction,
-                         RelAreaAction, TriggerAction, XYAction)
-from scc.constants import ROLL, TRIGGER_CLICK, YAW, HapticPos, SCButtons
-from scc.lib.vdf import ensure_list, parse_vdf
-from scc.menu_data import MenuData, MenuItem
-from scc.modifiers import (BallModifier, DoubleclickModifier, FeedbackModifier,
-                           HoldModifier, ModeModifier, SensitivityModifier)
-from scc.parser import ActionParser, ParseError
+from scc.actions import Action
+from scc.actions import AxisAction
+from scc.actions import ButtonAction
+from scc.actions import DPadAction
+from scc.actions import HatDownAction
+from scc.actions import HatLeftAction
+from scc.actions import HatRightAction
+from scc.actions import HatUpAction
+from scc.actions import MouseAction
+from scc.actions import MultiAction
+from scc.actions import NoAction
+from scc.actions import RelAreaAction
+from scc.actions import TriggerAction
+from scc.actions import XYAction
+from scc.constants import HapticPos
+from scc.constants import ROLL
+from scc.constants import SCButtons
+from scc.constants import TRIGGER_CLICK
+from scc.constants import YAW
+from scc.lib.vdf import ensure_list
+from scc.lib.vdf import parse_vdf
+from scc.menu_data import MenuData
+from scc.menu_data import MenuItem
+from scc.modifiers import BallModifier
+from scc.modifiers import DoubleclickModifier
+from scc.modifiers import FeedbackModifier
+from scc.modifiers import HoldModifier
+from scc.modifiers import ModeModifier
+from scc.modifiers import SensitivityModifier
+from scc.parser import ActionParser
+from scc.parser import ParseError
 from scc.profile import Profile
-from scc.special_actions import ChangeProfileAction, GridMenuAction, MenuAction
-from scc.uinput import Axes, Keys, Rels
+from scc.special_actions import ChangeProfileAction
+from scc.special_actions import GridMenuAction
+from scc.special_actions import MenuAction
+from scc.uinput import Axes
+from scc.uinput import Keys
+from scc.uinput import Rels
 
 log = logging.getLogger("import.vdf")
 
