@@ -1,7 +1,9 @@
 # Used to generate some icons
 # Requires inkscape and imagemagick pacages
 
-import os, subprocess, colorsys
+import os
+import subprocess
+import colorsys
 from xml.etree import ElementTree as ET
 
 ICODIR = "./images/"                    # Directory with icons
@@ -25,9 +27,10 @@ for size in (24, 256):
             "inkscape",
             "%s/scc-statusicon-%s.svg" % (ICODIR, state),
             "--export-area-page",
-            "--export-png=%s/%sx%s/status/scc-%s.png" % (ICODIR, size, size, state),
+            "--export-png=%s/%sx%s/status/scc-%s.png" % (
+                ICODIR, size, size, state),
             "--export-width=%s" % (size,),
-            "--export-height=%s" % (size,) ])
+            "--export-height=%s" % (size,)])
 
 
 def html_to_rgb(html):
@@ -39,12 +42,12 @@ def html_to_rgb(html):
         return 0, 0, 0, 0
     elif len(html) != 8:
         raise ValueError("Needs RRGGBB(AA) format, got '%s'" % (html, ))
-    return tuple(( float(int(html[i:i+2], 16)) / 255.0 for i in range(0, len(html), 2) ))
+    return tuple((float(int(html[i:i+2], 16)) / 255.0 for i in range(0, len(html), 2)))
 
 
 def rgb_to_html(r, g, b):
     """ Convets rgb back to html color code """
-    return "#" + "".join(( "%02x" % int(x * 255) for x in (r, g, b) ))
+    return "#" + "".join(("%02x" % int(x * 255) for x in (r, g, b)))
 
 
 def recolor(tree, add):
@@ -53,12 +56,12 @@ def recolor(tree, add):
         return
     for child in tree:
         if 'style' in child.attrib:
-            styles = { a : b
-                for (a, b) in (
-                    x.split(":", 1)
-                    for x in child.attrib['style'].split(';')
-                    if ":" in x
-                )}
+            styles = {a: b
+                      for (a, b) in (
+                          x.split(":", 1)
+                          for x in child.attrib['style'].split(';')
+                          if ":" in x
+                      )}
             if "fill" in styles or "stroke" in styles:
                 for key in ("fill", "stroke"):
                     if key in styles:
@@ -67,13 +70,16 @@ def recolor(tree, add):
                         h, s, v = colorsys.rgb_to_hsv(r, g, b)
                         # Shift hue
                         h += add
-                        while h > 1.0 : h -= 1.0
+                        while h > 1.0:
+                            h -= 1.0
                         # Convert it back
                         r, g, b = colorsys.hsv_to_rgb(h, s, v)
                         # Store
                         styles[key] = rgb_to_html(r, g, b)
-                child.attrib["style"] = ";".join(( ":".join((x, styles[x])) for x in styles ))
+                child.attrib["style"] = ";".join(
+                    (":".join((x, styles[x])) for x in styles))
         recolor(child, add)
+
 
 # Generate different colors for controller icons
 ET.register_namespace("", "http://www.w3.org/2000/svg")
@@ -85,7 +91,7 @@ for tp in ("sc", "scbt", "fake", "ds4", "hid", "rpad"):
         tree = ET.fromstring(data)
         # Walk recursively and recolor everything that has color
         recolor(tree, RECOLORS[key])
-        
+
         out = "%s/%s-%s.svg" % (CICONS, tp, key)
         file(out, "w").write(ET.tostring(tree))
         print(out)
