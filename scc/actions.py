@@ -133,10 +133,9 @@ class Action(object):
         Unregisters prefix (as in Prefix.COMMAND) recognized by parser.
         Returns True on sucess, False if there is no such prefix registered.
         """
-        if prefix in Action.ALL:
-            if isinstance(Action.ALL, dict):
-                del Action.ALL[prefix]
-                return True
+        if prefix in Action.ALL and type(Action.ALL) == dict:
+            del Action.ALL[prefix]
+            return True
         return False
     
     

@@ -640,8 +640,8 @@ class Keyboard(OSDWindow, TimerManager):
         Updates hilighted keys on bacgkround image.
         """
         self.background.hilight(
-            { a for a in list(self._hovers.values()) if a },
-            { a for a in list(self._pressed_areas.values()) if a }
+            {a for a in self._hovers.values() if a},
+            {a for a in self._pressed_areas.values() if a},
         )
     
     
