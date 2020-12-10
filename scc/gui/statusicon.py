@@ -4,8 +4,6 @@
 Syncthing-GTK - StatusIcon
 
 """
-
-
 import logging
 import os
 

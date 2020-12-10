@@ -4,8 +4,6 @@ SC-Controller - Action Editor
 
 Allows to edit button or trigger action.
 """
-
-
 import logging
 from collections import namedtuple
 

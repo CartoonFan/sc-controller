@@ -4,8 +4,6 @@ SC-Controller - OSD Daemon
 
 Controls stuff displayed as OSD.
 """
-
-
 import logging
 import os
 import sys
@@ -170,8 +168,8 @@ class OSDDaemon(object):
                 # TODO: Do this only for default position once changing
                 # TODO: is allowed
                 if self._visible_messages:
-                    height = list(self._visible_messages.values())[0].get_size(
-                    ).height
+                    height = list(
+                        self._visible_messages.values())[0].get_size().height
                     x, y = m.position
                     while y in [
                             i.position[1]

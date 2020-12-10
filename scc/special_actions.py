@@ -8,8 +8,6 @@ mapper.set_special_actions_handler() is called to do whatever action is supposed
 to do. If handler is not set, or doesn't have reqiuired method defined,
 action only prints warning to console.
 """
-
-
 import logging
 import sys
 from difflib import get_close_matches
@@ -763,10 +761,12 @@ class GesturesAction(Action, OSDEnabledAction, SpecialAction):
     def _find_best_match_gesture(self, gesture_string):
         NUM_MATCHES_TO_RETURN = 1
 
-        similar_gestures = get_close_matches(gesture_string,
-                                             list(self.gestures.keys()),
-                                             NUM_MATCHES_TO_RETURN,
-                                             self.precision)
+        similar_gestures = get_close_matches(
+            gesture_string,
+            list(self.gestures.keys()),
+            NUM_MATCHES_TO_RETURN,
+            self.precision,
+        )
         best_gesture = next(iter(similar_gestures), None)
 
         if best_gesture is not None:

@@ -4,8 +4,6 @@ SC-Controller - Action Editor
 
 Also doubles as Menu Item Editor in some cases
 """
-
-
 import importlib
 import logging
 import math
@@ -227,8 +225,7 @@ class ActionEditor(Editor):
         mod = importlib.import_module("scc.gui.ae.%s" % (class_name, ))
         for x in mod.__all__:
             cls = getattr(mod, x)
-            if isinstance(cls, type) and issubclass(
-                    cls, AEComponent):
+            if isinstance(cls, type) and issubclass(cls, AEComponent):
                 if cls is not AEComponent:
                     instance = cls(self.app, self)
                     self.loaded_components[class_name] = instance

@@ -8,8 +8,6 @@ keyboard. This mapper emulates input events on it using GTK methods.
 
 Mouse movement (but not buttons) are passed to uinput as usuall.
 """
-
-
 import logging
 import os
 

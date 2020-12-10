@@ -9,17 +9,33 @@ Based on
 
 Licensed under GPL 2.0
 """
-from scc.lib.hidparse_data import GlobalItem, MainItem, LocalItem, UsagePage
-from scc.lib.hidparse_data import SensorPage, SensorSelector, LightSensor
-from scc.lib.hidparse_data import GenericDesktopPage, page_to_enum
-from scc.lib.hidparse_data import MotionSensor, OrientationSensor
-from scc.lib.hidparse_data import ModifierI2a, HidSensorProperty
-from scc.lib.hidparse_data import ItemType, ItemLength, ItemBase
-from scc.lib.hidparse_data import SensorEvent, SensorDataField
-from scc.lib.hidparse_data import Collection, Unit, UnitType
-from scc.lib import ioctl_opt
+import ctypes
+import fcntl
+import struct
+
 from scc.lib import IntEnum
-import ctypes, fcntl, struct
+from scc.lib import ioctl_opt
+from scc.lib.hidparse_data import Collection
+from scc.lib.hidparse_data import GenericDesktopPage
+from scc.lib.hidparse_data import GlobalItem
+from scc.lib.hidparse_data import HidSensorProperty
+from scc.lib.hidparse_data import ItemBase
+from scc.lib.hidparse_data import ItemLength
+from scc.lib.hidparse_data import ItemType
+from scc.lib.hidparse_data import LightSensor
+from scc.lib.hidparse_data import LocalItem
+from scc.lib.hidparse_data import MainItem
+from scc.lib.hidparse_data import ModifierI2a
+from scc.lib.hidparse_data import MotionSensor
+from scc.lib.hidparse_data import OrientationSensor
+from scc.lib.hidparse_data import page_to_enum
+from scc.lib.hidparse_data import SensorDataField
+from scc.lib.hidparse_data import SensorEvent
+from scc.lib.hidparse_data import SensorPage
+from scc.lib.hidparse_data import SensorSelector
+from scc.lib.hidparse_data import Unit
+from scc.lib.hidparse_data import UnitType
+from scc.lib.hidparse_data import UsagePage
 
 # hid.h
 _HID_MAX_DESCRIPTOR_SIZE = 4096
@@ -34,18 +50,20 @@ AXES = [
 ]
 
 # hidraw.h
+
+
 class _hidraw_report_descriptor(ctypes.Structure):
     _fields_ = [
-        ('size', ctypes.c_uint),
-        ('value', ctypes.c_ubyte * _HID_MAX_DESCRIPTOR_SIZE),
+        ("size", ctypes.c_uint),
+        ("value", ctypes.c_ubyte * _HID_MAX_DESCRIPTOR_SIZE),
     ]
 
 
 class _hidraw_devinfo(ctypes.Structure):
     _fields_ = [
-        ('bustype', ctypes.c_uint),
-        ('vendor', ctypes.c_short),
-        ('product', ctypes.c_short),
+        ("bustype", ctypes.c_uint),
+        ("vendor", ctypes.c_short),
+        ("product", ctypes.c_short),
     ]
 
 
@@ -58,16 +76,15 @@ class BusType(IntEnum):
 
 class ReservedItem(object):
     _CACHE = {}
-    
+
     def __init__(self, value):
         self.value = value
-    
-    
+
     def __repr__(self):
-        return "<Reserved ID 0x%x>" % (self.value,)
-    
+        return "<Reserved ID 0x%x>" % (self.value, )
+
     __str__ = __repr__
-    
+
     def __new__(cls, value):
         if value not in cls._CACHE:
             cls._CACHE[value] = object.__new__(cls, value)
@@ -81,12 +98,15 @@ def enum_or_reserved(enum, value):
         return ReservedItem(value)
 
 
-_HIDIOCGRDESCSIZE = ioctl_opt.IOR(ord('H'), 0x01, ctypes.c_int)
-_HIDIOCGRDESC =     ioctl_opt.IOR(ord('H'), 0x02, _hidraw_report_descriptor)
-_HIDIOCGRAWINFO =   ioctl_opt.IOR(ord('H'), 0x03, _hidraw_devinfo)
-#_HIDIOCGFEATURE =  lambda len : ioctl_opt.IORW(ord('H'), 0x07, len)
-_HIDIOCGFEATURE = lambda len: ioctl_opt.IOC(
-    ioctl_opt.IOC_WRITE|ioctl_opt.IOC_READ, ord('H'), 0x07, len)
+_HIDIOCGRDESCSIZE = ioctl_opt.IOR(ord("H"), 0x01, ctypes.c_int)
+_HIDIOCGRDESC = ioctl_opt.IOR(ord("H"), 0x02, _hidraw_report_descriptor)
+_HIDIOCGRAWINFO = ioctl_opt.IOR(ord("H"), 0x03, _hidraw_devinfo)
+# _HIDIOCGFEATURE =  lambda len : ioctl_opt.IORW(ord('H'), 0x07, len)
+
+
+def _HIDIOCGFEATURE(len):
+    return ioctl_opt.IOC(ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ, ord("H"),
+                         0x07, len)
 
 
 def _ioctl(devfile, func, arg, mutate_flag=False):
@@ -119,28 +139,30 @@ def get_raw_report_descriptor(devfile):
 
 # Convert items to unsigned char, short, or int
 def _it2u(it):
-    if len(it) == 2:# unsigned char
+    if len(it) == 2:  # unsigned char
         return it[1]
     elif len(it) == 3:  # unsigned short
-        return int('{:02x}{:02x}'.format(it[2], it[1]), 16)
+        return int("{:02x}{:02x}".format(it[2], it[1]), 16)
     elif len(it) == 5:  # unsigned int
-        return int('{:02x}{:02x}{:02x}{:02x}'.format(it[4], it[3], it[2], it[1]), 16)
+        return int(
+            "{:02x}{:02x}{:02x}{:02x}".format(it[4], it[3], it[2], it[1]), 16)
     else:
         return 0
 
 
 # Convert items to signed char, short, or int
 def _it2s(it):
-    if len(it) == 2:                     # signed char
+    if len(it) == 2:  # signed char
         n = it[1]
         if n & 0x80:
             n -= 0x100
-    elif len(it) == 3:                 # signed short
-        n = int('{:02x}{:02x}'.format(it[2], it[1]), 16)
+    elif len(it) == 3:  # signed short
+        n = int("{:02x}{:02x}".format(it[2], it[1]), 16)
         if n & 0x8000:
             n -= 0x10000
-    elif len(it) == 5:                 # signed int
-        n = int('{:02x}{:02x}{:02x}{:02x}'.format(it[4], it[3], it[2], it[1]), 16)
+    elif len(it) == 5:  # signed int
+        n = int("{:02x}{:02x}{:02x}{:02x}".format(it[4], it[3], it[2], it[1]),
+                16)
         if n & 0x80000000:
             n -= 0x100000000
     else:
@@ -149,29 +171,30 @@ def _it2s(it):
 
 
 def parse_item(it, page):
-    if it[0] != 0xFE:                   # normal item
+    if it[0] != 0xFE:  # normal item
         itag = it[0] & 0xF0
         itype = it[0] & 0xC
         isize = it[0] & 0x3
-    else:                               # long item
+    else:  # long item
         isize = it[1]
         itag = it[3] * 256 + it[2]
         raise ValueError("Not implemented: long item!!")
 
-    if itype == 0x00:                   # main items
+    if itype == 0x00:  # main items
         item = enum_or_reserved(MainItem, itag)
         if item == MainItem.Collection:
             col_type = enum_or_reserved(Collection, it[1])
             return item, col_type
         if item in (MainItem.Input, MainItem.Output, MainItem.Feature):
-            return (item,
+            return (
+                item,
                 ItemType.Constant if it[1] & 0x1 else ItemType.Data,
                 ItemLength.Variable if it[1] & 0x2 else ItemLength.Array,
                 ItemBase.Relative if it[1] & 0x4 else ItemBase.Absolute,
             )
         # EndCollection or reserved
-        return item,
-    elif itype == 0x04:             # global items
+        return (item, )
+    elif itype == 0x04:  # global items
         item = enum_or_reserved(GlobalItem, itag)
         if item == GlobalItem.UsagePage:
             page = enum_or_reserved(UsagePage, _it2u(it))
@@ -188,52 +211,81 @@ def parse_item(it, page):
             if it[1] & 0xF0 != 0:
                 return item, unit_type, Unit.Length
             if len(it) > 2:
-                if it[2] & 0x0F: return item, unit_type, Unit.Mass
-                if it[2] & 0xF0: return item, unit_type, Unit.Item
+                if it[2] & 0x0F:
+                    return item, unit_type, Unit.Mass
+                if it[2] & 0xF0:
+                    return item, unit_type, Unit.Item
             if len(it) > 3:
-                if it[3] & 0x0F: return item, unit_type, Unit.Temperature
-                if it[3] & 0xF0: return item, unit_type, Unit.Current
-            if len(it) > 4 and it[4] & 0x0F: return item, unit_type, Unit.LuminousIntensity
+                if it[3] & 0x0F:
+                    return item, unit_type, Unit.Temperature
+                if it[3] & 0xF0:
+                    return item, unit_type, Unit.Current
+            if len(it) > 4 and it[4] & 0x0F:
+                return item, unit_type, Unit.LuminousIntensity
             return item, unit_type, ReservedItem(it[1])
         elif item in (GlobalItem.LogicalMaximum, GlobalItem.PhysicalMaximum):
             # unsigned values
             return item, _it2u(it)
-        elif item in (GlobalItem.LogicalMinimum, GlobalItem.PhysicalMinimum,
-                    GlobalItem.ReportSize):
+        elif item in (
+                GlobalItem.LogicalMinimum,
+                GlobalItem.PhysicalMinimum,
+                GlobalItem.ReportSize,
+        ):
             # signed values
             return item, _it2s(it)
         elif item in (GlobalItem.ReportID, GlobalItem.ReportCount):
             return item, it[1]
         else:
             return item
-    elif itype == 0x08:             # local items
+    elif itype == 0x08:  # local items
         item = enum_or_reserved(LocalItem, itag)
         if item == LocalItem.Usage:
-            if page is SensorPage and isize == 2:   # sensor page & usage size is 2
-                mdf = (it[2] & 0xf0) >> 4
-                if it[2] & 0xf == 0x02:
-                    return (item, enum_or_reserved(ModifierI2a, mdf),
-                            enum_or_reserved(SensorEvent, it[1]))
-                elif it[2] & 0xf== 0x03:
-                    return (item, enum_or_reserved(ModifierI2a, mdf),
-                            enum_or_reserved(HidSensorProperty, it[1]))
-                elif it[2] & 0xf== 0x04:
-                    if it[1] & 0xf0 == 0x50:
-                        return (item, enum_or_reserved(ModifierI2a, mdf),
-                                enum_or_reserved(MotionSensor, it[1]))
+            if page is SensorPage and isize == 2:  # sensor page & usage size is 2
+                mdf = (it[2] & 0xF0) >> 4
+                if it[2] & 0xF == 0x02:
+                    return (
+                        item,
+                        enum_or_reserved(ModifierI2a, mdf),
+                        enum_or_reserved(SensorEvent, it[1]),
+                    )
+                elif it[2] & 0xF == 0x03:
+                    return (
+                        item,
+                        enum_or_reserved(ModifierI2a, mdf),
+                        enum_or_reserved(HidSensorProperty, it[1]),
+                    )
+                elif it[2] & 0xF == 0x04:
+                    if it[1] & 0xF0 == 0x50:
+                        return (
+                            item,
+                            enum_or_reserved(ModifierI2a, mdf),
+                            enum_or_reserved(MotionSensor, it[1]),
+                        )
                     elif it[1] & 0xF0 in [0x70, 0x80]:
-                        return (item, enum_or_reserved(ModifierI2a, mdf),
-                                enum_or_reserved(OrientationSensor, it[1]))
-                    elif it[1] & 0xf0 == 0xD0:
-                        return (item, enum_or_reserved(ModifierI2a, mdf),
-                                enum_or_reserved(LightSensor, it[1]))
-                elif it[2] & 0xf== 0x05:
-                    return (item, enum_or_reserved(ModifierI2a, mdf),
-                            enum_or_reserved(SensorDataField, it[1]))
-                elif it[2] & 0xf == 0x08:
-                    return (item, enum_or_reserved(ModifierI2a, mdf),
-                            enum_or_reserved(SensorSelector, it[1]))
-            elif isize == 3:             # 4 bytes (usage page: usage id)
+                        return (
+                            item,
+                            enum_or_reserved(ModifierI2a, mdf),
+                            enum_or_reserved(OrientationSensor, it[1]),
+                        )
+                    elif it[1] & 0xF0 == 0xD0:
+                        return (
+                            item,
+                            enum_or_reserved(ModifierI2a, mdf),
+                            enum_or_reserved(LightSensor, it[1]),
+                        )
+                elif it[2] & 0xF == 0x05:
+                    return (
+                        item,
+                        enum_or_reserved(ModifierI2a, mdf),
+                        enum_or_reserved(SensorDataField, it[1]),
+                    )
+                elif it[2] & 0xF == 0x08:
+                    return (
+                        item,
+                        enum_or_reserved(ModifierI2a, mdf),
+                        enum_or_reserved(SensorSelector, it[1]),
+                    )
+            elif isize == 3:  # 4 bytes (usage page: usage id)
                 uid = it[2] * 256 + it[1]
                 upg = it[4] * 256 + it[3]
                 page = enum_or_reserved(hidparse_data.UsagePage, upg)
@@ -247,9 +299,14 @@ def parse_item(it, page):
                     return item, page(it[1])
                 except ValueError:
                     return item, it[1]
-        elif item in (LocalItem.UsageMinimum, LocalItem.UsageMaximum,
-                    LocalItem.DesignatorMinimum, LocalItem.DesignatorMaximum,
-                    LocalItem.StringMinimum, LocalItem.StringMaximum):
+        elif item in (
+                LocalItem.UsageMinimum,
+                LocalItem.UsageMaximum,
+                LocalItem.DesignatorMinimum,
+                LocalItem.DesignatorMaximum,
+                LocalItem.StringMinimum,
+                LocalItem.StringMaximum,
+        ):
             return item, _it2s(it)
         else:
             return item
@@ -260,21 +317,21 @@ def parse_item(it, page):
 def _split_hid_items(data):
     size = 0
     for i in range(len(data)):
-        if size != 0:                   # skip bytes for the previous item
+        if size != 0:  # skip bytes for the previous item
             size -= 1
             continue
-        size = data[i] & 0x3             # 3 means 4 bytes
+        size = data[i] & 0x3  # 3 means 4 bytes
         if size == 3:
             size = 4
-        if i == 0xFE:                   # long item
-            size = data[i+1]
-        yield data[i:i+size+1]
+        if i == 0xFE:  # long item
+            size = data[i + 1]
+        yield data[i:i + size + 1]
 
 
 def parse_report_descriptor(data, flat_list=False):
     """
     Parses HID report descriptor to list of elements.
-    
+
     If flat_list is set to True, only one list is returned.
     Otherwise, each collection is stored in its own nested list.
     """
@@ -283,7 +340,7 @@ def parse_report_descriptor(data, flat_list=False):
     for it in _split_hid_items(data):
         item = parse_item(it, page)
         if not flat_list and item[0] is MainItem.Collection:
-            item = [ item ]
+            item = [item]
             col.append(item)
             stack.append(col)
             col = item
@@ -292,7 +349,8 @@ def parse_report_descriptor(data, flat_list=False):
             col, stack = stack[0], stack[:-1]
         elif item[0] is GlobalItem.UsagePage:
             page = item[1]
-            page = page_to_enum[item[1]] if item[1] in page_to_enum else GenericDesktopPage
+            page = (page_to_enum[item[1]]
+                    if item[1] in page_to_enum else GenericDesktopPage)
             col.append(item)
         else:
             col.append(item)
@@ -303,7 +361,7 @@ def parse_report_descriptor(data, flat_list=False):
 def get_report_descriptor(devfile, flat_list=False):
     """
     Returns parsed HID report descriptor as list of elements.
-    
+
     If flat_list is set to True, only one list is returned.
     Otherwise, each collection is stored in its own nested list.
     """
@@ -312,7 +370,6 @@ def get_report_descriptor(devfile, flat_list=False):
 
 
 class Parser(object):
-    
     def __init__(self, code, offset, count, size):
         self.code = code
         self.value = 0
@@ -336,11 +393,12 @@ class Parser(object):
             self.byte_len = 1
             self.fmt = "<B"
         self.additional_bits = offset % 8
-    
-    
+
     def decode(self, data):
-        self.value, = struct.unpack(self.fmt, data[self.byte_offset: self.byte_offset + self.byte_len])
+        (self.value, ) = struct.unpack(
+            self.fmt, data[self.byte_offset:self.byte_offset + self.byte_len])
         self.value >>= self.additional_bits
+
 
 HIDPARSE_TYPE_AXIS = 1
 HIDPARSE_TYPE_BUTTONS = 2
@@ -348,16 +406,18 @@ HIDPARSE_TYPE_BUTTONS = 2
 
 class HIDButtonParser(Parser):
     TYPE = HIDPARSE_TYPE_BUTTONS
-    
+
     def __repr__(self):
-        return "<HID Buttons @%s len %s value %s>" % (self.offset, self.len, self.value)
+        return "<HID Buttons @%s len %s value %s>" % (self.offset, self.len,
+                                                      self.value)
 
 
 class HIDAxisParser(Parser):
     TYPE = HIDPARSE_TYPE_AXIS
-    
+
     def __repr__(self):
-        return "<HID Axis @%s len %s value %s>" % (self.offset, self.len, self.value)
+        return "<HID Axis @%s len %s value %s>" % (self.offset, self.len,
+                                                   self.value)
 
 
 def make_parsers(data):
@@ -380,12 +440,15 @@ def make_parsers(data):
             elif x[1] == ItemType.Data:
                 if kind in AXES:
                     for i in range(count):
-                        parsers.append(HIDAxisParser(axis_id, offset + size * i, 1, size))
+                        parsers.append(
+                            HIDAxisParser(axis_id, offset + size * i, 1, size))
                         axis_id += 1
                 else:
-                    parsers.append(HIDButtonParser(buttons_id, offset, count, size))
+                    parsers.append(
+                        HIDButtonParser(buttons_id, offset, count, size))
                     buttons_id += count
             offset += size * count
     size = offset / 8
-    if offset % 8 > 0: size += 1
+    if offset % 8 > 0:
+        size += 1
     return size, parsers

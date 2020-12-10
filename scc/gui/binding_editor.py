@@ -3,33 +3,44 @@ SC-Controller - BindingEditor
 
 Base class for main application window and OSD Keyboard bindings editor.
 """
-
-from scc.tools import _
-
-from scc.modifiers import ModeModifier, SensitivityModifier, FeedbackModifier
-from scc.modifiers import DoubleclickModifier, HoldModifier
 from scc.actions import NoAction
-from scc.macros import Macro, Type
-from scc.constants import SCButtons, LEFT, RIGHT
-from scc.profile import Profile
-from scc.gui.controller_widget import TRIGGERS, PADS, STICKS, GYROS, BUTTONS, PRESSABLE
-from scc.gui.controller_widget import ControllerPad, ControllerStick, ControllerGyro
-from scc.gui.controller_widget import ControllerButton, ControllerTrigger
-from scc.gui.modeshift_editor import ModeshiftEditor
-from scc.gui.ae.buttons import is_button_togle, is_button_repeat
-from scc.gui.ae.gyro_action import is_gyro_enable
+from scc.constants import LEFT
+from scc.constants import RIGHT
+from scc.constants import SCButtons
 from scc.gui.action_editor import ActionEditor
+from scc.gui.ae.buttons import is_button_repeat
+from scc.gui.ae.buttons import is_button_togle
+from scc.gui.ae.gyro_action import is_gyro_enable
+from scc.gui.controller_widget import BUTTONS
+from scc.gui.controller_widget import ControllerButton
+from scc.gui.controller_widget import ControllerGyro
+from scc.gui.controller_widget import ControllerPad
+from scc.gui.controller_widget import ControllerStick
+from scc.gui.controller_widget import ControllerTrigger
+from scc.gui.controller_widget import GYROS
+from scc.gui.controller_widget import PADS
+from scc.gui.controller_widget import PRESSABLE
+from scc.gui.controller_widget import STICKS
+from scc.gui.controller_widget import TRIGGERS
 from scc.gui.macro_editor import MacroEditor
+from scc.gui.modeshift_editor import ModeshiftEditor
 from scc.gui.ring_editor import RingEditor
+from scc.macros import Macro
+from scc.macros import Type
+from scc.modifiers import DoubleclickModifier
+from scc.modifiers import FeedbackModifier
+from scc.modifiers import HoldModifier
+from scc.modifiers import ModeModifier
+from scc.modifiers import SensitivityModifier
+from scc.profile import Profile
+from scc.tools import _
 
 
 class BindingEditor(object):
-    
     def __init__(self, app):
         self.button_widgets = {}
         self.app = app
-    
-    
+
     def create_binding_buttons(self, use_icons=True, enable_press=True):
         """
         Creates ControllerWidget instances for available Gtk.Buttons defined
@@ -38,36 +49,39 @@ class BindingEditor(object):
         for b in BUTTONS:
             w = self.builder.get_object("bt" + b.name)
             if w:
-                self.button_widgets[b] = ControllerButton(self, b, use_icons, w)
+                self.button_widgets[b] = ControllerButton(
+                    self, b, use_icons, w)
         for b in TRIGGERS:
             w = self.builder.get_object("bt" + b)
             if w:
-                self.button_widgets[b] = ControllerTrigger(self, b, use_icons, w)
+                self.button_widgets[b] = ControllerTrigger(
+                    self, b, use_icons, w)
         for b in PADS:
             w = self.builder.get_object("bt" + b)
             if w:
-                self.button_widgets[b] = ControllerPad(self, b, use_icons, enable_press, w)
+                self.button_widgets[b] = ControllerPad(self, b, use_icons,
+                                                       enable_press, w)
         for b in STICKS:
             w = self.builder.get_object("bt" + b)
             if w:
-                self.button_widgets[b] = ControllerStick(self, b, use_icons, enable_press, w)
+                self.button_widgets[b] = ControllerStick(
+                    self, b, use_icons, enable_press, w)
         w = self.builder.get_object("btSTICKPRESS")
         if w:
-            self.button_widgets[SCButtons.STICKPRESS] = ControllerButton(self, SCButtons.STICKPRESS, use_icons, w)
+            self.button_widgets[SCButtons.STICKPRESS] = ControllerButton(
+                self, SCButtons.STICKPRESS, use_icons, w)
         for b in GYROS:
             w = self.builder.get_object("bt" + b)
             if w:
                 self.button_widgets[b] = ControllerGyro(self, b, use_icons, w)
-    
-    
+
     def on_action_chosen(self, id, action, mark_changed=True):
         """
         Callback called when action editting is finished in editor.
         Should return None or action being replaced.
         """
         raise TypeError("Non-overriden on_action_chosen")
-    
-    
+
     def set_action(self, profile, id, action):
         """
         Stores action in profile.
@@ -98,15 +112,19 @@ class BindingEditor(object):
             if id in STICKS:
                 before, profile.stick = profile.stick, action
             elif id == Profile.LPAD:
-                before, profile.pads[Profile.LEFT] = profile.pads[Profile.LEFT], action
+                before, profile.pads[Profile.LEFT] = profile.pads[
+                    Profile.LEFT], action
             elif id == Profile.RPAD:
-                before, profile.pads[Profile.RIGHT] = profile.pads[Profile.RIGHT], action
+                before, profile.pads[Profile.RIGHT] = (
+                    profile.pads[Profile.RIGHT],
+                    action,
+                )
             else:
-                before, profile.pads[Profile.CPAD] = profile.pads[Profile.CPAD], action
+                before, profile.pads[Profile.CPAD] = profile.pads[
+                    Profile.CPAD], action
             self.button_widgets[id].update()
         return before
-    
-    
+
     def get_action(self, profile, id):
         """
         Returns action for specified id.
@@ -130,8 +148,7 @@ class BindingEditor(object):
                 return profile.pads[Profile.RIGHT]
             return profile.pads[Profile.CPAD]
         return None
-    
-    
+
     def choose_editor(self, action, title, id=None):
         """ Chooses apropripate Editor instance for edited action """
         if isinstance(action, SensitivityModifier):
@@ -141,9 +158,10 @@ class BindingEditor(object):
         if id in GYROS:
             e = ActionEditor(self.app, self.on_action_chosen)
             e.set_title(title)
-        elif isinstance(action, (ModeModifier, DoubleclickModifier, HoldModifier)) and not is_gyro_enable(action):
+        elif isinstance(action, (ModeModifier, DoubleclickModifier,
+                                 HoldModifier)) and not is_gyro_enable(action):
             e = ModeshiftEditor(self.app, self.on_action_chosen)
-            e.set_title(_("Mode Shift for %s") % (title,))
+            e.set_title(_("Mode Shift for %s") % (title, ))
         elif RingEditor.is_ring_action(action):
             e = RingEditor(self.app, self.on_action_chosen)
             e.set_title(title)
@@ -151,23 +169,18 @@ class BindingEditor(object):
             # Type is subclass of Macro
             e = ActionEditor(self.app, self.on_action_chosen)
             e.set_title(title)
-        elif (
-            isinstance(action, Macro)
-            and not is_button_togle(action)
-            and not is_button_repeat(action)
-        ):
+        elif (isinstance(action, Macro) and not is_button_togle(action)
+              and not is_button_repeat(action)):
             e = MacroEditor(self.app, self.on_action_chosen)
-            e.set_title(_("Macro for %s") % (title,))
+            e.set_title(_("Macro for %s") % (title, ))
         else:
             e = ActionEditor(self.app, self.on_action_chosen)
             e.set_title(title)
         return e
-    
-    
+
     def hilight(self, button):
         """ Hilights button on image. Overriden by app. """
         pass
-    
-    
+
     def show_editor(self, id):
         raise TypeError("show_editor not overriden")

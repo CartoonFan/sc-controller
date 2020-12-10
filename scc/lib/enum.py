@@ -274,7 +274,8 @@ class EnumMeta(type):
             enum_member.__init__(*args)
             # If another member with the same value was already defined, the
             # new member becomes an alias to the existing one.
-            for name, canonical_member in list(enum_class._member_map_.items()):
+            for name, canonical_member in list(
+                    enum_class._member_map_.items()):
                 if canonical_member.value == enum_member._value_:
                     enum_member = canonical_member
                     break
@@ -500,8 +501,7 @@ class EnumMeta(type):
         # special processing needed for names?
         if isinstance(names, str):
             names = names.replace(",", " ").split()
-        if isinstance(names,
-                      (tuple, list)) and isinstance(names[0], str):
+        if isinstance(names, (tuple, list)) and isinstance(names[0], str):
             names = [(e, i + start) for (i, e) in enumerate(names)]
 
         # Here, names is either an iterable of (name, value) or a mapping.
@@ -896,7 +896,10 @@ def _convert(cls, name, module, filter, source=None):
         source = vars(source)
     else:
         source = module_globals
-    members = {name: value for name, value in list(source.items()) if list(filter(name))}
+    members = {
+        name: value
+        for name, value in list(source.items()) if list(filter(name))
+    }
     cls = cls(name, members, module=module)
     cls.__reduce_ex__ = _reduce_ex_by_name
     module_globals.update(cls.__members__)

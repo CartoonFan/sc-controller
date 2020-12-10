@@ -1,24 +1,45 @@
+import logging
+import os
+import traceback
 
-from scc.lib import xwrappers as X
-from scc.uinput import UInput, Keyboard, Mouse, Dummy
-from scc.constants import SCButtons, LEFT, RIGHT, CPAD, HapticPos
-from scc.constants import FE_STICK, FE_TRIGGER, FE_PAD
-from scc.constants import STICK, STICKTILT, ControllerFlags
-from scc.aliases import ALL_AXES, ALL_BUTTONS
-from scc.actions import ButtonAction, GyroAbsAction
-from scc.controller import HapticData
+from scc.actions import ButtonAction
+from scc.actions import GyroAbsAction
+from scc.aliases import ALL_AXES
+from scc.aliases import ALL_BUTTONS
 from scc.config import Config
+from scc.constants import ControllerFlags
+from scc.constants import CPAD
+from scc.constants import FE_PAD
+from scc.constants import FE_STICK
+from scc.constants import FE_TRIGGER
+from scc.constants import HapticPos
+from scc.constants import LEFT
+from scc.constants import RIGHT
+from scc.constants import SCButtons
+from scc.constants import STICK
+from scc.constants import STICKTILT
+from scc.controller import HapticData
+from scc.lib import xwrappers as X
+from scc.uinput import Dummy
+from scc.uinput import Keyboard
+from scc.uinput import Mouse
+from scc.uinput import UInput
 
-
-import traceback, logging, os
 log = logging.getLogger("Mapper")
+
 
 class Mapper(object):
     DEBUG = False
-    
-    def __init__(self, profile, scheduler, keyboard=b"SCController Keyboard",
-                mouse=b"SCController Mouse",
-                gamepad=True, poller=None):
+
+    def __init__(
+            self,
+            profile,
+            scheduler,
+            keyboard=b"SCController Keyboard",
+            mouse=b"SCController Mouse",
+            gamepad=True,
+            poller=None,
+    ):
         """
         If any of keyboard, mouse or gamepad is set to None, that device
         will not be emulated.
@@ -29,33 +50,35 @@ class Mapper(object):
         self.controller = None
         self.xdisplay = None
         self.scheduler = scheduler
-        
+
         # Create virtual devices
         log.debug("Creating virtual devices")
         self.keyboard = self.create_keyboard(keyboard) if keyboard else Dummy()
         log.debug("Keyboard: %s" % (self.keyboard, ))
         self.mouse = self.create_mouse(mouse) if mouse else Dummy()
         log.debug("Mouse:    %s" % (self.mouse, ))
-        self.gamepad = self.create_gamepad(gamepad, poller) if gamepad else Dummy()
+        self.gamepad = self.create_gamepad(gamepad,
+                                           poller) if gamepad else Dummy()
         log.debug("Gamepad:  %s" % (self.gamepad, ))
-        
+
         # Set by SCCDaemon instance; Used to handle actions
         # from scc.special_actions
         self._sa_handler = None
-        
+
         # Setup emulation
         self.keypress_list = []
         self.keyrelease_list = []
-        self.mouse_movements = [0, 0, 0, 0]     # mouse x, y, wheel vertical, horisontal
-        self.feedbacks = [ None, None ]         # left, right
-        self.pressed = {}                       # for ButtonAction, holds number of times virtual button was pressed without releasing it first
+        # mouse x, y, wheel vertical, horisontal
+        self.mouse_movements = [0, 0, 0, 0]
+        self.feedbacks = [None, None]  # left, right
+        # for ButtonAction, holds number of times virtual button was pressed without releasing it first
+        self.pressed = {}
         self.syn_list = set()
         self.buttons, self.old_buttons = 0, 0
         self.lpad_touched = False
         self.state, self.old_state = None, None
         self.force_event = set()
-    
-    
+
     def create_gamepad(self, enabled, poller):
         """ Parses gamepad configuration and creates apropriate unput device """
         if not enabled or "SCC_NOGAMEPAD" in os.environ:
@@ -77,38 +100,44 @@ class Mapper(object):
             if abs(max - min) > 32768:
                 fuzz, flat = 16, 128
             try:
-                axes.append(( ALL_AXES[i], min, max, fuzz, flat ))
+                axes.append((ALL_AXES[i], min, max, fuzz, flat))
             except IndexError:
                 # Out of axes
                 break
             i += 1
-        
-        ui = UInput(vendor=vendor, product=product, version=version,
-            name=name, keys=keys, axes=axes, rels=[], rumble=rumble)
+
+        ui = UInput(
+            vendor=vendor,
+            product=product,
+            version=version,
+            name=name,
+            keys=keys,
+            axes=axes,
+            rels=[],
+            rumble=rumble,
+        )
         if poller and rumble:
-            poller.register(ui.getDescriptor(), poller.POLLIN, self._rumble_ready)
+            poller.register(ui.getDescriptor(), poller.POLLIN,
+                            self._rumble_ready)
         return ui
-    
-    
+
     def create_keyboard(self, name):
         return Keyboard(name=name)
-    
-    
+
     def create_mouse(self, name):
         return Mouse(name=name)
-    
-    
+
     def _rumble_ready(self, fd, event):
         ef = self.gamepad.ff_read()
         if ef:  # tale of...
-            self.send_feedback(HapticData(
-                HapticPos.BOTH,
-                period = 32760,
-                amplitude = max(0, ef.level),
-                count = min(0x7FFF, ef.duration * ef.repetitions / 30)
-            ))
-    
-    
+            self.send_feedback(
+                HapticData(
+                    HapticPos.BOTH,
+                    period=32760,
+                    amplitude=max(0, ef.level),
+                    count=min(0x7FFF, ef.duration * ef.repetitions / 30),
+                ))
+
     def get_gamepad_name(self):
         """
         Returns name of emulated gamepad (as displayed by jstest & co)
@@ -117,42 +146,34 @@ class Mapper(object):
         if isinstance(self.gamepad, Dummy):
             return None
         return self.gamepad.name
-    
-    
+
     def sync(self):
         """ Syncs generated events """
         if self.syn_list:
             for dev in self.syn_list:
                 dev.synEvent()
             self.syn_list = set()
-    
-    
+
     def set_controller(self, c):
         """ Sets controller device, used by some (one so far) actions """
         self.controller = c
-    
-    
+
     def get_controller(self):
         """ Returns assigned controller device or None if no controller is set """
         return self.controller
-    
-    
+
     def set_special_actions_handler(self, sa):
         self._sa_handler = sa
-    
-    
+
     def get_special_actions_handler(self):
         return self._sa_handler
-    
-    
+
     def set_xdisplay(self, x):
         self.xdisplay = x
-    
-    
+
     def get_xdisplay(self):
         return self.xdisplay
-    
-    
+
     def get_current_window(self):
         """
         Returns window id of current window or None if xdisplay is not set
@@ -160,8 +181,7 @@ class Mapper(object):
         if self.xdisplay:
             return X.get_current_window(self.xdisplay)
         return None
-    
-    
+
     def schedule(self, delay, cb):
         """
         Schedules callback to be ran no sooner than after delay.
@@ -169,13 +189,11 @@ class Mapper(object):
         Callback is called with mapper as only argument.
         """
         return self.scheduler.schedule(delay, cb, self)
-    
-    
+
     def cancel_task(self, task):
         """ Removes scheduled task. """
         return self.scheduler.cancel_task(task)
-    
-    
+
     def mouse_move(self, dx, dy):
         """
         Schedules mouse movement to be done at end of processing callback.
@@ -183,8 +201,7 @@ class Mapper(object):
         """
         self.mouse_movements[0] += dx
         self.mouse_movements[1] += dy
-    
-    
+
     def mouse_wheel(self, wx, wy):
         """
         Schedules mouse wheel movement to be done at end of processing callback.
@@ -192,8 +209,7 @@ class Mapper(object):
         """
         self.mouse_movements[2] += wx
         self.mouse_movements[3] += wy
-    
-    
+
     def send_feedback(self, hapticdata):
         """
         Schedules haptic feedback to be sent at end of processing callback.
@@ -202,25 +218,23 @@ class Mapper(object):
         if hapticdata.get_position() == HapticPos.BOTH:
             # HapticPos.BOTH is special case as controller doesn't
             # really support doing that by itself.
-            self.feedbacks[0]  = hapticdata.with_position(HapticPos.LEFT)
-            self.feedbacks[1]  = hapticdata.with_position(HapticPos.RIGHT)
+            self.feedbacks[0] = hapticdata.with_position(HapticPos.LEFT)
+            self.feedbacks[1] = hapticdata.with_position(HapticPos.RIGHT)
         else:
             self.feedbacks[hapticdata.get_position()] = hapticdata
-    
-    
+
     def controller_flags(self):
         """
         Returns controller flags or, if there is no controller set to
         this mapper, sc_by_cable driver matching defaults.
         """
         return 0 if self.controller is None else self.controller.flags
-    
-    
+
     def is_touched(self, what):
         """
         Returns True if specified pad is being touched.
         May randomly return False for aphephobic pads.
-        
+
         'what' should be LEFT or RIGHT (from scc.constants)
         """
         if what == LEFT:
@@ -230,13 +244,12 @@ class Mapper(object):
         if what == CPAD:
             return self.buttons & SCButtons.CPADTOUCH
         return False
-    
-    
+
     def was_touched(self, what):
         """
         As is_touched, but returns True if pad *was* touched
         in previous known state.
-        
+
         This is used as:
         is_touched() and not was_touched() -> pad was just pressed
         not is_touched() and was_touched() -> pad was just released
@@ -248,8 +261,7 @@ class Mapper(object):
         if what == CPAD:
             return self.old_buttons & SCButtons.CPADTOUCH
         return False
-    
-    
+
     def is_pressed(self, button):
         """
         Returns True if button is pressed
@@ -259,8 +271,7 @@ class Mapper(object):
         elif button == RIGHT:
             button = SCButtons.RPAD
         return self.buttons & button
-    
-    
+
     def was_pressed(self, button):
         """
         Returns True if button was pressed in previous known state
@@ -270,8 +281,7 @@ class Mapper(object):
         elif button == RIGHT:
             button = SCButtons.RPAD
         return self.old_buttons & button
-    
-    
+
     def get_pressed_button(self):
         """
         Gets button that was pressed by very last handled event or None,
@@ -281,44 +291,41 @@ class Mapper(object):
             if x & self.buttons & ~self.old_buttons:
                 return x
         return None
-    
-    
+
     def set_button(self, button, state):
         """
         Sets button state on input.
         Set value will stay only for durration of one event loop iteration.
-        
+
         Used _temporarely_ by RingAction to emulate finger lifting from pad.
         """
         if button == LEFT:
             button = SCButtons.LPADTOUCH
         elif button == RIGHT:
             button = SCButtons.RPADTOUCH
-        
+
         if state:
             self.buttons |= button
         else:
             self.buttons &= ~button
-    
-    
+
     def set_was_pressed(self, button, state):
         """
         As set_button, but changes value remembered
         from loop iteration before current.
-        
+
         Used _temporarely_ by RingAction to emulate finger lifting from pad.
         """
         if button == LEFT:
             button = SCButtons.LPADTOUCH
         elif button == RIGHT:
             button = SCButtons.RPADTOUCH
-        
+
         if state:
             self.old_buttons |= button
         else:
             self.old_buttons &= ~button
-    
-    
+
     def release_virtual_buttons(self):
         """
         Called when daemon is killed or USB dongle is disconnected.
@@ -328,8 +335,7 @@ class Mapper(object):
         to_release, self.pressed = self.pressed, {}
         for x in to_release:
             ButtonAction._button_release(self, x, True)
-    
-    
+
     def cancel_all(self):
         """
         Called when profile is changed to let all actions to cancel
@@ -337,14 +343,12 @@ class Mapper(object):
         """
         for a in self.profile.get_actions():
             a.cancel(self)
-    
-    
+
     def reset_gyros(self):
         for a in self.profile.get_all_actions():
             if isinstance(a, GyroAbsAction):
                 a.reset()
-    
-    
+
     def input(self, controller, old_state, state):
         # Store states
         self.old_state = old_state
@@ -353,8 +357,10 @@ class Mapper(object):
         self.state = state
         self.buttons = state.buttons
 
-        if self.buttons & SCButtons.LPAD and not self.buttons & (SCButtons.LPADTOUCH | STICKTILT):
-            self.buttons = (self.buttons & ~SCButtons.LPAD) | SCButtons.STICKPRESS
+        if self.buttons & SCButtons.LPAD and not self.buttons & (
+                SCButtons.LPADTOUCH | STICKTILT):
+            self.buttons = (self.buttons
+                            & ~SCButtons.LPAD) | SCButtons.STICKPRESS
 
         fe = self.force_event
         self.force_event = set()
@@ -373,48 +379,68 @@ class Mapper(object):
                     elif x & btn_rem:
                         self.profile.buttons[x].button_release(self)
 
-
             # Check stick
             if self.controller.flags & ControllerFlags.SEPARATE_STICK:
-                if FE_STICK in fe or self.old_state.stick_x != state.stick_x or self.old_state.stick_y != state.stick_y:
-                    self.profile.stick.whole(self, state.stick_x, state.stick_y, STICK)
+                if (FE_STICK in fe or self.old_state.stick_x != state.stick_x
+                        or self.old_state.stick_y != state.stick_y):
+                    self.profile.stick.whole(self, state.stick_x,
+                                             state.stick_y, STICK)
             elif not self.buttons & SCButtons.LPADTOUCH:
-                if FE_STICK in fe or self.old_state.lpad_x != state.lpad_x or self.old_state.lpad_y != state.lpad_y:
-                    self.profile.stick.whole(self, state.lpad_x, state.lpad_y, STICK)
+                if (FE_STICK in fe or self.old_state.lpad_x != state.lpad_x
+                        or self.old_state.lpad_y != state.lpad_y):
+                    self.profile.stick.whole(self, state.lpad_x, state.lpad_y,
+                                             STICK)
 
             # Check gyro
             if controller.get_gyro_enabled():
-                self.profile.gyro.gyro(self, state.gpitch, state.gyaw, state.groll, state.q1, state.q2, state.q3, state.q4)
+                self.profile.gyro.gyro(
+                    self,
+                    state.gpitch,
+                    state.gyaw,
+                    state.groll,
+                    state.q1,
+                    state.q2,
+                    state.q3,
+                    state.q4,
+                )
 
             # Check triggers
-            if (
-                FE_TRIGGER in fe or state.ltrig != self.old_state.ltrig
-            ) and LEFT in self.profile.triggers:
-                self.profile.triggers[LEFT].trigger(self, state.ltrig, self.old_state.ltrig)
-            if (
-                FE_TRIGGER in fe or state.rtrig != self.old_state.rtrig
-            ) and RIGHT in self.profile.triggers:
-                self.profile.triggers[RIGHT].trigger(self, state.rtrig, self.old_state.rtrig)
+            if (FE_TRIGGER in fe or state.ltrig != self.old_state.ltrig
+                ) and LEFT in self.profile.triggers:
+                self.profile.triggers[LEFT].trigger(self, state.ltrig,
+                                                    self.old_state.ltrig)
+            if (FE_TRIGGER in fe or state.rtrig != self.old_state.rtrig
+                ) and RIGHT in self.profile.triggers:
+                self.profile.triggers[RIGHT].trigger(self, state.rtrig,
+                                                     self.old_state.rtrig)
 
             # Check pads
             # RPAD
             if controller.flags & ControllerFlags.HAS_RSTICK:
-                if FE_PAD in fe or self.old_state.rpad_x != state.rpad_x or self.old_state.rpad_y != state.rpad_y:
-                    self.profile.pads[RIGHT].whole(self, state.rpad_x, state.rpad_y, RIGHT)
-            elif FE_PAD in fe or self.buttons & SCButtons.RPADTOUCH or SCButtons.RPADTOUCH & btn_rem:
-                self.profile.pads[RIGHT].whole(self, state.rpad_x, state.rpad_y, RIGHT)
+                if (FE_PAD in fe or self.old_state.rpad_x != state.rpad_x
+                        or self.old_state.rpad_y != state.rpad_y):
+                    self.profile.pads[RIGHT].whole(self, state.rpad_x,
+                                                   state.rpad_y, RIGHT)
+            elif (FE_PAD in fe or self.buttons & SCButtons.RPADTOUCH
+                  or SCButtons.RPADTOUCH & btn_rem):
+                self.profile.pads[RIGHT].whole(self, state.rpad_x,
+                                               state.rpad_y, RIGHT)
 
             # LPAD
             if self.controller.flags & ControllerFlags.SEPARATE_STICK:
-                if FE_PAD in fe or self.old_state.lpad_x != state.lpad_x or self.old_state.lpad_y != state.lpad_y:
-                    self.profile.pads[LEFT].whole(self, state.lpad_x, state.lpad_y, LEFT)
+                if (FE_PAD in fe or self.old_state.lpad_x != state.lpad_x
+                        or self.old_state.lpad_y != state.lpad_y):
+                    self.profile.pads[LEFT].whole(self, state.lpad_x,
+                                                  state.lpad_y, LEFT)
             else:
                 if self.buttons & SCButtons.LPADTOUCH:
                     # Pad is being touched now
                     if not self.lpad_touched:
                         self.lpad_touched = True
-                    self.profile.pads[LEFT].whole(self, state.lpad_x, state.lpad_y, LEFT)
-                    if self.old_state.buttons & STICKTILT and not self.buttons & STICKTILT:
+                    self.profile.pads[LEFT].whole(self, state.lpad_x,
+                                                  state.lpad_y, LEFT)
+                    if (self.old_state.buttons & STICKTILT
+                            and not self.buttons & STICKTILT):
                         # LPAD and stick share axes and so when they are used simultaneously (by someone with 3 hands or so :)
                         # this is how mapper can tell that stick was recentered
                         self.profile.stick.whole(self, 0, 0, STICK)
@@ -426,18 +452,13 @@ class Mapper(object):
 
             # CPAD (touchpad on DS4 controller)
             if controller.flags & ControllerFlags.HAS_CPAD and (
-                (
-                    (FE_PAD in fe)
-                    or (self.old_state.cpad_x != state.cpad_x)
-                    or (self.old_state.cpad_y != state.cpad_y)
-                    or (
-                        (self.old_buttons & SCButtons.CPADTOUCH)
-                        and not (self.buttons & SCButtons.CPADTOUCH)
-                    )
-                )
-            ):
+                ((FE_PAD in fe) or (self.old_state.cpad_x != state.cpad_x) or
+                 (self.old_state.cpad_y != state.cpad_y) or
+                 ((self.old_buttons & SCButtons.CPADTOUCH)
+                  and not (self.buttons & SCButtons.CPADTOUCH)))):
                 if self.buttons & SCButtons.CPADTOUCH:
-                    self.profile.pads[CPAD].whole(self, state.cpad_x, state.cpad_y, CPAD)
+                    self.profile.pads[CPAD].whole(self, state.cpad_x,
+                                                  state.cpad_y, CPAD)
                 elif self.old_buttons & SCButtons.CPADTOUCH:
                     self.profile.pads[CPAD].whole(self, 0, 0, CPAD)
         except Exception:
@@ -451,8 +472,7 @@ class Mapper(object):
         self.scheduler.run()
         self.generate_events()
         self.generate_feedback()
-    
-    
+
     def generate_events(self):
         # Generate events - keys
         if self.keypress_list:
@@ -469,10 +489,9 @@ class Mapper(object):
         if wx != 0 or wy != 0:
             self.mouse.scrollEvent(wx, wy)
             self.syn_list.add(self.mouse)
-        self.mouse_movements = [ 0, 0, 0, 0 ]
+        self.mouse_movements = [0, 0, 0, 0]
         self.sync()
-    
-    
+
     def generate_feedback(self):
         if self.controller:
             for x in (0, 1):
