@@ -4,8 +4,6 @@
 Syncthing-GTK - StatusIcon
 
 """
-from __future__ import unicode_literals
-
 import logging
 import os
 
