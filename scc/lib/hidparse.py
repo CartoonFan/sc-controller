@@ -81,7 +81,7 @@ class ReservedItem(object):
         self.value = value
 
     def __repr__(self):
-        return "<Reserved ID 0x%x>" % (self.value,)
+        return "<Reserved ID 0x%x>" % (self.value, )
 
     __str__ = __repr__
 
@@ -105,7 +105,8 @@ _HIDIOCGRAWINFO = ioctl_opt.IOR(ord("H"), 0x03, _hidraw_devinfo)
 
 
 def _HIDIOCGFEATURE(len):
-    return ioctl_opt.IOC(ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ, ord("H"), 0x07, len)
+    return ioctl_opt.IOC(ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ, ord("H"),
+                         0x07, len)
 
 
 def _ioctl(devfile, func, arg, mutate_flag=False):
@@ -133,7 +134,7 @@ def get_raw_report_descriptor(devfile):
     _ioctl(devfile, _HIDIOCGRDESCSIZE, size, True)
     descriptor.size = size
     _ioctl(devfile, _HIDIOCGRDESC, descriptor, True)
-    return descriptor.value[: size.value]
+    return descriptor.value[:size.value]
 
 
 # Convert items to unsigned char, short, or int
@@ -143,7 +144,8 @@ def _it2u(it):
     if len(it) == 3:  # unsigned short
         return int("{:02x}{:02x}".format(it[2], it[1]), 16)
     if len(it) == 5:  # unsigned int
-        return int("{:02x}{:02x}{:02x}{:02x}".format(it[4], it[3], it[2], it[1]), 16)
+        return int(
+            "{:02x}{:02x}{:02x}{:02x}".format(it[4], it[3], it[2], it[1]), 16)
     return 0
 
 
@@ -158,7 +160,8 @@ def _it2s(it):
         if n & 0x8000:
             n -= 0x10000
     elif len(it) == 5:  # signed int
-        n = int("{:02x}{:02x}{:02x}{:02x}".format(it[4], it[3], it[2], it[1]), 16)
+        n = int("{:02x}{:02x}{:02x}{:02x}".format(it[4], it[3], it[2], it[1]),
+                16)
         if n & 0x80000000:
             n -= 0x100000000
     else:
@@ -189,7 +192,7 @@ def parse_item(it, page):
                 ItemBase.Relative if it[1] & 0x4 else ItemBase.Absolute,
             )
         # EndCollection or reserved
-        return (item,)
+        return (item, )
     elif itype == 0x04:  # global items
         item = enum_or_reserved(GlobalItem, itag)
         if item == GlobalItem.UsagePage:
@@ -223,9 +226,9 @@ def parse_item(it, page):
             # unsigned values
             return item, _it2u(it)
         elif item in (
-            GlobalItem.LogicalMinimum,
-            GlobalItem.PhysicalMinimum,
-            GlobalItem.ReportSize,
+                GlobalItem.LogicalMinimum,
+                GlobalItem.PhysicalMinimum,
+                GlobalItem.ReportSize,
         ):
             # signed values
             return item, _it2s(it)
@@ -296,12 +299,12 @@ def parse_item(it, page):
                 except ValueError:
                     return item, it[1]
         elif item in (
-            LocalItem.UsageMinimum,
-            LocalItem.UsageMaximum,
-            LocalItem.DesignatorMinimum,
-            LocalItem.DesignatorMaximum,
-            LocalItem.StringMinimum,
-            LocalItem.StringMaximum,
+                LocalItem.UsageMinimum,
+                LocalItem.UsageMaximum,
+                LocalItem.DesignatorMinimum,
+                LocalItem.DesignatorMaximum,
+                LocalItem.StringMinimum,
+                LocalItem.StringMaximum,
         ):
             return item, _it2s(it)
         else:
@@ -321,7 +324,7 @@ def _split_hid_items(data):
             size = 4
         if i == 0xFE:  # long item
             size = data[i + 1]
-        yield data[i : i + size + 1]
+        yield data[i:i + size + 1]
 
 
 def parse_report_descriptor(data, flat_list=False):
@@ -345,9 +348,8 @@ def parse_report_descriptor(data, flat_list=False):
             col, stack = stack[0], stack[:-1]
         elif item[0] is GlobalItem.UsagePage:
             page = item[1]
-            page = (
-                page_to_enum[item[1]] if item[1] in page_to_enum else GenericDesktopPage
-            )
+            page = (page_to_enum[item[1]]
+                    if item[1] in page_to_enum else GenericDesktopPage)
             col.append(item)
         else:
             col.append(item)
@@ -376,7 +378,7 @@ class Parser(object):
         self.count = count
         self.len = count * size
         if self.len > 64:
-            raise ValueError("Too many bytes in value: %i" % (self.len,))
+            raise ValueError("Too many bytes in value: %i" % (self.len, ))
         elif self.len > 32:
             self.byte_len = 8
             self.fmt = "<Q"
@@ -392,9 +394,8 @@ class Parser(object):
         self.additional_bits = offset % 8
 
     def decode(self, data):
-        (self.value,) = struct.unpack(
-            self.fmt, data[self.byte_offset : self.byte_offset + self.byte_len]
-        )
+        (self.value, ) = struct.unpack(
+            self.fmt, data[self.byte_offset:self.byte_offset + self.byte_len])
         self.value >>= self.additional_bits
 
 
@@ -406,14 +407,16 @@ class HIDButtonParser(Parser):
     TYPE = HIDPARSE_TYPE_BUTTONS
 
     def __repr__(self):
-        return "<HID Buttons @%s len %s value %s>" % (self.offset, self.len, self.value)
+        return "<HID Buttons @%s len %s value %s>" % (self.offset, self.len,
+                                                      self.value)
 
 
 class HIDAxisParser(Parser):
     TYPE = HIDPARSE_TYPE_AXIS
 
     def __repr__(self):
-        return "<HID Axis @%s len %s value %s>" % (self.offset, self.len, self.value)
+        return "<HID Axis @%s len %s value %s>" % (self.offset, self.len,
+                                                   self.value)
 
 
 def make_parsers(data):
@@ -437,11 +440,11 @@ def make_parsers(data):
                 if kind in AXES:
                     for i in range(count):
                         parsers.append(
-                            HIDAxisParser(axis_id, offset + size * i, 1, size)
-                        )
+                            HIDAxisParser(axis_id, offset + size * i, 1, size))
                         axis_id += 1
                 else:
-                    parsers.append(HIDButtonParser(buttons_id, offset, count, size))
+                    parsers.append(
+                        HIDButtonParser(buttons_id, offset, count, size))
                     buttons_id += count
             offset += size * count
     size = offset / 8
