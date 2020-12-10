@@ -345,7 +345,6 @@ def run_osd_tool(tool, argv0, argv):
     signal.signal(signal.SIGINT, sigint)
 
     from scc.paths import get_share_path
-    from scc.tools import init_logging
 
     init_logging()
 
