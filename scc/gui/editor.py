@@ -26,9 +26,9 @@ class ComboSetter(object):
                 cb.set_active_iter(row.iter)
                 self._recursing = False
                 return True
-        else:
-            log.warning("Failed to set combobox value, key '%s' not found",
-                        key)
+            
+        log.warning("Failed to set combobox value, key '%s' not found",
+                    key)
         self._recursing = False
         return False
 
