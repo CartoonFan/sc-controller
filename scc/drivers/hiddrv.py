@@ -219,10 +219,9 @@ class HIDController(USBDevice, Controller):
             for setting in inter:
                 if setting.getClass() == DEV_CLASS_HID:
                     for endpoint in setting:
-                        if (
-                            endpoint.getAttributes() == TRANSFER_TYPE_INTERRUPT
-                            and (id is None or endpoint.getAddress() > id)
-                        ):
+                        if endpoint.getAttributes(
+                        ) == TRANSFER_TYPE_INTERRUPT and (
+                                id is None or endpoint.getAddress() > id):
                             id = endpoint.getAddress()
                             max_size = endpoint.getMaxPacketSize()
 
@@ -319,8 +318,7 @@ class HIDController(USBDevice, Controller):
         if axis_config:
             try:
                 target = [x for (x, y) in HIDControllerInput._fields_].index(
-                    axis_config.get("axis")
-                ) - 1
+                    axis_config.get("axis")) - 1
 
             except Exception:
                 # Maps to unknown axis
@@ -485,10 +483,8 @@ class HIDController(USBDevice, Controller):
         def recursive_search(pattern, path):
             for name in os.listdir(path):
                 full_path = os.path.join(path, name)
-                if (
-                    name == "report_descriptor"
-                    and pattern in os.path.split(path)[-1].lower()
-                ):
+                if (name == "report_descriptor"
+                        and pattern in os.path.split(path)[-1].lower()):
                     return full_path
                 try:
                     if os.path.islink(full_path):
