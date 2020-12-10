@@ -705,9 +705,8 @@ class SCCDaemon(Daemon):
                 gd.original_action = action.original_action
                 action.original_action = gd
                 return action
-            else:
-                gd.original_action = action
-                return gd
+            gd.original_action = action
+            return gd
 
         gd = GestureDetector(up_angle, cb)
         self._apply(mapper, what, set)

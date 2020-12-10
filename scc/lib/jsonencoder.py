@@ -58,13 +58,11 @@ def py_encode_basestring_ascii(s):
             if n < 0x10000:
                 return "\\u{0:04x}".format(n)
                 # return '\\u%04x' % (n,)
-            else:
-                # surrogate pair
-                n -= 0x10000
-                s1 = 0xD800 | ((n >> 10) & 0x3FF)
-                s2 = 0xDC00 | (n & 0x3FF)
-                return "\\u{0:04x}\\u{1:04x}".format(s1, s2)
-                # return '\\u%04x\\u%04x' % (s1, s2)
+            # surrogate pair
+            n -= 0x10000
+            s1 = 0xD800 | ((n >> 10) & 0x3FF)
+            s2 = 0xDC00 | (n & 0x3FF)
+            return "\\u{0:04x}\\u{1:04x}".format(s1, s2)
 
     return '"' + str(ESCAPE_ASCII.sub(replace, s)) + '"'
 
@@ -214,8 +212,7 @@ class JSONEncoder(object):
                     o = o.decode(_encoding)
             if self.ensure_ascii:
                 return encode_basestring_ascii(o)
-            else:
-                return encode_basestring(o)
+            return encode_basestring(o)
         # This doesn't pass the iterator directly to ''.join() because the
         # exceptions aren't as detailed.  The list call should be roughly
         # equivalent to the PySequence_Fast that ''.join() would do.

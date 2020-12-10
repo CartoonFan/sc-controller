@@ -278,10 +278,9 @@ class USBDriver(object):
             log.debug("USB device added: %.4x:%.4x", *tp)
             self.daemon.remove_error("usb:%s:%s" % (tp[0], tp[1]))
             return True
-        else:
-            log.warning("Known USB device ignored: %.4x:%.4x", *tp)
-            device.close()
-            return False
+        log.warning("Known USB device ignored: %.4x:%.4x", *tp)
+        device.close()
+        return False
 
     def handle_removed_device(self, syspath, vendor, product):
         if syspath in self._syspaths:

@@ -141,13 +141,12 @@ def get_raw_report_descriptor(devfile):
 def _it2u(it):
     if len(it) == 2:  # unsigned char
         return it[1]
-    elif len(it) == 3:  # unsigned short
+    if len(it) == 3:  # unsigned short
         return int("{:02x}{:02x}".format(it[2], it[1]), 16)
-    elif len(it) == 5:  # unsigned int
+    if len(it) == 5:  # unsigned int
         return int(
             "{:02x}{:02x}{:02x}{:02x}".format(it[4], it[3], it[2], it[1]), 16)
-    else:
-        return 0
+    return 0
 
 
 # Convert items to signed char, short, or int
