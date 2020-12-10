@@ -4,7 +4,7 @@ SC Controller - ActionParser
 Parses action(s) expressed as string or in dict loaded from json file into
 one or more Action instances.
 """
-from __future__ import unicode_literals
+
 from tokenize import generate_tokens, TokenError
 from collections import namedtuple
 
@@ -26,13 +26,13 @@ class ParseError(Exception): pass
 def build_action_constants():
     """ Generates dicts for ActionParser.CONSTS """
     rv = {
-        'Keys'      : Keys,
-        'Axes'      : Axes,
-        'Rels'      : Rels,
-        'HapticPos' : HapticPos,
-        'None'      : NoAction(),
-        'True'      : True,
-        'False'     : False,
+        'Keys': Keys,
+        'Axes': Axes,
+        'Rels': Rels,
+        'HapticPos': HapticPos,
+        'None': NoAction(),
+        'True': True,
+        'False': False,
     }
     for c in PARSER_CONSTANTS:
         rv[c] = c
@@ -101,7 +101,7 @@ class ActionParser(object):
             self.tokens = [
                 ActionParser.Token(type, string)
                 for (type, string, trash, trash, trash)
-                in generate_tokens( iter([string]).next )
+                in generate_tokens( iter([string]).__next__ )
                 if type != TokenType.ENDMARKER
             ]
         except TokenError:
@@ -140,7 +140,7 @@ class ActionParser(object):
                 # Action used as parameter
                 self.index -= 1 # go step back and reparse as action
                 parameter = self._parse_action()
-            elif self._tokens_left() and t.value in Action.ALL and type(Action.ALL[t.value]) == dict and self._peek_token().value == '.':
+            elif self._tokens_left() and t.value in Action.ALL and isinstance(Action.ALL[t.value], dict) and self._peek_token().value == '.':
                 # SOMETHING.Action used as parameter
                 self.index -= 1 # go step back and reparse as action
                 parameter = self._parse_action()
@@ -251,9 +251,9 @@ class ActionParser(object):
     def _create_action(self, cls, *pars):
         try:
             return cls(*pars)
-        except ValueError, e:
-            raise ParseError(unicode(e))
-        except TypeError, e:
+        except ValueError as e:
+            raise ParseError(str(e))
+        except TypeError as e:
             print >>sys.stderr, e
             raise ParseError("Invalid number of parameters for '%s'" % (cls.COMMAND))
     
@@ -285,7 +285,7 @@ class ActionParser(object):
         parameters = []
         if t.type == TokenType.OP and t.value == '.':
             # ACTION dict can have nested dicts; SOMETHING.action
-            if type(action_class) == dict:
+            if isinstance(action_class, dict):
                 self._next_token()
                 return self._parse_action(action_class)
             else:
@@ -365,5 +365,5 @@ class TalkingActionParser(ActionParser):
         """
         try:
             return ActionParser.parse(self)
-        except ParseError, e:
+        except ParseError as e:
             print >>sys.stderr, "Warning: Failed to parse '%s':" % (self.string,), e

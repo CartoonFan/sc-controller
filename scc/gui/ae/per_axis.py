@@ -4,7 +4,7 @@ SC-Controller - Action Editor - Per-Axis Component
 
 Handles all XYActions
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 from scc.actions import Action, NoAction, XYAction
 from scc.gui.ae import AEComponent, describe_action

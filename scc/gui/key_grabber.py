@@ -4,7 +4,7 @@ SC-Controller - Action Editor
 
 Allows to edit button or trigger action.
 """
-from __future__ import unicode_literals
+
 from scc.gui.gdk_to_key import keyevent_to_key
 from scc.uinput import Keys
 

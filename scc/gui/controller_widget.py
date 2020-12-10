@@ -7,7 +7,7 @@ or pad.
 
 Wraps around actual button defined in glade file.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import Gtk, Gdk, Pango
@@ -38,7 +38,7 @@ class ControllerWidget:
 	def __init__(self, app, id, use_icon, widget):
 		self.app = app
 		self.id = id
-		self.name = id if type(id) in (str, unicode) else id.name
+		self.name = id if type(id) in (str, str) else id.name
 		self.widget = widget
 		
 		self.label = Gtk.Label()
@@ -163,10 +163,10 @@ class ControllerStick(ControllerWidget):
 		# Check if cursor is placed on icon
 		if event.x < ix2:
 			what = {
-				Profile.LPAD : LEFT,
-				Profile.RPAD : RIGHT,
-				Profile.CPAD : nameof(SCButtons.CPADPRESS),
-				Profile.STICK : nameof(SCButtons.STICKPRESS),
+				Profile.LPAD: LEFT,
+				Profile.RPAD: RIGHT,
+				Profile.CPAD: nameof(SCButtons.CPADPRESS),
+				Profile.STICK: nameof(SCButtons.STICKPRESS),
 			}[self.name]
 			self.app.hilight(what)
 			self.over_icon = True
@@ -270,7 +270,7 @@ class ControllerGyro(ControllerWidget):
 	
 	def _set_label(self, action):
 		if is_gyro_enable(action):
-			action = action.mods.values()[0] or action.default
+			action = list(action.mods.values())[0] or action.default
 		if isinstance(action, MultiAction):
 			rv = []
 			for a in action.actions:

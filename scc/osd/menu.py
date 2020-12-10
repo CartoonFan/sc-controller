@@ -3,7 +3,7 @@ SC-Controller - OSD Menu
 
 Display menu that user can navigate through and prints chosen item id to stdout
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import Gtk, GLib, Gio, Gdk, GdkX11, GdkPixbuf
@@ -227,7 +227,7 @@ class Menu(OSDWindow):
             max_id_len = max(*[ len(x.id) for x in self.items ])
             row_format ="{:>%s}:\t{}" % (max_id_len,)
             for item in self.items:
-                print row_format.format(item.id, item.label)
+                print(row_format.format(item.id, item.label))
         return True
     
     

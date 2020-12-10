@@ -30,28 +30,28 @@ from collections import OrderedDict
 import operator as op
 
 OPERATORS = {
-	ast.Add	: op.add,
-	ast.Sub	: op.sub,
-	ast.Mult   : op.mul,
-	ast.Div	: op.floordiv,
-	ast.Mod	: op.mod,
-	ast.LShift : op.lshift,
-	ast.RShift : op.rshift,
-	ast.BitOr  : op.or_,
-	ast.BitXor : op.xor,
-	ast.BitAnd : op.and_,
-	ast.Invert : op.invert,
-	ast.Not	: op.not_,
-	ast.UAdd   : op.pos,
-	ast.USub   : op.neg,
-	ast.And	: op.and_,
-	ast.Or	 : op.or_,
-	ast.Eq	 : op.eq,
-	ast.NotEq  : op.ne,
-	ast.Lt	 : op.lt,
-	ast.LtE	: op.le,
-	ast.Gt	 : op.gt,
-	ast.GtE	: op.ge,
+	ast.Add: op.add,
+	ast.Sub: op.sub,
+	ast.Mult: op.mul,
+	ast.Div: op.floordiv,
+	ast.Mod: op.mod,
+	ast.LShift: op.lshift,
+	ast.RShift: op.rshift,
+	ast.BitOr: op.or_,
+	ast.BitXor: op.xor,
+	ast.BitAnd: op.and_,
+	ast.Invert: op.invert,
+	ast.Not: op.not_,
+	ast.UAdd: op.pos,
+	ast.USub: op.neg,
+	ast.And: op.and_,
+	ast.Or: op.or_,
+	ast.Eq: op.eq,
+	ast.NotEq: op.ne,
+	ast.Lt: op.lt,
+	ast.LtE: op.le,
+	ast.Gt: op.gt,
+	ast.GtE: op.ge,
 }
 
 def eval_expr(expr):
@@ -189,5 +189,5 @@ def defines(base, include):
 if __name__ == '__main__':
 	import sys
 	definesDict = defines(sys.argv[1], sys.argv[2])
-	for k, v in definesDict.items():
+	for k, v in list(definesDict.items()):
 		print("{}:\t{}".format(k, v))

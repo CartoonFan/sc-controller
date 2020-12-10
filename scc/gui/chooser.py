@@ -4,7 +4,7 @@ SC-Controller - Action Editor
 
 Allows to edit button or trigger action.
 """
-from __future__ import unicode_literals
+
 from scc.actions import AxisAction, MouseAction
 from scc.actions import HatLeftAction, HatRightAction
 from scc.actions import HatUpAction, HatDownAction

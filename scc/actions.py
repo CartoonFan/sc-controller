@@ -5,7 +5,7 @@ Action describes what should be done when event from physical controller button,
 stick, pad or trigger is generated - typicaly what emulated button, stick or
 trigger should be pressed.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from scc.tools import ensure_size, quat2euler, anglediff
@@ -380,7 +380,7 @@ class Action(object):
         """ Encodes one parameter. Used by encode_parameters """
         if parameter in PARSER_CONSTANTS:
             return parameter
-        if type(parameter) in (str, unicode):
+        if type(parameter) in (str, str):
             return "'%s'" % (str(parameter).encode('string_escape'),)
         return nameof(parameter)
     
@@ -560,16 +560,16 @@ class AxisAction(Action):
     COMMAND = "axis"
     
     AXIS_NAMES = {
-        Axes.ABS_X : ("LStick", "Left", "Right"),
-        Axes.ABS_Y : ("LStick", "Up", "Down"),
-        Axes.ABS_RX : ("RStick", "Left", "Right"),
-        Axes.ABS_RY : ("RStick", "Up", "Down"),
-        Axes.ABS_HAT0X : ("DPAD", "Left", "Right"),
-        Axes.ABS_HAT0Y : ("DPAD", "Up", "Down"),
-        Axes.ABS_Z  : ("Left Trigger", "Press", "Press"),
-        Axes.ABS_RZ : ("Right Trigger", "Press", "Press"),
-        Rels.REL_WHEEL : ("Mouse Wheel", "Up", "Down"),
-        Rels.REL_HWHEEL : ("Horizontal Wheel", "Left", "Right"),
+        Axes.ABS_X: ("LStick", "Left", "Right"),
+        Axes.ABS_Y: ("LStick", "Up", "Down"),
+        Axes.ABS_RX: ("RStick", "Left", "Right"),
+        Axes.ABS_RY: ("RStick", "Up", "Down"),
+        Axes.ABS_HAT0X: ("DPAD", "Left", "Right"),
+        Axes.ABS_HAT0Y: ("DPAD", "Up", "Down"),
+        Axes.ABS_Z: ("Left Trigger", "Press", "Press"),
+        Axes.ABS_RZ: ("Right Trigger", "Press", "Press"),
+        Rels.REL_WHEEL: ("Mouse Wheel", "Up", "Down"),
+        Rels.REL_HWHEEL: ("Horizontal Wheel", "Left", "Right"),
     }
     AXES_PAIRS = [
         (Axes.ABS_X, Axes.ABS_Y),
@@ -1195,7 +1195,7 @@ class GyroAction(Action):
         for i in (0, 1, 2):
             axis = self.axes[i]
             # 'gyro' cannot map to mouse, but 'mouse' does that.
-            if axis in Axes or type(axis) == int:
+            if axis in Axes or isinstance(axis, int):
                 mapper.gamepad.axisEvent(axis, AxisAction.clamp_axis(axis, pyr[i] * self.speed[i] * -10))
                 mapper.syn_list.add(mapper.gamepad)
     
@@ -1270,7 +1270,7 @@ class GyroAbsAction(HapticEnabledAction, GyroAction):
                 pyr[i] = int(clamp(STICK_PAD_MIN, pyr[i], STICK_PAD_MAX))
         for i in self.GYROAXES:
             axis = self.axes[i]
-            if axis in Axes or type(axis) == int:
+            if axis in Axes or isinstance(axis, int):
                 val = AxisAction.clamp_axis(axis, pyr[i] * self.speed[i])
                 if self._deadzone_fn:
                     val, trash = self._deadzone_fn(val, 0, STICK_PAD_MAX)
@@ -1417,7 +1417,7 @@ class TrackballAction(Action):
     COMMAND = "trackball"
     
     def __new__(cls, speed=None):
-        from modifiers import BallModifier
+        from .modifiers import BallModifier
         return BallModifier(MouseAction(speed=speed))
 
 
@@ -1731,7 +1731,7 @@ class MultiAction(MultichildAction):
     
     def _add_all(self, actions):
         for x in actions:
-            if type(x) == list:
+            if isinstance(x, list):
                 self._add_all(x)
             elif x:
                 self._add(x)
@@ -1904,7 +1904,7 @@ class DPadAction(MultichildAction, HapticEnabledAction):
         self.ranges = []
         normal_range = 90 - self.diagonal_rage
         i = 360-normal_range / 2
-        for x in xrange(0, 9):
+        for x in range(0, 9):
             r = normal_range if x % 2 == 0 else self.diagonal_rage
             i, j = (i + r) % 360, i
             self.ranges.append(( j, i, x % 8 ))
@@ -2658,7 +2658,7 @@ class NoAction(Action):
         return cls._singleton
     
     
-    def __nonzero__(self):
+    def __bool__(self):
         return False
     
     

@@ -3,7 +3,7 @@ SC-Controller - Action Editor - Axis Component
 
 Assigns emulated axis to trigger
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import Gdk, GdkX11, GLib
@@ -521,14 +521,14 @@ class FakeMapper(object):
         """
         root = X.get_default_root_window(self._xdisplay)
         NET_WM_WINDOW_TYPE_NORMAL = X.intern_atom(self._xdisplay,
-                "_NET_WM_WINDOW_TYPE_NORMAL" , False)
+                "_NET_WM_WINDOW_TYPE_NORMAL", False)
         my_windows = [ x.get_xid() for x
                 in Gdk.Screen.get_default().get_toplevel_windows() ]
         nitems, prop = X.get_window_prop(self._xdisplay,
                 root, "_NET_CLIENT_LIST_STACKING", max_size=0x8000)
         
         if nitems > 0:
-            for i in reversed(xrange(0, nitems)):
+            for i in reversed(list(range(0, nitems))):
                 window = cast(prop, POINTER(X.XID))[i]
                 if window in my_windows:
                     # skip over my own windows

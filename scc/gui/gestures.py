@@ -2,7 +2,7 @@
 """
 SC-Controller - Gesture-related GUI stuff.
 """
-from __future__ import unicode_literals
+
 
 from gi.repository import Gtk, Gdk
 from scc.constants import STICK_PAD_MIN, STICK_PAD_MAX
@@ -31,9 +31,9 @@ class GestureDraw(Gtk.DrawingArea):
 			grid="7A7A7AFF", hilight="0030AAFF", **a):
 		""" Expects colors in RRGGBB, as stored in config file """
 		self.colors = {
-			'background' :	parse_rgba(background),
-			'line' : 		parse_rgba(line),
-			'grid' : 		parse_rgba(grid),
+			'background':	parse_rgba(background),
+			'line': 		parse_rgba(line),
+			'grid': 		parse_rgba(grid),
 			'hilight':		parse_rgba(hilight),
 		}
 	
@@ -75,7 +75,7 @@ class GestureDraw(Gtk.DrawingArea):
 		
 		# Grid
 		Gdk.cairo_set_source_rgba(cr, self.colors['grid'])
-		for i in xrange(1, resolution):
+		for i in range(1, resolution):
 			cr.move_to(i * box_width, self.GRID_PAD)
 			cr.line_to(i * box_width, self._size - self.GRID_PAD)
 			cr.stroke()

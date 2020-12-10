@@ -4,7 +4,7 @@ SC-Controller - OSD Daemon
 
 Controls stuff displayed as OSD.
 """
-from __future__ import unicode_literals
+
 
 import logging
 import os
@@ -170,12 +170,12 @@ class OSDDaemon(object):
                 # TODO: Do this only for default position once changing
                 # TODO: is allowed
                 if self._visible_messages:
-                    height = self._visible_messages.values()[0].get_size(
+                    height = list(self._visible_messages.values())[0].get_size(
                     ).height
                     x, y = m.position
                     while y in [
                             i.position[1]
-                            for i in self._visible_messages.values()
+                            for i in list(self._visible_messages.values())
                     ]:
                         y -= height + 5
                     m.position = x, y
@@ -269,7 +269,7 @@ class OSDDaemon(object):
         If only_long_lasting is True, which is default behaviour on profile
         change, only messages set to last more than 10s are hidden.
         """
-        to_destroy = [] + self._visible_messages.values()
+        to_destroy = [] + list(self._visible_messages.values())
         for m in to_destroy:
             if (not only_long_lasting or m.timeout <= 0
                     or m.timeout > OSDAction.DEFAULT_TIMEOUT * 2):

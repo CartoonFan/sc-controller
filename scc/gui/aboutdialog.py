@@ -2,7 +2,7 @@
 """
 SC-Controller - About dialog
 """
-from __future__ import unicode_literals
+
 from scc.gui.editor import Editor
 
 class AboutDialog(Editor):

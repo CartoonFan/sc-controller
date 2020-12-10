@@ -4,7 +4,7 @@ SC-Controller - OSD Menu
 
 Displays border around area.
 """
-from __future__ import unicode_literals
+
 
 from gi.repository import Gtk, GdkX11
 from scc.lib import xwrappers as X

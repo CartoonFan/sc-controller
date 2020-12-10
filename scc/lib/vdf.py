@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 VDF file reader
 Copyright (C) 2017 Kozec
@@ -75,9 +74,9 @@ def ensure_list(value):
 	If value is list, returns same value.
 	Otherwise, returns [ value ]
 	"""
-	return value if type(value) == list else [ value ]
+	return value if isinstance(value, list) else [ value ]
 
 
 if __name__ == "__main__":
-	print parse_vdf(file('app_generic.vdf', "r"))
+	print(parse_vdf(file('app_generic.vdf', "r")))
 

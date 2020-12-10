@@ -22,49 +22,49 @@ log = logging.getLogger("import.vdf")
 class VDFProfile(Profile):
     BUTTON_TO_BUTTON = {
         # maps button keys from vdf file to SCButtons constants
-        'button_a'          : SCButtons.A,
-        'button_b'          : SCButtons.B,
-        'button_x'          : SCButtons.X,
-        'button_y'          : SCButtons.Y,
-        'button_back_left'  : SCButtons.LGRIP,
-        'button_back_right' : SCButtons.RGRIP,
-        'button_menu'       : SCButtons.BACK,
-        'button_escape'     : SCButtons.START,  # what what what
-        'left_bumper'       : SCButtons.LB,
-        'right_bumper'      : SCButtons.RB,
-        'left_click'        : SCButtons.LPAD,
-        'right_click'       : SCButtons.RPAD,
+        'button_a': SCButtons.A,
+        'button_b': SCButtons.B,
+        'button_x': SCButtons.X,
+        'button_y': SCButtons.Y,
+        'button_back_left': SCButtons.LGRIP,
+        'button_back_right': SCButtons.RGRIP,
+        'button_menu': SCButtons.BACK,
+        'button_escape': SCButtons.START,  # what what what
+        'left_bumper': SCButtons.LB,
+        'right_bumper': SCButtons.RB,
+        'left_click': SCButtons.LPAD,
+        'right_click': SCButtons.RPAD,
     }
     
     SPECIAL_KEYS = {
         # Maps some key names from vdf file to Keys.* constants.
         # Rest of key names are converted in convert_key_name.
-        'FORWARD_SLASH' : Keys.KEY_SLASH,
-        'VOLUME_DOWN' : Keys.KEY_VOLUMEDOWN,
-        'VOLUME_UP' : Keys.KEY_VOLUMEUP,
-        'NEXT_TRACK' : Keys.KEY_NEXTSONG,
-        'PREV_TRACK' : Keys.KEY_PREVIOUSSONG,
-        'PAGE_UP' : Keys.KEY_PAGEUP,
-        'PAGE_DOWN' : Keys.KEY_PAGEDOWN,
-        'SINGLE_QUOTE' : Keys.KEY_APOSTROPHE,
-        'DASH' : Keys.KEY_MINUS,
-        'RETURN' : Keys.KEY_ENTER,
-        'ESCAPE' : Keys.KEY_ESC,
-        'PERIOD' : Keys.KEY_DOT,
-        "LEFT_BRACKET" : Keys.KEY_LEFTBRACE,
-        "RIGHT_BRACKET" : Keys.KEY_RIGHTBRACE,
-        'KEYPAD_DASH' : Keys.KEY_KPMINUS,
-        'KEYPAD_FORWARD_SLASH' : Keys.KEY_KPSLASH,
-        'LEFT_CONTROL' : Keys.KEY_LEFTCTRL,
-        'RIGHT_CONTROL' : Keys.KEY_RIGHTCTRL,
+        'FORWARD_SLASH': Keys.KEY_SLASH,
+        'VOLUME_DOWN': Keys.KEY_VOLUMEDOWN,
+        'VOLUME_UP': Keys.KEY_VOLUMEUP,
+        'NEXT_TRACK': Keys.KEY_NEXTSONG,
+        'PREV_TRACK': Keys.KEY_PREVIOUSSONG,
+        'PAGE_UP': Keys.KEY_PAGEUP,
+        'PAGE_DOWN': Keys.KEY_PAGEDOWN,
+        'SINGLE_QUOTE': Keys.KEY_APOSTROPHE,
+        'DASH': Keys.KEY_MINUS,
+        'RETURN': Keys.KEY_ENTER,
+        'ESCAPE': Keys.KEY_ESC,
+        'PERIOD': Keys.KEY_DOT,
+        "LEFT_BRACKET": Keys.KEY_LEFTBRACE,
+        "RIGHT_BRACKET": Keys.KEY_RIGHTBRACE,
+        'KEYPAD_DASH': Keys.KEY_KPMINUS,
+        'KEYPAD_FORWARD_SLASH': Keys.KEY_KPSLASH,
+        'LEFT_CONTROL': Keys.KEY_LEFTCTRL,
+        'RIGHT_CONTROL': Keys.KEY_RIGHTCTRL,
     }
     
     SPECIAL_BUTTONS = {
         # As SPECIAL_KEYS, but for buttons.
-        'shoulder_left' : Keys.BTN_TL,
-        'shoulder_right' : Keys.BTN_TR,
-        'joystick_left' : Keys.BTN_THUMBL,
-        'joystick_right' : Keys.BTN_THUMBR,
+        'shoulder_left': Keys.BTN_TL,
+        'shoulder_right': Keys.BTN_TR,
+        'joystick_left': Keys.BTN_THUMBL,
+        'joystick_right': Keys.BTN_THUMBR,
     }
     
     REGION_IMPORT_FACTOR = 0.6      # Bulgarian const.
@@ -86,7 +86,7 @@ class VDFProfile(Profile):
         
         Returns Action instance or ParseError if action is not recognized.
         """
-        if type(lst_or_str) == list:
+        if isinstance(lst_or_str, list):
             return MultiAction.make(*[ self.parse_action(x) for x in lst_or_str ])
         # Split string into binding type, name and parameters
         binding, params = lst_or_str.split(" ", 1)
@@ -224,10 +224,10 @@ class VDFProfile(Profile):
         Parses button definition from vdf file.
         Parameter can be either string, as used in v2, or dict used in v3.
         """
-        if type(bdef) == str:
+        if isinstance(bdef, str):
             # V2
             return self.parse_action(bdef, button)
-        elif type(bdef) == list:
+        elif isinstance(bdef, list):
             # V2
             return MultiAction.make(*[ self.parse_action(x, button) for x in bdef ])
         elif "activators" in bdef:
@@ -588,7 +588,7 @@ class VDFProfile(Profile):
                 self.action_sets[aset.name] = aset
                 VDFProfile._load_preset(data, aset, p)
         
-        for aset in self.action_sets.values():
+        for aset in list(self.action_sets.values()):
             aset.buttons[SCButtons.C] = HoldModifier(
                 MenuAction("Default.menu"), MenuAction("Default.menu")
             )

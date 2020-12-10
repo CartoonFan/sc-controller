@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 from scc.lib import xwrappers as X
 from scc.uinput import UInput, Keyboard, Mouse, Dummy
 from scc.constants import SCButtons, LEFT, RIGHT, CPAD, HapticPos

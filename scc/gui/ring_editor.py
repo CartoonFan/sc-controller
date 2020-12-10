@@ -3,7 +3,7 @@ SC-Controller - Action Editor
 
 Allows to edit button or trigger action.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 from scc.gui.editor import Editor, ComboSetter
 from scc.gui.dwsnc import headerbar
@@ -103,7 +103,7 @@ class RingEditor(Editor, ComboSetter):
     
     
     def on_actionb_clicked(self, clicked_button):
-        for i in xrange(0, len(self.action_widgets)):
+        for i in range(0, len(self.action_widgets)):
             button, clearb = self.action_widgets[i]
             if button == clicked_button:
                 def on_chosen(id, action):
@@ -117,7 +117,7 @@ class RingEditor(Editor, ComboSetter):
     
     
     def on_clearb_clicked(self, clicked_button):
-        for i in xrange(0, len(self.action_widgets)):
+        for i in range(0, len(self.action_widgets)):
             button, clearb = self.action_widgets[i]
             if clearb == clicked_button:
                 self.actions[i] = NoAction()
@@ -172,7 +172,7 @@ class RingEditor(Editor, ComboSetter):
     
     
     def _update(self):
-        for i in xrange(0, len(self.action_widgets)):
+        for i in range(0, len(self.action_widgets)):
             button, clearb = self.action_widgets[i]
             button.set_label(self.actions[i].describe(Action.AC_BUTTON))
         self.builder.get_object("sclRadius").set_value(self.radius)

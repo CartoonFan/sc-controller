@@ -1,10 +1,9 @@
-#!/usr/bin/env python2
 """
 SC-Controller - App
 
 Main application window
 """
-from __future__ import unicode_literals
+
 from scc.tools import _, set_logging_level
 
 from gi.repository import Gtk, Gdk, Gio, GLib
@@ -30,7 +29,7 @@ from scc.profile import Profile
 from scc.config import Config
 
 import scc.osd.menu_generators
-import os, sys, platform, re, json, urllib, logging
+import os, sys, platform, re, json, urllib.request, urllib.parse, urllib.error, logging
 log = logging.getLogger("App")
 
 class App(Gtk.Application, UserDataManager, BindingEditor):
@@ -349,7 +348,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 	def hilight(self, button):
 		""" Hilights specified button on background image """
 		if button:
-			self.hilights[App.HILIGHT_COLOR] = set([button])
+			self.hilights[App.HILIGHT_COLOR] = {button}
 		else:
 			self.hilights[App.HILIGHT_COLOR] = set()
 		self._update_background()
@@ -366,7 +365,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 	def hint(self, button):
 		""" As hilight, but marks GTK Button as well """
 		active = None
-		for b in self.button_widgets.values():
+		for b in list(self.button_widgets.values()):
 			if b.widget.get_sensitive():
 				b.widget.set_state(Gtk.StateType.NORMAL)
 				if b.name == button:
@@ -578,7 +577,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 		self.builder.get_object("txProfileFilename").set_text(giofile.get_path().decode("utf-8"))
 		self.builder.get_object("txProfileDescription").get_buffer().set_text(self.current.description)
 		self.builder.get_object("cbProfileIsTemplate").set_active(self.current.is_template)
-		for b in self.button_widgets.values():
+		for b in list(self.button_widgets.values()):
 			b.update()
 		self.recursing = False
 	
@@ -865,7 +864,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 				self.remove_switcher(s)
 		
 		# Assign controllers to widgets
-		for i in xrange(0, count):
+		for i in range(0, count):
 			c = self.dm.get_controllers()[i]
 			self.profile_switchers[i].set_controller(c)
 		
@@ -1068,9 +1067,9 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 			self.osd_mode_mapper.handle_event(daemon, what, data)
 		elif what in (LEFT, RIGHT, STICK):
 			widget, area = {
-				LEFT  : (self.lpad_test,  "LPADTEST"),
-				RIGHT : (self.rpad_test,  "RPADTEST"),
-				STICK : (self.stick_test, "STICKTEST"),
+				LEFT: (self.lpad_test,  "LPADTEST"),
+				RIGHT: (self.rpad_test,  "RPADTEST"),
+				STICK: (self.stick_test, "STICKTEST"),
 			}[what]
 			# Check if stick or pad is released
 			if data[0] == data[1] == 0:
@@ -1101,11 +1100,11 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 				else:
 					self.hilights[App.OBSERVE_COLOR].remove(what)
 				self._update_background()
-			except KeyError, e:
+			except KeyError as e:
 				# Non fatal
 				pass
 		else:
-			print "event", what
+			print("event", what)
 	
 	
 	def on_profile_right_clicked(self, ps):
@@ -1193,7 +1192,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 				except:
 					# non-existing .mod file is expected
 					pass
-		except Exception, e:
+		except Exception as e:
 			log.error("Failed to rename %s: %s", old_fname, e)
 		
 		controllers = list(self.dm.get_controllers())
@@ -1235,7 +1234,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 					pass
 				for ps in self.profile_switchers:
 					ps.refresh_profile_path(name)
-			except Exception, e:
+			except Exception as e:
 				log.error("Failed to remove %s: %s", fname, e)
 		d.destroy()
 	
@@ -1506,7 +1505,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 					stream.read_bytes_async(102400, 0, None, stream_ready, buffer)
 				else:
 					self.on_got_release_notes(buffer.decode("utf-8"))
-			except Exception, e:
+			except Exception as e:
 				log.warning("Failed to read release notes")
 				log.exception(e)
 				return
@@ -1516,7 +1515,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 				stream = f.read_finish(task)
 				assert stream
 				stream.read_bytes_async(102400, 0, None, stream_ready, buffer)
-			except Exception, e:
+			except Exception as e:
 				log.warning("Failed to read release notes")
 				log.exception(e)
 				log.warning("(above error is not fatal and can be ignored)")
@@ -1596,7 +1595,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 						.replace("https://github.com/", "https://raw.githubusercontent.com/")
 						.replace("/blob/", "/")
 					)
-				name = urllib.unquote(".".join(uri.split("/")[-1].split(".")[0:-1]))
+				name = urllib.parse.unquote(".".join(uri.split("/")[-1].split(".")[0:-1]))
 				remote = Gio.File.new_for_uri(uri)
 				tmp, stream = Gio.File.new_tmp("%s.XXXXXX" % (name,))
 				stream.close()
@@ -1652,7 +1651,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 					os.rename("%s/%s.convert" % (get_profiles_path(), name),
 							"%s/%s" % (get_profiles_path(), name))
 					log.warning("Converted %s (from v%s)", name, to_convert[name].original_version)
-				except Exception, e:
+				except Exception as e:
 					log.warning("Failed to convert %s: %s", name, e)
 
 

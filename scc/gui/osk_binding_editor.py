@@ -4,7 +4,7 @@ SC-Controller - On Screen Keyboard Binding Editor
 
 Edits '.scc-osd.keyboard.sccprofile', profile used by on screen keyboard
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 from scc.constants import SCButtons, STICK
 from scc.paths import get_profiles_path
