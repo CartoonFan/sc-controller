@@ -24,12 +24,11 @@ from scc.gui.ring_editor import RingEditor
 
 
 class BindingEditor(object):
-    
+
     def __init__(self, app):
         self.button_widgets = {}
         self.app = app
-    
-    
+
     def create_binding_buttons(self, use_icons=True, enable_press=True):
         """
         Creates ControllerWidget instances for available Gtk.Buttons defined
@@ -38,36 +37,39 @@ class BindingEditor(object):
         for b in BUTTONS:
             w = self.builder.get_object("bt" + b.name)
             if w:
-                self.button_widgets[b] = ControllerButton(self, b, use_icons, w)
+                self.button_widgets[b] = ControllerButton(
+                    self, b, use_icons, w)
         for b in TRIGGERS:
             w = self.builder.get_object("bt" + b)
             if w:
-                self.button_widgets[b] = ControllerTrigger(self, b, use_icons, w)
+                self.button_widgets[b] = ControllerTrigger(
+                    self, b, use_icons, w)
         for b in PADS:
             w = self.builder.get_object("bt" + b)
             if w:
-                self.button_widgets[b] = ControllerPad(self, b, use_icons, enable_press, w)
+                self.button_widgets[b] = ControllerPad(
+                    self, b, use_icons, enable_press, w)
         for b in STICKS:
             w = self.builder.get_object("bt" + b)
             if w:
-                self.button_widgets[b] = ControllerStick(self, b, use_icons, enable_press, w)
+                self.button_widgets[b] = ControllerStick(
+                    self, b, use_icons, enable_press, w)
         w = self.builder.get_object("btSTICKPRESS")
         if w:
-            self.button_widgets[SCButtons.STICKPRESS] = ControllerButton(self, SCButtons.STICKPRESS, use_icons, w)
+            self.button_widgets[SCButtons.STICKPRESS] = ControllerButton(
+                self, SCButtons.STICKPRESS, use_icons, w)
         for b in GYROS:
             w = self.builder.get_object("bt" + b)
             if w:
                 self.button_widgets[b] = ControllerGyro(self, b, use_icons, w)
-    
-    
+
     def on_action_chosen(self, id, action, mark_changed=True):
         """
         Callback called when action editting is finished in editor.
         Should return None or action being replaced.
         """
         raise TypeError("Non-overriden on_action_chosen")
-    
-    
+
     def set_action(self, profile, id, action):
         """
         Stores action in profile.
@@ -105,8 +107,7 @@ class BindingEditor(object):
                 before, profile.pads[Profile.CPAD] = profile.pads[Profile.CPAD], action
             self.button_widgets[id].update()
         return before
-    
-    
+
     def get_action(self, profile, id):
         """
         Returns action for specified id.
@@ -130,8 +131,7 @@ class BindingEditor(object):
                 return profile.pads[Profile.RIGHT]
             return profile.pads[Profile.CPAD]
         return None
-    
-    
+
     def choose_editor(self, action, title, id=None):
         """ Chooses apropripate Editor instance for edited action """
         if isinstance(action, SensitivityModifier):
@@ -162,12 +162,10 @@ class BindingEditor(object):
             e = ActionEditor(self.app, self.on_action_chosen)
             e.set_title(title)
         return e
-    
-    
+
     def hilight(self, button):
         """ Hilights button on image. Overriden by app. """
         pass
-    
-    
+
     def show_editor(self, id):
         raise TypeError("show_editor not overriden")

@@ -36,8 +36,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 __all__ = ["Enum", "IntEnum", "unique"]
 
-import sys as _sys
 
+import sys as _sys
 version = 1, 1, 3
 
 pyver = float("%s.%s" % _sys.version_info[:2])
@@ -896,7 +896,8 @@ def _convert(cls, name, module, filter, source=None):
         source = vars(source)
     else:
         source = module_globals
-    members = {name: value for name, value in list(source.items()) if list(filter(name))}
+    members = {name: value for name, value in list(
+        source.items()) if list(filter(name))}
     cls = cls(name, members, module=module)
     cls.__reduce_ex__ = _reduce_ex_by_name
     module_globals.update(cls.__members__)

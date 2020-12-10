@@ -17,11 +17,12 @@ class AxisData(object):
     (Almost) dumb container.
     Stores position, center and limits for single axis.
     """
-    
+
     def __init__(self, name, xy, min=STICK_PAD_MAX, max=STICK_PAD_MIN):
         self.name = name
         self.area = name.split("_")[0].upper()
-        if self.area.endswith("TRIG"): self.area = self.area[0:-3]
+        if self.area.endswith("TRIG"):
+            self.area = self.area[0:-3]
         self.xy = xy
         self.pos = 0
         self.center = 0
@@ -29,20 +30,17 @@ class AxisData(object):
         self.max = max
         self.invert = False
         self.cursor = None
-    
-    
+
     def reset(self):
         """
         Resets min and max value so axis can (has to be) recalibrated again
         """
         self.min = STICK_PAD_MAX
         self.max = STICK_PAD_MIN
-    
-    
+
     def __repr__(self):
         return "<Axis data '%s'>" % (self.name, )
-    
-    
+
     def set_position(self, value):
         """
         Returns (changed, x), value determining if axis limits were changed and
@@ -72,11 +70,11 @@ class DPadEmuData(object):
     Dumb container that stores dpad emulation data.
     DPAd emulation is used, for example, on PS3 controller, where dpad does not
     inputs as 2 axes, but as 4 buttons.
-    
+
     This class stores mapping of one button to one half of axis.
     """
-    
+
     def __init__(self, axis_data, positive):
         self.axis_data = axis_data
-        self.positive  = positive
+        self.positive = positive
         self.button = AXIS_TO_BUTTON[axis_data.name]

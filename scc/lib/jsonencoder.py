@@ -271,7 +271,8 @@ class JSONEncoder(object):
 
             if not allow_nan:
                 raise ValueError(
-                    "Out of range float values are not JSON compliant: " + repr(o)
+                    "Out of range float values are not JSON compliant: " +
+                    repr(o)
                 )
 
             return text
@@ -320,7 +321,7 @@ def _make_iterencode(
     _sort_keys,
     _skipkeys,
     _one_shot,
-    ## HACK: hand-optimized bytecode; turn globals into locals
+    # HACK: hand-optimized bytecode; turn globals into locals
     ValueError=ValueError,
     str=str,
     dict=dict,
@@ -343,7 +344,7 @@ def _make_iterencode(
                 raise ValueError("Circular reference detected")
             markers[markerid] = lst
         buf = "["
-        if False:  #  _indent is not None:
+        if False:  # _indent is not None:
             _current_indent_level += 1
             newline_indent = "\n" + (" " * (_indent * _current_indent_level))
             separator = _item_separator + newline_indent

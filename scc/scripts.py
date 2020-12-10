@@ -5,10 +5,13 @@ Contains code for most of what can be done using 'scc' script.
 Created so scc-* stuff doesn't polute /usr/bin.
 """
 from scc.tools import init_logging, set_logging_level, find_binary
-import os, sys, subprocess
+import os
+import sys
+import subprocess
 
 
-class InvalidArguments(Exception): pass
+class InvalidArguments(Exception):
+    pass
 
 
 def cmd_daemon(argv0, argv):
@@ -38,7 +41,7 @@ def help_gui():
 def cmd_test_evdev(argv0, argv):
     """
     Evdev driver test. Displays gamepad inputs using evdev driver.
-    
+
     Usage: scc test-evdev /dev/input/node
     Return codes:
       0 - normal exit
@@ -52,7 +55,7 @@ def cmd_test_evdev(argv0, argv):
 def cmd_test_hid(argv0, argv):
     """
     HID driver test. Displays gamepad inputs using hid driver.
-    
+
     Usage: scc test-hid vendor_id device_id
     Return codes:
       0 - normal exit
@@ -81,14 +84,14 @@ def cmd_osd_keyboard(argv0, argv):
 def cmd_list_profiles(argv0, argv):
     """
     Lists available profiles
-    
+
     Usage: scc list-profiles [-a]
-    
+
     Arguments:
       -a   Include names begining with dot
     """
     from scc.paths import get_profiles_path, get_default_profiles_path
-    paths = [ get_default_profiles_path(), get_profiles_path() ]
+    paths = [get_default_profiles_path(), get_profiles_path()]
     include_hidden = "-a" in argv
     lst = set()
     for path in paths:
@@ -114,31 +117,35 @@ def cmd_set_profile(argv0, argv):
     from scc.tools import find_profile
 
     if len(argv) < 1:
-        show_help(command = "set_profile", out=sys.stderr)
+        show_help(command="set_profile", out=sys.stderr)
         return 1
     s = connect_to_daemon()
-    if s is None: return -1
+    if s is None:
+        return -1
     if len(argv) >= 2:
         profile = find_profile(argv[1])
         if profile is None:
             print >>sys.stderr, "Unknown profile:", argv[1]
             return 1
         print >>s, "Controller: %s" % (argv[0],)
-        if not check_error(s): return 1
+        if not check_error(s):
+            return 1
     else:
         profile = find_profile(argv[0])
         if profile is None:
             print >>sys.stderr, "Unknown profile:", argv[0]
             return 1
     print >>s, "Profile: %s" % (profile,)
-    if not check_error(s): return 1
+    if not check_error(s):
+        return 1
     return 0
 
 
 def cmd_info(argv0, argv):
     """ Displays basic information about running driver """
     s = connect_to_daemon()
-    if s is None: return -1
+    if s is None:
+        return -1
     # Daemon already sends situable info, so this is mostly reading
     # until "Ready." message is recieved.
     global_profile = None
@@ -171,9 +178,9 @@ def cmd_dependency_check(argv0, argv):
     """ Checks if all required libraries are installed on this system """
     try:
         import gi
-        gi.require_version('Gtk', '3.0') 
-        gi.require_version('GdkX11', '3.0') 
-        gi.require_version('Rsvg', '2.0') 
+        gi.require_version('Gtk', '3.0')
+        gi.require_version('GdkX11', '3.0')
+        gi.require_version('Rsvg', '2.0')
     except ValueError as e1:
         print >>sys.stderr, e1
         if "Rsvg" in str(e1):
@@ -203,15 +210,15 @@ def cmd_dependency_check(argv0, argv):
 def cmd_lock_inputs(argv0, argv, lock="Lock: "):
     """
     Locks and prints pressed buttons, pads and sticks
-    
+
     Locks controller inputs and prints buttons, pads and stick as they are
     pressed or moved on controller.
-    
+
     Usage: scc lock-inputs [button1] [stick1] [button2] ... [buttonN]
-    
+
     Available button, sticks and pads:
         A X B Y START C BACK RGRIP LGRIP   LB RB LT RT STICK LPAD RPAD
-    
+
     Return codes:
         -1  - failed to connect to daemon
         -2  - failed to lock inputs
@@ -219,14 +226,15 @@ def cmd_lock_inputs(argv0, argv, lock="Lock: "):
         -4  - daemon reported error
     """
     s = connect_to_daemon()
-    if s is None: return -1
+    if s is None:
+        return -1
     try:
         while True:
             line = s.readline()
             if line == "":
                 return -3
             elif line.startswith("Ready."):
-                print >>s, lock + " ".join([ x.upper() for x in argv ])
+                print >>s, lock + " ".join([x.upper() for x in argv])
                 s.flush()
             elif line.startswith("Error:"):
                 print >>sys.stderr, line.strip()
@@ -249,15 +257,15 @@ def cmd_lock_inputs(argv0, argv, lock="Lock: "):
 def cmd_print_inputs(argv0, argv, lock="Lock: "):
     """
     Prints pressed buttons, pads and sticks
-    
+
     Prints controller inputs and prints buttons, pads and stick as they are
     pressed or moved on controller, without locking them exclusivelly.
-    
+
     Usage: scc lock-inputs [button1] [stick1] [button2] ... [buttonN]
-    
+
     Available button, sticks and pads:
         A X B Y START C BACK RGRIP LGRIP   LB RB LT RT STICK LPAD RPAD
-    
+
     Return codes:
         -1  - failed to connect to daemon
         -2  - failed to lock inputs
@@ -318,13 +326,14 @@ def import_osd():
 
 
 def run_osd_tool(tool, argv0, argv):
-    import signal, argparse
+    import signal
+    import argparse
     signal.signal(signal.SIGINT, sigint)
-    
+
     from scc.tools import init_logging
     from scc.paths import get_share_path
     init_logging()
-    
+
     sys.argv[0] = "scc osd-keyboard"
     if not tool.parse_argumets([argv0] + argv):
         sys.exit(1)
@@ -332,8 +341,8 @@ def run_osd_tool(tool, argv0, argv):
     sys.exit(tool.get_exit_code())
 
 
-def show_help(command = None, out=sys.stdout):
-    names = [ x[4:] for x in globals() if x.startswith("cmd_") ]
+def show_help(command=None, out=sys.stdout):
+    names = [x[4:] for x in globals() if x.startswith("cmd_")]
     max_len = max(len(x) for x in names)
     if command in names:
         if "help_" + command in globals():
@@ -344,8 +353,9 @@ def show_help(command = None, out=sys.stdout):
             if len(lines) > 0:
                 for line in lines:
                     line = (line
-                        .replace("Usage: scc", "Usage: %s" % (sys.argv[0], )))
-                    if line.startswith("\t"): line = line[1:]
+                            .replace("Usage: scc", "Usage: %s" % (sys.argv[0], )))
+                    if line.startswith("\t"):
+                        line = line[1:]
                     print >>out, line
                 return 0
 
@@ -354,8 +364,8 @@ def show_help(command = None, out=sys.stdout):
     print >>out, "List of commands:"
     for name in sorted(names):
         hlp = ((globals()["cmd_" + name].__doc__ or "")
-                    .strip("\t \r\n")
-                    .split("\n")[0])
+               .strip("\t \r\n")
+               .split("\n")[0])
         print >>out, (" - %%-%ss %%s" % (max_len, )) % (
             name.replace("_", "-"), hlp)
     return 0
@@ -370,7 +380,8 @@ def main():
             sys.argv.remove("-h")
         while "--help" in sys.argv:
             sys.argv.remove("--help")
-        sys.exit(show_help(sys.argv[1].replace("-", "_") if len(sys.argv) > 1 else None))
+        sys.exit(show_help(sys.argv[1].replace(
+            "-", "_") if len(sys.argv) > 1 else None))
     if "-v" in sys.argv:
         while "-v" in sys.argv:
             sys.argv.remove("-v")
@@ -382,7 +393,7 @@ def main():
     except:
         print >>sys.stderr, "Unknown command: %s" % (sys.argv[1], )
         sys.exit(show_help(out=sys.stderr))
-    
+
     try:
         sys.exit(command(sys.argv[0], sys.argv[2:]))
     except KeyboardInterrupt:

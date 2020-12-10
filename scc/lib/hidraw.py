@@ -13,11 +13,14 @@ BUS_VIRTUAL = 0x06
 _HID_MAX_DESCRIPTOR_SIZE = 4096
 
 # hidraw.h
+
+
 class _hidraw_report_descriptor(ctypes.Structure):
     _fields_ = [
         ('size', ctypes.c_uint),
         ('value', ctypes.c_ubyte * _HID_MAX_DESCRIPTOR_SIZE),
     ]
+
 
 class _hidraw_devinfo(ctypes.Structure):
     _fields_ = [
@@ -26,17 +29,27 @@ class _hidraw_devinfo(ctypes.Structure):
         ('product', ctypes.c_short),
     ]
 
+
 _HIDIOCGRDESCSIZE = ioctl_opt.IOR(ord('H'), 0x01, ctypes.c_int)
 _HIDIOCGRDESC = ioctl_opt.IOR(ord('H'), 0x02, _hidraw_report_descriptor)
 _HIDIOCGRAWINFO = ioctl_opt.IOR(ord('H'), 0x03, _hidraw_devinfo)
-_HIDIOCGRAWNAME = lambda len: ioctl_opt.IOC(ioctl_opt.IOC_READ, ord('H'),
-    0x04, len)
-_HIDIOCGRAWPHYS = lambda len: ioctl_opt.IOC(ioctl_opt.IOC_READ, ord('H'),
-    0x05, len)
-_HIDIOCSFEATURE = lambda len: ioctl_opt.IOC(
-    ioctl_opt.IOC_WRITE|ioctl_opt.IOC_READ, ord('H'), 0x06, len)
-_HIDIOCGFEATURE = lambda len: ioctl_opt.IOC(
-    ioctl_opt.IOC_WRITE|ioctl_opt.IOC_READ, ord('H'), 0x07, len)
+
+
+def _HIDIOCGRAWNAME(len): return ioctl_opt.IOC(ioctl_opt.IOC_READ, ord('H'),
+                                               0x04, len)
+
+
+def _HIDIOCGRAWPHYS(len): return ioctl_opt.IOC(ioctl_opt.IOC_READ, ord('H'),
+                                               0x05, len)
+
+
+def _HIDIOCSFEATURE(len): return ioctl_opt.IOC(
+    ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ, ord('H'), 0x06, len)
+
+
+def _HIDIOCGFEATURE(len): return ioctl_opt.IOC(
+    ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ, ord('H'), 0x07, len)
+
 
 HIDRAW_FIRST_MINOR = 0
 HIDRAW_MAX_DEVICES = 64
@@ -44,10 +57,12 @@ HIDRAW_BUFFER_SIZE = 64
 
 DevInfo = collections.namedtuple('DevInfo', ['bustype', 'vendor', 'product'])
 
+
 class HIDRaw(object):
     """
     Provides methods to access hidraw device's ioctls.
     """
+
     def __init__(self, device):
         """
         device (file, fileno)
@@ -75,7 +90,7 @@ class HIDRaw(object):
         return ''.join(chr(x) for x in descriptor.value[:size.value])
 
     # TODO: decode descriptor into a python object
-    #def getReportDescriptor(self):
+    # def getReportDescriptor(self):
 
     def getInfo(self):
         """

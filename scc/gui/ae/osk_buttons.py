@@ -15,20 +15,18 @@ from scc.gui.ae import AEComponent
 import logging
 log = logging.getLogger("AE.Buttons")
 
-__all__ = [ 'OSKButtonsComponent' ]
+__all__ = ['OSKButtonsComponent']
 
 
 class OSKButtonsComponent(ButtonsComponent):
-	CTXS = Action.AC_OSK
-	PRIORITY = 1
-	IMAGES = { }
-	
-	
-	def get_button_title(self):
-		return _("Key")
-	
-	
-	def load(self):
-		if not self.loaded:
-			AEComponent.load(self)
-			self.builder.get_object("lblClickAnyButton").set_visible(False)
+    CTXS = Action.AC_OSK
+    PRIORITY = 1
+    IMAGES = {}
+
+    def get_button_title(self):
+        return _("Key")
+
+    def load(self):
+        if not self.loaded:
+            AEComponent.load(self)
+            self.builder.get_object("lblClickAnyButton").set_visible(False)

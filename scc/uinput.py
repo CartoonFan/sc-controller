@@ -20,7 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import os, ctypes
+import os
+import ctypes
 from ctypes import POINTER, c_bool, c_int16, c_uint16, c_int32, byref
 from math import copysign
 from scc.lib.libusb1 import timeval
@@ -42,15 +43,18 @@ MAX_FEEDBACK_EFFECTS = 4
 
 # Keys enum contains all keys and button from linux/uinput.h (KEY_* BTN_*)
 Keys = IntEnum('Keys', {i: CHEAD[i] for i in list(CHEAD.keys()) if (i.startswith('KEY_') or
-                                                            i.startswith('BTN_'))})
+                                                                    i.startswith('BTN_'))})
 # Keys enum contains all keys and button from linux/uinput.h (KEY_* BTN_*)
-KeysOnly = IntEnum('KeysOnly', {i: CHEAD[i] for i in list(CHEAD.keys()) if i.startswith('KEY_')})
+KeysOnly = IntEnum('KeysOnly', {i: CHEAD[i] for i in list(
+    CHEAD.keys()) if i.startswith('KEY_')})
 
 # Axes enum contains all axes from linux/uinput.h (ABS_*)
-Axes = IntEnum('Axes', {i: CHEAD[i] for i in list(CHEAD.keys()) if i.startswith('ABS_')})
+Axes = IntEnum('Axes', {i: CHEAD[i] for i in list(
+    CHEAD.keys()) if i.startswith('ABS_')})
 
 # Rels enum contains all rels from linux/uinput.h (REL_*)
-Rels = IntEnum('Rels', {i: CHEAD[i] for i in list(CHEAD.keys()) if i.startswith('REL_')})
+Rels = IntEnum('Rels', {i: CHEAD[i] for i in list(
+    CHEAD.keys()) if i.startswith('REL_')})
 
 # Scan codes for each keys (taken from a logitech keyboard)
 Scans = {
@@ -173,6 +177,7 @@ Scans = {
     Keys.KEY_FORWARD: 0xc00f3,
 }
 
+
 class InputEvent(ctypes.Structure):
     _fields_ = [
         ('time', timeval),
@@ -180,6 +185,7 @@ class InputEvent(ctypes.Structure):
         ('code', c_uint16),
         ('value', c_int32)
     ]
+
 
 class FeedbackEvent(ctypes.Structure):
     _fields_ = [
@@ -203,25 +209,26 @@ class UInput(object):
     See Gamepad, Mouse, Keyboard for examples
     """
 
-
     def __init__(self, vendor, product, version, name, keys, axes, rels, keyboard=False, rumble=False):
         self._lib = None
         self._k = keys
         self.name = name
         if not axes or len(axes) == 0:
-            self._a, self._amin, self._amax, self._afuzz, self._aflat = [[]] * 5
+            self._a, self._amin, self._amax, self._afuzz, self._aflat = [
+                []] * 5
         else:
-            self._a, self._amin, self._amax, self._afuzz, self._aflat = list(zip(*axes))
+            self._a, self._amin, self._amax, self._afuzz, self._aflat = list(
+                zip(*axes))
 
         self._r = rels
-        
+
         self._lib = find_library("libuinput")
         self._ff_events = None
         if rumble:
             self._ff_events = (POINTER(FeedbackEvent) * MAX_FEEDBACK_EFFECTS)()
             for i in range(MAX_FEEDBACK_EFFECTS):
                 self._ff_events[i].contents = FeedbackEvent()
-        
+
         try:
             if self._lib.uinput_module_version() != UNPUT_MODULE_VERSION:
                 raise Exception()
@@ -231,21 +238,21 @@ class UInput(object):
             print >>sys.stderr, "If you are running sc-controller from source, you can do this by removing 'build' directory"
             print >>sys.stderr, "and runinng 'python setup.py build' or 'run.sh' script"
             raise Exception("Invalid native module version")
-        
-        c_k     = (ctypes.c_uint16 * len(self._k))(*self._k)
-        c_a     = (ctypes.c_uint16 * len(self._a))(*self._a)
-        c_amin   = (ctypes.c_int32  * len(self._amin ))(*self._amin )
-        c_amax   = (ctypes.c_int32  * len(self._amax ))(*self._amax )
-        c_afuzz = (ctypes.c_int32  * len(self._afuzz))(*self._afuzz)
-        c_aflat = (ctypes.c_int32  * len(self._aflat))(*self._aflat)
-        c_r     = (ctypes.c_uint16 * len(self._r))(*self._r)
-        c_vendor   = ctypes.c_uint16(vendor)
-        c_product  = ctypes.c_uint16(product)
-        c_version  = ctypes.c_uint16(version)
+
+        c_k = (ctypes.c_uint16 * len(self._k))(*self._k)
+        c_a = (ctypes.c_uint16 * len(self._a))(*self._a)
+        c_amin = (ctypes.c_int32 * len(self._amin))(*self._amin)
+        c_amax = (ctypes.c_int32 * len(self._amax))(*self._amax)
+        c_afuzz = (ctypes.c_int32 * len(self._afuzz))(*self._afuzz)
+        c_aflat = (ctypes.c_int32 * len(self._aflat))(*self._aflat)
+        c_r = (ctypes.c_uint16 * len(self._r))(*self._r)
+        c_vendor = ctypes.c_uint16(vendor)
+        c_product = ctypes.c_uint16(product)
+        c_version = ctypes.c_uint16(version)
         c_keyboard = ctypes.c_int(keyboard)
         c_rumble = ctypes.c_int(MAX_FEEDBACK_EFFECTS if rumble else 0)
         c_name = ctypes.c_char_p(name.encode("utf-8"))
-        
+
         self._fd = self._lib.uinput_init(ctypes.c_int(len(self._k)),
                                          c_k,
                                          ctypes.c_int(len(self._a)),
@@ -263,12 +270,11 @@ class UInput(object):
                                          c_rumble,
                                          c_name)
         if self._fd < 0:
-            raise CannotCreateUInputException("Failed to create uinput device. Error code: %s" % (self._fd,))
-
+            raise CannotCreateUInputException(
+                "Failed to create uinput device. Error code: %s" % (self._fd,))
 
     def getDescriptor(self):
         return self._fd
-
 
     def keyEvent(self, key, val):
         """
@@ -280,7 +286,6 @@ class UInput(object):
         self._lib.uinput_key(self._fd,
                              ctypes.c_uint16(key),
                              ctypes.c_int32(val))
-
 
     def axisEvent(self, axis, val):
         """
@@ -319,7 +324,6 @@ class UInput(object):
         """
         self._lib.uinput_syn(self._fd)
 
-
     def setDelayPeriod(self, delay, period):
         """
         Update delay period values for keyboard
@@ -346,7 +350,8 @@ class UInput(object):
         Returns effect that should be played or None if there were no such request.
         """
         if self._ff_events:
-            id = self._lib.uinput_ff_read(self._fd, MAX_FEEDBACK_EFFECTS, byref(self._ff_events))
+            id = self._lib.uinput_ff_read(
+                self._fd, MAX_FEEDBACK_EFFECTS, byref(self._ff_events))
             if id >= 0:
                 return self._ff_events[id].contents
         return None
@@ -503,11 +508,13 @@ class Mouse(UInput):
         self._scr_dy += dy * self._scr_yscale
         _syn = False
         if int(self._scr_dx):
-            self.relEvent(rel=Rels.REL_HWHEEL, val=int(copysign(1, self._scr_dx)))
+            self.relEvent(rel=Rels.REL_HWHEEL, val=int(
+                copysign(1, self._scr_dx)))
             self._scr_dx -= int(self._scr_dx)
             _syn = True
         if int(self._scr_dy):
-            self.relEvent(rel=Rels.REL_WHEEL,  val=int(copysign(1, self._scr_dy)))
+            self.relEvent(rel=Rels.REL_WHEEL,  val=int(
+                copysign(1, self._scr_dy)))
             self._scr_dy -= int(self._scr_dy)
             _syn = True
         if _syn:
@@ -563,7 +570,8 @@ class Keyboard(UInput):
         @param list of Keys keys        keys to release, give None or empty list
                                         to release all
         """
-        rem = [k for k in keys if k in self._pressed] if keys else list(self._pressed)
+        rem = [k for k in keys if k in self._pressed] if keys else list(
+            self._pressed)
         for i in rem:
             self.scanEvent(Scans[i])
             self.keyEvent(i, 0)
@@ -574,12 +582,13 @@ class Keyboard(UInput):
 
 class Dummy(object):
     """ Fake uinput device that does nothing, but has all required methods """
+
     def __init__(self, *a, **b):
         pass
-    
+
     def keyEvent(self, *a, **b):
         pass
-    
+
     axisEvent = keyEvent
     relEvent = keyEvent
     scanEvent = keyEvent
@@ -592,10 +601,10 @@ class Dummy(object):
     pressEvent = keyEvent
     releaseEvent = keyEvent
     reset = keyEvent
-    
+
     def keyManaged(self, ev):
         return False
-    
+
     axisManaged = keyManaged
     relManaged = keyManaged
 
