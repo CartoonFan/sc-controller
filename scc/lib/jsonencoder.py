@@ -208,7 +208,7 @@ class JSONEncoder(object):
         if isinstance(o, str):
             if isinstance(o, str):
                 _encoding = self.encoding
-                if _encoding is not None and not (_encoding == "utf-8"):
+                if _encoding is not None and (_encoding != "utf-8"):
                     o = o.decode(_encoding)
             if self.ensure_ascii:
                 return encode_basestring_ascii(o)
