@@ -33,7 +33,7 @@ class OSDWindow(Gtk.Window):
             min-width: 48pt;
             min-height: 48pt;
         }
-    
+
         #osd-dialog-buttons #osd-menu-item,
         #osd-dialog-buttons #osd-menu-item-selected {
             min-width: 100px;

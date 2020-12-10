@@ -321,14 +321,14 @@ class SCController(Controller):
          - uint8_t size - SCPacketLength.CONFIGURE or SCPacketLength.LED
          - uint8_t config_type - SCConfigType.CONFIGURE or SCConfigType.LED
          - 61B data
-        
+
         Format for data when configuring controller:
          - uint16   timeout
          - 13B      unknown1 - (0x18, 0x00, 0x00, 0x31, 0x02, 0x00, 0x08, 0x07, 0x00, 0x07, 0x07, 0x00, 0x30)
          - uint8    enable gyro sensor - 0x14 enables, 0x00 disables
          - 2B       unknown2 - (0x00, 0x2e)
          - 43B      unused
-         
+
         Format for data when configuring led:
          - uint8    led
          - 60B      unused

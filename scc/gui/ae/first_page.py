@@ -19,7 +19,7 @@ MARKUP_BUTTON = """
 <big>%(what)s: Quick settings</big>
 
   • Map to <a href='page://buttons'>Button</a>
-  
+
   • Use to <a href='quick://menu("Default.menu")'>display on-screen menu</a>
 """
 
@@ -27,9 +27,9 @@ MARKUP_TRIGGER = """
 <big>%(what)s: Quick settings</big>
 
   • Map to <a href='quick://axis(Axes.ABS_Z)'>Left</a> or <a href='quick://axis(Axes.ABS_RZ)'>Right</a> Trigger
-  
+
   • Map to <a href='quick://trigger(50, 255, button(Keys.BTN_LEFT))'>Left</a> or <a href='quick://trigger(50, 255, button(Keys.BTN_RIGHT))'>Right</a> mouse button
-  
+
   • Map to <a href='grab://trigger_button'>Button</a>
 """
 
@@ -63,9 +63,9 @@ MARKUP_GYRO = """
 <big>Gyro: Quick settings</big>
 
   • Setup for aiming when right <a href='quick://mode(RPADTOUCH, mouse(ROLL), None)'>pad is touched</a>
-  
+
   • Setup for aiming when right <a href='quick://mode(LT >= 0.7, mouse(ROLL), None)'>trigger is pushed</a>
-  
+
   • <a href='quick://sens(3.5, 3.5, 3.5, mouse(ROLL))'>Use as mouse</a>
 """
 
