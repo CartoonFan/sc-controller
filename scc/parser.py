@@ -83,8 +83,7 @@ class ActionParser(object):
             # calling 'if button in data["buttons"]: ...' everywhere
             if key in data:
                 return self.from_json_data(data[key], None)
-            else:
-                return NoAction()
+            return NoAction()
 
         if "action" in data:
             a = self.restart(data["action"]).parse() or NoAction()
@@ -218,14 +217,13 @@ class ActionParser(object):
             raise ParseError("Expected number, got '%s'" % (t.value, ))
         if "." in t.value:
             return float(t.value)
-        elif "e" in t.value.lower():
+        if "e" in t.value.lower():
             return float(t.value)
-        elif t.value.lower().startswith("0x"):
+        if t.value.lower().startswith("0x"):
             return int(t.value, 16)
-        elif t.value.lower().startswith("0b"):
+        if t.value.lower().startswith("0b"):
             return int(t.value, 2)
-        else:
-            return int(t.value)
+        return int(t.value)
 
     def _parse_parameters(self):
         """ Parses parameter list """

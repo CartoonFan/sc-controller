@@ -66,14 +66,13 @@ class MenuActionCofC(UserDataManager):
         """
         if isinstance(action, GridMenuAction):
             return "gridmenu"
-        elif isinstance(action, QuickMenuAction):
+        if isinstance(action, QuickMenuAction):
             return "quickmenu"
-        elif isinstance(action, HorizontalMenuAction):
+        if isinstance(action, HorizontalMenuAction):
             return "hmenu"
-        elif isinstance(action, RadialMenuAction):
+        if isinstance(action, RadialMenuAction):
             return "radialmenu"
-        else:
-            return "menu"
+        return "menu"
 
     def load_menu_data(self, action):
         if isinstance(action, PositionModifier):
@@ -462,15 +461,14 @@ class MenuActionCofC(UserDataManager):
             lblMenuSize.set_text(_("Items per row"))
             rvMenuSize.set_reveal_child(True)
             return True
-        elif isinstance(action, (RadialMenuAction, HorizontalMenuAction)):
+        if isinstance(action, (RadialMenuAction, HorizontalMenuAction)):
             spMenuSize.set_visible(False)
             sclMenuSize.set_visible(True)
             lblMenuSize.set_text(_("Size"))
             rvMenuSize.set_reveal_child(True)
             return True
-        else:
-            rvMenuSize.set_reveal_child(False)
-            return False
+        rvMenuSize.set_reveal_child(False)
+        return False
 
     def get_control_with(self):
         """ Returns value of "Control With" combo or STICK if there is none """

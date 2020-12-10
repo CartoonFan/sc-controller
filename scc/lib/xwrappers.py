@@ -351,9 +351,8 @@ def get_window_geometry(dpy, win):
     if translate_coordinates(dpy, win, get_default_root_window(dpy), 0, 0,
                              byref(x), byref(y), byref(trash)):
         return x.value, y.value, attrs.width, attrs.height
-    else:
-        # translate_coordinates failed
-        return attrs.x, attrs.y, attrs.width, attrs.height
+    # translate_coordinates failed
+    return attrs.x, attrs.y, attrs.width, attrs.height
 
 
 def get_screen_size(dpy):
