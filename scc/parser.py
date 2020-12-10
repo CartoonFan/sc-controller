@@ -7,23 +7,14 @@ one or more Action instances.
 import sys
 import token as TokenType
 from collections import namedtuple
-from tokenize import generate_tokens
-from tokenize import TokenError
+from tokenize import TokenError, generate_tokens
 
 import scc.aliases
-from scc.actions import Action
-from scc.actions import MultiAction
-from scc.actions import NoAction
-from scc.actions import RangeOP
-from scc.constants import HapticPos
-from scc.constants import PARSER_CONSTANTS
-from scc.constants import SCButtons
-from scc.constants import STICK
+from scc.actions import Action, MultiAction, NoAction, RangeOP
+from scc.constants import PARSER_CONSTANTS, STICK, HapticPos, SCButtons
 from scc.macros import Macro
 from scc.tools import nameof
-from scc.uinput import Axes
-from scc.uinput import Keys
-from scc.uinput import Rels
+from scc.uinput import Axes, Keys, Rels
 
 
 class ParseError(Exception):
