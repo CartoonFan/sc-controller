@@ -387,7 +387,7 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
                 self._recursing = False
 
         if not cb.get_active() and any(
-            drv in x for x in self.DRIVER_DEPS.values()
+            drv in x for x in list(self.DRIVER_DEPS.values())
         ):
             # Something depends on this driver,
             # disable anything that has no dependent drivers active

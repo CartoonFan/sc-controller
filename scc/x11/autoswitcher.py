@@ -75,7 +75,7 @@ class AutoSwitcher(object):
         count, cmpwith = 0, None
         if action is not None:
             cmpwith = action.to_string()
-        for c in conds.keys():
+        for c in list(conds.keys()):
             if (action is None or conds[c].to_string() == cmpwith) and c.matches(
                 title, wm_class
             ):
