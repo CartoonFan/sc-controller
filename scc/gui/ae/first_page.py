@@ -5,13 +5,11 @@ SC-Controller - Action Editor - First Page
 Provides links for quick settings.
 """
 
-from scc.tools import _
+import logging
+
 from scc.actions import Action
 from scc.gui.ae import AEComponent
-from scc.tools import nameof
-
-
-import logging
+from scc.tools import _, nameof
 
 log = logging.getLogger("AE.1st")
 

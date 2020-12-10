@@ -5,15 +5,16 @@ SC-Controller - Global Settings
 Currently setups only one thing...
 """
 
-from scc.tools import _
-
-from gi.repository import GLib, GdkPixbuf
-from scc.paths import get_controller_icons_path, get_default_controller_icons_path
-from scc.gui.userdata_manager import UserDataManager
-from scc.gui.editor import Editor, ComboSetter
-
-import os
 import logging
+import os
+
+from gi.repository import GdkPixbuf, GLib
+
+from scc.gui.editor import ComboSetter, Editor
+from scc.gui.userdata_manager import UserDataManager
+from scc.paths import (get_controller_icons_path,
+                       get_default_controller_icons_path)
+from scc.tools import _
 
 log = logging.getLogger("GS")
 

@@ -6,16 +6,17 @@ prints chosen item id to stdout
 """
 
 
-from gi.repository import Gtk, GdkX11
-from scc.gui.daemon_manager import DaemonManager
-from scc.osd import OSDWindow, StickController
-from scc.lib import xwrappers as X
-from scc.constants import DEFAULT
-from scc.menu_data import MenuData
-from scc.config import Config
-
-import sys
 import logging
+import sys
+
+from gi.repository import GdkX11, Gtk
+
+from scc.config import Config
+from scc.constants import DEFAULT
+from scc.gui.daemon_manager import DaemonManager
+from scc.lib import xwrappers as X
+from scc.menu_data import MenuData
+from scc.osd import OSDWindow, StickController
 
 log = logging.getLogger("osd.dialog")
 

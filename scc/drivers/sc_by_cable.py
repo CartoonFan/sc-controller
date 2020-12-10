@@ -7,12 +7,13 @@ Called and used when single Steam Controller is connected directly by USB cable.
 Shares a lot of classes with sc_dongle.py
 """
 
-from scc.lib.usb1 import USBError
-from scc.drivers.usb import USBDevice, register_hotplug_device
-from .sc_dongle import ControllerInput, TUP_FORMAT
-from .sc_dongle import SCStatus, SCController
-import struct
 import logging
+import struct
+
+from scc.drivers.usb import USBDevice, register_hotplug_device
+from scc.lib.usb1 import USBError
+
+from .sc_dongle import TUP_FORMAT, ControllerInput, SCController, SCStatus
 
 VENDOR_ID = 0x28DE
 PRODUCT_ID = 0x1102

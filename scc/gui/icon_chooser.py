@@ -3,18 +3,18 @@
 SC-Controller - Icon Chooser
 """
 
-from scc.tools import _
+import logging
+import os
+import re
+import traceback
 
-from gi.repository import Gtk, Gdk, Gio, GdkPixbuf, GObject
-from scc.gui.userdata_manager import UserDataManager
+from gi.repository import Gdk, GdkPixbuf, Gio, GObject, Gtk
+
 from scc.gui.dwsnc import headerbar
 from scc.gui.editor import Editor
+from scc.gui.userdata_manager import UserDataManager
 from scc.paths import get_menuicons_path
-from scc.tools import find_icon
-import os
-import traceback
-import logging
-import re
+from scc.tools import _, find_icon
 
 log = logging.getLogger("IconChooser")
 RE_URL = re.compile(r"(.*)(https?://[^ ]+)(.*)")

@@ -8,16 +8,16 @@ Set of widgets designed to allow user to select profile, placed in one Gtk.Box:
 indicator drawn in combobox.
 """
 
-from scc.tools import _
-
-from gi.repository import Gtk, Gio, GLib, GObject
-from scc.gui.userdata_manager import UserDataManager
-from scc.paths import get_controller_icons_path, get_default_controller_icons_path
-from scc.tools import find_profile, find_controller_icon
-
+import logging
 import os
 import random
-import logging
+
+from gi.repository import Gio, GLib, GObject, Gtk
+
+from scc.gui.userdata_manager import UserDataManager
+from scc.paths import (get_controller_icons_path,
+                       get_default_controller_icons_path)
+from scc.tools import _, find_controller_icon, find_profile
 
 log = logging.getLogger("PS")
 

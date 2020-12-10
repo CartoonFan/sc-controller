@@ -6,16 +6,15 @@ Handles mapping profile stored in json file
 """
 
 
-from scc.constants import LEFT, RIGHT, CPAD, WHOLE, STICK, GYRO
-from scc.constants import SCButtons
-from scc.special_actions import MenuAction
-from scc.modifiers import HoldModifier
-from scc.lib.jsonencoder import JSONEncoder
-from scc.menu_data import MenuData
-from scc.actions import NoAction
-
 import json
 import logging
+
+from scc.actions import NoAction
+from scc.constants import CPAD, GYRO, LEFT, RIGHT, STICK, WHOLE, SCButtons
+from scc.lib.jsonencoder import JSONEncoder
+from scc.menu_data import MenuData
+from scc.modifiers import HoldModifier
+from scc.special_actions import MenuAction
 
 log = logging.getLogger("profile")
 
@@ -267,8 +266,8 @@ class Profile(object):
                 )
         if from_version < 1.1:
             # Convert old scrolling wheel to new representation
-            from scc.modifiers import FeedbackModifier, BallModifier
             from scc.actions import MouseAction, XYAction
+            from scc.modifiers import BallModifier, FeedbackModifier
             from scc.uinput import Rels
 
             iswheelaction = lambda x: isinstance(x, MouseAction) and x.parameters[
@@ -289,8 +288,8 @@ class Profile(object):
         if from_version < 1.2:
             # Convert old trigger settings that were done with ButtonAction
             # to new TriggerAction
-            from scc.constants import TRIGGER_HALF, TRIGGER_MAX, TRIGGER_CLICK
-            from scc.actions import ButtonAction, TriggerAction, MultiAction
+            from scc.actions import ButtonAction, MultiAction, TriggerAction
+            from scc.constants import TRIGGER_CLICK, TRIGGER_HALF, TRIGGER_MAX
             from scc.uinput import Keys
 
             for p in (Profile.LEFT, Profile.RIGHT):

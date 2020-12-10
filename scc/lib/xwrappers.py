@@ -18,9 +18,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 
-from ctypes import CDLL, POINTER, c_void_p, Structure, byref, cast
-from ctypes import c_long, c_ulong, c_int, c_uint, c_short, c_char_p
-from ctypes import c_ushort, c_ubyte, c_char_p, c_bool
+from ctypes import (CDLL, POINTER, Structure, byref, c_bool, c_char_p, c_int,
+                    c_long, c_short, c_ubyte, c_uint, c_ulong, c_ushort,
+                    c_void_p, cast)
 
 
 def _load_lib(*names):

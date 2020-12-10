@@ -6,12 +6,13 @@ Displays border around area.
 """
 
 
-from gi.repository import Gtk, GdkX11
-from scc.lib import xwrappers as X
-from scc.osd.timermanager import TimerManager
-from scc.osd import OSDWindow
-
 import logging
+
+from gi.repository import GdkX11, Gtk
+
+from scc.lib import xwrappers as X
+from scc.osd import OSDWindow
+from scc.osd.timermanager import TimerManager
 
 log = logging.getLogger("osd.area")
 

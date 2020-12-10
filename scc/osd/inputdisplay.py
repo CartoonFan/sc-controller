@@ -2,19 +2,19 @@
 SC-Controller - Input Display
 """
 
-from scc.tools import _, set_logging_level
+import argparse
+import logging
+import os
+import signal
+import sys
 
-from gi.repository import Gtk, GLib
-from scc.constants import SCButtons, STICK, LEFT, RIGHT, STICK_PAD_MAX
+from gi.repository import GLib, Gtk
+
+from scc.constants import LEFT, RIGHT, STICK, STICK_PAD_MAX, SCButtons
 from scc.gui.daemon_manager import DaemonManager
 from scc.gui.svg_widget import SVGWidget
 from scc.osd import OSDWindow
-
-import os
-import sys
-import logging
-import signal
-import argparse
+from scc.tools import _, set_logging_level
 
 log = logging.getLogger("osd.InputDisplay")
 
@@ -193,8 +193,8 @@ if __name__ == "__main__":
     gi.require_version("Rsvg", "2.0")
     gi.require_version("GdkX11", "3.0")
 
-    from scc.tools import init_logging
     from scc.paths import get_share_path
+    from scc.tools import init_logging
 
     init_logging()
 

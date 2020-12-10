@@ -4,16 +4,15 @@ SC-Controller - Action Editor - Axis Component
 Assigns emulated axis to trigger
 """
 
-from scc.tools import _
-
-from scc.special_actions import ChangeProfileAction, ShellCommandAction
-from scc.special_actions import TurnOffAction, KeyboardAction, OSDAction
-from scc.special_actions import ClearOSDAction
-from scc.actions import Action, NoAction, ResetGyroAction
-from scc.gui.ae.menu_action import MenuActionCofC
-from scc.gui.ae import AEComponent
-
 import logging
+
+from scc.actions import Action, NoAction, ResetGyroAction
+from scc.gui.ae import AEComponent
+from scc.gui.ae.menu_action import MenuActionCofC
+from scc.special_actions import (ChangeProfileAction, ClearOSDAction,
+                                 KeyboardAction, OSDAction, ShellCommandAction,
+                                 TurnOffAction)
+from scc.tools import _
 
 log = logging.getLogger("AE.SA")
 

@@ -6,13 +6,13 @@ Handles loading, storing and querying config file
 """
 
 
+import json
+import logging
+import os
+
 from scc.paths import get_config_path
 from scc.profile import Encoder
 from scc.special_actions import ChangeProfileAction
-
-import os
-import json
-import logging
 
 log = logging.getLogger("Config")
 

@@ -5,13 +5,12 @@ SC-Controller - Action Editor - Tilt
 Setups DPAD emulation or menu display
 """
 
-from scc.tools import _
+import logging
+
 from scc.actions import Action, NoAction, TiltAction
 from scc.gui.ae import AEComponent, describe_action
 from scc.gui.binding_editor import BindingEditor
-
-
-import logging
+from scc.tools import _
 
 log = logging.getLogger("AE.Tilt")
 

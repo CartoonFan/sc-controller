@@ -5,17 +5,15 @@ SC-Controller - Controller Image
 Big, SVGWidget based widget with interchangeable controller and button images.
 """
 
-from scc.tools import _
-
-from scc.gui.svg_widget import SVGWidget, SVGEditor
-from scc.constants import SCButtons
-from scc.tools import nameof
-
-import os
-import sys
 import copy
 import json
 import logging
+import os
+import sys
+
+from scc.constants import SCButtons
+from scc.gui.svg_widget import SVGEditor, SVGWidget
+from scc.tools import _, nameof
 
 log = logging.getLogger("ContImage")
 

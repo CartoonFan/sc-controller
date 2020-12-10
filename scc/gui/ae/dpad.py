@@ -6,17 +6,17 @@ SC-Controller - Action Editor - "DPAD or Menu"
 Setups DPAD emulation or menu display
 """
 
-from scc.tools import _
-from scc.actions import HatUpAction, HatDownAction, HatLeftAction, HatRightAction
-from scc.actions import Action, NoAction, DPadAction, DPad8Action, ButtonAction
-from scc.constants import STICK, SAME, DEFAULT, SCButtons
-from scc.uinput import Keys, Axes
+import logging
+
+from scc.actions import (Action, ButtonAction, DPad8Action, DPadAction,
+                         HatDownAction, HatLeftAction, HatRightAction,
+                         HatUpAction, NoAction)
+from scc.constants import DEFAULT, SAME, STICK, SCButtons
 from scc.gui.ae import AEComponent, describe_action
 from scc.gui.ae.menu_action import MenuActionCofC
 from scc.gui.binding_editor import BindingEditor
-
-
-import logging
+from scc.tools import _
+from scc.uinput import Axes, Keys
 
 log = logging.getLogger("AE.DPAD")
 

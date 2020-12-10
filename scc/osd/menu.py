@@ -4,26 +4,25 @@ SC-Controller - OSD Menu
 Display menu that user can navigate through and prints chosen item id to stdout
 """
 
-import scc.x11.autoswitcher
-import scc.osd.menu_generators
-from scc.tools import _
-
-from gi.repository import Gtk, GLib, Gio, Gdk, GdkX11, GdkPixbuf
-from scc.tools import point_in_gtkrect, find_menu, find_icon
-from scc.tools import circle_to_square, clamp
-from scc.constants import LEFT, RIGHT, SAME, STICK, ControllerFlags
-from scc.constants import DEFAULT, STICK_PAD_MAX, SCButtons
-from scc.menu_data import MenuData, Separator, Submenu
-from scc.gui.daemon_manager import DaemonManager
-from scc.osd import OSDWindow, StickController
-from scc.paths import get_share_path
-from scc.lib import xwrappers as X
-from scc.config import Config
-from math import sqrt
-
+import logging
 import os
 import sys
-import logging
+from math import sqrt
+
+from gi.repository import Gdk, GdkPixbuf, GdkX11, Gio, GLib, Gtk
+
+import scc.osd.menu_generators
+import scc.x11.autoswitcher
+from scc.config import Config
+from scc.constants import (DEFAULT, LEFT, RIGHT, SAME, STICK, STICK_PAD_MAX,
+                           ControllerFlags, SCButtons)
+from scc.gui.daemon_manager import DaemonManager
+from scc.lib import xwrappers as X
+from scc.menu_data import MenuData, Separator, Submenu
+from scc.osd import OSDWindow, StickController
+from scc.paths import get_share_path
+from scc.tools import (_, circle_to_square, clamp, find_icon, find_menu,
+                       point_in_gtkrect)
 
 log = logging.getLogger("osd.menu")
 

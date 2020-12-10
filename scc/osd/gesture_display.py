@@ -6,15 +6,16 @@ that's usually not very much) grid.
 """
 
 import logging
-from scc.tools import _, set_logging_level
 
-from gi.repository import Gtk, GObject
+from gi.repository import GObject, Gtk
+
+from scc.config import Config
+from scc.constants import CPAD, LEFT, RIGHT
+from scc.gestures import GestureDetector
 from scc.gui.daemon_manager import DaemonManager
 from scc.gui.gestures import GestureDraw
-from scc.constants import LEFT, RIGHT, CPAD
-from scc.config import Config
 from scc.osd import OSDWindow
-from scc.gestures import GestureDetector
+from scc.tools import _, set_logging_level
 
 BOTH = "BOTH"
 
@@ -184,8 +185,8 @@ def main():
     gi.require_version("Rsvg", "2.0")
     gi.require_version("GdkX11", "3.0")
 
-    from scc.tools import init_logging
     from scc.paths import get_share_path
+    from scc.tools import init_logging
 
     init_logging()
 
@@ -201,8 +202,8 @@ def main():
 
 if __name__ == "__main__":
     import os
-    import sys
     import signal
+    import sys
 
     def sigint(*a):
         print("\n*break*")

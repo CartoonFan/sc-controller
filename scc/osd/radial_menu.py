@@ -4,24 +4,25 @@ SC-Controller - OSD Menu
 Display menu that user can navigate through
 """
 
-from scc.tools import _, set_logging_level
-
-from gi.repository import Gtk, Gdk, GLib, GdkX11
-from scc.constants import LEFT, RIGHT, STICK, STICK_PAD_MIN, STICK_PAD_MAX
-from scc.menu_data import MenuData, Separator, Submenu
-from scc.gui.svg_widget import SVGWidget, SVGEditor
-from scc.osd.menu import Menu, MenuIcon
-from scc.osd import OSDWindow
-from scc.tools import degdiff, find_icon
-from scc.paths import get_share_path
-from scc.lib import xwrappers as X
-from scc.config import Config
-from math import pi as PI, atan2, sin, cos
-
-import os
-import sys
 import json
 import logging
+import os
+import sys
+from math import atan2, cos
+from math import pi as PI
+from math import sin
+
+from gi.repository import Gdk, GdkX11, GLib, Gtk
+
+from scc.config import Config
+from scc.constants import LEFT, RIGHT, STICK, STICK_PAD_MAX, STICK_PAD_MIN
+from scc.gui.svg_widget import SVGEditor, SVGWidget
+from scc.lib import xwrappers as X
+from scc.menu_data import MenuData, Separator, Submenu
+from scc.osd import OSDWindow
+from scc.osd.menu import Menu, MenuIcon
+from scc.paths import get_share_path
+from scc.tools import _, degdiff, find_icon, set_logging_level
 
 log = logging.getLogger("osd.menu")
 
@@ -302,8 +303,8 @@ if __name__ == "__main__":
     gi.require_version("Rsvg", "2.0")
     gi.require_version("GdkX11", "3.0")
 
-    from scc.tools import init_logging
     from scc.paths import get_share_path
+    from scc.tools import init_logging
 
     init_logging()
 

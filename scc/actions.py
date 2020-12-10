@@ -6,29 +6,28 @@ stick, pad or trigger is generated - typicaly what emulated button, stick or
 trigger should be pressed.
 """
 
-import scc.special_actions
-import scc.modifiers
-import scc.macros
-from scc.tools import _
-
-from scc.tools import ensure_size, quat2euler, anglediff
-from scc.tools import circle_to_square, clamp, nameof
-from scc.uinput import Keys, Axes, Rels
-from scc.lib import xwrappers as X
-from scc.constants import STICK_PAD_MIN, STICK_PAD_MAX, STICK_PAD_MIN_HALF
-from scc.constants import STICK_PAD_MAX_HALF, TRIGGER_MIN, TRIGGER_HALF
-from scc.constants import HIPFIRE_NORMAL, HIPFIRE_SENSIBLE, HIPFIRE_EXCLUSIVE
-from scc.constants import LEFT, RIGHT, CPAD, STICK, PITCH, YAW, ROLL
-from scc.constants import PARSER_CONSTANTS, ControllerFlags
-from scc.constants import FE_STICK, FE_PAD
-from scc.constants import TRIGGER_CLICK, TRIGGER_MAX
-from scc.constants import SCButtons
-from scc.aliases import ALL_BUTTONS as GAMEPAD_BUTTONS
-from math import sqrt, sin, cos, atan2, pi as PI
-
-import sys
-import logging
 import inspect
+import logging
+import sys
+from math import atan2, cos
+from math import pi as PI
+from math import sin, sqrt
+
+import scc.macros
+import scc.modifiers
+import scc.special_actions
+from scc.aliases import ALL_BUTTONS as GAMEPAD_BUTTONS
+from scc.constants import (CPAD, FE_PAD, FE_STICK, HIPFIRE_EXCLUSIVE,
+                           HIPFIRE_NORMAL, HIPFIRE_SENSIBLE, LEFT,
+                           PARSER_CONSTANTS, PITCH, RIGHT, ROLL, STICK,
+                           STICK_PAD_MAX, STICK_PAD_MAX_HALF, STICK_PAD_MIN,
+                           STICK_PAD_MIN_HALF, TRIGGER_CLICK, TRIGGER_HALF,
+                           TRIGGER_MAX, TRIGGER_MIN, YAW, ControllerFlags,
+                           SCButtons)
+from scc.lib import xwrappers as X
+from scc.tools import (_, anglediff, circle_to_square, clamp, ensure_size,
+                       nameof, quat2euler)
+from scc.uinput import Axes, Keys, Rels
 
 log = logging.getLogger("Actions")
 

@@ -4,22 +4,21 @@ SC-Controller - Action Editor - common part of "DPAD or menu" and "Special Actio
 two components with MenuAction selectable.
 """
 
-from scc.tools import _
+import logging
+import os
 
 from gi.repository import Gtk
-from scc.special_actions import MenuAction, HorizontalMenuAction
-from scc.special_actions import RadialMenuAction, GridMenuAction
-from scc.special_actions import QuickMenuAction, PositionModifier
-from scc.constants import SCButtons, SAME, STICK, DEFAULT
-from scc.paths import get_menus_path
+
 from scc.actions import NoAction
-from scc.tools import nameof
-from scc.gui.userdata_manager import UserDataManager
+from scc.constants import DEFAULT, SAME, STICK, SCButtons
 from scc.gui.menu_editor import MenuEditor
 from scc.gui.parser import GuiActionParser
-
-import os
-import logging
+from scc.gui.userdata_manager import UserDataManager
+from scc.paths import get_menus_path
+from scc.special_actions import (GridMenuAction, HorizontalMenuAction,
+                                 MenuAction, PositionModifier, QuickMenuAction,
+                                 RadialMenuAction)
+from scc.tools import _, nameof
 
 log = logging.getLogger("AE.Menu")
 

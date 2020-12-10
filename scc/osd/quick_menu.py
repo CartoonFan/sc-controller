@@ -5,19 +5,18 @@ Controled by buttons instead of stick. Fast to use, but can display only
 limited number of items
 """
 
-from scc.tools import _, set_logging_level
-
-from gi.repository import Gtk, GLib
-from scc.menu_data import MenuItem, Submenu
-from scc.tools import find_icon, find_menu
-from scc.paths import get_share_path
-from scc.config import Config
-from scc.osd.menu import Menu, MenuIcon
-from scc.osd import OSDWindow
-
+import logging
 import os
 import sys
-import logging
+
+from gi.repository import GLib, Gtk
+
+from scc.config import Config
+from scc.menu_data import MenuItem, Submenu
+from scc.osd import OSDWindow
+from scc.osd.menu import Menu, MenuIcon
+from scc.paths import get_share_path
+from scc.tools import _, find_icon, find_menu, set_logging_level
 
 log = logging.getLogger("osd.quickmenu")
 
@@ -289,8 +288,8 @@ if __name__ == "__main__":
     gi.require_version("Rsvg", "2.0")
     gi.require_version("GdkX11", "3.0")
 
-    from scc.tools import init_logging
     from scc.paths import get_share_path
+    from scc.tools import init_logging
 
     init_logging()
 

@@ -4,23 +4,23 @@ SC-Controller - BindingEditor
 Base class for main application window and OSD Keyboard bindings editor.
 """
 
-from scc.tools import _
-
-from scc.modifiers import ModeModifier, SensitivityModifier, FeedbackModifier
-from scc.modifiers import DoubleclickModifier, HoldModifier
 from scc.actions import NoAction
-from scc.macros import Macro, Type
-from scc.constants import SCButtons, LEFT, RIGHT
-from scc.profile import Profile
-from scc.gui.controller_widget import TRIGGERS, PADS, STICKS, GYROS, BUTTONS, PRESSABLE
-from scc.gui.controller_widget import ControllerPad, ControllerStick, ControllerGyro
-from scc.gui.controller_widget import ControllerButton, ControllerTrigger
-from scc.gui.modeshift_editor import ModeshiftEditor
-from scc.gui.ae.buttons import is_button_togle, is_button_repeat
-from scc.gui.ae.gyro_action import is_gyro_enable
+from scc.constants import LEFT, RIGHT, SCButtons
 from scc.gui.action_editor import ActionEditor
+from scc.gui.ae.buttons import is_button_repeat, is_button_togle
+from scc.gui.ae.gyro_action import is_gyro_enable
+from scc.gui.controller_widget import (BUTTONS, GYROS, PADS, PRESSABLE, STICKS,
+                                       TRIGGERS, ControllerButton,
+                                       ControllerGyro, ControllerPad,
+                                       ControllerStick, ControllerTrigger)
 from scc.gui.macro_editor import MacroEditor
+from scc.gui.modeshift_editor import ModeshiftEditor
 from scc.gui.ring_editor import RingEditor
+from scc.macros import Macro, Type
+from scc.modifiers import (DoubleclickModifier, FeedbackModifier, HoldModifier,
+                           ModeModifier, SensitivityModifier)
+from scc.profile import Profile
+from scc.tools import _
 
 
 class BindingEditor(object):

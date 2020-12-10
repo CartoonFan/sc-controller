@@ -5,11 +5,10 @@ SC-Controller - Action Editor - Recent List Component
 Displays page that can edit settings for RecentListMenuGenerator
 """
 
-from scc.tools import _
+import logging
 
 from scc.gui.ae import AEComponent
-
-import logging
+from scc.tools import _
 
 log = logging.getLogger("AE.SA")
 

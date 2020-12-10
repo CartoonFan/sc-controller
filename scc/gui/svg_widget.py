@@ -7,12 +7,15 @@ Also supports clicking on areas defined in SVG image.
 """
 
 
-from gi.repository import Gtk, Gdk, GObject, GdkPixbuf, Rsvg
-from xml.etree import ElementTree as ET
-from math import sin, cos, pi as PI
-from collections import OrderedDict
-import re
 import logging
+import re
+from collections import OrderedDict
+from math import cos
+from math import pi as PI
+from math import sin
+from xml.etree import ElementTree as ET
+
+from gi.repository import Gdk, GdkPixbuf, GObject, Gtk, Rsvg
 
 log = logging.getLogger("Background")
 ET.register_namespace("", "http://www.w3.org/2000/svg")

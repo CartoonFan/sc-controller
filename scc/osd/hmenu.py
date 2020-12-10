@@ -9,13 +9,14 @@ awfull with larger number of items.
 """
 
 
+import logging
+
 from gi.repository import Gtk
-from scc.menu_data import Separator, Submenu
+
 from scc.constants import STICK_PAD_MIN
+from scc.menu_data import Separator, Submenu
 from scc.osd.grid_menu import GridMenu
 from scc.osd.menu import MenuIcon
-
-import logging
 
 log = logging.getLogger("osd.hmenu")
 

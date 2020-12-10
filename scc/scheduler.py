@@ -8,9 +8,9 @@ also called on main thread.
 
 Use schedule(delay, callback, *data) to register one-time task.
 """
-import time
-import queue
 import logging
+import queue
+import time
 
 log = logging.getLogger("Scheduler")
 

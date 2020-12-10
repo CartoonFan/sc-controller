@@ -6,12 +6,12 @@ Everything related to non-GUI part of gesture detection lies here.
 It's technically part of SCC-Daemon, separater into special module just to keep
 it clean.
 """
-from scc.actions import Action
-from scc.tools import clamp
-from scc.constants import STICK_PAD_MIN, STICK_PAD_MAX, CPAD, CPAD_MIN
-from scc.constants import CPAD_X_MAX, CPAD_Y_MAX
-
 import logging
+
+from scc.actions import Action
+from scc.constants import (CPAD, CPAD_MIN, CPAD_X_MAX, CPAD_Y_MAX,
+                           STICK_PAD_MAX, STICK_PAD_MIN)
+from scc.tools import clamp
 
 log = logging.getLogger("Gestures")
 

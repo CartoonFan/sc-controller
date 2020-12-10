@@ -5,12 +5,12 @@ SC-Controller - Action Editor - Custom action
 Custom Action page in Action Editor window
 """
 
-from scc.tools import _
-from scc.gui.parser import GuiActionParser
-from scc.gui.ae import AEComponent
-from scc.actions import Action
-
 import logging
+
+from scc.actions import Action
+from scc.gui.ae import AEComponent
+from scc.gui.parser import GuiActionParser
+from scc.tools import _
 
 log = logging.getLogger("AE.Custom")
 

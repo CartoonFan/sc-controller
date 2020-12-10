@@ -6,32 +6,31 @@ Display menu that user can navigate through and print chosen item id to stdout
 """
 
 
-from gi.repository import Gtk, Gdk, GdkX11, GdkPixbuf
-from xml.etree import ElementTree as ET
-from scc.constants import LEFT, RIGHT, STICK, STICK_PAD_MAX
-from scc.constants import CPAD
-from scc.constants import SCButtons, ControllerFlags
-from scc.tools import circle_to_square, clamp
-from scc.tools import find_profile, find_button_image
-from scc.paths import get_share_path, get_config_path
-from scc.parser import TalkingActionParser
-from scc.modifiers import ModeModifier
-from scc.actions import Action
-from scc.profile import Profile
-from scc.config import Config
-from scc.uinput import Keys
-from scc.lib import xwrappers as X
-from scc.gui.svg_widget import SVGWidget, SVGEditor
-from scc.gui.keycode_to_key import KEY_TO_KEYCODE
-from scc.gui.daemon_manager import DaemonManager
-from scc.osd.timermanager import TimerManager
-from scc.osd.slave_mapper import SlaveMapper
-from scc.osd import OSDWindow
-import scc.osd.osk_actions
-
+import logging
 import os
 import sys
-import logging
+from xml.etree import ElementTree as ET
+
+from gi.repository import Gdk, GdkPixbuf, GdkX11, Gtk
+
+import scc.osd.osk_actions
+from scc.actions import Action
+from scc.config import Config
+from scc.constants import (CPAD, LEFT, RIGHT, STICK, STICK_PAD_MAX,
+                           ControllerFlags, SCButtons)
+from scc.gui.daemon_manager import DaemonManager
+from scc.gui.keycode_to_key import KEY_TO_KEYCODE
+from scc.gui.svg_widget import SVGEditor, SVGWidget
+from scc.lib import xwrappers as X
+from scc.modifiers import ModeModifier
+from scc.osd import OSDWindow
+from scc.osd.slave_mapper import SlaveMapper
+from scc.osd.timermanager import TimerManager
+from scc.parser import TalkingActionParser
+from scc.paths import get_config_path, get_share_path
+from scc.profile import Profile
+from scc.tools import circle_to_square, clamp, find_button_image, find_profile
+from scc.uinput import Keys
 
 log = logging.getLogger("osd.keyboard")
 

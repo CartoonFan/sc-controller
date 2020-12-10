@@ -6,10 +6,10 @@ Allows to edit button or trigger action.
 """
 
 
-from gi.repository import Gtk, Gdk
-
-import os
 import logging
+import os
+
+from gi.repository import Gdk, Gtk
 
 log = logging.getLogger("Editor")
 

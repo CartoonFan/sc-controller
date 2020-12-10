@@ -3,24 +3,24 @@ SC Controller - Universal HID driver. For all three universal HID devices.
 
 Borrows bit of code and configuration from evdevdrv.
 """
-from scc.lib.hidparse import GlobalItem, LocalItem, MainItem, ItemType
-from scc.lib.hidparse import UsagePage, parse_report_descriptor
-from scc.lib.hidparse import GenericDesktopPage, AXES
-from scc.drivers.usb import register_hotplug_device, unregister_hotplug_device
-from scc.drivers.usb import USBDevice
-from scc.constants import STICK_PAD_MIN, STICK_PAD_MAX
-from scc.constants import SCButtons, ControllerFlags
-from scc.drivers.evdevdrv import FIRST_BUTTON, TRIGGERS, parse_axis
+import ctypes
+import json
+import logging
+import os
+import sys
+
+from scc.constants import (STICK_PAD_MAX, STICK_PAD_MIN, ControllerFlags,
+                           SCButtons)
 from scc.controller import Controller
+from scc.drivers.evdevdrv import FIRST_BUTTON, TRIGGERS, parse_axis
+from scc.drivers.usb import (USBDevice, register_hotplug_device,
+                             unregister_hotplug_device)
+from scc.lib import IntEnum
+from scc.lib.hidparse import (AXES, GenericDesktopPage, GlobalItem, ItemType,
+                              LocalItem, MainItem, UsagePage,
+                              parse_report_descriptor)
 from scc.paths import get_config_path
 from scc.tools import find_library
-from scc.lib import IntEnum
-
-import os
-import json
-import ctypes
-import sys
-import logging
 
 log = logging.getLogger("HID")
 
@@ -667,9 +667,9 @@ def hiddrv_test(cls, args):
     Small input test used by GUI while setting up the device.
     Basically, if HID device works with this, it will work with daemon as well.
     """
-    from scc.poller import Poller
-    from scc.drivers.usb import _usb
     from scc.device_monitor import create_device_monitor
+    from scc.drivers.usb import _usb
+    from scc.poller import Poller
     from scc.scripts import InvalidArguments
 
     try:

@@ -1,17 +1,16 @@
-from scc.lib import xwrappers as X
-from scc.uinput import UInput, Keyboard, Mouse, Dummy
-from scc.constants import SCButtons, LEFT, RIGHT, CPAD, HapticPos
-from scc.constants import FE_STICK, FE_TRIGGER, FE_PAD
-from scc.constants import STICK, STICKTILT, ControllerFlags
-from scc.aliases import ALL_AXES, ALL_BUTTONS
-from scc.actions import ButtonAction, GyroAbsAction
-from scc.controller import HapticData
-from scc.config import Config
-
-
-import traceback
 import logging
 import os
+import traceback
+
+from scc.actions import ButtonAction, GyroAbsAction
+from scc.aliases import ALL_AXES, ALL_BUTTONS
+from scc.config import Config
+from scc.constants import (CPAD, FE_PAD, FE_STICK, FE_TRIGGER, LEFT, RIGHT,
+                           STICK, STICKTILT, ControllerFlags, HapticPos,
+                           SCButtons)
+from scc.controller import HapticData
+from scc.lib import xwrappers as X
+from scc.uinput import Dummy, Keyboard, Mouse, UInput
 
 log = logging.getLogger("Mapper")
 

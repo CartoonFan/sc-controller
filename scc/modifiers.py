@@ -7,23 +7,24 @@ For example, click() modifier executes action only if pad is pressed.
 """
 
 
-from scc.actions import Action, MouseAction, XYAction, AxisAction, RangeOP
-from scc.actions import NoAction, WholeHapticAction, HapticEnabledAction
-from scc.actions import GyroAbsAction
-from scc.constants import STICK_PAD_MIN, STICK_PAD_MAX, STICK_PAD_MAX_HALF
-from scc.constants import CUT, MINIMUM, FE_STICK
-from scc.constants import TRIGGER_MAX, LEFT, CPAD, RIGHT, STICK
-from scc.constants import FE_PAD, SCButtons, STICKTILT
-from scc.constants import HapticPos, ControllerFlags
-from scc.tools import nameof, clamp
-from scc.controller import HapticData
-from scc.uinput import Axes, Rels
-from math import pi as PI, sqrt, copysign, atan2, sin, cos
-from collections import OrderedDict, deque
-
-import time
-import logging
 import inspect
+import logging
+import time
+from collections import OrderedDict, deque
+from math import atan2, copysign, cos
+from math import pi as PI
+from math import sin, sqrt
+
+from scc.actions import (Action, AxisAction, GyroAbsAction,
+                         HapticEnabledAction, MouseAction, NoAction, RangeOP,
+                         WholeHapticAction, XYAction)
+from scc.constants import (CPAD, CUT, FE_PAD, FE_STICK, LEFT, MINIMUM, RIGHT,
+                           STICK, STICK_PAD_MAX, STICK_PAD_MAX_HALF,
+                           STICK_PAD_MIN, STICKTILT, TRIGGER_MAX,
+                           ControllerFlags, HapticPos, SCButtons)
+from scc.controller import HapticData
+from scc.tools import clamp, nameof
+from scc.uinput import Axes, Rels
 
 log = logging.getLogger("Modifiers")
 

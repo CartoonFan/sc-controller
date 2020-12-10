@@ -7,28 +7,27 @@ Most "interesting" thing here may be that this works 100% independently from
 daemon.
 """
 
-from scc.tools import _
-
-from gi.repository import Gtk, GLib, GdkPixbuf
-from scc.gui.creg.constants import SDL_TO_SCC_NAMES, STICK_PAD_AREAS
-from scc.gui.creg.constants import AXIS_ORDER, SDL_AXES, SDL_DPAD
-from scc.gui.creg.constants import BUTTON_ORDER, TRIGGER_AREAS
-from scc.gui.creg.grabs import InputGrabber, TriggerGrabber, StickGrabber
-from scc.gui.creg.data import AxisData, DPadEmuData
-from scc.gui.creg.tester import Tester
-from scc.gui.controller_image import ControllerImage
-from scc.gui.editor import Editor
-from scc.gui.app import App
-from scc.constants import SCButtons, STICK_PAD_MAX, STICK_PAD_MIN
-from scc.paths import get_config_path, get_share_path
-from scc.tools import nameof, clamp
-from scc.config import Config
+import json
+import logging
+import os
+import re
 
 import evdev
-import os
-import logging
-import json
-import re
+from gi.repository import GdkPixbuf, GLib, Gtk
+
+from scc.config import Config
+from scc.constants import STICK_PAD_MAX, STICK_PAD_MIN, SCButtons
+from scc.gui.app import App
+from scc.gui.controller_image import ControllerImage
+from scc.gui.creg.constants import (AXIS_ORDER, BUTTON_ORDER, SDL_AXES,
+                                    SDL_DPAD, SDL_TO_SCC_NAMES,
+                                    STICK_PAD_AREAS, TRIGGER_AREAS)
+from scc.gui.creg.data import AxisData, DPadEmuData
+from scc.gui.creg.grabs import InputGrabber, StickGrabber, TriggerGrabber
+from scc.gui.creg.tester import Tester
+from scc.gui.editor import Editor
+from scc.paths import get_config_path, get_share_path
+from scc.tools import _, clamp, nameof
 
 log = logging.getLogger("CRegistration")
 

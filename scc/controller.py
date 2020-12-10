@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
-from scc.constants import HapticPos
 import logging
+
+from scc.constants import HapticPos
 
 log = logging.getLogger("SCController")
 

@@ -1,15 +1,14 @@
 #!/usr/bin/env python2
 """ ae - Action Editor components """
 
-from scc.tools import _
+import logging
+import os
 
-from gi.repository import Gtk, Gdk, GLib
+from gi.repository import Gdk, GLib, Gtk
+
 from scc.actions import Action, NoAction, XYAction
 from scc.gui.editor import ComboSetter
-from scc.tools import ensure_size
-
-import os
-import logging
+from scc.tools import _, ensure_size
 
 log = logging.getLogger("AE")
 

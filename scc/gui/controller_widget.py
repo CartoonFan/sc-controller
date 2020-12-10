@@ -8,17 +8,17 @@ or pad.
 Wraps around actual button defined in glade file.
 """
 
-from scc.tools import _
+import logging
+import os
 
-from gi.repository import Gtk, Gdk, Pango
-from scc.constants import SCButtons, STICK, GYRO, LEFT, RIGHT
+from gi.repository import Gdk, Gtk, Pango
+
 from scc.actions import Action, MultiAction
+from scc.constants import GYRO, LEFT, RIGHT, STICK, SCButtons
 from scc.gui.ae.gyro_action import is_gyro_enable
 from scc.modifiers import DoubleclickModifier
 from scc.profile import Profile
-from scc.tools import nameof
-import os
-import logging
+from scc.tools import _, nameof
 
 log = logging.getLogger("ControllerWidget")
 

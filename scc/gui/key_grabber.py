@@ -5,12 +5,13 @@ SC-Controller - Action Editor
 Allows to edit button or trigger action.
 """
 
-from scc.gui.gdk_to_key import keyevent_to_key
-from scc.uinput import Keys
+import logging
+import os
 
 from gi.repository import Gtk
-import os
-import logging
+
+from scc.gui.gdk_to_key import keyevent_to_key
+from scc.uinput import Keys
 
 log = logging.getLogger("KeyGrabber")
 

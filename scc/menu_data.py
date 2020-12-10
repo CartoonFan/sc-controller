@@ -4,11 +4,11 @@ SC-Controller - Menu Data
 Container for list of menu items + required parsers
 """
 
-from scc.tools import _
-from scc.actions import Action
-
 import json
 import os
+
+from scc.actions import Action
+from scc.tools import _
 
 
 class MenuData(object):

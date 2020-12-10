@@ -6,11 +6,12 @@ Display message that just sits there
 """
 
 
-from gi.repository import Gtk, GLib
-from scc.special_actions import OSDAction
-from scc.osd import OSDWindow
-
 import logging
+
+from gi.repository import GLib, Gtk
+
+from scc.osd import OSDWindow
+from scc.special_actions import OSDAction
 
 log = logging.getLogger("osd.message")
 

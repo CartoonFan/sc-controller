@@ -8,8 +8,8 @@ register callbacks to be called when data is available in them.
 
 Callback is called as callback(fd, event) where event is one of select.POLL*
 """
-import select
 import logging
+import select
 
 log = logging.getLogger("Poller")
 

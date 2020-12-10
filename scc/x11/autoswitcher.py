@@ -4,26 +4,24 @@ SC-Controller - Autoswitch Daemon
 Observes active window and commands scc-daemon to change profiles as needed.
 """
 
-from scc.tools import _
+import logging
+import os
+import re
+import socket
+import sys
+import threading
+import time
+import traceback
 
-from scc.menu_data import MenuGenerator, MenuItem, Separator, MENU_GENERATORS
-from scc.special_actions import ChangeProfileAction
+from scc.actions import Action
+from scc.config import Config
+from scc.lib import xwrappers as X
+from scc.mapper import Mapper
+from scc.menu_data import MENU_GENERATORS, MenuGenerator, MenuItem, Separator
 from scc.parser import TalkingActionParser
 from scc.paths import get_daemon_socket
-from scc.lib import xwrappers as X
-from scc.tools import find_profile
-from scc.actions import Action
-from scc.mapper import Mapper
-from scc.config import Config
-
-import os
-import sys
-import re
-import time
-import socket
-import traceback
-import threading
-import logging
+from scc.special_actions import ChangeProfileAction
+from scc.tools import _, find_profile
 
 log = logging.getLogger("AutoSwitcher")
 

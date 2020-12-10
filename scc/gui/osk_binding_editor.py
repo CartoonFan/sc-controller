@@ -5,20 +5,19 @@ SC-Controller - On Screen Keyboard Binding Editor
 Edits '.scc-osd.keyboard.sccprofile', profile used by on screen keyboard
 """
 
-from scc.tools import _
-from scc.constants import SCButtons, STICK
-from scc.paths import get_profiles_path
-from scc.tools import find_profile
-from scc.profile import Profile
-from scc.actions import Action
-from scc.gui.binding_editor import BindingEditor
-from scc.gui.controller_widget import TRIGGERS, STICKS
-from scc.gui.parser import GuiActionParser
-from scc.gui.editor import Editor
-from scc.osd.keyboard import Keyboard as OSDKeyboard
-
-import os
 import logging
+import os
+
+from scc.actions import Action
+from scc.constants import STICK, SCButtons
+from scc.gui.binding_editor import BindingEditor
+from scc.gui.controller_widget import STICKS, TRIGGERS
+from scc.gui.editor import Editor
+from scc.gui.parser import GuiActionParser
+from scc.osd.keyboard import Keyboard as OSDKeyboard
+from scc.paths import get_profiles_path
+from scc.profile import Profile
+from scc.tools import _, find_profile
 
 log = logging.getLogger("OSKEdit")
 

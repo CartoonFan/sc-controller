@@ -24,10 +24,10 @@
 
 
 import ast
+import operator as op
 import os
 import shlex
 from collections import OrderedDict
-import operator as op
 
 OPERATORS = {
     ast.Add: op.add,

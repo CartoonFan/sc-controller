@@ -6,18 +6,18 @@ is a gamepad and which user actually wants to be handled by SCC, list of enabled
 devices is read from config file.
 """
 
-import logging
-import json
 import binascii
-import sys
+import json
+import logging
 import os
+import sys
 from collections import namedtuple
-from scc.constants import STICK_PAD_MIN, STICK_PAD_MAX, TRIGGER_MIN, TRIGGER_MAX
-from scc.constants import SCButtons, ControllerFlags
+
+from scc.constants import (STICK_PAD_MAX, STICK_PAD_MIN, TRIGGER_MAX,
+                           TRIGGER_MIN, ControllerFlags, SCButtons)
 from scc.controller import Controller
 from scc.paths import get_config_path
 from scc.tools import clamp
-
 
 HAVE_EVDEV = False
 try:

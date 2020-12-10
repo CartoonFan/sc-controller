@@ -20,14 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import os
 import ctypes
-from ctypes import POINTER, c_bool, c_int16, c_uint16, c_int32, byref
+import os
+from ctypes import POINTER, byref, c_bool, c_int16, c_int32, c_uint16
 from math import copysign
-from scc.lib.libusb1 import timeval
-from scc.tools import find_library
+
 from scc.cheader import defines
 from scc.lib import IntEnum
+from scc.lib.libusb1 import timeval
+from scc.tools import find_library
 
 UNPUT_MODULE_VERSION = 9
 

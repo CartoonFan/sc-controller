@@ -5,14 +5,15 @@ SC-Controller - Device Monitor
 Extends eudevmonitor with options to register callbacks and
 manage plugging/releasing devices.
 """
-from scc.lib.eudevmonitor import Eudev, Monitor
-from scc.lib.ioctl_opt import IOR
-from ctypes.util import find_library
-import os
 import ctypes
 import fcntl
-import re
 import logging
+import os
+import re
+from ctypes.util import find_library
+
+from scc.lib.eudevmonitor import Eudev, Monitor
+from scc.lib.ioctl_opt import IOR
 
 log = logging.getLogger("DevMon")
 

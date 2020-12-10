@@ -5,20 +5,20 @@ SC-Controller - Action Editor - Button Component
 Assigns emulated button to physical button
 """
 
-from scc.tools import _
+import logging
 
 from gi.repository import Gtk
-from scc.actions import Action, ButtonAction, MouseAction
-from scc.actions import AxisAction, MultiAction, NoAction
-from scc.macros import Macro, Cycle, PressAction, ReleaseAction
-from scc.uinput import Rels, Keys
+
+from scc.actions import (Action, AxisAction, ButtonAction, MouseAction,
+                         MultiAction, NoAction)
+from scc.gui.ae import AEComponent
 from scc.gui.area_to_action import action_to_area
+from scc.gui.chooser import Chooser
 from scc.gui.key_grabber import KeyGrabber
 from scc.gui.parser import InvalidAction
-from scc.gui.chooser import Chooser
-from scc.gui.ae import AEComponent
-
-import logging
+from scc.macros import Cycle, Macro, PressAction, ReleaseAction
+from scc.tools import _
+from scc.uinput import Keys, Rels
 
 log = logging.getLogger("AE.Buttons")
 

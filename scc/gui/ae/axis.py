@@ -5,14 +5,14 @@ SC-Controller - Action Editor - Axis Component
 Handles specific XYActions
 """
 
-from scc.tools import _
-from scc.actions import ButtonAction, MultiAction
-from scc.actions import Action, AxisAction, MouseAction
+import logging
+
+from scc.actions import (Action, AxisAction, ButtonAction, MouseAction,
+                         MultiAction)
 from scc.gui.ae import AEComponent, describe_action
 from scc.gui.area_to_action import action_to_area
 from scc.gui.chooser import Chooser
-
-import logging
+from scc.tools import _
 
 log = logging.getLogger("AE.Axis")
 

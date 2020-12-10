@@ -4,37 +4,36 @@ SC-Controller - Global Settings
 Currently setups only one thing...
 """
 
-from scc.tools import _
-
-from gi.repository import Gtk, Gdk, GObject, GLib, GdkPixbuf
-from scc.menu_data import MenuData, MenuItem, Submenu, Separator, MenuGenerator
-from scc.paths import get_profiles_path, get_menus_path, get_config_path
-from scc.special_actions import TurnOffAction, RestartDaemonAction
-from scc.special_actions import ChangeProfileAction
-from scc.tools import find_profile, find_menu, find_binary
-from scc.modifiers import SensitivityModifier
-from scc.profile import Profile, Encoder
-from scc.actions import Action, NoAction
-from scc.constants import LEFT, RIGHT
-from scc.paths import get_share_path
-from scc.gui.osk_binding_editor import OSKBindingEditor
-from scc.gui.userdata_manager import UserDataManager
-from scc.gui.editor import Editor, ComboSetter
-from scc.gui.parser import GuiActionParser
-from scc.gui.dwsnc import IS_UNITY
-from scc.x11.autoswitcher import AutoSwitcher, Condition
-from scc.osd.menu_generators import RecentListMenuGenerator
-from scc.osd.menu_generators import WindowListMenuGenerator
-from scc.osd.keyboard import Keyboard as OSDKeyboard
-from scc.osd.osk_actions import OSKCursorAction
-import scc.osd.osk_actions
-
-import re
-import sys
-import os
 import json
 import logging
+import os
+import re
+import sys
 import traceback
+
+from gi.repository import Gdk, GdkPixbuf, GLib, GObject, Gtk
+
+import scc.osd.osk_actions
+from scc.actions import Action, NoAction
+from scc.constants import LEFT, RIGHT
+from scc.gui.dwsnc import IS_UNITY
+from scc.gui.editor import ComboSetter, Editor
+from scc.gui.osk_binding_editor import OSKBindingEditor
+from scc.gui.parser import GuiActionParser
+from scc.gui.userdata_manager import UserDataManager
+from scc.menu_data import MenuData, MenuGenerator, MenuItem, Separator, Submenu
+from scc.modifiers import SensitivityModifier
+from scc.osd.keyboard import Keyboard as OSDKeyboard
+from scc.osd.menu_generators import (RecentListMenuGenerator,
+                                     WindowListMenuGenerator)
+from scc.osd.osk_actions import OSKCursorAction
+from scc.paths import (get_config_path, get_menus_path, get_profiles_path,
+                       get_share_path)
+from scc.profile import Encoder, Profile
+from scc.special_actions import (ChangeProfileAction, RestartDaemonAction,
+                                 TurnOffAction)
+from scc.tools import _, find_binary, find_menu, find_profile
+from scc.x11.autoswitcher import AutoSwitcher, Condition
 
 log = logging.getLogger("GS")
 

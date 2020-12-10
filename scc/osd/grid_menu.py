@@ -7,13 +7,14 @@ that's usually not very much) grid.
 """
 
 
+import logging
+import math
+
 from gi.repository import Gtk
+
 from scc.menu_data import Separator, Submenu
 from scc.osd.menu import Menu, MenuIcon
 from scc.tools import find_icon
-
-import math
-import logging
 
 log = logging.getLogger("osd.gridmenu")
 

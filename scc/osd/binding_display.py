@@ -8,28 +8,28 @@ application (list is generated using xdg) and start it.
 Reuses styles from OSD Menu and OSD Dialog
 """
 
-from scc.tools import _
-
-from gi.repository import Gtk
-from scc.actions import DPadAction, AxisAction, MouseAction
-from scc.actions import Action, MultiAction, XYAction
-from scc.modifiers import ModeModifier, DoubleclickModifier
-from scc.paths import get_share_path, get_config_path
-from scc.lib import IntEnum
-from scc.special_actions import MenuAction
-from scc.parser import TalkingActionParser
-from scc.constants import SCButtons
-from scc.profile import Profile
-from scc.config import Config
-from scc.tools import nameof
-from scc.uinput import Rels
-from scc.gui.svg_widget import SVGWidget, SVGEditor
-from scc.gui.daemon_manager import DaemonManager
-from scc.osd import OSDWindow
-import os
-import sys
 import base64
 import logging
+import os
+import sys
+
+from gi.repository import Gtk
+
+from scc.actions import (Action, AxisAction, DPadAction, MouseAction,
+                         MultiAction, XYAction)
+from scc.config import Config
+from scc.constants import SCButtons
+from scc.gui.daemon_manager import DaemonManager
+from scc.gui.svg_widget import SVGEditor, SVGWidget
+from scc.lib import IntEnum
+from scc.modifiers import DoubleclickModifier, ModeModifier
+from scc.osd import OSDWindow
+from scc.parser import TalkingActionParser
+from scc.paths import get_config_path, get_share_path
+from scc.profile import Profile
+from scc.special_actions import MenuAction
+from scc.tools import _, nameof
+from scc.uinput import Rels
 
 log = logging.getLogger("osd.binds")
 

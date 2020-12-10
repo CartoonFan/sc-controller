@@ -5,7 +5,7 @@ SC-Controller - RIBar
 Infobar wrapped in Revealer, looks better than sounds.
 """
 
-from gi.repository import Gtk, GLib, GObject
+from gi.repository import GLib, GObject, Gtk
 
 
 class RIBar(Gtk.Revealer):

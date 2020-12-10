@@ -5,20 +5,21 @@ SC Controller - Dualshock 4 Driver
 Extends HID driver with DS4-specific options.
 """
 
-from scc.drivers.hiddrv import BUTTON_COUNT, ButtonData, AxisType, AxisData
-from scc.drivers.hiddrv import HIDController, HIDDecoder, hiddrv_test
-from scc.drivers.hiddrv import AxisMode, AxisDataUnion, AxisModeData
-from scc.drivers.hiddrv import HatswitchModeData, _lib
-from scc.drivers.evdevdrv import HAVE_EVDEV, EvdevController, get_axes
-from scc.drivers.evdevdrv import get_evdev_devices_from_syspath
-from scc.drivers.evdevdrv import make_new_device
-from scc.drivers.usb import register_hotplug_device
-from scc.constants import SCButtons, ControllerFlags
-from scc.constants import STICK_PAD_MIN, STICK_PAD_MAX
-from scc.tools import init_logging, set_logging_level
-import sys
-import logging
 import ctypes
+import logging
+import sys
+
+from scc.constants import (STICK_PAD_MAX, STICK_PAD_MIN, ControllerFlags,
+                           SCButtons)
+from scc.drivers.evdevdrv import (HAVE_EVDEV, EvdevController, get_axes,
+                                  get_evdev_devices_from_syspath,
+                                  make_new_device)
+from scc.drivers.hiddrv import (BUTTON_COUNT, AxisData, AxisDataUnion,
+                                AxisMode, AxisModeData, AxisType, ButtonData,
+                                HatswitchModeData, HIDController, HIDDecoder,
+                                _lib, hiddrv_test)
+from scc.drivers.usb import register_hotplug_device
+from scc.tools import init_logging, set_logging_level
 
 log = logging.getLogger("DS4")
 

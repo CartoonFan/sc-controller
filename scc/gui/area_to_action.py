@@ -6,10 +6,10 @@ Maps areas on SVG images into actions.
 Used by ActionEditor.
 """
 
-from scc.actions import AxisAction, RAxisAction, MouseAction, ButtonAction
-from scc.actions import HatLeftAction, HatRightAction
-from scc.actions import HatUpAction, HatDownAction
-from scc.uinput import Keys, Axes, Rels
+from scc.actions import (AxisAction, ButtonAction, HatDownAction,
+                         HatLeftAction, HatRightAction, HatUpAction,
+                         MouseAction, RAxisAction)
+from scc.uinput import Axes, Keys, Rels
 
 AREA_TO_ACTION = {
     # Values in tuples: ActionClass, param1, param2...

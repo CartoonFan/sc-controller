@@ -22,6 +22,7 @@ class AboutDialog(Editor):
         app_ver = "(unknown version)"
         try:
             import pkg_resources
+
             import scc
 
             if scc.__file__.startswith(

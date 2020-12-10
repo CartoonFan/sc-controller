@@ -4,40 +4,40 @@ SC-Controller - App
 Main application window
 """
 
-from scc.tools import _, set_logging_level
-
-from gi.repository import Gtk, Gdk, Gio, GLib
-from scc.gui.controller_widget import TRIGGERS, PADS, STICKS, BUTTONS, GYROS
-from scc.gui.daemon_manager import DaemonManager, ControllerManager
-from scc.gui.parser import GuiActionParser, InvalidAction
-from scc.gui.controller_image import ControllerImage
-from scc.gui.profile_switcher import ProfileSwitcher
-from scc.gui.userdata_manager import UserDataManager
-from scc.gui.binding_editor import BindingEditor
-from scc.gui.statusicon import get_status_icon
-from scc.gui.dwsnc import headerbar, IS_UNITY
-from scc.gui.ribar import RIBar
-from scc.tools import check_access, find_gksudo, profile_is_override, nameof
-from scc.tools import get_profile_name, profile_is_default, find_profile
-from scc.constants import SCButtons, STICK, STICK_PAD_MAX
-from scc.constants import DAEMON_VERSION, LEFT, RIGHT
-from scc.paths import get_config_path, get_profiles_path
-from scc.custom import load_custom_module
-from scc.modifiers import NameModifier
-from scc.actions import NoAction
-from scc.profile import Profile
-from scc.config import Config
-
-import scc.osd.menu_generators
+import json
+import logging
 import os
-import sys
 import platform
 import re
-import json
-import urllib.request
-import urllib.parse
+import sys
 import urllib.error
-import logging
+import urllib.parse
+import urllib.request
+
+from gi.repository import Gdk, Gio, GLib, Gtk
+
+import scc.osd.menu_generators
+from scc.actions import NoAction
+from scc.config import Config
+from scc.constants import (DAEMON_VERSION, LEFT, RIGHT, STICK, STICK_PAD_MAX,
+                           SCButtons)
+from scc.custom import load_custom_module
+from scc.gui.binding_editor import BindingEditor
+from scc.gui.controller_image import ControllerImage
+from scc.gui.controller_widget import BUTTONS, GYROS, PADS, STICKS, TRIGGERS
+from scc.gui.daemon_manager import ControllerManager, DaemonManager
+from scc.gui.dwsnc import IS_UNITY, headerbar
+from scc.gui.parser import GuiActionParser, InvalidAction
+from scc.gui.profile_switcher import ProfileSwitcher
+from scc.gui.ribar import RIBar
+from scc.gui.statusicon import get_status_icon
+from scc.gui.userdata_manager import UserDataManager
+from scc.modifiers import NameModifier
+from scc.paths import get_config_path, get_profiles_path
+from scc.profile import Profile
+from scc.tools import (_, check_access, find_gksudo, find_profile,
+                       get_profile_name, nameof, profile_is_default,
+                       profile_is_override, set_logging_level)
 
 log = logging.getLogger("App")
 

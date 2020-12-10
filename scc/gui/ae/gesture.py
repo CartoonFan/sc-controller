@@ -6,22 +6,21 @@ SC-Controller - Action Editor - Gesture Component
 Handles gesture recognition settings.
 """
 
-from scc.tools import _
+import logging
+import os
 
-from gi.repository import Gtk, Gdk, GLib, GdkX11, GObject
+from gi.repository import Gdk, GdkX11, GLib, GObject, Gtk
+
+from scc.actions import Action, NoAction, XYAction
+from scc.gui.action_editor import ActionEditor
 from scc.gui.ae import AEComponent, describe_action
 from scc.gui.area_to_action import action_to_area
-from scc.gui.simple_chooser import SimpleChooser
-from scc.gui.action_editor import ActionEditor
 from scc.gui.parser import GuiActionParser
-from scc.special_actions import GesturesAction, OSDAction
-from scc.osd.gesture_display import GestureDisplay
-from scc.actions import Action, NoAction, XYAction
+from scc.gui.simple_chooser import SimpleChooser
 from scc.modifiers import NameModifier
-from scc.tools import strip_gesture
-
-import os
-import logging
+from scc.osd.gesture_display import GestureDisplay
+from scc.special_actions import GesturesAction, OSDAction
+from scc.tools import _, strip_gesture
 
 log = logging.getLogger("AE.PerAxis")
 

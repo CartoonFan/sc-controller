@@ -9,9 +9,10 @@ SCC_FAKES says.
 Created controllers are completely useless. For debuging purposes only.
 """
 
-from scc.controller import Controller
-import os
 import logging
+import os
+
+from scc.controller import Controller
 
 ENV_VAR = "SCC_FAKES"
 

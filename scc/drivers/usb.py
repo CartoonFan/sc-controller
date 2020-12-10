@@ -9,11 +9,11 @@ Callback will be called with following arguments:
 	callback(device, handle)
 Callback has to return created USBDevice instance or None.
 """
-from scc.lib import usb1
-
+import logging
 import time
 import traceback
-import logging
+
+from scc.lib import usb1
 
 log = logging.getLogger("USB")
 

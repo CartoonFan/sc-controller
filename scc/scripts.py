@@ -4,10 +4,11 @@ SC-Controller - Scripts
 Contains code for most of what can be done using 'scc' script.
 Created so scc-* stuff doesn't polute /usr/bin.
 """
-from scc.tools import init_logging, set_logging_level, find_binary
 import os
-import sys
 import subprocess
+import sys
+
+from scc.tools import find_binary, init_logging, set_logging_level
 
 
 class InvalidArguments(Exception):
@@ -65,7 +66,7 @@ def cmd_test_hid(argv0, argv):
       3 - device is not HID-compatibile
       4 - failed to parse HID descriptor
     """
-    from scc.drivers.hiddrv import hiddrv_test, HIDController
+    from scc.drivers.hiddrv import HIDController, hiddrv_test
 
     return hiddrv_test(HIDController, argv)
 
@@ -94,7 +95,7 @@ def cmd_list_profiles(argv0, argv):
     Arguments:
       -a   Include names begining with dot
     """
-    from scc.paths import get_profiles_path, get_default_profiles_path
+    from scc.paths import get_default_profiles_path, get_profiles_path
 
     paths = [get_default_profiles_path(), get_profiles_path()]
     include_hidden = "-a" in argv
@@ -288,6 +289,7 @@ def connect_to_daemon():
     Outputs error message in later case.
     """
     import socket
+
     from scc.paths import get_daemon_socket
 
     try:
@@ -335,13 +337,13 @@ def import_osd():
 
 
 def run_osd_tool(tool, argv0, argv):
-    import signal
     import argparse
+    import signal
 
     signal.signal(signal.SIGINT, sigint)
 
-    from scc.tools import init_logging
     from scc.paths import get_share_path
+    from scc.tools import init_logging
 
     init_logging()
 

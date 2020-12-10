@@ -3,41 +3,41 @@ SC-Controller - Daemon class
 """
 
 
-from scc.lib import xwrappers as X
-from scc.lib import xinput
-from scc.lib.daemon import Daemon
-from scc.constants import SCButtons, DAEMON_VERSION, HapticPos
-from scc.constants import LEFT, RIGHT, STICK, CPAD
-from scc.tools import find_profile, find_menu, nameof, shsplit, shjoin
-from scc.uinput import CannotCreateUInputException
-from scc.tools import set_logging_level, find_binary, clamp
-from scc.device_monitor import create_device_monitor
-from scc.cemuhook_server import CemuhookServer
-from scc.custom import load_custom_module
-from scc.gestures import GestureDetector
-from scc.parser import TalkingActionParser
-from scc.controller import HapticData
-from scc.scheduler import Scheduler
-from scc.menu_data import MenuData
-from scc.profile import Profile
-from scc.actions import Action
-from scc.config import Config
-from scc.poller import Poller
-from scc.mapper import Mapper
-from scc import drivers
-
-from socketserver import UnixStreamServer, ThreadingMixIn, StreamRequestHandler
-import os
-import sys
-import pkgutil
-import signal
-import time
 import json
 import logging
-import threading
-import traceback
-import subprocess
+import os
+import pkgutil
 import shlex
+import signal
+import subprocess
+import sys
+import threading
+import time
+import traceback
+from socketserver import StreamRequestHandler, ThreadingMixIn, UnixStreamServer
+
+from scc import drivers
+from scc.actions import Action
+from scc.cemuhook_server import CemuhookServer
+from scc.config import Config
+from scc.constants import (CPAD, DAEMON_VERSION, LEFT, RIGHT, STICK, HapticPos,
+                           SCButtons)
+from scc.controller import HapticData
+from scc.custom import load_custom_module
+from scc.device_monitor import create_device_monitor
+from scc.gestures import GestureDetector
+from scc.lib import xinput
+from scc.lib import xwrappers as X
+from scc.lib.daemon import Daemon
+from scc.mapper import Mapper
+from scc.menu_data import MenuData
+from scc.parser import TalkingActionParser
+from scc.poller import Poller
+from scc.profile import Profile
+from scc.scheduler import Scheduler
+from scc.tools import (clamp, find_binary, find_menu, find_profile, nameof,
+                       set_logging_level, shjoin, shsplit)
+from scc.uinput import CannotCreateUInputException
 
 log = logging.getLogger("SCCDaemon")
 tlog = logging.getLogger("Socket Thread")

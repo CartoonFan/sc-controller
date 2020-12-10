@@ -1,8 +1,8 @@
-from scc.parser import ActionParser, ParseError
-from scc.actions import Action
-from scc.tools import _
-
 import logging
+
+from scc.actions import Action
+from scc.parser import ActionParser, ParseError
+from scc.tools import _
 
 log = logging.getLogger("gui.parse")
 

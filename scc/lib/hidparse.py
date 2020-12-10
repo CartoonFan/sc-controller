@@ -9,19 +9,18 @@ Based on
 
 Licensed under GPL 2.0
 """
-from scc.lib.hidparse_data import GlobalItem, MainItem, LocalItem, UsagePage
-from scc.lib.hidparse_data import SensorPage, SensorSelector, LightSensor
-from scc.lib.hidparse_data import GenericDesktopPage, page_to_enum
-from scc.lib.hidparse_data import MotionSensor, OrientationSensor
-from scc.lib.hidparse_data import ModifierI2a, HidSensorProperty
-from scc.lib.hidparse_data import ItemType, ItemLength, ItemBase
-from scc.lib.hidparse_data import SensorEvent, SensorDataField
-from scc.lib.hidparse_data import Collection, Unit, UnitType
-from scc.lib import ioctl_opt
-from scc.lib import IntEnum
 import ctypes
 import fcntl
 import struct
+
+from scc.lib import IntEnum, ioctl_opt
+from scc.lib.hidparse_data import (Collection, GenericDesktopPage, GlobalItem,
+                                   HidSensorProperty, ItemBase, ItemLength,
+                                   ItemType, LightSensor, LocalItem, MainItem,
+                                   ModifierI2a, MotionSensor,
+                                   OrientationSensor, SensorDataField,
+                                   SensorEvent, SensorPage, SensorSelector,
+                                   Unit, UnitType, UsagePage, page_to_enum)
 
 # hid.h
 _HID_MAX_DESCRIPTOR_SIZE = 4096

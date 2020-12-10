@@ -9,10 +9,10 @@ and its binding editor enables them to use with 'OSK.something'
 syntax.
 """
 
-from scc.constants import TRIGGER_HALF, LEFT, RIGHT
-from scc.actions import Action, SpecialAction
-
 import logging
+
+from scc.actions import Action, SpecialAction
+from scc.constants import LEFT, RIGHT, TRIGGER_HALF
 
 log = logging.getLogger("OSDKeyActs")
 

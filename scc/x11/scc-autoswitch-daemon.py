@@ -10,6 +10,7 @@ import logging
 import os
 import signal
 import sys
+
 from scc.tools import set_logging_level
 from scc.x11.autoswitcher import AutoSwitcher
 

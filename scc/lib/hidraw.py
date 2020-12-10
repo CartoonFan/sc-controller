@@ -1,6 +1,7 @@
-import ctypes
 import collections
+import ctypes
 import fcntl
+
 from . import ioctl_opt
 
 # input.h

@@ -5,8 +5,9 @@ This module, when imported, applies various fixes and monkey-patching to allow
 application to run with older versions of GLib and/or GTK.
 """
 
-from gi.repository import Gtk, GObject
 import os
+
+from gi.repository import GObject, Gtk
 
 
 def fix_label_missing_set_XYalign_methods():

@@ -5,20 +5,19 @@ SC-Controller - OSD Menu Generators
 Auto-generated menus with stuff like list of all available profiles...
 """
 
-from scc.tools import _, set_logging_level
-
-from gi.repository import Gdk, Gio, GdkX11
-from scc.menu_data import MenuGenerator, MenuItem, MENU_GENERATORS
-from scc.paths import get_profiles_path, get_default_profiles_path
-from scc.tools import find_profile
-from scc.lib import xwrappers as X
-
-from ctypes import POINTER, cast
+import json
+import logging
 import os
 import sys
-import json
 import traceback
-import logging
+from ctypes import POINTER, cast
+
+from gi.repository import Gdk, GdkX11, Gio
+
+from scc.lib import xwrappers as X
+from scc.menu_data import MENU_GENERATORS, MenuGenerator, MenuItem
+from scc.paths import get_default_profiles_path, get_profiles_path
+from scc.tools import _, find_profile, set_logging_level
 
 log = logging.getLogger("osd.menu_gen")
 

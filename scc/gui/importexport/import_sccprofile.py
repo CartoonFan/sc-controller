@@ -1,22 +1,23 @@
 #!/usr/bin/env python2
 
-from scc.tools import _
-
-from gi.repository import Gtk, Gio, GLib, GObject
-from scc.tools import get_profiles_path, get_menus_path, find_profile, find_menu
-from scc.special_actions import ChangeProfileAction, MenuAction
-from scc.special_actions import ShellCommandAction
-from scc.profile import Profile, Encoder
-from scc.menu_data import MenuData
-from scc.gui.parser import GuiActionParser
-from .export import Export
-
-import sys
-import os
 import json
+import logging
+import os
+import sys
 import tarfile
 import tempfile
-import logging
+
+from gi.repository import Gio, GLib, GObject, Gtk
+
+from scc.gui.parser import GuiActionParser
+from scc.menu_data import MenuData
+from scc.profile import Encoder, Profile
+from scc.special_actions import (ChangeProfileAction, MenuAction,
+                                 ShellCommandAction)
+from scc.tools import (_, find_menu, find_profile, get_menus_path,
+                       get_profiles_path)
+
+from .export import Export
 
 log = logging.getLogger("IE.ImportSSCC")
 

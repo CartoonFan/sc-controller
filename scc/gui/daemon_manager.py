@@ -10,14 +10,15 @@ probably too crazy even for me.
 """
 
 
-from scc.tools import find_binary, find_button_image, nameof
-from scc.paths import get_daemon_socket
-from scc.gui import BUTTON_ORDER
-from gi.repository import GObject, Gio, GLib
-
-import os
 import json
 import logging
+import os
+
+from gi.repository import Gio, GLib, GObject
+
+from scc.gui import BUTTON_ORDER
+from scc.paths import get_daemon_socket
+from scc.tools import find_binary, find_button_image, nameof
 
 log = logging.getLogger("DaemonCtrl")
 

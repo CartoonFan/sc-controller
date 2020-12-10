@@ -5,22 +5,17 @@ SC-Controller - Action Editor - Trigger-as-button Component
 Assigns one or two emulated buttons to trigger
 """
 
-from scc.tools import _
-from scc.constants import TRIGGER_MIN, TRIGGER_HALF, TRIGGER_CLICK, TRIGGER_MAX
-from scc.constants import HIPFIRE_NORMAL, HIPFIRE_SENSIBLE, HIPFIRE_EXCLUSIVE
-from scc.actions import (
-    TriggerAction,
-    ButtonAction,
-    AxisAction,
-    MouseAction,
-    HipfireAction,
-)
-from scc.actions import Action, NoAction, MultiAction
-from scc.gui.ae import AEComponent, describe_action
-from scc.gui.simple_chooser import SimpleChooser
-from scc.gui.binding_editor import BindingEditor
-
 import logging
+
+from scc.actions import (Action, AxisAction, ButtonAction, HipfireAction,
+                         MouseAction, MultiAction, NoAction, TriggerAction)
+from scc.constants import (HIPFIRE_EXCLUSIVE, HIPFIRE_NORMAL, HIPFIRE_SENSIBLE,
+                           TRIGGER_CLICK, TRIGGER_HALF, TRIGGER_MAX,
+                           TRIGGER_MIN)
+from scc.gui.ae import AEComponent, describe_action
+from scc.gui.binding_editor import BindingEditor
+from scc.gui.simple_chooser import SimpleChooser
+from scc.tools import _
 
 log = logging.getLogger("AE.TriggerAB")
 

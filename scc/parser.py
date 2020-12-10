@@ -5,19 +5,18 @@ Parses action(s) expressed as string or in dict loaded from json file into
 one or more Action instances.
 """
 
-from tokenize import generate_tokens, TokenError
-from collections import namedtuple
-
-from scc.constants import SCButtons, HapticPos, PARSER_CONSTANTS, STICK
-from scc.actions import Action, RangeOP, NoAction, MultiAction
-from scc.special_actions import OSDAction
-from scc.uinput import Keys, Axes, Rels
-from scc.macros import Macro
-from scc.tools import nameof
-import scc.aliases
-
-import token as TokenType
 import sys
+import token as TokenType
+from collections import namedtuple
+from tokenize import TokenError, generate_tokens
+
+import scc.aliases
+from scc.actions import Action, MultiAction, NoAction, RangeOP
+from scc.constants import PARSER_CONSTANTS, STICK, HapticPos, SCButtons
+from scc.macros import Macro
+from scc.special_actions import OSDAction
+from scc.tools import nameof
+from scc.uinput import Axes, Keys, Rels
 
 
 class ParseError(Exception):

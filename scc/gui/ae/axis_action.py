@@ -4,27 +4,27 @@ SC-Controller - Action Editor - Axis Component
 Assigns emulated axis to trigger
 """
 
-from scc.tools import _
+import logging
+import os
+from ctypes import POINTER, cast
 
 from gi.repository import Gdk, GdkX11, GLib
-from ctypes import cast, POINTER
-from scc.actions import Action, NoAction, AxisAction, MouseAction
-from scc.actions import XYAction, RelXYAction
-from scc.actions import MultiAction, RelWinAreaAction, ButtonAction
-from scc.actions import AreaAction, WinAreaAction, RelAreaAction
-from scc.modifiers import BallModifier, CircularModifier
-from scc.uinput import Keys, Axes, Rels
+
+from scc.actions import (Action, AreaAction, AxisAction, ButtonAction,
+                         MouseAction, MultiAction, NoAction, RelAreaAction,
+                         RelWinAreaAction, RelXYAction, WinAreaAction,
+                         XYAction)
 from scc.constants import SCButtons
-from scc.lib import xwrappers as X
-from scc.osd.timermanager import TimerManager
-from scc.osd.area import Area
+from scc.gui.ae import AEComponent
+from scc.gui.controller_widget import STICKS
 from scc.gui.parser import GuiActionParser, InvalidAction
 from scc.gui.simple_chooser import SimpleChooser
-from scc.gui.controller_widget import STICKS
-from scc.gui.ae import AEComponent
-
-import os
-import logging
+from scc.lib import xwrappers as X
+from scc.modifiers import BallModifier, CircularModifier
+from scc.osd.area import Area
+from scc.osd.timermanager import TimerManager
+from scc.tools import _
+from scc.uinput import Axes, Keys, Rels
 
 log = logging.getLogger("AE.AxisAction")
 

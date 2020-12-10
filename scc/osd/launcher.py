@@ -7,19 +7,18 @@ application (list is generated using xdg) and start it.
 Reuses styles from OSD Menu and OSD Dialog
 """
 
-from scc.tools import _
+import logging
+import os
 
-from gi.repository import Gtk, Gio, GdkX11, Pango
-from scc.constants import STICK_PAD_MAX, DEFAULT, LEFT, RIGHT, STICK
-from scc.tools import point_in_gtkrect, circle_to_square, clamp
+from gi.repository import GdkX11, Gio, Gtk, Pango
+
+from scc.config import Config
+from scc.constants import DEFAULT, LEFT, RIGHT, STICK, STICK_PAD_MAX
 from scc.gui.daemon_manager import DaemonManager
+from scc.lib import xwrappers as X
 from scc.osd import OSDWindow, StickController
 from scc.paths import get_share_path
-from scc.lib import xwrappers as X
-from scc.config import Config
-
-import os
-import logging
+from scc.tools import _, circle_to_square, clamp, point_in_gtkrect
 
 log = logging.getLogger("osd.menu")
 

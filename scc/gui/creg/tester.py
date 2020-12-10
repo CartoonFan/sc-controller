@@ -4,10 +4,11 @@ SC-Controller - Controller Registration - Tester
 
 Class that interacts with `scc hid_test` and `scc evdev_test` commands.
 """
-from gi.repository import GObject, Gio
-from scc.tools import find_binary
-
 import logging
+
+from gi.repository import Gio, GObject
+
+from scc.tools import find_binary
 
 log = logging.getLogger("CReg.Tester")
 

@@ -6,17 +6,18 @@ Driver for Steam Controller over bluetooth (evdev)
 Shares a lot of classes with sc_dongle.py
 """
 
-from scc.lib.hidraw import HIDRaw
-from scc.constants import ControllerFlags
-from scc.tools import find_library
-from .sc_dongle import SCPacketType, SCPacketLength, SCConfigType
-from .sc_dongle import SCController
-from math import sin, cos
-import os
-import sys
-import struct
 import ctypes
 import logging
+import os
+import struct
+import sys
+from math import cos, sin
+
+from scc.constants import ControllerFlags
+from scc.lib.hidraw import HIDRaw
+from scc.tools import find_library
+
+from .sc_dongle import SCConfigType, SCController, SCPacketLength, SCPacketType
 
 VENDOR_ID = 0x28DE
 PRODUCT_ID = 0x1106

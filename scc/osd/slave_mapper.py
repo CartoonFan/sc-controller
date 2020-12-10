@@ -8,12 +8,12 @@ Used by on-screen keyboard.
 """
 
 
-from collections import deque
-from scc.constants import SCButtons, LEFT, RIGHT, CPAD, STICK, TRIGGER_MAX
-from scc.mapper import Mapper
-
 import logging
 import time
+from collections import deque
+
+from scc.constants import CPAD, LEFT, RIGHT, STICK, TRIGGER_MAX, SCButtons
+from scc.mapper import Mapper
 
 log = logging.getLogger("SlaveMapper")
 

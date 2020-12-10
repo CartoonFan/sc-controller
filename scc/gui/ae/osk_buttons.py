@@ -7,12 +7,12 @@ Retuses ButtonsComponent, but hides image, so user can't select mouse or gamepad
 button.
 """
 
-from scc.tools import _
-from scc.actions import Action
-from scc.gui.ae.buttons import ButtonsComponent
-from scc.gui.ae import AEComponent
-
 import logging
+
+from scc.actions import Action
+from scc.gui.ae import AEComponent
+from scc.gui.ae.buttons import ButtonsComponent
+from scc.tools import _
 
 log = logging.getLogger("AE.Buttons")
 
