@@ -219,10 +219,12 @@ class HIDController(USBDevice, Controller):
             for setting in inter:
                 if setting.getClass() == DEV_CLASS_HID:
                     for endpoint in setting:
-                        if endpoint.getAttributes() == TRANSFER_TYPE_INTERRUPT:
-                            if id is None or endpoint.getAddress() > id:
-                                id = endpoint.getAddress()
-                                max_size = endpoint.getMaxPacketSize()
+                        if (
+                            endpoint.getAttributes() == TRANSFER_TYPE_INTERRUPT
+                            and (id is None or endpoint.getAddress() > id)
+                        ):
+                            id = endpoint.getAddress()
+                            max_size = endpoint.getMaxPacketSize()
 
         if id is None:
             raise NotHIDDevice()
@@ -316,8 +318,10 @@ class HIDController(USBDevice, Controller):
         axis_config = config.get("axes", {}).get(str(int(axis)))
         if axis_config:
             try:
-                target = (list([x for (x, y) in HIDControllerInput._fields_
-                                ]).index(axis_config.get("axis")) - 1)
+                target = [x for (x, y) in HIDControllerInput._fields_].index(
+                    axis_config.get("axis")
+                ) - 1
+
             except Exception:
                 # Maps to unknown axis
                 return None, None
@@ -370,10 +374,10 @@ class HIDController(USBDevice, Controller):
                     log.debug("Found %s bits of nothing", count * size)
                 elif x[1] == ItemType.Data:
                     if kind in AXES:
-                        if not size in ALLOWED_SIZES:
+                        if size not in ALLOWED_SIZES:
                             raise UnparsableDescriptor(
                                 "Axis with invalid size (%s bits)" % (size, ))
-                        for i in range(count):
+                        for _ in range(count):
                             if next_axis < AXIS_COUNT:
                                 log.debug("Found axis #%s at bit %s",
                                           int(next_axis), total)
@@ -394,8 +398,8 @@ class HIDController(USBDevice, Controller):
                                         next_axis].bit_offset = total % 8
                                     self._decoder.axes[next_axis].size = size
                                 next_axis = next_axis + 1
-                                if next_axis < AXIS_COUNT:
-                                    next_axis = AxisType(next_axis)
+                            if next_axis < AXIS_COUNT:
+                                next_axis = AxisType(next_axis)
                             total += size
                     elif kind == GenericDesktopPage.Hatswitch:
                         if count * size != 4:
@@ -461,8 +465,7 @@ class HIDController(USBDevice, Controller):
         self._decoder.packet_size = total / 8
         if total % 8 > 0:
             self._decoder.packet_size += 1
-        if self._decoder.packet_size > max_size:
-            self._decoder.packet_size = max_size
+        self._decoder.packet_size = min(self._decoder.packet_size, max_size)
         log.debug("Packet size: %s", self._decoder.packet_size)
 
     @staticmethod
@@ -482,9 +485,11 @@ class HIDController(USBDevice, Controller):
         def recursive_search(pattern, path):
             for name in os.listdir(path):
                 full_path = os.path.join(path, name)
-                if name == "report_descriptor":
-                    if pattern in os.path.split(path)[-1].lower():
-                        return full_path
+                if (
+                    name == "report_descriptor"
+                    and pattern in os.path.split(path)[-1].lower()
+                ):
+                    return full_path
                 try:
                     if os.path.islink(full_path):
                         # Recursive stuff in /sys ftw...
@@ -559,7 +564,7 @@ class HIDController(USBDevice, Controller):
 
         pressed = self._decoder.state.buttons & ~self._decoder.old_state.buttons
         released = self._decoder.old_state.buttons & ~self._decoder.state.buttons
-        for j in range(0, self._decoder.buttons.button_count):
+        for j in range(self._decoder.buttons.button_count):
             mask = 1 << j
             if pressed & mask:
                 print("ButtonPress", FIRST_BUTTON + j)
@@ -569,10 +574,9 @@ class HIDController(USBDevice, Controller):
                 sys.stdout.flush()
 
     def input(self, endpoint, data):
-        if _lib.decode(ctypes.byref(self._decoder), data):
-            if self.mapper:
-                self.mapper.input(self, self._decoder.old_state,
-                                  self._decoder.state)
+        if _lib.decode(ctypes.byref(self._decoder), data) and self.mapper:
+            self.mapper.input(self, self._decoder.old_state,
+                              self._decoder.state)
 
     def apply_config(self, config):
         # TODO: This?
@@ -604,14 +608,13 @@ class HIDDrv(object):
     def hotplug_cb(self, device, handle):
         vid, pid = device.getVendorID(), device.getProductID()
         if (vid, pid) in self.configs:
-            controller = HIDController(
+            return HIDController(
                 device,
                 self.daemon,
                 handle,
                 self.config_files[vid, pid],
                 self.configs[vid, pid],
             )
-            return controller
         return None
 
     def scan_files(self):

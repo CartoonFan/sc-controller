@@ -137,14 +137,6 @@ class TestSpecialActions(object):
                     NameModifier("Option", OSDAction("display this")),
                 )):
             raise AssertionError
-        if not _parses_as_itself(
-                DialogAction(
-                    SCButtons.X,
-                    SCButtons.Y,
-                    "Some Text",
-                    NameModifier("Option", OSDAction("display this")),
-                )):
-            raise AssertionError
 
     def test_position(self):
         """

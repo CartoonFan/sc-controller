@@ -149,7 +149,7 @@ class TestInputs(object):
         # Release left pad
         mapper.input(mapper.controller, state, ZERO_STATE)
         # 'Wait' for 2s
-        for x in range(20):
+        for _ in range(20):
             mapper.input(mapper.controller, ZERO_STATE, ZERO_STATE)
         if int(mapper.mouse.scroll_x) != -24479:
             raise AssertionError
@@ -210,17 +210,17 @@ class TestInputs(object):
         mapper._tick_rate = 0.001
         mapper.input(mapper.controller, state, ZERO_STATE)
         # 'Wait' for 1s
-        for x in range(100):
+        for _ in range(100):
             mapper.input(mapper.controller, ZERO_STATE, ZERO_STATE)
         if mapper.gamepad.axes[Axes.ABS_RX] != 3510:
             raise AssertionError
         # 'Wait' for another 0.5s
-        for x in range(50):
+        for _ in range(50):
             mapper.input(mapper.controller, ZERO_STATE, ZERO_STATE)
         if mapper.gamepad.axes[Axes.ABS_RX] != 1570:
             raise AssertionError
         # 'Wait' for long time so stick recenters
-        for x in range(100):
+        for _ in range(100):
             mapper.input(mapper.controller, ZERO_STATE, ZERO_STATE)
         if mapper.gamepad.axes[Axes.ABS_RX] != 0:
             raise AssertionError

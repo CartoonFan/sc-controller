@@ -25,7 +25,7 @@ def _same_action(a1, a2):
     """
     if len(a1.parameters) != len(a2.parameters):
         raise AssertionError
-    for i in range(0, len(a1.parameters)):
+    for i in range(len(a1.parameters)):
         if isinstance(a1.parameters[i], Action):
             if not isinstance(a2.parameters[i], Action):
                 raise AssertionError("Parameter missmatch")

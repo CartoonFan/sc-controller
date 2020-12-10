@@ -66,8 +66,8 @@ class TestActions(object):
         """
         Tests if MouseAction is parsed correctly from json.
         """
-        assert parser.from_json_data({ 'action' : 'mouse()' })._mouse_axis == None
-        assert parser.from_json_data({ 'action' : 'trackpad()' })._mouse_axis == None
+        assert parser.from_json_data({ 'action' : 'mouse()' })._mouse_axis is None
+        assert parser.from_json_data({ 'action' : 'trackpad()' })._mouse_axis is None
         assert parser.from_json_data({ 'action' : 'mouse(REL_WHEEL)' })._mouse_axis == Rels.REL_WHEEL
 
 

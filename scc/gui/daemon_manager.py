@@ -147,7 +147,7 @@ class DaemonManager(GObject.GObject):
         self.connecting = False
         try:
             self.connection = sc.connect_finish(results)
-            if self.connection == None:
+            if self.connection is None:
                 raise Exception("Unknown error")
         except Exception as e:
             self._on_daemon_died()
@@ -440,8 +440,7 @@ class ControllerManager(GObject.GObject):
             if "/" not in filename:
                 filename = os.path.join(default_path, filename)
             try:
-                data = json.loads(open(filename, "r").read()) or None
-                return data
+                return json.loads(open(filename, "r").read()) or None
             except Exception as e:
                 log.exception(e)
         return None
