@@ -73,9 +73,8 @@ class ModeshiftEditor(Editor):
         Editor.setup_widgets(self)
 
         cbButtonChooser = self.builder.get_object("cbButtonChooser")
-        cbButtonChooser.set_row_separator_func(
-            lambda model, iter: model.get_value(iter, 0) is None
-        )
+        cbButtonChooser.set_row_separator_func(lambda model, iter: model.
+                                               get_value(iter, 0) is None)
 
         b = self.builder.get_object
         self.action_widgets = (
@@ -104,10 +103,8 @@ class ModeshiftEditor(Editor):
             if type(item) in (str, str):
                 # Special case for soft pull items
                 button = getattr(SCButtons, item.split(" ")[-1])
-                if any(
-                    (isinstance(x, RangeOP) and x.what == button)
-                    for x in self.actions[self.current_page]
-                ):
+                if any((isinstance(x, RangeOP) and x.what == button)
+                       for x in self.actions[self.current_page]):
                     # Skip already added soft pulls
                     continue
 
@@ -153,20 +150,19 @@ class ModeshiftEditor(Editor):
                 what.value = -1
             if what.value == -1:
                 # Range with value taken from "Soft Pull Level" slider
-                l.set_markup("<b>%s (soft pull)</b>" % (nameof(what.what),))
+                l.set_markup("<b>%s (soft pull)</b>" % (nameof(what.what), ))
             else:
                 # Any other range
-                l.set_markup("<b>%s</b>" % (nameof(what),))
+                l.set_markup("<b>%s</b>" % (nameof(what), ))
         else:
-            l.set_markup("<b>%s</b>" % (nameof(what),))
+            l.set_markup("<b>%s</b>" % (nameof(what), ))
         l.set_xalign(0.0)
         b = Gtk.Button.new_with_label(action.describe(self.mode))
         b.set_property("hexpand", True)
         b.connect("clicked", self.on_actionb_clicked, index, what)
         clearb = Gtk.Button()
         clearb.set_image(
-            Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.SMALL_TOOLBAR)
-        )
+            Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.SMALL_TOOLBAR))
         clearb.set_relief(Gtk.ReliefStyle.NONE)
         clearb.connect("clicked", self.on_clearb_clicked, index, what)
         grActions.attach(l, 0, i, 1, 1)
@@ -257,8 +253,10 @@ class ModeshiftEditor(Editor):
     def on_ntbMore_switch_page(self, ntb, box, index):
         self.current_page = index
         self._fill_button_chooser()
-        self.builder.get_object("cbButtonChooser").set_sensitive(box.get_sensitive())
-        self.builder.get_object("btAddAction").set_sensitive(box.get_sensitive())
+        self.builder.get_object("cbButtonChooser").set_sensitive(
+            box.get_sensitive())
+        self.builder.get_object("btAddAction").set_sensitive(
+            box.get_sensitive())
 
     def on_nomodbt_clicked(self, button, *a):
         actionButton = self.action_widgets[self.current_page][1]
@@ -274,13 +272,13 @@ class ModeshiftEditor(Editor):
     def on_nomodclear_clicked(self, button, *a):
         self.nomods[self.current_page] = NoAction()
         actionButton = self.action_widgets[self.current_page][1]
-        actionButton.set_label(self.nomods[self.current_page].describe(self.mode))
+        actionButton.set_label(self.nomods[self.current_page].describe(
+            self.mode))
 
     def on_btAddAction_clicked(self, *a):
         cbButtonChooser = self.builder.get_object("cbButtonChooser")
         item = cbButtonChooser.get_model().get_value(
-            cbButtonChooser.get_active_iter(), 0
-        )
+            cbButtonChooser.get_active_iter(), 0)
         if item.startswith("Soft"):
             b = getattr(SCButtons, item.split(" ")[-1])
             rng = RangeOP(b, ">=", -1)
@@ -290,7 +288,7 @@ class ModeshiftEditor(Editor):
             self._add_action(self.current_page, b, NoAction())
 
     def on_sclSoftLevel_format_value(self, scale, value):
-        return "%s%%" % (int(value * 100.0),)
+        return "%s%%" % (int(value * 100.0), )
 
     def on_btClear_clicked(self, *a):
         """ Handler for clear button """
@@ -315,7 +313,8 @@ class ModeshiftEditor(Editor):
         e.show(self.get_transient_for())
 
     def on_cbHoldFeedback_toggled(self, cb, *a):
-        rvHoldFeedbackAmplitude = self.builder.get_object("rvHoldFeedbackAmplitude")
+        rvHoldFeedbackAmplitude = self.builder.get_object(
+            "rvHoldFeedbackAmplitude")
         rvHoldFeedbackAmplitude.set_reveal_child(cb.get_active())
 
     def on_btOK_clicked(self, *a):
@@ -341,9 +340,8 @@ class ModeshiftEditor(Editor):
         action.timeout = self.builder.get_object("adjTime").get_value()
 
         if cbHoldFeedback.get_active():
-            action = FeedbackModifier(
-                HapticPos.BOTH, sclHoldFeedback.get_value(), action
-            )
+            action = FeedbackModifier(HapticPos.BOTH,
+                                      sclHoldFeedback.get_value(), action)
 
         return action
 
@@ -403,9 +401,8 @@ class ModeshiftEditor(Editor):
             lblPressAlone.set_label(_("(pressed alone)"))
             self.mode = mode = mode or Action.AC_BUTTON
 
-        self.set_title(
-            "Modeshift for %s" % (nameof(id) if id in SCButtons else str(id),)
-        )
+        self.set_title("Modeshift for %s" %
+                       (nameof(id) if id in SCButtons else str(id), ))
 
         if isinstance(action, FeedbackModifier):
             cbHoldFeedback.set_active(True)

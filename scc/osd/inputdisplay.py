@@ -42,14 +42,11 @@ class InputDisplay(OSDWindow):
         self.main_area = Gtk.Fixed()
         self.background = SVGWidget(os.path.join(self.imagepath, self.IMAGE))
         self.lpadTest = Gtk.Image.new_from_file(
-            os.path.join(self.imagepath, "inputdisplay-cursor.svg")
-        )
+            os.path.join(self.imagepath, "inputdisplay-cursor.svg"))
         self.rpadTest = Gtk.Image.new_from_file(
-            os.path.join(self.imagepath, "inputdisplay-cursor.svg")
-        )
+            os.path.join(self.imagepath, "inputdisplay-cursor.svg"))
         self.stickTest = Gtk.Image.new_from_file(
-            os.path.join(self.imagepath, "inputdisplay-cursor.svg")
-        )
+            os.path.join(self.imagepath, "inputdisplay-cursor.svg"))
 
         self.main_area.set_property("margin-left", 10)
         self.main_area.set_property("margin-right", 10)
@@ -86,7 +83,8 @@ class InputDisplay(OSDWindow):
         self._eh_ids += [
             (self.daemon, self.daemon.connect("dead", self.on_daemon_died)),
             (self.daemon, self.daemon.connect("error", self.on_daemon_died)),
-            (self.daemon, self.daemon.connect("alive", self.on_daemon_connected)),
+            (self.daemon, self.daemon.connect("alive",
+                                              self.on_daemon_connected)),
         ]
 
     def on_daemon_connected(self, *a):
