@@ -17,8 +17,6 @@ from scc.gestures import GestureDetector
 from scc.gui.daemon_manager import DaemonManager
 from scc.gui.gestures import GestureDraw
 from scc.osd import OSDWindow
-from scc.tools import _
-from scc.tools import set_logging_level
 
 BOTH = "BOTH"
 

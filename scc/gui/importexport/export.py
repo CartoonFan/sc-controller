@@ -2,7 +2,6 @@
 import json
 import logging
 import os
-import sys
 import tarfile
 import tempfile
 
@@ -20,7 +19,6 @@ from scc.special_actions import MenuAction
 from scc.tools import _
 from scc.tools import find_menu
 from scc.tools import find_profile
-from scc.tools import get_profiles_path
 from scc.tools import menu_is_default
 from scc.tools import profile_is_default
 

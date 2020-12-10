@@ -4,10 +4,8 @@ SC-Controller - OSD Menu Generators
 
 Auto-generated menus with stuff like list of all available profiles...
 """
-import json
 import logging
 import os
-import sys
 import traceback
 from ctypes import cast
 from ctypes import POINTER
@@ -24,7 +22,6 @@ from scc.paths import get_default_profiles_path
 from scc.paths import get_profiles_path
 from scc.tools import _
 from scc.tools import find_profile
-from scc.tools import set_logging_level
 
 log = logging.getLogger("osd.menu_gen")
 

@@ -7,12 +7,8 @@ import logging
 import os
 import re
 import socket
-import sys
 import threading
 import time
-import traceback
-
-from scc.actions import Action
 from scc.config import Config
 from scc.lib import xwrappers as X
 from scc.mapper import Mapper

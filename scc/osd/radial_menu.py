@@ -12,31 +12,20 @@ from math import cos
 from math import pi as PI
 from math import sin
 
-from gi.repository import Gdk
-from gi.repository import GdkX11
-from gi.repository import GLib
-from gi.repository import Gtk
-
 from scc.config import Config
-from scc.constants import LEFT
-from scc.constants import RIGHT
 from scc.constants import STICK
 from scc.constants import STICK_PAD_MAX
-from scc.constants import STICK_PAD_MIN
 from scc.gui.svg_widget import SVGEditor
 from scc.gui.svg_widget import SVGWidget
 from scc.lib import xwrappers as X
-from scc.menu_data import MenuData
 from scc.menu_data import Separator
 from scc.menu_data import Submenu
 from scc.osd import OSDWindow
 from scc.osd.menu import Menu
 from scc.osd.menu import MenuIcon
 from scc.paths import get_share_path
-from scc.tools import _
 from scc.tools import degdiff
 from scc.tools import find_icon
-from scc.tools import set_logging_level
 
 log = logging.getLogger("osd.menu")
 

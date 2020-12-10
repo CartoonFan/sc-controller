@@ -35,7 +35,6 @@ from scc.menu_data import Submenu
 from scc.modifiers import SensitivityModifier
 from scc.osd.keyboard import Keyboard as OSDKeyboard
 from scc.osd.menu_generators import RecentListMenuGenerator
-from scc.osd.menu_generators import WindowListMenuGenerator
 from scc.osd.osk_actions import OSKCursorAction
 from scc.paths import get_config_path
 from scc.paths import get_menus_path

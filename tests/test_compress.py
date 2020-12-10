@@ -1,5 +1,4 @@
-from scc.uinput import Keys, Axes, Rels
-from scc.constants import SCButtons, HapticPos
+from scc.uinput import Axes
 from scc.modifiers import DoubleclickModifier
 from scc.actions import Action, AxisAction
 from scc.macros import Macro

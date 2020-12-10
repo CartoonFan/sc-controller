@@ -5,7 +5,6 @@ import json
 import logging
 import os
 import pkgutil
-import shlex
 import signal
 import subprocess
 import sys
