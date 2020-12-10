@@ -61,12 +61,10 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
     DEFAULT_MENU_OPTIONS = [
         # label,                order, class, icon, parameter
         ("Recent profiles", 0, RecentListMenuGenerator, None, 3),
-        ("Autoswitch Options", 1, Submenu, "system/autoswitch",
-         ".autoswitch.menu"),
+        ("Autoswitch Options", 1, Submenu, "system/autoswitch", ".autoswitch.menu"),
         ("Switch To", 1, Submenu, "system/windowlist", ".windowlist.menu"),
         ("Display Keyboard", 2, MenuItem, "system/keyboard", "keyboard()"),
-        ("Turn Controller OFF", 2, MenuItem, "system/turn-off",
-         "osd(turnoff())"),
+        ("Turn Controller OFF", 2, MenuItem, "system/turn-off", "osd(turnoff())"),
         (
             "Kill Current Window",
             1,
@@ -76,8 +74,7 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
             "name('Back', None), "
             "name('Kill', shell('kill -9 $(xdotool getwindowfocus getwindowpid)')))",
         ),
-        ("Run Program...", 1, MenuItem, "system/cog",
-         'shell("scc-osd-launcher")'),
+        ("Run Program...", 1, MenuItem, "system/cog", 'shell("scc-osd-launcher")'),
         (
             "Display Current Bindings...",
             1,
@@ -86,8 +83,7 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
             'shell("scc-osd-show-bindings")',
         ),
         ("Games", 1, Submenu, "system/controller", ".games.menu"),
-        ("Edit Bindings", 2, MenuItem, "system/edit",
-         'shell("sc-controller --osd")'),
+        ("Edit Bindings", 2, MenuItem, "system/edit", 'shell("sc-controller --osd")'),
         # order: 0 - top, 1 - after 'options', 2 bottom
     ]
 
@@ -98,26 +94,26 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         self._timer = None
         self._recursing = False
         self._gamepad_icons = {
-            "unknown":
-            GdkPixbuf.Pixbuf.new_from_file(
-                os.path.join(self.app.imagepath, "controller-icons",
-                             "unknown.svg"))
+            "unknown": GdkPixbuf.Pixbuf.new_from_file(
+                os.path.join(self.app.imagepath, "controller-icons", "unknown.svg")
+            )
         }
         self.app.config.reload()
         Action.register_all(sys.modules["scc.osd.osk_actions"], prefix="OSK")
         self.load_settings()
         self.load_profile_list()
         self._recursing = False
-        self._eh_ids = (self.app.dm.connect("reconfigured",
-                                            self.on_daemon_reconfigured), )
+        self._eh_ids = (
+            self.app.dm.connect("reconfigured", self.on_daemon_reconfigured),
+        )
 
     def _get_gamepad_icon(self, drv):
         if drv in self._gamepad_icons:
             return self._gamepad_icons[drv]
         try:
             p = GdkPixbuf.Pixbuf.new_from_file(
-                os.path.join(self.app.imagepath, "controller-icons",
-                             drv + "-4.svg"))
+                os.path.join(self.app.imagepath, "controller-icons", drv + "-4.svg")
+            )
         except:
             log.warning("Failed to load gamepad icon for driver '%s'", drv)
             p = self._gamepad_icons["unknown"]
@@ -145,28 +141,56 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         self.load_controllers()
         # Load rest
         self._recursing = True
-        (self.builder.get_object("cbInputTestMode").set_active(
-            bool(self.app.config["enable_sniffing"])))
-        (self.builder.get_object("cbEnableSerials").set_active(
-            not bool(self.app.config["ignore_serials"])))
-        (self.builder.get_object("cbEnableRumble").set_active(
-            bool(self.app.config["output"]["rumble"])))
-        (self.builder.get_object("cbEnableStatusIcon").set_active(
-            bool(self.app.config["gui"]["enable_status_icon"])))
-        (self.builder.get_object("cbMinimizeToStatusIcon").set_active(
-            not IS_UNITY
-            and bool(self.app.config["gui"]["minimize_to_status_icon"])))
-        (self.builder.get_object("cbMinimizeToStatusIcon").set_sensitive(
-            not IS_UNITY and self.app.config["gui"]["enable_status_icon"]))
-        (self.builder.get_object("cbMinimizeOnStart").set_active(
-            not IS_UNITY
-            and bool(self.app.config["gui"]["minimize_on_start"])))
-        (self.builder.get_object("cbMinimizeOnStart").set_sensitive(
-            not IS_UNITY and self.app.config["gui"]["enable_status_icon"]))
-        (self.builder.get_object("cbAutokillDaemon").set_active(
-            self.app.config["gui"]["autokill_daemon"]))
-        (self.builder.get_object("cbNewRelease").set_active(
-            self.app.config["gui"]["news"]["enabled"]))
+        (
+            self.builder.get_object("cbInputTestMode").set_active(
+                bool(self.app.config["enable_sniffing"])
+            )
+        )
+        (
+            self.builder.get_object("cbEnableSerials").set_active(
+                not bool(self.app.config["ignore_serials"])
+            )
+        )
+        (
+            self.builder.get_object("cbEnableRumble").set_active(
+                bool(self.app.config["output"]["rumble"])
+            )
+        )
+        (
+            self.builder.get_object("cbEnableStatusIcon").set_active(
+                bool(self.app.config["gui"]["enable_status_icon"])
+            )
+        )
+        (
+            self.builder.get_object("cbMinimizeToStatusIcon").set_active(
+                not IS_UNITY and bool(self.app.config["gui"]["minimize_to_status_icon"])
+            )
+        )
+        (
+            self.builder.get_object("cbMinimizeToStatusIcon").set_sensitive(
+                not IS_UNITY and self.app.config["gui"]["enable_status_icon"]
+            )
+        )
+        (
+            self.builder.get_object("cbMinimizeOnStart").set_active(
+                not IS_UNITY and bool(self.app.config["gui"]["minimize_on_start"])
+            )
+        )
+        (
+            self.builder.get_object("cbMinimizeOnStart").set_sensitive(
+                not IS_UNITY and self.app.config["gui"]["enable_status_icon"]
+            )
+        )
+        (
+            self.builder.get_object("cbAutokillDaemon").set_active(
+                self.app.config["gui"]["autokill_daemon"]
+            )
+        )
+        (
+            self.builder.get_object("cbNewRelease").set_active(
+                self.app.config["gui"]["news"]["enabled"]
+            )
+        )
         self._recursing = False
 
         try:
@@ -179,28 +203,26 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
 
     def load_drivers(self):
         for key, value in list(self.app.config["drivers"].items()):
-            w = self.builder.get_object("cbEnableDriver_%s" % (key, ))
+            w = self.builder.get_object("cbEnableDriver_%s" % (key,))
             if w:
                 w.set_active(value)
 
     def _load_color(self, w, dct, key):
         """ Common part of load_colors """
         if w:
-            success, color = Gdk.Color.parse("#%s" %
-                                             (self.app.config[dct][key], ))
+            success, color = Gdk.Color.parse("#%s" % (self.app.config[dct][key],))
             if not success:
-                success, color = Gdk.Color.parse("#%s" %
-                                                 (self.app.config[dct][key], ))
+                success, color = Gdk.Color.parse("#%s" % (self.app.config[dct][key],))
             w.set_color(color)
 
     def load_colors(self):
         cbOSDStyle = self.builder.get_object("cbOSDStyle")
         cbOSDColorPreset = self.builder.get_object("cbOSDColorPreset")
         for k in self.app.config["osd_colors"]:
-            w = self.builder.get_object("cb%s" % (k, ))
+            w = self.builder.get_object("cb%s" % (k,))
             self._load_color(w, "osd_colors", k)
         for k in self.app.config["osk_colors"]:
-            w = self.builder.get_object("cbosk_%s" % (k, ))
+            w = self.builder.get_object("cbosk_%s" % (k,))
             self._load_color(w, "osk_colors", k)
         theme = self.app.config.get("osd_color_theme", "None")
         self.set_cb(cbOSDColorPreset, theme)
@@ -240,8 +262,7 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
             self.add_custom(cbTriggersAction, triggers)
 
         # Load stick
-        if not self.set_cb(
-                cbStickAction, profile.stick.to_string(), keyindex=1):
+        if not self.set_cb(cbStickAction, profile.stick.to_string(), keyindex=1):
             self.add_custom(cbStickAction, profile.stick.to_string())
 
         # Load sensitivity
@@ -275,8 +296,8 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         Used by methods that are changing it.
         """
         profile.save(
-            os.path.join(get_profiles_path(),
-                         OSDKeyboard.OSK_PROF_NAME + ".sccprofile"))
+            os.path.join(get_profiles_path(), OSDKeyboard.OSK_PROF_NAME + ".sccprofile")
+        )
         self.app.dm.reconfigure()
 
     def on_cbStickAction_changed(self, cb):
@@ -313,11 +334,11 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
             return "".join([striphex(int(x * 0xFF)) for x in a.to_floats()])
 
         for k in self.app.config["osd_colors"]:
-            w = self.builder.get_object("cb%s" % (k, ))
+            w = self.builder.get_object("cb%s" % (k,))
             if w:
                 self.app.config["osd_colors"][k] = tohex(w.get_color())
         for k in self.app.config["osk_colors"]:
-            w = self.builder.get_object("cbosk_%s" % (k, ))
+            w = self.builder.get_object("cbosk_%s" % (k,))
             if w:
                 self.app.config["osk_colors"][k] = tohex(w.get_color())
         self.app.config["osd_color_theme"] = None
@@ -344,19 +365,25 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         tvItems = self.builder.get_object("tvItems")
         cbShowOSD = self.builder.get_object("cbShowOSD")
         cbEnableStatusIcon = self.builder.get_object("cbEnableStatusIcon")
-        cbMinimizeToStatusIcon = self.builder.get_object(
-            "cbMinimizeToStatusIcon")
-        conds = [{
-            "condition": row[0].condition.encode(),
-            "action": row[0].action.to_string(),
-        } for row in tvItems.get_model()]
+        cbMinimizeToStatusIcon = self.builder.get_object("cbMinimizeToStatusIcon")
+        conds = [
+            {
+                "condition": row[0].condition.encode(),
+                "action": row[0].action.to_string(),
+            }
+            for row in tvItems.get_model()
+        ]
         # Apply status icon settings
-        if (self.app.config["gui"]["enable_status_icon"] !=
-                cbEnableStatusIcon.get_active()):
+        if (
+            self.app.config["gui"]["enable_status_icon"]
+            != cbEnableStatusIcon.get_active()
+        ):
             self.app.config["gui"][
-                "enable_status_icon"] = cbEnableStatusIcon.get_active()
+                "enable_status_icon"
+            ] = cbEnableStatusIcon.get_active()
             cbMinimizeToStatusIcon.set_sensitive(
-                not IS_UNITY and cbEnableStatusIcon.get_active())
+                not IS_UNITY and cbEnableStatusIcon.get_active()
+            )
             if cbEnableStatusIcon.get_active():
                 self.app.setup_statusicon()
             else:
@@ -365,22 +392,29 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         self.app.config["autoswitch"] = conds
         self.app.config["autoswitch_osd"] = cbShowOSD.get_active()
         self.app.config["enable_sniffing"] = self.builder.get_object(
-            "cbInputTestMode").get_active()
+            "cbInputTestMode"
+        ).get_active()
         self.app.config["ignore_serials"] = not self.builder.get_object(
-            "cbEnableSerials").get_active()
+            "cbEnableSerials"
+        ).get_active()
         self.app.config["output"]["rumble"] = self.builder.get_object(
-            "cbEnableRumble").get_active()
+            "cbEnableRumble"
+        ).get_active()
         self.app.config["gui"]["enable_status_icon"] = self.builder.get_object(
-            "cbEnableStatusIcon").get_active()
-        self.app.config["gui"][
-            "minimize_to_status_icon"] = self.builder.get_object(
-                "cbMinimizeToStatusIcon").get_active()
+            "cbEnableStatusIcon"
+        ).get_active()
+        self.app.config["gui"]["minimize_to_status_icon"] = self.builder.get_object(
+            "cbMinimizeToStatusIcon"
+        ).get_active()
         self.app.config["gui"]["minimize_on_start"] = self.builder.get_object(
-            "cbMinimizeOnStart").get_active()
+            "cbMinimizeOnStart"
+        ).get_active()
         self.app.config["gui"]["autokill_daemon"] = self.builder.get_object(
-            "cbAutokillDaemon").get_active()
+            "cbAutokillDaemon"
+        ).get_active()
         self.app.config["gui"]["news"]["enabled"] = self.builder.get_object(
-            "cbNewRelease").get_active()
+            "cbNewRelease"
+        ).get_active()
 
         # Save
         self.app.save_config()
@@ -416,28 +450,31 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         self.app.config["drivers"][drv] = cb.get_active()
         if cb.get_active() and drv in self.DRIVER_DEPS:
             # Driver has dependencies, make sure at least one of them is active
-            one_active = any(self.app.config["drivers"].get(x)
-                             for x in self.DRIVER_DEPS[drv])
+            one_active = any(
+                self.app.config["drivers"].get(x) for x in self.DRIVER_DEPS[drv]
+            )
 
             if not one_active:
                 # Nothing is, make everything active just to be sure
                 self._recursing = True
                 for x in self.DRIVER_DEPS[drv]:
-                    w = self.builder.get_object("cbEnableDriver_%s" % (x, ))
+                    w = self.builder.get_object("cbEnableDriver_%s" % (x,))
                     if w:
                         w.set_active(True)
                     self.app.config["drivers"][x] = True
                 self._recursing = False
 
         if not cb.get_active() and any(
-                drv in x for x in list(self.DRIVER_DEPS.values())):
+            drv in x for x in list(self.DRIVER_DEPS.values())
+        ):
             # Something depends on this driver,
             # disable anything that has no dependent drivers active
             self._recursing = True
             for x, deps in list(self.DRIVER_DEPS.items()):
-                w = self.builder.get_object("cbEnableDriver_%s" % (x, ))
-                one_active = any(self.app.config["drivers"].get(y)
-                                 for y in self.DRIVER_DEPS[x])
+                w = self.builder.get_object("cbEnableDriver_%s" % (x,))
+                one_active = any(
+                    self.app.config["drivers"].get(y) for y in self.DRIVER_DEPS[x]
+                )
 
                 if not one_active and w:
                     w.set_active(False)
@@ -650,10 +687,10 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
             profile.pads[LEFT] = OSKCursorAction(LEFT)
             profile.pads[RIGHT] = OSKCursorAction(RIGHT)
         else:
-            profile.pads[LEFT] = SensitivityModifier(s[0], s[1],
-                                                     OSKCursorAction(LEFT))
-            profile.pads[RIGHT] = SensitivityModifier(s[0], s[1],
-                                                      OSKCursorAction(RIGHT))
+            profile.pads[LEFT] = SensitivityModifier(s[0], s[1], OSKCursorAction(LEFT))
+            profile.pads[RIGHT] = SensitivityModifier(
+                s[0], s[1], OSKCursorAction(RIGHT)
+            )
         self._save_osk_profile(profile)
 
     def on_entTitle_changed(self, ent):
@@ -694,25 +731,24 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
 
     def on_cbOSDStyle_changed(self, cb):
         color_keys = list(self.app.config["osk_colors"].keys()) + list(
-            self.app.config["osd_colors"].keys())
+            self.app.config["osd_colors"].keys()
+        )
         osd_style = cb.get_model().get_value(cb.get_active_iter(), 0)
         css_file = os.path.join(get_share_path(), "osd-styles", osd_style)
         first_line = file(css_file, "r").read().split("\n")[0]
         used_colors = None  # None means "all"
         if "Used colors:" in first_line:
-            used_colors = set(
-                first_line.split(":", 1)[1].strip(" */").split(" "))
+            used_colors = set(first_line.split(":", 1)[1].strip(" */").split(" "))
             if "all" in used_colors:
                 used_colors = None  # None means "all"
 
         for key in color_keys:
-            cb = self.builder.get_object("cb%s" % (key, ))
-            lbl = self.builder.get_object("lbl%s" % (key, ))
+            cb = self.builder.get_object("cb%s" % (key,))
+            lbl = self.builder.get_object("lbl%s" % (key,))
             if cb:
                 cb.set_sensitive((used_colors is None) or (key in used_colors))
             if lbl:
-                lbl.set_sensitive((used_colors is None)
-                                  or (key in used_colors))
+                lbl.set_sensitive((used_colors is None) or (key in used_colors))
         self.app.config["osd_style"] = osd_style
         self.app.save_config()
 
@@ -720,13 +756,9 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
     def _make_mi_instance(index):
         """ Helper method used by on_cbMI_toggled and load_cbMIs """
         # label,                class, icon, *init_parameters
-        label, order, cls, icon, parameter = GlobalSettings.DEFAULT_MENU_OPTIONS[
-            index]
+        label, order, cls, icon, parameter = GlobalSettings.DEFAULT_MENU_OPTIONS[index]
         if cls == MenuItem:
-            instance = MenuItem("item_i%s" % (index, ),
-                                label,
-                                parameter,
-                                icon=icon)
+            instance = MenuItem("item_i%s" % (index,), label, parameter, icon=icon)
         elif cls == Submenu:
             instance = Submenu(parameter, label, icon=icon)
         else:
@@ -750,8 +782,9 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         if self._recursing:
             return
         try:
-            data = MenuData.from_fileobj(open(find_menu("Default.menu"), "r"),
-                                         GuiActionParser())
+            data = MenuData.from_fileobj(
+                open(find_menu("Default.menu"), "r"), GuiActionParser()
+            )
             index = int(widget.get_name().split("_")[-1])
             instance = GlobalSettings._make_mi_instance(index)
         except Exception as e:
@@ -789,11 +822,13 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         else:
             if isinstance(instance, MenuGenerator):
                 items = [
-                    x for x in items if not (
-                        isinstance(x, Separator) and x.label == instance.label)
+                    x
+                    for x in items
+                    if not (isinstance(x, Separator) and x.label == instance.label)
                 ]
             items = [
-                x for x in items
+                x
+                for x in items
                 if instance.describe().strip(" >") != x.describe().strip(" >")
             ]
 
@@ -817,7 +852,7 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         self._recursing = True
 
         for index in range(0, len(GlobalSettings.DEFAULT_MENU_OPTIONS)):
-            id = "cbMI_%s" % (index, )
+            id = "cbMI_%s" % (index,)
             instance = GlobalSettings._make_mi_instance(index)
             present = instance.describe().strip(" >") in [
                 x.describe().strip(" >") for x in data
@@ -831,7 +866,8 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
             # Not found
             cbMI_5.set_sensitive(False)
             cbMI_5.set_tooltip_text(
-                _("Please, install xdotool package to use this feature"))
+                _("Please, install xdotool package to use this feature")
+            )
         else:
             cbMI_5.set_sensitive(True)
             cbMI_5.set_tooltip_text("")
@@ -880,5 +916,4 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
                     drv, name = filename.split("-", 1)
                     name = name[0:-5]
                 path = os.path.join(get_config_path(), "devices", filename)
-                lstControllers.append(
-                    (path, name, self._get_gamepad_icon(drv)))
+                lstControllers.append((path, name, self._get_gamepad_icon(drv)))

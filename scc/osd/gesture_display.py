@@ -40,7 +40,7 @@ class GestureDisplay(OSDWindow):
    3  - erorr, failed to lock input
     """
     __gsignals__ = {
-        b"gesture-updated": (GObject.SignalFlags.RUN_FIRST, None, (str, )),
+        b"gesture-updated": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
     }
 
     SIZE = 128  # times two horizontaly + borders
@@ -87,7 +87,7 @@ class GestureDisplay(OSDWindow):
         """
         self.config = c
         # for x in (self._left_draw, self._right_draw):
-        for x in (self._left_draw, ):
+        for x in (self._left_draw,):
             x.set_colors(**self.config["gesture_colors"])
 
     def _add_arguments(self):
@@ -99,8 +99,8 @@ class GestureDisplay(OSDWindow):
             metavar="option",
             default=LEFT,
             choices=(LEFT, RIGHT, CPAD),
-            help="which pad should be used to generate gesture menu (default: %s)" %
-            (LEFT, ),
+            help="which pad should be used to generate gesture menu (default: %s)"
+            % (LEFT,),
         )
 
     def parse_argumets(self, argv):
@@ -118,8 +118,7 @@ class GestureDisplay(OSDWindow):
         self._eh_ids += [
             (self.daemon, self.daemon.connect("dead", self.on_daemon_died)),
             (self.daemon, self.daemon.connect("error", self.on_daemon_died)),
-            (self.daemon, self.daemon.connect("alive",
-                                              self.on_daemon_connected)),
+            (self.daemon, self.daemon.connect("alive", self.on_daemon_connected)),
         ]
 
     def run(self):

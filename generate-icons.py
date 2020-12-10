@@ -5,31 +5,33 @@ import subprocess
 import colorsys
 from xml.etree import ElementTree as ET
 
-ICODIR = "./images/"                    # Directory with icons
-CICONS = "./images/controller-icons/"   # Directory controller-icons
-RECOLORS = {                            # Defines set of hue shifts for controller-icons
+ICODIR = "./images/"  # Directory with icons
+CICONS = "./images/controller-icons/"  # Directory controller-icons
+RECOLORS = {  # Defines set of hue shifts for controller-icons
     # "0" : 0.0,    # Green - original
-    "1": 0.3,       # Blue
-    "2": 0.7,       # Red
-    "3": 0.9,       # Yellow
-    "4": 0.2,       # Cyan
-    "5": 0.8,       # Orange
-    "6": 0.5,       # Purple
+    "1": 0.3,  # Blue
+    "2": 0.7,  # Red
+    "3": 0.9,  # Yellow
+    "4": 0.2,  # Cyan
+    "5": 0.8,  # Orange
+    "6": 0.5,  # Purple
 }
 
 
 # Generate svg state icons
 for size in (24, 256):
-    for state in ('alive', 'dead', 'error', 'unknown'):
+    for state in ("alive", "dead", "error", "unknown"):
         print("scc-statusicon-%s.png" % (state,))
-        subprocess.call([
-            "inkscape",
-            "%s/scc-statusicon-%s.svg" % (ICODIR, state),
-            "--export-area-page",
-            "--export-png=%s/%sx%s/status/scc-%s.png" % (
-                ICODIR, size, size, state),
-            "--export-width=%s" % (size,),
-            "--export-height=%s" % (size,)])
+        subprocess.call(
+            [
+                "inkscape",
+                "%s/scc-statusicon-%s.svg" % (ICODIR, state),
+                "--export-area-page",
+                "--export-png=%s/%sx%s/status/scc-%s.png" % (ICODIR, size, size, state),
+                "--export-width=%s" % (size,),
+                "--export-height=%s" % (size,),
+            ]
+        )
 
 
 def html_to_rgb(html):
@@ -40,8 +42,10 @@ def html_to_rgb(html):
     elif html == "none":
         return 0, 0, 0, 0
     elif len(html) != 8:
-        raise ValueError("Needs RRGGBB(AA) format, got '%s'" % (html, ))
-    return tuple((float(int(html[i:i+2], 16)) / 255.0 for i in range(0, len(html), 2)))
+        raise ValueError("Needs RRGGBB(AA) format, got '%s'" % (html,))
+    return tuple(
+        (float(int(html[i : i + 2], 16)) / 255.0 for i in range(0, len(html), 2))
+    )
 
 
 def rgb_to_html(r, g, b):
@@ -51,16 +55,18 @@ def rgb_to_html(r, g, b):
 
 def recolor(tree, add):
     """ Recursive part of recolor_strokes and recolor_background """
-    if 'id' in tree.attrib and "overlay" in tree.attrib['id']:
+    if "id" in tree.attrib and "overlay" in tree.attrib["id"]:
         return
     for child in tree:
-        if 'style' in child.attrib:
-            styles = {a: b
-                      for (a, b) in (
-                          x.split(":", 1)
-                          for x in child.attrib['style'].split(';')
-                          if ":" in x
-                      )}
+        if "style" in child.attrib:
+            styles = {
+                a: b
+                for (a, b) in (
+                    x.split(":", 1)
+                    for x in child.attrib["style"].split(";")
+                    if ":" in x
+                )
+            }
             if "fill" in styles or "stroke" in styles:
                 for key in ("fill", "stroke"):
                     if key in styles:
@@ -76,7 +82,8 @@ def recolor(tree, add):
                         # Store
                         styles[key] = rgb_to_html(r, g, b)
                 child.attrib["style"] = ";".join(
-                    (":".join((x, styles[x])) for x in styles))
+                    (":".join((x, styles[x])) for x in styles)
+                )
         recolor(child, add)
 
 
