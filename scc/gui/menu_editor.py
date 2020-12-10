@@ -7,6 +7,7 @@ Edits .menu files and menus stored in profile.
 import logging
 import os
 import traceback
+
 from gi.repository import GObject
 from gi.repository import Gtk
 

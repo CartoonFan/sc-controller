@@ -2,6 +2,7 @@
 import logging
 import os
 import tarfile
+
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk

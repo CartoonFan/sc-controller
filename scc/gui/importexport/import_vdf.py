@@ -9,6 +9,7 @@ import logging
 import os
 import threading
 from io import StringIO
+
 from gi.repository import GLib
 
 from scc.foreign.vdf import VDFProfile
