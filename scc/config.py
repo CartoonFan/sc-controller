@@ -17,13 +17,10 @@ log = logging.getLogger("Config")
 
 class Config(object):
     DEFAULTS = {
-        "autoswitch_osd":
-        True,  # True to show OSD message when profile is autoswitched
+        "autoswitch_osd": True,  # True to show OSD message when profile is autoswitched
         "autoswitch": [],  # Empty list of conditions
-        "recent_max":
-        10,  # Number of profiles to keep
-        "recent_profiles":
-        [  # Hard-coded list of profiles from default_profiles/
+        "recent_max": 10,  # Number of profiles to keep
+        "recent_profiles": [  # Hard-coded list of profiles from default_profiles/
             # This is actually updated by scc-osd-daemon, as that's
             # only thing actually knowing what to put here.
             "Desktop",
@@ -39,11 +36,9 @@ class Config(object):
             "fake": False,  # Used for developement
             "hiddrv": True,
             "evdevdrv": True,
-            "ds4drv":
-            True,  # At least one of hiddrv or evdevdrv has to be enabled as well
+            "ds4drv": True,  # At least one of hiddrv or evdevdrv has to be enabled as well
         },
-        "fix_xinput":
-        True,  # If True, attempt is done to deatach emulated controller
+        "fix_xinput": True,  # If True, attempt is done to deatach emulated controller
         # from 'Virtual core pointer' core device.
         "gui": {
             # GUI-only settings
@@ -54,26 +49,19 @@ class Config(object):
             "news": {
                 # Controls "new in this version" message
                 "enabled": True,  # if disabled, no querying is done
-                "last_version":
-                "0.3.12",  # last version for which message was displayed
+                "last_version": "0.3.12",  # last version for which message was displayed
             },
         },
         "controllers": {},
         # output - modifies emulated controller
         # Changing this may be usefull, but can break a lot of things
         "output": {
-            "vendor":
-            "0x045e",
-            "product":
-            "0x028e",
-            "version":
-            "0x110",
-            "name":
-            "Microsoft X-Box 360 pad",
-            "buttons":
-            11,
-            "rumble":
-            True,
+            "vendor": "0x045e",
+            "product": "0x028e",
+            "version": "0x110",
+            "name": "Microsoft X-Box 360 pad",
+            "buttons": 11,
+            "rumble": True,
             "axes": [
                 (-32768, 32767),  # Axes.ABS_X
                 (-32768, 32767),  # Axes.ABS_Y
@@ -89,11 +77,9 @@ class Config(object):
         # ~/.config/scc can ask daemon to send notifications about all
         # (or only some) inputs.
         # This enables GUI to display which physical button was pressed to user.
-        "enable_sniffing":
-        False,
+        "enable_sniffing": False,
         # Style and colors used by OSD
-        "osd_style":
-        "Classic.gtkstyle.css",
+        "osd_style": "Classic.gtkstyle.css",
         "osd_colors": {
             "background": "101010",
             "border": "101010",
@@ -121,11 +107,9 @@ class Config(object):
             "line": "ffffff1a",
         },
         # TODO: Config for opacity
-        "windows_opacity":
-        0.95,
+        "windows_opacity": 0.95,
         # See drivers/sc_dongle.py, read_serial method
-        "ignore_serials":
-        True,
+        "ignore_serials": True,
     }
 
     CONTROLLER_DEFAULTS = {
@@ -152,7 +136,7 @@ class Config(object):
             self.load()
         except Exception as e:
             log.warning("Failed to load configuration; Creating new one.")
-            log.warning("Reason: %s", (e, ))
+            log.warning("Reason: %s", (e,))
             self.create()
         if self.check_values():
             self.save()
@@ -185,8 +169,7 @@ class Config(object):
         if "autoswitch" in self.values:
             for a in self.values["autoswitch"]:
                 if "profile" in a:
-                    a["action"] = ChangeProfileAction(str(
-                        a["profile"])).to_string()
+                    a["action"] = ChangeProfileAction(str(a["profile"])).to_string()
                     del a["profile"]
                     rv = True
         return rv
@@ -209,8 +192,7 @@ class Config(object):
             return rv
         # Create new config
         rv = self.values["controllers"][controller_id] = {
-            key: self.CONTROLLER_DEFAULTS[key]
-            for key in self.CONTROLLER_DEFAULTS
+            key: self.CONTROLLER_DEFAULTS[key] for key in self.CONTROLLER_DEFAULTS
         }
         rv["name"] = controller_id
         return rv

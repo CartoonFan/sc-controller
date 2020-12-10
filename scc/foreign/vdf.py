@@ -111,12 +111,10 @@ class VDFProfile(Profile):
         Returns Action instance or ParseError if action is not recognized.
         """
         if isinstance(lst_or_str, list):
-            return MultiAction.make(
-                *[self.parse_action(x) for x in lst_or_str])
+            return MultiAction.make(*[self.parse_action(x) for x in lst_or_str])
         # Split string into binding type, name and parameters
         binding, params = lst_or_str.split(" ", 1)
-        params, name = params.split(",", 1) if "," in params else (params,
-                                                                   None)
+        params, name = params.split(",", 1) if "," in params else (params, None)
         params = params.split(" ")
         if name:
             name = name.strip()
@@ -146,13 +144,14 @@ class VDFProfile(Profile):
             return ButtonAction(b).set_name(name)
         elif binding in ("mode_shift"):
             if button is None:
-                log.warning("Ignoring modeshift assigned to no button: '%s'" %
-                            (lst_or_str, ))
+                log.warning(
+                    "Ignoring modeshift assigned to no button: '%s'" % (lst_or_str,)
+                )
                 return NoAction()
             if button not in VDFProfile.BUTTON_TO_BUTTON:
                 log.warning(
-                    "Ignoring modeshift assigned to unknown button: '%s'" %
-                    (button, ))
+                    "Ignoring modeshift assigned to unknown button: '%s'" % (button,)
+                )
                 return NoAction()
             self.modeshift_buttons[VDFProfile.BUTTON_TO_BUTTON[button]] = (
                 params[1],
@@ -162,23 +161,22 @@ class VDFProfile(Profile):
         elif binding in ("controller_action"):
             if params[0] == "CHANGE_PRESET":
                 id = int(params[1]) - 1
-                cpa = ChangeProfileAction("action_set:%s" % (id, ))
+                cpa = ChangeProfileAction("action_set:%s" % (id,))
                 self.action_set_switches.add(cpa)
                 return cpa
 
-            log.warning("Ignoring controller_action '%s' binding" %
-                        (params[0], ))
+            log.warning("Ignoring controller_action '%s' binding" % (params[0],))
             return NoAction()
         elif binding == "mouse_wheel":
             if params[0].lower() == "scroll_down":
                 return MouseAction(Rels.REL_WHEEL, -1)
             return MouseAction(Rels.REL_WHEEL, 1)
         elif binding == "game_action":
-            log.warning("Ignoring game_action binding: '%s'" % (lst_or_str, ))
+            log.warning("Ignoring game_action binding: '%s'" % (lst_or_str,))
             return NoAction()
 
         else:
-            raise ParseError("Unknown binding: '%s'" % (binding, ))
+            raise ParseError("Unknown binding: '%s'" % (binding,))
 
     @staticmethod
     def parse_modifiers(group, action, side):
@@ -196,8 +194,7 @@ class VDFProfile(Profile):
                 sens = s, s, s
             if "haptic_intensity" in settings:
                 action = FeedbackModifier(
-                    HapticPos.LEFT
-                    if side == Profile.LEFT else HapticPos.RIGHT,
+                    HapticPos.LEFT if side == Profile.LEFT else HapticPos.RIGHT,
                     512 * int(settings["haptic_intensity"]),
                     8,
                     action,
@@ -222,20 +219,20 @@ class VDFProfile(Profile):
         if name in VDFProfile.SPECIAL_KEYS:
             return VDFProfile.SPECIAL_KEYS[name]
         elif name.endswith("_ARROW"):
-            key = "KEY_%s" % (name[:-6], )
+            key = "KEY_%s" % (name[:-6],)
         elif "KEYPAD_" in name:
-            key = "KEY_%s" % (name.replace("KEYPAD_", "KP"), )
+            key = "KEY_%s" % (name.replace("KEYPAD_", "KP"),)
         elif "LEFT_" in name:
-            key = "KEY_%s" % (name.replace("LEFT_", "LEFT"), )
+            key = "KEY_%s" % (name.replace("LEFT_", "LEFT"),)
         elif "RIGHT_" in name:
-            key = "KEY_%s" % (name.replace("RIGHT_", "RIGHT"), )
+            key = "KEY_%s" % (name.replace("RIGHT_", "RIGHT"),)
         else:
-            key = "KEY_%s" % (name, )
+            key = "KEY_%s" % (name,)
         if hasattr(Keys, key):
             return getattr(Keys, key)
         if hasattr(Keys, key.upper()):
             return getattr(Keys, key.upper())
-        raise ParseError("Unknown key: '%s'" % (name, ))
+        raise ParseError("Unknown key: '%s'" % (name,))
 
     @staticmethod
     def convert_button_name(name):
@@ -244,10 +241,10 @@ class VDFProfile(Profile):
         """
         if name.lower() in VDFProfile.SPECIAL_BUTTONS:
             return VDFProfile.SPECIAL_BUTTONS[name.lower()]
-        key = "BTN_%s" % (name.upper(), )
+        key = "BTN_%s" % (name.upper(),)
         if hasattr(Keys, key):
             return getattr(Keys, key)
-        raise ParseError("Unknown button: '%s'" % (name, ))
+        raise ParseError("Unknown button: '%s'" % (name,))
 
     def parse_button(self, bdef, button=None):
         """
@@ -259,8 +256,7 @@ class VDFProfile(Profile):
             return self.parse_action(bdef, button)
         elif isinstance(bdef, list):
             # V2
-            return MultiAction.make(
-                *[self.parse_action(x, button) for x in bdef])
+            return MultiAction.make(*[self.parse_action(x, button) for x in bdef])
         elif "activators" in bdef:
             # V3
             act_actions = []
@@ -269,8 +265,7 @@ class VDFProfile(Profile):
                 if k in bdef["activators"]:
                     # TODO: Handle multiple bindings
                     bindings = ensure_list(bdef["activators"][k])[0]
-                    a = self.parse_action(bindings["bindings"]["binding"],
-                                          button)
+                    a = self.parse_action(bindings["bindings"]["binding"], button)
                     a = VDFProfile.parse_modifiers(bindings, a, Profile.RIGHT)
                     # holly...
                 act_actions.append(a)
@@ -283,7 +278,7 @@ class VDFProfile(Profile):
             action.holdaction = hold
             return action
         else:
-            log.warning("Failed to parse button definition: %s" % (bdef, ))
+            log.warning("Failed to parse button definition: %s" % (bdef,))
 
     @staticmethod
     def get_inputs(group):
@@ -338,33 +333,33 @@ class VDFProfile(Profile):
         elif mode == "joystick_move":
             if side == Profile.LEFT:
                 # Left
-                action = XYAction(AxisAction(Axes.ABS_X),
-                                  AxisAction(Axes.ABS_Y))
+                action = XYAction(AxisAction(Axes.ABS_X), AxisAction(Axes.ABS_Y))
             else:
                 # Right
-                action = XYAction(AxisAction(Axes.ABS_RX),
-                                  AxisAction(Axes.ABS_RY))
+                action = XYAction(AxisAction(Axes.ABS_RX), AxisAction(Axes.ABS_RY))
         elif mode == "joystick_camera":
             output_joystick = 0
             if "output_joystick" in settings:
                 output_joystick = int(settings["output_joystick"])
             if output_joystick == 0:
                 action = BallModifier(
-                    XYAction(AxisAction(Axes.ABS_X), AxisAction(Axes.ABS_Y)))
+                    XYAction(AxisAction(Axes.ABS_X), AxisAction(Axes.ABS_Y))
+                )
             elif output_joystick == 1:
                 action = BallModifier(
-                    XYAction(AxisAction(Axes.ABS_RX), AxisAction(Axes.ABS_RY)))
+                    XYAction(AxisAction(Axes.ABS_RX), AxisAction(Axes.ABS_RY))
+                )
             else:
                 # TODO: Absolute mouse? Doesn't seems to do anything in Steam
-                action = BallModifier(
-                    SensitivityModifier(0.1, 0.1, MouseAction()))
+                action = BallModifier(SensitivityModifier(0.1, 0.1, MouseAction()))
         elif mode == "mouse_joystick":
             action = BallModifier(
-                XYAction(AxisAction(Axes.ABS_RX), AxisAction(Axes.ABS_RY)))
+                XYAction(AxisAction(Axes.ABS_RX), AxisAction(Axes.ABS_RY))
+            )
         elif mode == "scrollwheel":
             action = BallModifier(
-                XYAction(MouseAction(Rels.REL_HWHEEL),
-                         MouseAction(Rels.REL_WHEEL)))
+                XYAction(MouseAction(Rels.REL_HWHEEL), MouseAction(Rels.REL_WHEEL))
+            )
         elif mode == "touch_menu":
             # Touch menu is converted to GridMenu
             items = []
@@ -372,12 +367,13 @@ class VDFProfile(Profile):
                 action = self.parse_button(inputs[k])
                 items.append(
                     MenuItem(
-                        "item_%s" % (next_item_id, ),
+                        "item_%s" % (next_item_id,),
                         action.describe(Action.AC_BUTTON),
                         action,
-                    ))
+                    )
+                )
             # Menu is stored in profile, with generated ID
-            menu_id = "menu_%s" % (self.next_menu_id, )
+            menu_id = "menu_%s" % (self.next_menu_id,)
             self.next_menu_id += 1
             self.menus[menu_id] = MenuData(*items)
 
@@ -389,11 +385,13 @@ class VDFProfile(Profile):
         elif mode == "absolute_mouse":
             if "click" in inputs:
                 if side == Profile.LEFT:
-                    self.add_by_binding(SCButtons.LPAD,
-                                        self.parse_button(inputs["click"]))
+                    self.add_by_binding(
+                        SCButtons.LPAD, self.parse_button(inputs["click"])
+                    )
                 else:
-                    self.add_by_binding(SCButtons.RPAD,
-                                        self.parse_button(inputs["click"]))
+                    self.add_by_binding(
+                        SCButtons.RPAD, self.parse_button(inputs["click"])
+                    )
             if "gyro_axis" in settings:
                 if int(settings["gyro_axis"]) == 1:
                     action = MouseAction(ROLL)
@@ -403,14 +401,14 @@ class VDFProfile(Profile):
                 action = MouseAction()
         elif mode == "mouse_wheel":
             action = BallModifier(
-                XYAction(MouseAction(Rels.REL_HWHEEL),
-                         ouseAction(Rels.REL_WHEEL)))
+                XYAction(MouseAction(Rels.REL_HWHEEL), ouseAction(Rels.REL_WHEEL))
+            )
         elif mode == "trigger":
             actions = []
             if "click" in inputs:
                 actions.append(
-                    TriggerAction(TRIGGER_CLICK,
-                                  self.parse_button(inputs["click"])))
+                    TriggerAction(TRIGGER_CLICK, self.parse_button(inputs["click"]))
+                )
 
             if side == Profile.LEFT:
                 actions.append(AxisAction(Axes.ABS_Z))
@@ -421,14 +419,18 @@ class VDFProfile(Profile):
         elif mode == "mouse_region":
             # Read value and assume dafaults
             scale = float(settings["scale"]) if "scale" in settings else 100.0
-            x = float(
-                settings["position_x"]) if "position_x" in settings else 50.0
-            y = float(
-                settings["position_y"]) if "position_y" in settings else 50.0
-            w = (float(settings["sensitivity_horiz_scale"])
-                 if "sensitivity_horiz_scale" in settings else 100.0)
-            h = (float(settings["sensitivity_vert_scale"])
-                 if "sensitivity_vert_scale" in settings else 100.0)
+            x = float(settings["position_x"]) if "position_x" in settings else 50.0
+            y = float(settings["position_y"]) if "position_y" in settings else 50.0
+            w = (
+                float(settings["sensitivity_horiz_scale"])
+                if "sensitivity_horiz_scale" in settings
+                else 100.0
+            )
+            h = (
+                float(settings["sensitivity_vert_scale"])
+                if "sensitivity_vert_scale" in settings
+                else 100.0
+            )
             # Apply scale
             w = w * scale / 100.0
             h = h * scale / 100.0
@@ -443,7 +445,7 @@ class VDFProfile(Profile):
 
             action = RelAreaAction(x1, y1, x2, y2)
         else:
-            raise ParseError("Unknown mode: '%s'" % (group["mode"], ))
+            raise ParseError("Unknown mode: '%s'" % (group["mode"],))
 
         action = VDFProfile.parse_modifiers(group, action, side)
         return action
@@ -462,14 +464,16 @@ class VDFProfile(Profile):
                     self.parse_button(inputs[button], button),
                 )
             else:
-                raise ParseError("Unknown button: '%s'" % (button, ))
+                raise ParseError("Unknown button: '%s'" % (button,))
 
     def parse_input_binding(self, data, group_id, binding):
         group = VDFProfile.find_group(data, group_id)
         if group and "mode" in group:
-            if (binding.startswith("switch")
-                    or not binding.startswith("switch")
-                    and binding.startswith("button_diamond")):
+            if (
+                binding.startswith("switch")
+                or not binding.startswith("switch")
+                and binding.startswith("button_diamond")
+            ):
                 self.parse_switches(group)
             else:
                 if binding.startswith("right_"):
@@ -504,8 +508,7 @@ class VDFProfile(Profile):
         elif binding.startswith("gyro"):
             self.gyro = action
         else:
-            raise ParseError("Unknown group source binding: '%s'" %
-                             (binding, ))
+            raise ParseError("Unknown group source binding: '%s'" % (binding,))
 
     def add_by_binding(self, binding, action):
         """
@@ -539,7 +542,7 @@ class VDFProfile(Profile):
             return self.stick
         elif binding.startswith("gyro"):
             return self.gyro
-        raise ParseError("Unknown group source binding: '%s'" % (binding, ))
+        raise ParseError("Unknown group source binding: '%s'" % (binding,))
 
     @staticmethod
     def _load_preset(data, profile, preset):
@@ -615,7 +618,8 @@ class VDFProfile(Profile):
 
         for aset in list(self.action_sets.values()):
             aset.buttons[SCButtons.C] = HoldModifier(
-                MenuAction("Default.menu"), MenuAction("Default.menu"))
+                MenuAction("Default.menu"), MenuAction("Default.menu")
+            )
 
         return self
 

@@ -64,8 +64,7 @@ class Menu(OSDWindow):
         self.config = None
         self.feedback = None
         self.controller = None
-        self.xdisplay = X.Display(hash(
-            GdkX11.x11_get_default_xdisplay()))  # Magic
+        self.xdisplay = X.Display(hash(GdkX11.x11_get_default_xdisplay()))  # Magic
 
         cursor = os.path.join(get_share_path(), "images", "menu-cursor.svg")
         self.cursor = Gtk.Image.new_from_file(cursor)
@@ -171,13 +170,12 @@ class Menu(OSDWindow):
             action="store_true",
             help="cancel menu with button release instead of button press",
         )
-        self.argparser.add_argument("--use-cursor",
-                                    "-u",
-                                    action="store_true",
-                                    help="display and use cursor")
-        self.argparser.add_argument("--size",
-                                    type=int,
-                                    help="sets prefered width or height")
+        self.argparser.add_argument(
+            "--use-cursor", "-u", action="store_true", help="display and use cursor"
+        )
+        self.argparser.add_argument(
+            "--size", type=int, help="sets prefered width or height"
+        )
         self.argparser.add_argument(
             "--feedback-amplitude",
             type=int,
@@ -197,14 +195,12 @@ class Menu(OSDWindow):
             metavar="filename",
             help="load menu items from json file",
         )
-        self.argparser.add_argument("--print-items",
-                                    action="store_true",
-                                    help="prints menu items to stdout")
-        self.argparser.add_argument("items",
-                                    type=str,
-                                    nargs="*",
-                                    metavar="id title",
-                                    help="Menu items")
+        self.argparser.add_argument(
+            "--print-items", action="store_true", help="prints menu items to stdout"
+        )
+        self.argparser.add_argument(
+            "items", type=str, nargs="*", metavar="id title", help="Menu items"
+        )
 
     @staticmethod
     def _get_on_screen_position(w):
@@ -223,31 +219,30 @@ class Menu(OSDWindow):
         if self.args.from_profile:
             try:
                 self._menuid = self.args.items[0]
-                self.items = MenuData.from_profile(self.args.from_profile,
-                                                   self._menuid)
+                self.items = MenuData.from_profile(self.args.from_profile, self._menuid)
             except IOError:
-                print >> sys.stderr, "%s: error: profile file not found" % (
-                    sys.argv[0])
+                print >>sys.stderr, "%s: error: profile file not found" % (sys.argv[0])
                 return False
             except ValueError:
-                print >> sys.stderr, "%s: error: menu not found" % (
-                    sys.argv[0])
+                print >>sys.stderr, "%s: error: menu not found" % (sys.argv[0])
                 return False
         elif self.args.from_file:
             try:
                 self._menuid = self.args.from_file
                 self.items = MenuData.from_file(self.args.from_file)
             except:
-                print >> sys.stderr, "%s: error: failed to load menu file" % (
-                    sys.argv[0])
+                print >>sys.stderr, "%s: error: failed to load menu file" % (
+                    sys.argv[0]
+                )
                 return False
         else:
             try:
                 self.items = MenuData.from_args(self.args.items)
                 self._menuid = None
             except ValueError:
-                print >> sys.stderr, "%s: error: invalid number of arguments" % (
-                    sys.argv[0])
+                print >>sys.stderr, "%s: error: invalid number of arguments" % (
+                    sys.argv[0]
+                )
                 return False
         return True
 
@@ -271,12 +266,12 @@ class Menu(OSDWindow):
                 self.items.append(item)
         self.pack_items(self.parent, self.items)
         if len(self.items) == 0:
-            print >> sys.stderr, "%s: error: no items in menu" % (sys.argv[0])
+            print >>sys.stderr, "%s: error: no items in menu" % (sys.argv[0])
             return False
 
         if self.args.print_items:
             max_id_len = max(*[len(x.id) for x in self.items])
-            row_format = "{:>%s}:\t{}" % (max_id_len, )
+            row_format = "{:>%s}:\t{}" % (max_id_len,)
             for item in self.items:
                 print(row_format.format(item.id, item.label))
         return True
@@ -324,12 +319,12 @@ class Menu(OSDWindow):
                 has_colors = True
             elif isinstance(item.icon, Gio.ThemedIcon):
                 icon = Gtk.IconTheme.get_default().choose_icon(
-                    item.icon.get_names(), 64, 0)
+                    item.icon.get_names(), 64, 0
+                )
                 icon_file = icon.get_filename() if icon else None
                 has_colors = True
             else:
-                icon_file, has_colors = find_icon(item.icon,
-                                                  self.PREFER_BW_ICONS)
+                icon_file, has_colors = find_icon(item.icon, self.PREFER_BW_ICONS)
 
             if icon_file:
                 icon = MenuIcon(icon_file, has_colors)
@@ -346,14 +341,19 @@ class Menu(OSDWindow):
     def select(self, index):
         if self._selected:
             self._selected.widget.set_name(
-                self._selected.widget.get_name().replace("-selected", ""))
+                self._selected.widget.get_name().replace("-selected", "")
+            )
         if self.items[index].id:
-            if (self._selected != self.items[index] and self.feedback
-                    and self.controller):
+            if (
+                self._selected != self.items[index]
+                and self.feedback
+                and self.controller
+            ):
                 self.controller.feedback(*self.feedback)
             self._selected = self.items[index]
-            self._selected.widget.set_name(self._selected.widget.get_name() +
-                                           "-selected")
+            self._selected.widget.set_name(
+                self._selected.widget.get_name() + "-selected"
+            )
             GLib.timeout_add(2, self._check_on_screen_position)
             return True
         return False
@@ -361,8 +361,7 @@ class Menu(OSDWindow):
     def _check_on_screen_position(self, quick=False):
         x, y = Menu._get_on_screen_position(self._selected.widget)
         try:
-            m = self.get_window().get_display().get_monitor_at_window(
-                self.get_window())
+            m = self.get_window().get_display().get_monitor_at_window(self.get_window())
             assert m
             y_offset = m.get_geometry().y
             screen_height = m.get_geometry().height
@@ -391,8 +390,7 @@ class Menu(OSDWindow):
         self._eh_ids += [
             (self.daemon, self.daemon.connect("dead", self.on_daemon_died)),
             (self.daemon, self.daemon.connect("error", self.on_daemon_died)),
-            (self.daemon, self.daemon.connect("alive",
-                                              self.on_daemon_connected)),
+            (self.daemon, self.daemon.connect("alive", self.on_daemon_connected)),
         ]
 
     def run(self):
@@ -418,8 +416,7 @@ class Menu(OSDWindow):
 
         self._eh_ids += [
             (self.controller, self.controller.connect("event", self.on_event)),
-            (self.controller,
-             self.controller.connect("lost", self.on_controller_lost)),
+            (self.controller, self.controller.connect("lost", self.on_controller_lost)),
         ]
         self.lock_inputs()
 
@@ -444,8 +441,10 @@ class Menu(OSDWindow):
         if getattr(self.args, "use_cursor", False):
             # As special case, using LEFT pad on controller with
             # actual DPAD should not display cursor
-            if (self._control_with != LEFT or
-                    (controller.get_flags() & ControllerFlags.HAS_DPAD) == 0):
+            if (
+                self._control_with != LEFT
+                or (controller.get_flags() & ControllerFlags.HAS_DPAD) == 0
+            ):
                 self.enable_cursor()
 
         if getattr(self.args, "feedback_amplitude", None):
@@ -518,26 +517,30 @@ class Menu(OSDWindow):
             self._submenu = self.__class__()
             sub_pos = list(self.position)
             for i in (0, 1):
-                sub_pos[i] = (sub_pos[i] - self.SUBMENU_OFFSET
-                              if sub_pos[i] < 0 else sub_pos[i] +
-                              self.SUBMENU_OFFSET)
+                sub_pos[i] = (
+                    sub_pos[i] - self.SUBMENU_OFFSET
+                    if sub_pos[i] < 0
+                    else sub_pos[i] + self.SUBMENU_OFFSET
+                )
 
             self._submenu.use_config(self.config)
-            self._submenu.parse_argumets([
-                "menu.py",
-                "-x",
-                str(sub_pos[0]),
-                "-y",
-                str(sub_pos[1]),
-                "--from-file",
-                filename,
-                "--control-with",
-                self._control_with,
-                "--confirm-with",
-                self._confirm_with,
-                "--cancel-with",
-                self._cancel_with,
-            ])
+            self._submenu.parse_argumets(
+                [
+                    "menu.py",
+                    "-x",
+                    str(sub_pos[0]),
+                    "-y",
+                    str(sub_pos[1]),
+                    "--from-file",
+                    filename,
+                    "--control-with",
+                    self._control_with,
+                    "--confirm-with",
+                    self._confirm_with,
+                    "--cancel-with",
+                    self._cancel_with,
+                ]
+            )
             self._submenu.set_is_submenu()
             self._submenu.use_daemon(self.daemon)
             self._submenu.use_controller(self.controller)
@@ -574,8 +577,11 @@ class Menu(OSDWindow):
             if self._use_cursor:
                 # Special case, both confirm_with and cancel_with
                 # can be set to STICK
-                if (self._cancel_with == STICK and self._control_with == STICK
-                        and self._control_equals_cancel(daemon, x, y)):
+                if (
+                    self._cancel_with == STICK
+                    and self._control_with == STICK
+                    and self._control_equals_cancel(daemon, x, y)
+                ):
                     return
 
                 pad_w = self.cursor.get_allocation().width * 0.5
@@ -583,12 +589,11 @@ class Menu(OSDWindow):
                 max_w = self.get_allocation().width - 2 * pad_w
                 max_h = self.get_allocation().height - 2 * pad_h
 
-                x, y = circle_to_square(x / (STICK_PAD_MAX * 2.0),
-                                        y / (STICK_PAD_MAX * 2.0))
-                x = clamp(pad_w, (pad_w + max_w) * 0.5 + x * max_w,
-                          max_w - pad_w)
-                y = clamp(pad_h, (pad_h + max_h) * 0.5 + y * max_h * -1,
-                          max_h - pad_h)
+                x, y = circle_to_square(
+                    x / (STICK_PAD_MAX * 2.0), y / (STICK_PAD_MAX * 2.0)
+                )
+                x = clamp(pad_w, (pad_w + max_w) * 0.5 + x * max_w, max_w - pad_w)
+                y = clamp(pad_h, (pad_h + max_h) * 0.5 + y * max_h * -1, max_h - pad_h)
                 self.f.move(self.cursor, int(x), int(y))
 
                 for i in self.items:
@@ -599,8 +604,9 @@ class Menu(OSDWindow):
         elif what == self._confirm_with:
             if data[0] == 0:  # Button released
                 if self._selected and self._selected.callback:
-                    self._selected.callback(self, self.daemon, self.controller,
-                                            self._selected)
+                    self._selected.callback(
+                        self, self.daemon, self.controller, self._selected
+                    )
                 elif self._selected:
                     self.quit(0)
                 else:
@@ -633,20 +639,21 @@ class MenuIcon(Gtk.DrawingArea):
         allocation = self.get_allocation()
         if allocation.width >= allocation.height:
             context = Gtk.Widget.get_style_context(self)
-            Gtk.render_background(context, cr, 0, 0, allocation.width,
-                                  allocation.height)
+            Gtk.render_background(
+                context, cr, 0, 0, allocation.width, allocation.height
+            )
             if self.pb is None:
                 # No icon set
                 return
-            scaled = self.pb.scale_simple(allocation.height, allocation.height,
-                                          GdkPixbuf.InterpType.BILINEAR)
+            scaled = self.pb.scale_simple(
+                allocation.height, allocation.height, GdkPixbuf.InterpType.BILINEAR
+            )
             surf = Gdk.cairo_surface_create_from_pixbuf(scaled, 1)
             if self.has_colors:
                 cr.set_source_surface(surf, 1.0, 1.0)
                 # allocation.height, allocation.height)
                 cr.rectangle(0, 0, allocation.height, allocation.height)
             else:
-                Gdk.cairo_set_source_rgba(
-                    cr, context.get_color(Gtk.StateFlags.NORMAL))
+                Gdk.cairo_set_source_rgba(cr, context.get_color(Gtk.StateFlags.NORMAL))
                 cr.mask_surface(surf, 0, 0)
             cr.fill()

@@ -125,7 +125,7 @@ class Dialog(Editor, ComboSetter, Export, ImportVdf, ImportSccprofile):
         stDialog = self.builder.get_object("stDialog")
         hbDialog = self.builder.get_object("hbDialog")
         hbDialog.set_title(stDialog.child_get_property(page, "title"))
-        hname = "on_%s_activated" % (page.get_name(), )
+        hname = "on_%s_activated" % (page.get_name(),)
         if hasattr(self, hname):
             getattr(self, hname)()
 

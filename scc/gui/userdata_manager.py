@@ -32,11 +32,11 @@ class UserDataManager(object):
     def __init__(self):
         profiles_path = get_profiles_path()
         if not os.path.exists(profiles_path):
-            log.info("Creting profile directory '%s'" % (profiles_path, ))
+            log.info("Creting profile directory '%s'" % (profiles_path,))
             os.makedirs(profiles_path)
         menus_path = get_menus_path()
         if not os.path.exists(menus_path):
-            log.info("Creting menu directory '%s'" % (menus_path, ))
+            log.info("Creting menu directory '%s'" % (menus_path,))
             os.makedirs(menus_path)
 
     def load_profile(self, giofile):
@@ -73,8 +73,7 @@ class UserDataManager(object):
 
     def load_profile_list(self, category=None):
         paths = [get_default_profiles_path(), get_profiles_path()]
-        self.load_user_data(paths, "*.sccprofile", category,
-                            self.on_profiles_loaded)
+        self.load_user_data(paths, "*.sccprofile", category, self.on_profiles_loaded)
 
     def load_menu_list(self, category=None):
         paths = [get_default_menus_path(), get_menus_path()]
@@ -117,8 +116,9 @@ class UserDataManager(object):
             data[i] = pdir, pdir.enumerate_children_finish(res)
         except Exception as e:
             # Usually when directory doesn't exists
-            log.warning("enumerate_children_finish for %s failed: %s",
-                        pdir.get_path(), e)
+            log.warning(
+                "enumerate_children_finish for %s failed: %s", pdir.get_path(), e
+            )
             data[i] = None, []
         if not None in data:
             files = {}
@@ -133,12 +133,14 @@ class UserDataManager(object):
                 # https://github.com/kozec/sc-controller/issues/50
                 log.warning("enumerate_children_async failed: %s", e)
                 files = self._sync_load(
-                    [pdir for pdir, enumerator in data if pdir is not None])
+                    [pdir for pdir, enumerator in data if pdir is not None]
+                )
             if len(files) < 1:
                 # https://github.com/kozec/sc-controller/issues/327
                 log.warning("enumerate_children_async returned no files")
                 files = self._sync_load(
-                    [pdir for pdir, enumerator in data if pdir is not None])
+                    [pdir for pdir, enumerator in data if pdir is not None]
+                )
 
             callback(list(files.values()))
 
