@@ -6,8 +6,7 @@ application to run with older versions of GLib and/or GTK.
 """
 import os
 
-from gi.repository import GObject
-from gi.repository import Gtk
+from gi.repository import GObject, Gtk
 
 
 def fix_label_missing_set_XYalign_methods():

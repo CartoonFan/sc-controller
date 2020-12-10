@@ -16,15 +16,11 @@ from scc.actions import Action
 from scc.config import Config
 from scc.lib import xwrappers as X
 from scc.mapper import Mapper
-from scc.menu_data import MENU_GENERATORS
-from scc.menu_data import MenuGenerator
-from scc.menu_data import MenuItem
-from scc.menu_data import Separator
+from scc.menu_data import MENU_GENERATORS, MenuGenerator, MenuItem, Separator
 from scc.parser import TalkingActionParser
 from scc.paths import get_daemon_socket
 from scc.special_actions import ChangeProfileAction
-from scc.tools import _
-from scc.tools import find_profile
+from scc.tools import _, find_profile
 
 log = logging.getLogger("AutoSwitcher")
 

@@ -9,22 +9,14 @@ import logging
 import os
 import sys
 import traceback
-from ctypes import cast
-from ctypes import POINTER
+from ctypes import POINTER, cast
 
-from gi.repository import Gdk
-from gi.repository import GdkX11
-from gi.repository import Gio
+from gi.repository import Gdk, GdkX11, Gio
 
 from scc.lib import xwrappers as X
-from scc.menu_data import MENU_GENERATORS
-from scc.menu_data import MenuGenerator
-from scc.menu_data import MenuItem
-from scc.paths import get_default_profiles_path
-from scc.paths import get_profiles_path
-from scc.tools import _
-from scc.tools import find_profile
-from scc.tools import set_logging_level
+from scc.menu_data import MENU_GENERATORS, MenuGenerator, MenuItem
+from scc.paths import get_default_profiles_path, get_profiles_path
+from scc.tools import _, find_profile, set_logging_level
 
 log = logging.getLogger("osd.menu_gen")
 

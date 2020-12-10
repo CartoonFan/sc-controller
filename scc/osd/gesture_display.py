@@ -6,19 +6,15 @@ that's usually not very much) grid.
 """
 import logging
 
-from gi.repository import GObject
-from gi.repository import Gtk
+from gi.repository import GObject, Gtk
 
 from scc.config import Config
-from scc.constants import CPAD
-from scc.constants import LEFT
-from scc.constants import RIGHT
+from scc.constants import CPAD, LEFT, RIGHT
 from scc.gestures import GestureDetector
 from scc.gui.daemon_manager import DaemonManager
 from scc.gui.gestures import GestureDraw
 from scc.osd import OSDWindow
-from scc.tools import _
-from scc.tools import set_logging_level
+from scc.tools import _, set_logging_level
 
 BOTH = "BOTH"
 

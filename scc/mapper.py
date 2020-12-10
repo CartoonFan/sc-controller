@@ -2,28 +2,15 @@ import logging
 import os
 import traceback
 
-from scc.actions import ButtonAction
-from scc.actions import GyroAbsAction
-from scc.aliases import ALL_AXES
-from scc.aliases import ALL_BUTTONS
+from scc.actions import ButtonAction, GyroAbsAction
+from scc.aliases import ALL_AXES, ALL_BUTTONS
 from scc.config import Config
-from scc.constants import ControllerFlags
-from scc.constants import CPAD
-from scc.constants import FE_PAD
-from scc.constants import FE_STICK
-from scc.constants import FE_TRIGGER
-from scc.constants import HapticPos
-from scc.constants import LEFT
-from scc.constants import RIGHT
-from scc.constants import SCButtons
-from scc.constants import STICK
-from scc.constants import STICKTILT
+from scc.constants import (CPAD, FE_PAD, FE_STICK, FE_TRIGGER, LEFT, RIGHT,
+                           STICK, STICKTILT, ControllerFlags, HapticPos,
+                           SCButtons)
 from scc.controller import HapticData
 from scc.lib import xwrappers as X
-from scc.uinput import Dummy
-from scc.uinput import Keyboard
-from scc.uinput import Mouse
-from scc.uinput import UInput
+from scc.uinput import Dummy, Keyboard, Mouse, UInput
 
 log = logging.getLogger("Mapper")
 

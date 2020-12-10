@@ -7,8 +7,9 @@ VDFProfile to decode rest.
 import json
 import logging
 
-from .vdf import VDFProfile
 from scc.lib.vdf import parse_vdf
+
+from .vdf import VDFProfile
 
 log = logging.getLogger("import.vdffz")
 

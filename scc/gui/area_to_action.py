@@ -5,17 +5,10 @@ SC-Controller - AREA_TO_ACTION
 Maps areas on SVG images into actions.
 Used by ActionEditor.
 """
-from scc.actions import AxisAction
-from scc.actions import ButtonAction
-from scc.actions import HatDownAction
-from scc.actions import HatLeftAction
-from scc.actions import HatRightAction
-from scc.actions import HatUpAction
-from scc.actions import MouseAction
-from scc.actions import RAxisAction
-from scc.uinput import Axes
-from scc.uinput import Keys
-from scc.uinput import Rels
+from scc.actions import (AxisAction, ButtonAction, HatDownAction,
+                         HatLeftAction, HatRightAction, HatUpAction,
+                         MouseAction, RAxisAction)
+from scc.uinput import Axes, Keys, Rels
 
 AREA_TO_ACTION = {
     # Values in tuples: ActionClass, param1, param2...

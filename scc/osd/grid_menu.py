@@ -10,10 +10,8 @@ import math
 
 from gi.repository import Gtk
 
-from scc.menu_data import Separator
-from scc.menu_data import Submenu
-from scc.osd.menu import Menu
-from scc.osd.menu import MenuIcon
+from scc.menu_data import Separator, Submenu
+from scc.osd.menu import Menu, MenuIcon
 from scc.tools import find_icon
 
 log = logging.getLogger("osd.gridmenu")

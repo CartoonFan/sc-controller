@@ -6,13 +6,9 @@ Handles specific XYActions
 """
 import logging
 
-from scc.actions import Action
-from scc.actions import AxisAction
-from scc.actions import ButtonAction
-from scc.actions import MouseAction
-from scc.actions import MultiAction
-from scc.gui.ae import AEComponent
-from scc.gui.ae import describe_action
+from scc.actions import (Action, AxisAction, ButtonAction, MouseAction,
+                         MultiAction)
+from scc.gui.ae import AEComponent, describe_action
 from scc.gui.area_to_action import action_to_area
 from scc.gui.chooser import Chooser
 from scc.tools import _

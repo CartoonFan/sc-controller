@@ -9,26 +9,15 @@ Reuses styles from OSD Menu and OSD Dialog
 import logging
 import os
 
-from gi.repository import GdkX11
-from gi.repository import Gio
-from gi.repository import Gtk
-from gi.repository import Pango
+from gi.repository import GdkX11, Gio, Gtk, Pango
 
 from scc.config import Config
-from scc.constants import DEFAULT
-from scc.constants import LEFT
-from scc.constants import RIGHT
-from scc.constants import STICK
-from scc.constants import STICK_PAD_MAX
+from scc.constants import DEFAULT, LEFT, RIGHT, STICK, STICK_PAD_MAX
 from scc.gui.daemon_manager import DaemonManager
 from scc.lib import xwrappers as X
-from scc.osd import OSDWindow
-from scc.osd import StickController
+from scc.osd import OSDWindow, StickController
 from scc.paths import get_share_path
-from scc.tools import _
-from scc.tools import circle_to_square
-from scc.tools import clamp
-from scc.tools import point_in_gtkrect
+from scc.tools import _, circle_to_square, clamp, point_in_gtkrect
 
 log = logging.getLogger("osd.menu")
 

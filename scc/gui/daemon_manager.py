@@ -12,15 +12,11 @@ import json
 import logging
 import os
 
-from gi.repository import Gio
-from gi.repository import GLib
-from gi.repository import GObject
+from gi.repository import Gio, GLib, GObject
 
 from scc.gui import BUTTON_ORDER
 from scc.paths import get_daemon_socket
-from scc.tools import find_binary
-from scc.tools import find_button_image
-from scc.tools import nameof
+from scc.tools import find_binary, find_button_image, nameof
 
 log = logging.getLogger("DaemonCtrl")
 
