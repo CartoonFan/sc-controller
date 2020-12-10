@@ -7,15 +7,12 @@ using libusb directly. Relies to Observe or Lock message being sent by client.
 Used by on-screen keyboard.
 """
 import logging
-import time
-from collections import deque
 
 from scc.constants import CPAD
 from scc.constants import LEFT
 from scc.constants import RIGHT
 from scc.constants import SCButtons
 from scc.constants import STICK
-from scc.constants import TRIGGER_MAX
 from scc.mapper import Mapper
 
 log = logging.getLogger("SlaveMapper")

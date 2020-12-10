@@ -7,7 +7,6 @@ Also doubles as Menu Item Editor in some cases
 import importlib
 import logging
 import math
-import types
 
 from gi.repository import GLib
 from gi.repository import Gtk

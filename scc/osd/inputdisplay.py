@@ -1,13 +1,11 @@
 """
 SC-Controller - Input Display
 """
-import argparse
 import logging
 import os
 import signal
 import sys
 
-from gi.repository import GLib
 from gi.repository import Gtk
 
 from scc.constants import LEFT
@@ -18,8 +16,6 @@ from scc.constants import STICK_PAD_MAX
 from scc.gui.daemon_manager import DaemonManager
 from scc.gui.svg_widget import SVGWidget
 from scc.osd import OSDWindow
-from scc.tools import _
-from scc.tools import set_logging_level
 
 log = logging.getLogger("osd.InputDisplay")
 

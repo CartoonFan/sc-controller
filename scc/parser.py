@@ -20,7 +20,6 @@ from scc.constants import PARSER_CONSTANTS
 from scc.constants import SCButtons
 from scc.constants import STICK
 from scc.macros import Macro
-from scc.special_actions import OSDAction
 from scc.tools import nameof
 from scc.uinput import Axes
 from scc.uinput import Keys

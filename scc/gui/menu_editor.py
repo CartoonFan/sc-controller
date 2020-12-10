@@ -4,13 +4,10 @@ SC-Controller - Menu Editor
 
 Edits .menu files and menus stored in profile.
 """
-import json
 import logging
 import os
 import traceback
 
-from gi.repository import Gdk
-from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -21,7 +18,6 @@ from scc.gui.dwsnc import headerbar
 from scc.gui.editor import Editor
 from scc.gui.icon_chooser import IconChooser
 from scc.menu_data import MenuData
-from scc.menu_data import MenuGenerator
 from scc.menu_data import MenuItem
 from scc.menu_data import Separator
 from scc.menu_data import Submenu

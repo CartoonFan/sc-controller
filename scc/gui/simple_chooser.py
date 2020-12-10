@@ -6,7 +6,6 @@ Used by Action Editor to display window with just one Component
 """
 import importlib
 import logging
-import types
 
 from scc.gui.ae import AEComponent
 from scc.gui.dwsnc import headerbar

@@ -1,12 +1,8 @@
 #!/usr/bin/env python2
-import json
 import logging
 import os
-import sys
 import tarfile
-import tempfile
 
-from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -20,8 +16,6 @@ from scc.special_actions import ChangeProfileAction
 from scc.special_actions import MenuAction
 from scc.special_actions import ShellCommandAction
 from scc.tools import _
-from scc.tools import find_menu
-from scc.tools import find_profile
 from scc.tools import get_menus_path
 from scc.tools import get_profiles_path
 

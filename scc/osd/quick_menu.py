@@ -21,7 +21,6 @@ from scc.paths import get_share_path
 from scc.tools import _
 from scc.tools import find_icon
 from scc.tools import find_menu
-from scc.tools import set_logging_level
 
 log = logging.getLogger("osd.quickmenu")
 
