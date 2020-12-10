@@ -201,11 +201,11 @@ class TestActions(object):
 		a = parser.from_json_data({
 			'dpad' : [{
 				'action' : 'button(KEY_A)'
-				} , {
+				}, {
 				'action' : 'button(KEY_B)'
-				} , {
+				}, {
 				'action' : 'button(KEY_C)'
-				} , {
+				}, {
 				'action' : 'button(KEY_D)'
 			}]
 		})
@@ -225,17 +225,17 @@ class TestActions(object):
 				'outer' : {
 					'dpad' : [{
 						'action' : 'button(KEY_A)'
-						} , {
+						}, {
 						'action' : 'button(KEY_B)'
-						} , {
+						}, {
 						'action' : 'button(KEY_C)'
-						} , {
+						}, {
 						'action' : 'button(KEY_D)'
 					}]
 				},
 				'inner' : {
-					'X' : { 'action' : 'axis(ABS_X)' },
-					'Y' : { 'action' : 'axis(ABS_Y)' },
+					'X': { 'action' : 'axis(ABS_X)' },
+					'Y': { 'action' : 'axis(ABS_Y)' },
 				}
 			}
 		})
@@ -255,25 +255,25 @@ class TestActions(object):
 		a = parser.from_json_data({
 			'dpad' : [{
 				'action' : 'button(KEY_A)'
-				} , {
+				}, {
 				'action' : 'button(KEY_B)'
-				} , {
+				}, {
 				'action' : 'button(KEY_C)'
-				} , {
+				}, {
 				'action' : 'button(KEY_D)'
-				} , {
+				}, {
 				'action' : 'button(KEY_E)'
-				} , {
+				}, {
 				'action' : 'button(KEY_F)'
-				} , {
+				}, {
 				'action' : 'button(KEY_G)'
-				} , {
+				}, {
 				'action' : 'button(KEY_H)'
 			}]
 		})
 		
-		print a
-		print a.actions
+		print(a)
+		print(a.actions)
 		assert isinstance(a, DPadAction)
 		for sub in a.actions:
 			assert isinstance(sub, ButtonAction)
@@ -284,8 +284,8 @@ class TestActions(object):
 		Tests if XYAction is parsed correctly from json.
 		"""
 		a = parser.from_json_data({
-			'X' : { 'action' : 'axis(ABS_X)' },
-			'Y' : { 'action' : 'axis(ABS_Y)' },
+			'X': { 'action' : 'axis(ABS_X)' },
+			'Y': { 'action' : 'axis(ABS_Y)' },
 		})
 		
 		assert isinstance(a, XYAction)
