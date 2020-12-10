@@ -4,7 +4,6 @@ SC-Controller - Global Settings
 
 Currently setups only one thing...
 """
-
 import collections
 import logging
 import os
@@ -13,13 +12,17 @@ import sys
 import threading
 from io import StringIO
 
-from gi.repository import Gdk, GLib, GObject
+from gi.repository import Gdk
+from gi.repository import GLib
+from gi.repository import GObject
 
 from scc.foreign.vdf import VDFProfile
 from scc.foreign.vdffz import VDFFZProfile
-from scc.gui.editor import ComboSetter, Editor
+from scc.gui.editor import ComboSetter
+from scc.gui.editor import Editor
 from scc.lib.vdf import parse_vdf
-from scc.tools import _, get_profiles_path
+from scc.tools import _
+from scc.tools import get_profiles_path
 
 log = logging.getLogger("IE.ImportVdf")
 

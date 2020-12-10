@@ -4,7 +4,6 @@ SC-Controller - Action Editor
 
 Allows to edit button or trigger action.
 """
-
 import logging
 import os
 

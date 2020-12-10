@@ -3,12 +3,15 @@ SC-Controller - Action Editor
 
 Allows to edit button or trigger action.
 """
-
 import logging
 
-from scc.actions import Action, MultiAction, NoAction, RingAction
+from scc.actions import Action
+from scc.actions import MultiAction
+from scc.actions import NoAction
+from scc.actions import RingAction
 from scc.gui.dwsnc import headerbar
-from scc.gui.editor import ComboSetter, Editor
+from scc.gui.editor import ComboSetter
+from scc.gui.editor import Editor
 from scc.modifiers import ModeModifier
 from scc.tools import _
 

@@ -4,19 +4,24 @@ SC-Controller - Quick OSD Menu
 Controled by buttons instead of stick. Fast to use, but can display only
 limited number of items
 """
-
 import logging
 import os
 import sys
 
-from gi.repository import GLib, Gtk
+from gi.repository import GLib
+from gi.repository import Gtk
 
 from scc.config import Config
-from scc.menu_data import MenuItem, Submenu
+from scc.menu_data import MenuItem
+from scc.menu_data import Submenu
 from scc.osd import OSDWindow
-from scc.osd.menu import Menu, MenuIcon
+from scc.osd.menu import Menu
+from scc.osd.menu import MenuIcon
 from scc.paths import get_share_path
-from scc.tools import _, find_icon, find_menu, set_logging_level
+from scc.tools import _
+from scc.tools import find_icon
+from scc.tools import find_menu
+from scc.tools import set_logging_level
 
 log = logging.getLogger("osd.quickmenu")
 

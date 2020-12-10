@@ -2,7 +2,6 @@
 """
 SC-Controller - About dialog
 """
-
 from scc.gui.editor import Editor
 
 

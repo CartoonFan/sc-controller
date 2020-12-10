@@ -3,26 +3,43 @@ SC-Controller - OSD Menu
 
 Display menu that user can navigate through and prints chosen item id to stdout
 """
-
 import logging
 import os
 import sys
 from math import sqrt
 
-from gi.repository import Gdk, GdkPixbuf, GdkX11, Gio, GLib, Gtk
+from gi.repository import Gdk
+from gi.repository import GdkPixbuf
+from gi.repository import GdkX11
+from gi.repository import Gio
+from gi.repository import GLib
+from gi.repository import Gtk
 
 import scc.osd.menu_generators
 import scc.x11.autoswitcher
 from scc.config import Config
-from scc.constants import (DEFAULT, LEFT, RIGHT, SAME, STICK, STICK_PAD_MAX,
-                           ControllerFlags, SCButtons)
+from scc.constants import ControllerFlags
+from scc.constants import DEFAULT
+from scc.constants import LEFT
+from scc.constants import RIGHT
+from scc.constants import SAME
+from scc.constants import SCButtons
+from scc.constants import STICK
+from scc.constants import STICK_PAD_MAX
 from scc.gui.daemon_manager import DaemonManager
 from scc.lib import xwrappers as X
-from scc.menu_data import MenuData, Separator, Submenu
-from scc.osd import OSDWindow, StickController
+from scc.menu_data import MenuData
+from scc.menu_data import Separator
+from scc.menu_data import Submenu
+from scc.osd import OSDWindow
+from scc.osd import StickController
 from scc.paths import get_share_path
-from scc.tools import (_, circle_to_square, clamp, find_icon, find_menu,
-                       point_in_gtkrect)
+from scc.tools import _
+from scc.tools import circle_to_square
+from scc.tools import clamp
+from scc.tools import find_icon
+from scc.tools import find_menu
+from scc.tools import point_in_gtkrect
 
 log = logging.getLogger("osd.menu")
 

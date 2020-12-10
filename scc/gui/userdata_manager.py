@@ -7,18 +7,23 @@ user-editable data - that are profiles, menus and controller-icons.
 
 Main App class interits from this.
 """
-
 import logging
 import os
 
-from gi.repository import Gio, GLib, Gtk
+from gi.repository import Gio
+from gi.repository import GLib
+from gi.repository import Gtk
 
 from scc.gui.parser import GuiActionParser
-from scc.paths import (get_default_menuicons_path, get_default_menus_path,
-                       get_default_profiles_path, get_menuicons_path,
-                       get_menus_path, get_profiles_path)
+from scc.paths import get_default_menuicons_path
+from scc.paths import get_default_menus_path
+from scc.paths import get_default_profiles_path
+from scc.paths import get_menuicons_path
+from scc.paths import get_menus_path
+from scc.paths import get_profiles_path
 from scc.profile import Profile
-from scc.tools import _, set_logging_level
+from scc.tools import _
+from scc.tools import set_logging_level
 
 log = logging.getLogger("UDataManager")
 

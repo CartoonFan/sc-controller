@@ -4,10 +4,10 @@ DWSNC - Doing Weird Things in Name of Compatibility
 This module, when imported, applies various fixes and monkey-patching to allow
 application to run with older versions of GLib and/or GTK.
 """
-
 import os
 
-from gi.repository import GObject, Gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 
 def fix_label_missing_set_XYalign_methods():

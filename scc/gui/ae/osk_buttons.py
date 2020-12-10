@@ -6,7 +6,6 @@ Binds controller buttons on on on on on... screen keyboard.
 Retuses ButtonsComponent, but hides image, so user can't select mouse or gamepad
 button.
 """
-
 import logging
 
 from scc.actions import Action

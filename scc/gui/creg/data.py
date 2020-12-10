@@ -3,11 +3,10 @@ SC-Controller - Controller Registration data
 
 Dummy container classes
 """
-
-
 import logging
 
-from scc.constants import STICK_PAD_MAX, STICK_PAD_MIN
+from scc.constants import STICK_PAD_MAX
+from scc.constants import STICK_PAD_MIN
 from scc.gui.creg.constants import AXIS_TO_BUTTON
 
 log = logging.getLogger("CReg.data")

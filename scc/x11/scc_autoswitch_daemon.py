@@ -4,8 +4,6 @@ SC-Controller - Autoswitch Daemon
 
 Observes active window and commands scc-daemon to change profiles as needed.
 """
-
-
 import os
 import sys
 

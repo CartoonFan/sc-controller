@@ -4,7 +4,6 @@ SC-Controller - Simple Chooser
 
 Used by Action Editor to display window with just one Component
 """
-
 import importlib
 import logging
 import types

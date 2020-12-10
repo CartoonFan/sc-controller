@@ -7,14 +7,13 @@ Works as OSD menu, but displays all items in one row.
 Designed mainly as RPG numeric pad display and looks
 awfull with larger number of items.
 """
-
-
 import logging
 
 from gi.repository import Gtk
 
 from scc.constants import STICK_PAD_MIN
-from scc.menu_data import Separator, Submenu
+from scc.menu_data import Separator
+from scc.menu_data import Submenu
 from scc.osd.grid_menu import GridMenu
 from scc.osd.menu import MenuIcon
 

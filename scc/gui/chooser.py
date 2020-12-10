@@ -4,12 +4,15 @@ SC-Controller - Action Editor
 
 Allows to edit button or trigger action.
 """
-
 import logging
 import os
 
-from scc.actions import (AxisAction, HatDownAction, HatLeftAction,
-                         HatRightAction, HatUpAction, MouseAction)
+from scc.actions import AxisAction
+from scc.actions import HatDownAction
+from scc.actions import HatLeftAction
+from scc.actions import HatRightAction
+from scc.actions import HatUpAction
+from scc.actions import MouseAction
 from scc.gui.area_to_action import AREA_TO_ACTION
 from scc.gui.editor import Editor
 from scc.gui.svg_widget import SVGWidget

@@ -4,7 +4,6 @@ SC Controller - Steam Controller Wireless Receiver (aka Dongle) Driver
 Called and used when Dongle is detected on USB bus.
 Handles one or multiple controllers connected to dongle.
 """
-
 import logging
 import struct
 from collections import namedtuple
@@ -15,7 +14,8 @@ from math import sin
 from scc.config import Config
 from scc.constants import SCButtons
 from scc.controller import Controller
-from scc.drivers.usb import USBDevice, register_hotplug_device
+from scc.drivers.usb import register_hotplug_device
+from scc.drivers.usb import USBDevice
 from scc.lib import IntEnum
 
 VENDOR_ID = 0x28DE

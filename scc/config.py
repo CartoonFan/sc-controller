@@ -4,8 +4,6 @@ SC-Controller - Config
 
 Handles loading, storing and querying config file
 """
-
-
 import json
 import logging
 import os

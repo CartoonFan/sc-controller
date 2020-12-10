@@ -4,20 +4,26 @@ SC-Controller - Action Editor
 
 Allows to edit button or trigger action.
 """
-
 import logging
 
 from gi.repository import Gtk
 
-from scc.actions import Action, NoAction, RangeOP
-from scc.constants import HapticPos, SCButtons
-from scc.gui.controller_widget import PADS, STICKS
+from scc.actions import Action
+from scc.actions import NoAction
+from scc.actions import RangeOP
+from scc.constants import HapticPos
+from scc.constants import SCButtons
+from scc.gui.controller_widget import PADS
+from scc.gui.controller_widget import STICKS
 from scc.gui.dwsnc import headerbar
 from scc.gui.editor import Editor
 from scc.macros import Macro
-from scc.modifiers import (DoubleclickModifier, FeedbackModifier, HoldModifier,
-                           ModeModifier)
-from scc.tools import _, nameof
+from scc.modifiers import DoubleclickModifier
+from scc.modifiers import FeedbackModifier
+from scc.modifiers import HoldModifier
+from scc.modifiers import ModeModifier
+from scc.tools import _
+from scc.tools import nameof
 
 log = logging.getLogger("ModeshiftEditor")
 

@@ -8,7 +8,6 @@ SCC_FAKES says.
 
 Created controllers are completely useless. For debuging purposes only.
 """
-
 import logging
 import os
 

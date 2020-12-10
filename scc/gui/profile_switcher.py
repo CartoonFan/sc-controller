@@ -7,17 +7,21 @@ Set of widgets designed to allow user to select profile, placed in one Gtk.Box:
 ... where (S) is Save button that can be shown on demand and (ch) is change
 indicator drawn in combobox.
 """
-
 import logging
 import os
 import random
 
-from gi.repository import Gio, GLib, GObject, Gtk
+from gi.repository import Gio
+from gi.repository import GLib
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from scc.gui.userdata_manager import UserDataManager
-from scc.paths import (get_controller_icons_path,
-                       get_default_controller_icons_path)
-from scc.tools import _, find_controller_icon, find_profile
+from scc.paths import get_controller_icons_path
+from scc.paths import get_default_controller_icons_path
+from scc.tools import _
+from scc.tools import find_controller_icon
+from scc.tools import find_profile
 
 log = logging.getLogger("PS")
 

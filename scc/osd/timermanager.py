@@ -4,8 +4,6 @@ SC-Controller - Timer manager
 
 Simple abstract class for named, cancelable timers
 """
-
-
 from gi.repository import GLib
 
 

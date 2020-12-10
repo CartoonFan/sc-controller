@@ -19,10 +19,14 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-
 import ctypes
 import os
-from ctypes import POINTER, byref, c_bool, c_int16, c_int32, c_uint16
+from ctypes import byref
+from ctypes import c_bool
+from ctypes import c_int16
+from ctypes import c_int32
+from ctypes import c_uint16
+from ctypes import POINTER
 from math import copysign
 
 from scc.cheader import defines

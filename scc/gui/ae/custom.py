@@ -4,7 +4,6 @@ SC-Controller - Action Editor - Custom action
 
 Custom Action page in Action Editor window
 """
-
 import logging
 
 from scc.actions import Action

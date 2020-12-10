@@ -4,13 +4,17 @@ SC-Controller - Profile
 
 Handles mapping profile stored in json file
 """
-
-
 import json
 import logging
 
 from scc.actions import NoAction
-from scc.constants import CPAD, GYRO, LEFT, RIGHT, STICK, WHOLE, SCButtons
+from scc.constants import CPAD
+from scc.constants import GYRO
+from scc.constants import LEFT
+from scc.constants import RIGHT
+from scc.constants import SCButtons
+from scc.constants import STICK
+from scc.constants import WHOLE
 from scc.lib.jsonencoder import JSONEncoder
 from scc.menu_data import MenuData
 from scc.modifiers import HoldModifier

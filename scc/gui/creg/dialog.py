@@ -6,28 +6,41 @@ Dialog that asks a lot of question to create configuration node in config file.
 Most "interesting" thing here may be that this works 100% independently from
 daemon.
 """
-
 import json
 import logging
 import os
 import re
 
 import evdev
-from gi.repository import GdkPixbuf, GLib, Gtk
+from gi.repository import GdkPixbuf
+from gi.repository import GLib
+from gi.repository import Gtk
 
 from scc.config import Config
-from scc.constants import STICK_PAD_MAX, STICK_PAD_MIN, SCButtons
+from scc.constants import SCButtons
+from scc.constants import STICK_PAD_MAX
+from scc.constants import STICK_PAD_MIN
 from scc.gui.app import App
 from scc.gui.controller_image import ControllerImage
-from scc.gui.creg.constants import (AXIS_ORDER, BUTTON_ORDER, SDL_AXES,
-                                    SDL_DPAD, SDL_TO_SCC_NAMES,
-                                    STICK_PAD_AREAS, TRIGGER_AREAS)
-from scc.gui.creg.data import AxisData, DPadEmuData
-from scc.gui.creg.grabs import InputGrabber, StickGrabber, TriggerGrabber
+from scc.gui.creg.constants import AXIS_ORDER
+from scc.gui.creg.constants import BUTTON_ORDER
+from scc.gui.creg.constants import SDL_AXES
+from scc.gui.creg.constants import SDL_DPAD
+from scc.gui.creg.constants import SDL_TO_SCC_NAMES
+from scc.gui.creg.constants import STICK_PAD_AREAS
+from scc.gui.creg.constants import TRIGGER_AREAS
+from scc.gui.creg.data import AxisData
+from scc.gui.creg.data import DPadEmuData
+from scc.gui.creg.grabs import InputGrabber
+from scc.gui.creg.grabs import StickGrabber
+from scc.gui.creg.grabs import TriggerGrabber
 from scc.gui.creg.tester import Tester
 from scc.gui.editor import Editor
-from scc.paths import get_config_path, get_share_path
-from scc.tools import _, clamp, nameof
+from scc.paths import get_config_path
+from scc.paths import get_share_path
+from scc.tools import _
+from scc.tools import clamp
+from scc.tools import nameof
 
 log = logging.getLogger("CRegistration")
 

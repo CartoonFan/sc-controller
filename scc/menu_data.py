@@ -3,7 +3,6 @@ SC-Controller - Menu Data
 
 Container for list of menu items + required parsers
 """
-
 import json
 import os
 

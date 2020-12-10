@@ -3,22 +3,35 @@ SC-Controller - BindingEditor
 
 Base class for main application window and OSD Keyboard bindings editor.
 """
-
 from scc.actions import NoAction
-from scc.constants import LEFT, RIGHT, SCButtons
+from scc.constants import LEFT
+from scc.constants import RIGHT
+from scc.constants import SCButtons
 from scc.gui.action_editor import ActionEditor
-from scc.gui.ae.buttons import is_button_repeat, is_button_togle
+from scc.gui.ae.buttons import is_button_repeat
+from scc.gui.ae.buttons import is_button_togle
 from scc.gui.ae.gyro_action import is_gyro_enable
-from scc.gui.controller_widget import (BUTTONS, GYROS, PADS, PRESSABLE, STICKS,
-                                       TRIGGERS, ControllerButton,
-                                       ControllerGyro, ControllerPad,
-                                       ControllerStick, ControllerTrigger)
+from scc.gui.controller_widget import BUTTONS
+from scc.gui.controller_widget import ControllerButton
+from scc.gui.controller_widget import ControllerGyro
+from scc.gui.controller_widget import ControllerPad
+from scc.gui.controller_widget import ControllerStick
+from scc.gui.controller_widget import ControllerTrigger
+from scc.gui.controller_widget import GYROS
+from scc.gui.controller_widget import PADS
+from scc.gui.controller_widget import PRESSABLE
+from scc.gui.controller_widget import STICKS
+from scc.gui.controller_widget import TRIGGERS
 from scc.gui.macro_editor import MacroEditor
 from scc.gui.modeshift_editor import ModeshiftEditor
 from scc.gui.ring_editor import RingEditor
-from scc.macros import Macro, Type
-from scc.modifiers import (DoubleclickModifier, FeedbackModifier, HoldModifier,
-                           ModeModifier, SensitivityModifier)
+from scc.macros import Macro
+from scc.macros import Type
+from scc.modifiers import DoubleclickModifier
+from scc.modifiers import FeedbackModifier
+from scc.modifiers import HoldModifier
+from scc.modifiers import ModeModifier
+from scc.modifiers import SensitivityModifier
 from scc.profile import Profile
 from scc.tools import _
 
