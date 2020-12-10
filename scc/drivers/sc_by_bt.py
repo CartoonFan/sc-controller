@@ -294,13 +294,13 @@ def hidraw_test(filename):
         def add_error(self, id, error):
             log.error(error)
 
-        def remove_error(*a):
+        def remove_error(self, *a):
             pass
 
-        def add_mainloop(*a):
+        def add_mainloop(self, *a):
             pass
 
-        def get_active_ids(*a):
+        def get_active_ids(self, *a):
             return []
 
         def get_poller(self):

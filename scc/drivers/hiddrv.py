@@ -688,7 +688,7 @@ def hiddrv_test(cls, args):
             fake_daemon.exitcode = 2
             log.error(error)
 
-        def remove_error(*a):
+        def remove_error(self, *a):
             pass
 
         def get_poller(self):
