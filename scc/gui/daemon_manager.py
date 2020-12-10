@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - DaemonManager
 
@@ -272,7 +271,7 @@ class DaemonManager(GObject.GObject):
             error_cb("Not connected.")
 
     @classmethod
-    def nocallback(*a):
+    def nocallback(cls, *a):
         """ Used when request doesn't needs callback """
         pass
 
