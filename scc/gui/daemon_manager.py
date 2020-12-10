@@ -454,7 +454,7 @@ class ControllerManager(GObject.GObject):
         """
         return find_button_image(ControllerManager.get_button_name(
             config, button),
-                                 prefer_bw=prefer_bw)
+            prefer_bw=prefer_bw)
 
     @staticmethod
     def get_button_name(config, button):
