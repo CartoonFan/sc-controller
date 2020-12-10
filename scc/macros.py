@@ -10,10 +10,12 @@ from scc.uinput import Keys
 
 
 import logging
+
 log = logging.getLogger("Macros")
 
 
-def _(x): return x
+def _(x):
+    return x
 
 
 class Macro(Action):
@@ -121,8 +123,8 @@ class Macro(Action):
 
     def __str__(self):
         if self.repeat:
-            return "<[repeat %s ]>" % ("; ".join([str(x) for x in self.actions]), )
-        return "<[ %s ]>" % ("; ".join([str(x) for x in self.actions]), )
+            return "<[repeat %s ]>" % ("; ".join([str(x) for x in self.actions]),)
+        return "<[ %s ]>" % ("; ".join([str(x) for x in self.actions]),)
 
     __repr__ = __str__
 
@@ -136,6 +138,7 @@ class Type(Macro):
     Recognizes only lowercase letters, uppercase letters, numbers and space.
     Adding anything else will make action unparseable.
     """
+
     COMMAND = "type"
     HOLD_TIME = 0.001
 
@@ -144,19 +147,17 @@ class Type(Macro):
         shift = False
         for letter in string:
             if (
-                (letter >= 'a' and letter <= 'z')
-                or (letter >= '0' and letter <= '9')
+                (letter >= "a" and letter <= "z") or (letter >= "0" and letter <= "9")
             ) and hasattr(Keys, ("KEY_" + letter).upper()):
                 if shift:
                     params.append(ReleaseAction(Keys.KEY_LEFTSHIFT))
                     shift = False
-                params.append(ButtonAction(
-                    getattr(Keys, ("KEY_" + letter).upper())))
+                params.append(ButtonAction(getattr(Keys, ("KEY_" + letter).upper())))
                 continue
-            if letter == ' ':
+            if letter == " ":
                 params.append(ButtonAction(Keys.KEY_SPACE))
                 continue
-            if letter >= 'A' and letter <= 'Z' and hasattr(Keys, "KEY_" + letter):
+            if letter >= "A" and letter <= "Z" and hasattr(Keys, "KEY_" + letter):
                 if not shift:
                     params.append(PressAction(Keys.KEY_LEFTSHIFT))
                     shift = True
@@ -177,7 +178,7 @@ class Cycle(Macro):
     executed for 2nd press et cetera et cetera.
     """
 
-    COMMAND = 'cycle'
+    COMMAND = "cycle"
 
     def __init__(self, *parameters):
         Action.__init__(self, *parameters)
@@ -205,7 +206,7 @@ class Cycle(Macro):
         return (" " * pad) + self.COMMAND + "(" + lst + ")"
 
     def __str__(self):
-        return "<cycle %s >" % ("; ".join([str(x) for x in self.actions]), )
+        return "<cycle %s >" % ("; ".join([str(x) for x in self.actions]),)
 
     __repr__ = __str__
 
@@ -215,6 +216,7 @@ class Repeat(Macro):
     Repeats specified action as long as physical button is pressed.
     This is actually just Macro with 'repeat' set to True
     """
+
     COMMAND = "repeat"
 
     def __new__(cls, action):
@@ -229,6 +231,7 @@ class SleepAction(Action):
     Does nothing.
     If used in macro, overrides delay after itself.
     """
+
     COMMAND = "sleep"
 
     def __init__(self, delay):
@@ -240,15 +243,18 @@ class SleepAction(Action):
         if self.name:
             return self.name
         if self.delay < 1.0:
-            return _("Wait %sms") % (int(self.delay*1000),)
+            return _("Wait %sms") % (int(self.delay * 1000),)
         s = ("%0.2f" % (self.delay,)).strip(".0")
         return _("Wait %ss") % (s,)
 
     def to_string(self, multiline=False, pad=0):
         return (" " * pad) + "%s(%0.3f)" % (self.COMMAND, self.delay)
 
-    def button_press(self, mapper): pass
-    def button_release(self, mapper): pass
+    def button_press(self, mapper):
+        pass
+
+    def button_release(self, mapper):
+        pass
 
 
 class PressAction(Action):
@@ -256,6 +262,7 @@ class PressAction(Action):
     Presses button and leaves it pressed.
     Can be used anywhere, but makes sense only with macro.
     """
+
     COMMAND = "press"
     PR = _("Press")
 
@@ -289,6 +296,7 @@ class ReleaseAction(PressAction):
     Releases button.
     Can be used anywhere, but makes sense only with macro.
     """
+
     COMMAND = "release"
     PR = _("Release")
 
@@ -302,6 +310,7 @@ class TapAction(PressAction):
     If button is already pressed, generates release-press-release-press
     events in quick sequence.
     """
+
     COMMAND = "tap"
     PR = _("Tap")
     PAUSE = 0.1
@@ -331,8 +340,7 @@ class TapAction(PressAction):
         # action touched same button.
         # ---
         if self.button in mapper.pressed and mapper.pressed[self.button] > 1:
-            log.warning(
-                "Failed to tap, two or more actions are holding button")
+            log.warning("Failed to tap, two or more actions are holding button")
             return
 
         # Generate as many clicks as requested
@@ -394,7 +402,11 @@ class TapAction(PressAction):
             return "%s %s" % (_("Tap"), ButtonAction.describe_button(self.button))
         if self.count == 2:
             return "%s %s" % (_("DblTap"), ButtonAction.describe_button(self.button))
-        return "%s%s %s" % (self.count, _("-tap"), ButtonAction.describe_button(self.button))
+        return "%s%s %s" % (
+            self.count,
+            _("-tap"),
+            ButtonAction.describe_button(self.button),
+        )
 
     def describe(self, context):
         if self.name:

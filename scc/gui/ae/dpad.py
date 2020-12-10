@@ -17,9 +17,10 @@ from scc.gui.binding_editor import BindingEditor
 
 
 import logging
+
 log = logging.getLogger("AE.DPAD")
 
-__all__ = ['DPADComponent']
+__all__ = ["DPADComponent"]
 
 
 class DPADComponent(AEComponent, MenuActionCofC, BindingEditor):
@@ -28,7 +29,7 @@ class DPADComponent(AEComponent, MenuActionCofC, BindingEditor):
     CTXS = Action.AC_STICK | Action.AC_PAD
     PRIORITY = 2
 
-    DPAD8_WIDGETS = ['btDPAD4', 'btDPAD5', 'btDPAD6', 'btDPAD7']
+    DPAD8_WIDGETS = ["btDPAD4", "btDPAD5", "btDPAD6", "btDPAD7"]
 
     def __init__(self, app, editor):
         AEComponent.__init__(self, app, editor)
@@ -45,9 +46,11 @@ class DPADComponent(AEComponent, MenuActionCofC, BindingEditor):
         cbConfirmWith = self.builder.get_object("cbConfirmWith")
         cbCancelWith = self.builder.get_object("cbCancelWith")
         cbConfirmWith.set_row_separator_func(
-            lambda model, iter: model.get_value(iter, 0) == "-")
+            lambda model, iter: model.get_value(iter, 0) == "-"
+        )
         cbCancelWith.set_row_separator_func(
-            lambda model, iter: model.get_value(iter, 0) == "-")
+            lambda model, iter: model.get_value(iter, 0) == "-"
+        )
 
     def shown(self):
         if not self._userdata_load_started:
@@ -102,31 +105,40 @@ class DPADComponent(AEComponent, MenuActionCofC, BindingEditor):
             self.editor.set_action(DPad8Action(scl.get_value(), *self.actions))
         elif key == "dpad":
             # 4-way dpad
-            self.editor.set_action(DPadAction(scl.get_value(),
-                                              *self.actions[0:4]))
+            self.editor.set_action(DPadAction(scl.get_value(), *self.actions[0:4]))
         elif key == "wsad":
             # special case of 4-way dpad
-            a = DPadAction(scl.get_value(),
-                           ButtonAction(Keys.KEY_W), ButtonAction(Keys.KEY_S),
-                           ButtonAction(Keys.KEY_A), ButtonAction(Keys.KEY_D))
+            a = DPadAction(
+                scl.get_value(),
+                ButtonAction(Keys.KEY_W),
+                ButtonAction(Keys.KEY_S),
+                ButtonAction(Keys.KEY_A),
+                ButtonAction(Keys.KEY_D),
+            )
             self.actions = [NoAction()] * 8
             self.editor.set_action(a)
             self.update_button_desc(a)
         elif key == "arrows":
             # special case of 4-way dpad
-            a = DPadAction(scl.get_value(),
-                           ButtonAction(Keys.KEY_UP), ButtonAction(
-                               Keys.KEY_DOWN),
-                           ButtonAction(Keys.KEY_LEFT), ButtonAction(Keys.KEY_RIGHT))
+            a = DPadAction(
+                scl.get_value(),
+                ButtonAction(Keys.KEY_UP),
+                ButtonAction(Keys.KEY_DOWN),
+                ButtonAction(Keys.KEY_LEFT),
+                ButtonAction(Keys.KEY_RIGHT),
+            )
             self.actions = [NoAction()] * 8
             self.editor.set_action(a)
             self.update_button_desc(a)
         elif key == "actual_dpad":
             # maps to dpad as real gamepad usually has
-            a = DPadAction(scl.get_value(),
-                           HatUpAction(Axes.ABS_HAT0Y), HatDownAction(
-                               Axes.ABS_HAT0Y),
-                           HatLeftAction(Axes.ABS_HAT0X), HatRightAction(Axes.ABS_HAT0X))
+            a = DPadAction(
+                scl.get_value(),
+                HatUpAction(Axes.ABS_HAT0Y),
+                HatDownAction(Axes.ABS_HAT0Y),
+                HatLeftAction(Axes.ABS_HAT0X),
+                HatRightAction(Axes.ABS_HAT0X),
+            )
             self.actions = [NoAction()] * 8
             self.editor.set_action(a)
             self.update_button_desc(a)
@@ -157,7 +169,7 @@ class DPADComponent(AEComponent, MenuActionCofC, BindingEditor):
             # one of actions, swap back to 'Simple DPAD' mode.
             self.set_cb(cb, "dpad", 1)
         # if action.name:
-        #	action = NameModifier(action.name, action)
+        # 	action = NameModifier(action.name, action)
         self.set_button_desc(i)
         self.update()
 
@@ -176,8 +188,8 @@ class DPADComponent(AEComponent, MenuActionCofC, BindingEditor):
         i = int(b.get_name())
         action = self.actions[i]
         # f isinstance(action, NameModifier):
-        #action.action.name = action.name
-        #action = action.action
+        # action.action.name = action.name
+        # action = action.action
         ae = self.choose_editor(action, "")
         # ae = ActionEditor(self.app, self.on_choosen)
         ae.set_title(_("Select DPAD Action"))

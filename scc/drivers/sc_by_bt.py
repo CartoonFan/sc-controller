@@ -18,7 +18,7 @@ import struct
 import ctypes
 import logging
 
-VENDOR_ID = 0x28de
+VENDOR_ID = 0x28DE
 PRODUCT_ID = 0x1106
 PACKET_SIZE = 20
 
@@ -27,33 +27,33 @@ log = logging.getLogger("SCBT")
 
 class SCByBtControllerInput(ctypes.Structure):
     _fields_ = [
-        ('type', ctypes.c_uint16),
-        ('buttons', ctypes.c_uint32),
-        ('ltrig', ctypes.c_uint8),
-        ('rtrig', ctypes.c_uint8),
-        ('stick_x', ctypes.c_int32),
-        ('stick_y', ctypes.c_int32),
-        ('lpad_x', ctypes.c_int32),
-        ('lpad_y', ctypes.c_int32),
-        ('rpad_x', ctypes.c_int32),
-        ('rpad_y', ctypes.c_int32),
-        ('gpitch', ctypes.c_int32),
-        ('groll', ctypes.c_int32),
-        ('gyaw', ctypes.c_int32),
-        ('q1', ctypes.c_int32),
-        ('q2', ctypes.c_int32),
-        ('q3', ctypes.c_int32),
-        ('q4', ctypes.c_int32),
+        ("type", ctypes.c_uint16),
+        ("buttons", ctypes.c_uint32),
+        ("ltrig", ctypes.c_uint8),
+        ("rtrig", ctypes.c_uint8),
+        ("stick_x", ctypes.c_int32),
+        ("stick_y", ctypes.c_int32),
+        ("lpad_x", ctypes.c_int32),
+        ("lpad_y", ctypes.c_int32),
+        ("rpad_x", ctypes.c_int32),
+        ("rpad_y", ctypes.c_int32),
+        ("gpitch", ctypes.c_int32),
+        ("groll", ctypes.c_int32),
+        ("gyaw", ctypes.c_int32),
+        ("q1", ctypes.c_int32),
+        ("q2", ctypes.c_int32),
+        ("q3", ctypes.c_int32),
+        ("q4", ctypes.c_int32),
     ]
 
 
 class SCByBtC(ctypes.Structure):
     _fields_ = [
-        ('fileno', ctypes.c_int),
-        ('buffer', ctypes.c_char * 256),
-        ('long_packet', ctypes.c_uint8),
-        ('state', SCByBtControllerInput),
-        ('old_state', SCByBtControllerInput),
+        ("fileno", ctypes.c_int),
+        ("buffer", ctypes.c_char * 256),
+        ("long_packet", ctypes.c_uint8),
+        ("state", SCByBtControllerInput),
+        ("old_state", SCByBtControllerInput),
     ]
 
 
@@ -62,23 +62,26 @@ SCByBtCPtr = ctypes.POINTER(SCByBtC)
 
 class Driver:
     """ Similar to USB driver, but with hidraw used for backend """
+
     # TODO: It should be possible to merge this, usb and hiddrv
 
     def __init__(self, daemon, config):
         self.config = config
         self.daemon = daemon
         self.reconnecting = set()
-        self._lib = find_library('libsc_by_bt')
+        self._lib = find_library("libsc_by_bt")
         read_input = self._lib.read_input
         read_input.restype = ctypes.c_int
         read_input.argtypes = [SCByBtCPtr]
-        daemon.get_device_monitor().add_callback("bluetooth",
-                                                 VENDOR_ID, PRODUCT_ID, self.new_device_callback, None)
+        daemon.get_device_monitor().add_callback(
+            "bluetooth", VENDOR_ID, PRODUCT_ID, self.new_device_callback, None
+        )
 
     def retry(self, syspath):
         """
         Schedules reconnecting controller after read operation fails.
         """
+
         def reconnect(*a):
             if syspath in self.reconnecting:
                 self.reconnecting.remove(syspath)
@@ -87,7 +90,8 @@ class Driver:
 
         self.reconnecting.add(syspath)
         self.daemon.get_device_monitor().add_remove_callback(
-            syspath, self._retry_cancel)
+            syspath, self._retry_cancel
+        )
         self.daemon.get_scheduler().schedule(1.0, reconnect)
 
     def _retry_cancel(self, syspath):
@@ -129,10 +133,8 @@ class SCByBt(SCController):
         self._state = self._c_data.state
         self._poller = self.daemon.get_poller()
         if self._poller:
-            self._poller.register(
-                self._fileno, self._poller.POLLIN, self._input)
-        self.daemon.get_device_monitor().add_remove_callback(
-            syspath, self.close)
+            self._poller.register(self._fileno, self._poller.POLLIN, self._input)
+        self.daemon.get_device_monitor().add_remove_callback(syspath, self.close)
         self.read_serial()
         self.configure()
         self.flush()
@@ -180,35 +182,43 @@ class SCByBt(SCController):
         if led_level is not None:
             self._led_level = led_level
 
-        unknown1 = b'\x00\x00\x31\x02\x00\x08\x07\x00\x07\x07\x00\x30'
-        unknown2 = b'\x00\x2e'
+        unknown1 = b"\x00\x00\x31\x02\x00\x08\x07\x00\x07\x07\x00\x30"
+        unknown2 = b"\x00\x2e"
 
         # Timeout & Gyros
-        self.overwrite_control(self._ccidx, struct.pack('>BBB12sB2s',
-                                                        SCPacketType.CONFIGURE,
-                                                        SCPacketLength.CONFIGURE_BT,
-                                                        SCConfigType.CONFIGURE_BT,
-                                                        unknown1,
-                                                        0x14 if self._enable_gyros else 0,
-                                                        unknown2))
+        self.overwrite_control(
+            self._ccidx,
+            struct.pack(
+                ">BBB12sB2s",
+                SCPacketType.CONFIGURE,
+                SCPacketLength.CONFIGURE_BT,
+                SCConfigType.CONFIGURE_BT,
+                unknown1,
+                0x14 if self._enable_gyros else 0,
+                unknown2,
+            ),
+        )
 
         # LED
-        self.overwrite_control(self._ccidx, struct.pack('>BBBB',
-                                                        SCPacketType.CONFIGURE,
-                                                        SCPacketLength.LED,
-                                                        SCConfigType.LED,
-                                                        self._led_level
-                                                        ))
+        self.overwrite_control(
+            self._ccidx,
+            struct.pack(
+                ">BBBB",
+                SCPacketType.CONFIGURE,
+                SCPacketLength.LED,
+                SCConfigType.LED,
+                self._led_level,
+            ),
+        )
 
     def read_serial(self):
-        self._serial = (self._hidrawdev
-                        .getPhysicalAddress().replace(":", ""))
+        self._serial = self._hidrawdev.getPhysicalAddress().replace(":", "")
 
     def send_control(self, index, data):
         """ Schedules writing control to device """
         # For BT controller, index is ignored
-        zeros = b'\x00' * (PACKET_SIZE - len(data) - 1)
-        self._cmsg.insert(0, b'\xc0' + data + zeros)
+        zeros = b"\x00" * (PACKET_SIZE - len(data) - 1)
+        self._cmsg.insert(0, b"\xc0" + data + zeros)
 
     def overwrite_control(self, index, data):
         """
@@ -255,14 +265,12 @@ class SCByBt(SCController):
             if self.mapper is not None:
                 if self._input_rotation_l and (self._state.type & 0x0100) != 0:
                     lx, ly = self._state.lpad_x, self._state.lpad_y
-                    s, c = sin(self._input_rotation_l), cos(
-                        self._input_rotation_l)
+                    s, c = sin(self._input_rotation_l), cos(self._input_rotation_l)
                     self._state.lpad_x = int(lx * c - ly * s)
                     self._state.lpad_y = int(lx * s + ly * c)
                 if self._input_rotation_r and (self._state.type & 0x0200) != 0:
                     rx, ry = self._state.rpad_x, self._state.rpad_y
-                    s, c = sin(self._input_rotation_r), cos(
-                        self._input_rotation_r)
+                    s, c = sin(self._input_rotation_r), cos(self._input_rotation_r)
                     self._state.rpad_x = int(rx * c - ry * s)
                     self._state.rpad_y = int(rx * s + ry * c)
 
@@ -276,15 +284,17 @@ class SCByBt(SCController):
 
 def hidraw_test(filename):
     class FakeDaemon(object):
-
         def add_error(self, id, error):
             log.error(error)
 
-        def remove_error(*a): pass
+        def remove_error(*a):
+            pass
 
-        def add_mainloop(*a): pass
+        def add_mainloop(*a):
+            pass
 
-        def get_active_ids(*a): return []
+        def get_active_ids(*a):
+            return []
 
         def get_poller(self):
             return None
@@ -319,6 +329,7 @@ def init(daemon, config):
 if __name__ == "__main__":
     """ Called when executed as script """
     from scc.tools import init_logging, set_logging_level
+
     init_logging()
     set_logging_level(True, True)
     sys.exit(hidraw_test(sys.argv[1]))

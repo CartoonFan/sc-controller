@@ -13,9 +13,10 @@ from scc.gui.ae.menu_action import MenuActionCofC
 from scc.gui.ae import AEComponent
 
 import logging
+
 log = logging.getLogger("AE.SA")
 
-__all__ = ['MenuOnlyComponent']
+__all__ = ["MenuOnlyComponent"]
 
 
 class MenuOnlyComponent(AEComponent, MenuActionCofC):

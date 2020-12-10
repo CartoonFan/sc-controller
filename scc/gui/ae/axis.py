@@ -13,9 +13,10 @@ from scc.gui.area_to_action import action_to_area
 from scc.gui.chooser import Chooser
 
 import logging
+
 log = logging.getLogger("AE.Axis")
 
-__all__ = ['AxisComponent']
+__all__ = ["AxisComponent"]
 
 
 class AxisComponent(AEComponent, Chooser):
@@ -47,7 +48,8 @@ class AxisComponent(AEComponent, Chooser):
                 # axis + button on fully pressed trigger
                 self.full = action.actions[0].button2
                 self.builder.get_object("lblFullPressed").set_label(
-                    describe_action(Action.AC_BUTTON, ButtonAction, self.full))
+                    describe_action(Action.AC_BUTTON, ButtonAction, self.full)
+                )
                 action = action.actions[1]
             area = action_to_area(action)
             if area is not None:

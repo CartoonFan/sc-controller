@@ -15,6 +15,7 @@ import os
 import traceback
 import logging
 import re
+
 log = logging.getLogger("IconChooser")
 RE_URL = re.compile(r"(.*)(https?://[^ ]+)(.*)")
 DEFAULT_ICON_CATEGORIES = ("items", "media", "weapons", "system")
@@ -77,7 +78,8 @@ class IconChooser(Editor, UserDataManager):
             # This part may throw TypeError if either list has nothing selected.
             return None
 
-    def on_entName_changed(self, *a): pass
+    def on_entName_changed(self, *a):
+        pass
 
     def on_tvItems_cursor_changed(self, view):
         entName = self.builder.get_object("entName")
@@ -99,9 +101,12 @@ class IconChooser(Editor, UserDataManager):
                 m = RE_URL.match(license)
                 if m:
                     license = "%s<a href='%s'>%s</a>%s" % (
-                        m.group(1), m.group(2), m.group(2), m.group(3))
-                lblLicense.set_markup(
-                    _("Free-use icon created by %s" % (license,)))
+                        m.group(1),
+                        m.group(2),
+                        m.group(2),
+                        m.group(3),
+                    )
+                lblLicense.set_markup(_("Free-use icon created by %s" % (license,)))
             rvLicense.set_reveal_child(bool(license))
 
     def on_tvCategories_cursor_changed(self, view):
@@ -123,7 +128,12 @@ class IconChooser(Editor, UserDataManager):
         model.clear()
         for f in icons:
             name = f.get_basename()
-            if f.query_info(Gio.FILE_ATTRIBUTE_STANDARD_TYPE, Gio.FileQueryInfoFlags.NONE, None).get_file_type() == Gio.FileType.DIRECTORY:
+            if (
+                f.query_info(
+                    Gio.FILE_ATTRIBUTE_STANDARD_TYPE, Gio.FileQueryInfoFlags.NONE, None
+                ).get_file_type()
+                == Gio.FileType.DIRECTORY
+            ):
                 # ^^ woo, Gio is fun...
                 tvCategories.get_model().append((name, name.title()))
             else:
@@ -158,7 +168,7 @@ class IconChooser(Editor, UserDataManager):
         if not selected:
             try:
                 # Try to select 1st category, but ignore if that fails
-                tvCategories.get_selection().select_path((0, ))
+                tvCategories.get_selection().select_path((0,))
                 self.on_tvCategories_cursor_changed(tvCategories)
             except:
                 pass
@@ -189,15 +199,17 @@ class CellRendererMenuIcon(Gtk.CellRenderer):
 
     def do_render(self, cr, treeview, background_area, cell_area, flags):
         context = Gtk.Widget.get_style_context(treeview)
-        Gtk.render_background(context, cr,
-                              cell_area.x, cell_area.y,
-                              cell_area.x + cell_area.width,
-                              cell_area.y + cell_area.height
-                              )
+        Gtk.render_background(
+            context,
+            cr,
+            cell_area.x,
+            cell_area.y,
+            cell_area.x + cell_area.width,
+            cell_area.y + cell_area.height,
+        )
 
         scaled = self.icon.scale_simple(
-            self.size, self.size,
-            GdkPixbuf.InterpType.BILINEAR
+            self.size, self.size, GdkPixbuf.InterpType.BILINEAR
         )
         surf = Gdk.cairo_surface_create_from_pixbuf(scaled, 1)
         if self.has_colors:

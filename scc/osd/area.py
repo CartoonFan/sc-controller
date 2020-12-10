@@ -12,6 +12,7 @@ from scc.osd.timermanager import TimerManager
 from scc.osd import OSDWindow
 
 import logging
+
 log = logging.getLogger("osd.area")
 
 
@@ -26,18 +27,32 @@ class Area(OSDWindow, TimerManager):
 
     def _add_arguments(self):
         OSDWindow._add_arguments(self)
-        self.argparser.add_argument('--width', type=int, metavar="pixels", default=20,
-                                    help="""area width in pixels""")
-        self.argparser.add_argument('--height', type=int, metavar="pixels", default=-20,
-                                    help="""area height in pixels""")
+        self.argparser.add_argument(
+            "--width",
+            type=int,
+            metavar="pixels",
+            default=20,
+            help="""area width in pixels""",
+        )
+        self.argparser.add_argument(
+            "--height",
+            type=int,
+            metavar="pixels",
+            default=-20,
+            help="""area height in pixels""",
+        )
 
     def parse_argumets(self, argv):
         if not OSDWindow.parse_argumets(self, argv):
             return False
-        self.position = (self.position[0] - self.BORDER_WIDTH,
-                         self.position[1] - self.BORDER_WIDTH)
-        self.size = (self.args.width + 2 * self.BORDER_WIDTH,
-                     self.args.height + 2 * self.BORDER_WIDTH)
+        self.position = (
+            self.position[0] - self.BORDER_WIDTH,
+            self.position[1] - self.BORDER_WIDTH,
+        )
+        self.size = (
+            self.args.width + 2 * self.BORDER_WIDTH,
+            self.args.height + 2 * self.BORDER_WIDTH,
+        )
         return True
 
     def compute_position(self):
@@ -78,8 +93,15 @@ class Area(OSDWindow, TimerManager):
         X.fill_rectangle(dpy, mask, gc, 0, 0, width, height)
 
         X.set_foreground(dpy, gc, 0)
-        X.fill_rectangle(dpy, mask, gc, border_width, border_width,
-                         width - 2 * border_width, height - 2 * border_width)
+        X.fill_rectangle(
+            dpy,
+            mask,
+            gc,
+            border_width,
+            border_width,
+            width - 2 * border_width,
+            height - 2 * border_width,
+        )
 
         SHAPE_BOUNDING = 0
         SHAPE_SET = 0

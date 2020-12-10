@@ -11,9 +11,10 @@ from scc.gui.ae import AEComponent
 from scc.actions import Action
 
 import logging
+
 log = logging.getLogger("AE.Custom")
 
-__all__ = ['CustomActionComponent']
+__all__ = ["CustomActionComponent"]
 
 
 class CustomActionComponent(AEComponent):
@@ -55,7 +56,8 @@ class CustomActionComponent(AEComponent):
         """
         txCustomAction = self.builder.get_object("txCustomAction")
         txt = tbCustomAction.get_text(
-            tbCustomAction.get_start_iter(), tbCustomAction.get_end_iter(), True)
+            tbCustomAction.get_start_iter(), tbCustomAction.get_end_iter(), True
+        )
         if len(txt.strip(" \t\r\n")) > 0:
             action = self.parser.restart(txt).parse()
             self.editor.set_action(action, from_custom=True)

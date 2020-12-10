@@ -19,11 +19,13 @@ import sys
 import json
 import traceback
 import logging
+
 log = logging.getLogger("osd.menu_gen")
 
 
 class ProfileListMenuGenerator(MenuGenerator):
     """ Generates list of all available profiles """
+
     GENERATOR_NAME = "profiles"
 
     @staticmethod
@@ -33,8 +35,10 @@ class ProfileListMenuGenerator(MenuGenerator):
 
         def on_response(*a):
             menu.quit(-2)
-        daemon.request(b"OSD: " + menuitem.label.encode("utf-8") + b"\n",
-                       on_response, on_response)
+
+        daemon.request(
+            b"OSD: " + menuitem.label.encode("utf-8") + b"\n", on_response, on_response
+        )
 
     def describe(self):
         return _("[ All Profiles ]")
@@ -57,6 +61,7 @@ class ProfileListMenuGenerator(MenuGenerator):
 
 class RecentListMenuGenerator(MenuGenerator):
     """ Generates list of X recently used profiles """
+
     GENERATOR_NAME = "recent"
 
     def __init__(self, rows=5, **b):
@@ -75,12 +80,14 @@ class RecentListMenuGenerator(MenuGenerator):
 
         def on_response(*a):
             menu.quit(-2)
-        daemon.request(b"OSD: " + menuitem.label.encode("utf-8") + b"\n",
-                       on_response, on_response)
+
+        daemon.request(
+            b"OSD: " + menuitem.label.encode("utf-8") + b"\n", on_response, on_response
+        )
 
     def generate(self, menuhandler):
         rv = []
-        for p in menuhandler.config['recent_profiles']:
+        for p in menuhandler.config["recent_profiles"]:
             filename = find_profile(p)
             if filename:
                 menuitem = MenuItem("generated", p)
@@ -94,6 +101,7 @@ class RecentListMenuGenerator(MenuGenerator):
 
 class WindowListMenuGenerator(MenuGenerator):
     """ Generates list of all windows """
+
     GENERATOR_NAME = "windowlist"
     MAX_LENGHT = 50
 
@@ -125,7 +133,7 @@ class WindowListMenuGenerator(MenuGenerator):
         wlist = cast(wlist, POINTER(X.XID))[0:count]
         for win in wlist:
             if not skip_taskbar in X.get_wm_state(dpy, win):
-                title = X.get_window_title(dpy, win)[0:self.MAX_LENGHT]
+                title = X.get_window_title(dpy, win)[0 : self.MAX_LENGHT]
                 menuitem = MenuItem(str(win), title)
                 menuitem.callback = WindowListMenuGenerator.callback
                 rv.append(menuitem)
@@ -137,10 +145,11 @@ class GameListMenuGenerator(MenuGenerator):
     Generates list of applications known to XDG menu
     and belonging to 'Game' category
     """
+
     GENERATOR_NAME = "games"
     MAX_LENGHT = 50
 
-    _games = None		# Static list of know games
+    _games = None  # Static list of know games
 
     def generate(self, menuhandler):
         return _("[ Games ]")
@@ -160,8 +169,9 @@ class GameListMenuGenerator(MenuGenerator):
             for x in Gio.AppInfo.get_all():
                 if x.get_categories():
                     if "Game" in x.get_categories().split(";"):
-                        menuitem = MenuItem(str(id), x.get_display_name(),
-                                            icon=x.get_icon())
+                        menuitem = MenuItem(
+                            str(id), x.get_display_name(), icon=x.get_icon()
+                        )
                         menuitem.callback = GameListMenuGenerator.callback
                         menuitem._desktop_file = x
                         GameListMenuGenerator._games.append(menuitem)
@@ -169,6 +179,6 @@ class GameListMenuGenerator(MenuGenerator):
 
 
 # Add classes to MENU_GENERATORS dict
-for i in [globals()[x] for x in dir() if hasattr(globals()[x], 'GENERATOR_NAME')]:
+for i in [globals()[x] for x in dir() if hasattr(globals()[x], "GENERATOR_NAME")]:
     if i.GENERATOR_NAME is not None:
         MENU_GENERATORS[i.GENERATOR_NAME] = i

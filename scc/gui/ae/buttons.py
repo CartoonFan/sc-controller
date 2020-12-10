@@ -19,9 +19,10 @@ from scc.gui.chooser import Chooser
 from scc.gui.ae import AEComponent
 
 import logging
+
 log = logging.getLogger("AE.Buttons")
 
-__all__ = ['ButtonsComponent']
+__all__ = ["ButtonsComponent"]
 
 
 class ButtonsComponent(AEComponent, Chooser):
@@ -30,10 +31,16 @@ class ButtonsComponent(AEComponent, Chooser):
     IMAGES = {"buttons": "buttons.svg"}
     CTXS = Action.AC_BUTTON | Action.AC_MENU
     PRIORITY = 1
-    MODIFIER_KEYS = (Keys.KEY_LEFTSHIFT, Keys.KEY_LEFTMETA, Keys.KEY_LEFTALT,
-                     Keys.KEY_LEFTCTRL, Keys.KEY_RIGHTMETA, Keys.KEY_RIGHTSHIFT,
-                     Keys.KEY_RIGHTCTRL, Keys.KEY_RIGHTALT,
-                     )
+    MODIFIER_KEYS = (
+        Keys.KEY_LEFTSHIFT,
+        Keys.KEY_LEFTMETA,
+        Keys.KEY_LEFTALT,
+        Keys.KEY_LEFTCTRL,
+        Keys.KEY_RIGHTMETA,
+        Keys.KEY_RIGHTSHIFT,
+        Keys.KEY_RIGHTCTRL,
+        Keys.KEY_RIGHTALT,
+    )
 
     def __init__(self, app, editor):
         AEComponent.__init__(self, app, editor)
@@ -46,8 +53,8 @@ class ButtonsComponent(AEComponent, Chooser):
             AEComponent.load(self)
             self.setup_image()
             if self.app.osd_mode:
-                self.builder.get_object('btnGrabKey').set_sensitive(False)
-                self.builder.get_object('btnGrabAnother').set_sensitive(False)
+                self.builder.get_object("btnGrabKey").set_sensitive(False)
+                self.builder.get_object("btnGrabAnother").set_sensitive(False)
 
     def area_action_selected(self, area, action):
         self.set_active_area(area)
@@ -149,8 +156,7 @@ class ButtonsComponent(AEComponent, Chooser):
         Same as above, but adds another key to action
         """
         kg = KeyGrabber(self.app)
-        kg.grab(self.editor.window, self.editor._action,
-                self.on_additional_key_grabbed)
+        kg.grab(self.editor.window, self.editor._action, self.on_additional_key_grabbed)
 
     def on_cbToggle_toggled(self, cbToggle):
         cbRepeat = self.builder.get_object("cbRepeat")
@@ -191,7 +197,10 @@ def is_button_togle(action):
         if isinstance(action.actions[1], ReleaseAction):
             if isinstance(action.actions[0].action, ButtonAction):
                 if isinstance(action.actions[1].action, ButtonAction):
-                    return action.actions[0].action.button == action.actions[1].action.button
+                    return (
+                        action.actions[0].action.button
+                        == action.actions[1].action.button
+                    )
     return False
 
 

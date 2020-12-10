@@ -13,33 +13,34 @@ from scc.special_actions import ChangeProfileAction
 import os
 import json
 import logging
+
 log = logging.getLogger("Config")
 
 
 class Config(object):
     DEFAULTS = {
-        "autoswitch_osd":	True,  # True to show OSD message when profile is autoswitched
-        "autoswitch":		[],		# Empty list of conditions
-        "recent_max":		10,		# Number of profiles to keep
-        "recent_profiles":	[		# Hard-coded list of profiles from default_profiles/
+        "autoswitch_osd": True,  # True to show OSD message when profile is autoswitched
+        "autoswitch": [],  # Empty list of conditions
+        "recent_max": 10,  # Number of profiles to keep
+        "recent_profiles": [  # Hard-coded list of profiles from default_profiles/
             # This is actually updated by scc-osd-daemon, as that's
             # only thing actually knowing what to put here.
             "Desktop",
             "XBox Controller with High Precision Camera",
-            "XBox Controller"
+            "XBox Controller",
         ],
-        "drivers": {				# Map of drivers with values of True, Flase
+        "drivers": {  # Map of drivers with values of True, Flase
             # or additional driver config where needed.
             # Anything but False means enabled here.
             "sc_dongle": True,
             "sc_by_cable": True,
             "sc_by_bt": True,
-            "fake": False,			# Used for developement
+            "fake": False,  # Used for developement
             "hiddrv": True,
             "evdevdrv": True,
-            "ds4drv": True,			# At least one of hiddrv or evdevdrv has to be enabled as well
+            "ds4drv": True,  # At least one of hiddrv or evdevdrv has to be enabled as well
         },
-        "fix_xinput": True,		# If True, attempt is done to deatach emulated controller
+        "fix_xinput": True,  # If True, attempt is done to deatach emulated controller
         # from 'Virtual core pointer' core device.
         "gui": {
             # GUI-only settings
@@ -49,30 +50,30 @@ class Config(object):
             "autokill_daemon": False,
             "news": {
                 # Controls "new in this version" message
-                "enabled": True,			# if disabled, no querying is done
+                "enabled": True,  # if disabled, no querying is done
                 "last_version": "0.3.12",  # last version for which message was displayed
-            }
+            },
         },
         "controllers": {},
         # output - modifies emulated controller
         # Changing this may be usefull, but can break a lot of things
         "output": {
-            'vendor': '0x045e',
-            'product': '0x028e',
-            'version': '0x110',
-            'name': "Microsoft X-Box 360 pad",
-                    'buttons': 11,
-                    'rumble': True,
-                    'axes': [
-                        (-32768, 32767),  # Axes.ABS_X
-                        (-32768, 32767),  # Axes.ABS_Y
-                        (-32768, 32767),  # Axes.ABS_RX
-                        (-32768, 32767),  # Axes.ABS_RY
-                        (0, 255),			# Axes.ABS_Z
-                        (0, 255),			# Axes.ABS_RZ
-                        (-1, 1),			# Axes.ABS_HAT0X
-                        (-1, 1)				# Axes.ABS_HAT0Y
-                    ],
+            "vendor": "0x045e",
+            "product": "0x028e",
+            "version": "0x110",
+            "name": "Microsoft X-Box 360 pad",
+            "buttons": 11,
+            "rumble": True,
+            "axes": [
+                (-32768, 32767),  # Axes.ABS_X
+                (-32768, 32767),  # Axes.ABS_Y
+                (-32768, 32767),  # Axes.ABS_RX
+                (-32768, 32767),  # Axes.ABS_RY
+                (0, 255),  # Axes.ABS_Z
+                (0, 255),  # Axes.ABS_RZ
+                (-1, 1),  # Axes.ABS_HAT0X
+                (-1, 1),  # Axes.ABS_HAT0Y
+            ],
         },
         # enable_sniffing - If enabled, another program with write access to
         # ~/.config/scc can ask daemon to send notifications about all
@@ -85,21 +86,21 @@ class Config(object):
             "background": "101010",
             "border": "101010",
             "text": "16BF24",
-                    "menuitem_border": "101010",
-                    "menuitem_hilight": "202020",
-                    "menuitem_hilight_text": "16FF26",
-                    "menuitem_hilight_border": "16FF26",
-                    "menuseparator": "2e3436",
+            "menuitem_border": "101010",
+            "menuitem_hilight": "202020",
+            "menuitem_hilight_text": "16FF26",
+            "menuitem_hilight_border": "16FF26",
+            "menuseparator": "2e3436",
         },
         # Colors used by on-screen keyboard
         "osk_colors": {
-            'hilight': '7A7A7A',
-            'pressed': 'B0B0B0',
+            "hilight": "7A7A7A",
+            "pressed": "B0B0B0",
             "button1": "101010",
             "button1_border": "101010",
             "button2": "2e3436",
             "button2_border": "2e3436",
-            "text": "16BF24"
+            "text": "16BF24",
         },
         # Colors used by gesture display. Unlike OSD and OSK, these are RGBA
         "gesture_colors": {
@@ -115,16 +116,16 @@ class Config(object):
 
     CONTROLLER_DEFAULTS = {
         # Defaults for controller config
-        "name":					None,  # Filled with controller ID on runtime
-        "icon":					None,  # Determined by magic by UI
-        "led_level":			80,		# range 0 to 100
-        "idle_timeout":			600,  # in seconds, range from 1 to 32767
-        "osd_alignment":		0,		# not used yet
-        "input_rotation_l":		20,		# range -180 to 180
+        "name": None,  # Filled with controller ID on runtime
+        "icon": None,  # Determined by magic by UI
+        "led_level": 80,  # range 0 to 100
+        "idle_timeout": 600,  # in seconds, range from 1 to 32767
+        "osd_alignment": 0,  # not used yet
+        "input_rotation_l": 20,  # range -180 to 180
         "input_rotation_r": -20,  # range -180 to 180
-        "menu_control":			"STICK",
-        "menu_confirm":			"A",
-        "menu_cancel":			"B",
+        "menu_control": "STICK",
+        "menu_confirm": "A",
+        "menu_cancel": "B",
     }
 
     def __init__(self):
@@ -170,8 +171,7 @@ class Config(object):
         if "autoswitch" in self.values:
             for a in self.values["autoswitch"]:
                 if "profile" in a:
-                    a["action"] = ChangeProfileAction(
-                        str(a["profile"])).to_string()
+                    a["action"] = ChangeProfileAction(str(a["profile"])).to_string()
                     del a["profile"]
                     rv = True
         return rv
@@ -181,9 +181,9 @@ class Config(object):
         Returns self['controllers'][controller_id], creating new node populated
         with defaults if there is none.
         """
-        if controller_id in self.values['controllers']:
+        if controller_id in self.values["controllers"]:
             # Check values in existing config
-            rv = self.values['controllers'][controller_id]
+            rv = self.values["controllers"][controller_id]
             for key in self.CONTROLLER_DEFAULTS:
                 if key not in rv:
                     if key in ("input_rotation_l", "input_rotation_r"):
@@ -193,7 +193,7 @@ class Config(object):
                         rv[key] = self.CONTROLLER_DEFAULTS[key]
             return rv
         # Create new config
-        rv = self.values['controllers'][controller_id] = {
+        rv = self.values["controllers"][controller_id] = {
             key: self.CONTROLLER_DEFAULTS[key] for key in self.CONTROLLER_DEFAULTS
         }
         rv["name"] = controller_id

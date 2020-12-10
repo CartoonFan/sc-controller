@@ -14,6 +14,7 @@ from scc.lib import usb1
 import time
 import traceback
 import logging
+
 log = logging.getLogger("USB")
 
 
@@ -24,8 +25,8 @@ class USBDevice(object):
         self.device = device
         self.handle = handle
         self._claimed = []
-        self._cmsg = []		# controll messages
-        self._rmsg = []		# requests (excepts response)
+        self._cmsg = []  # controll messages
+        self._rmsg = []  # requests (excepts response)
         self._transfer_list = []
 
     def set_input_interrupt(self, endpoint, size, callback):
@@ -34,9 +35,12 @@ class USBDevice(object):
 
         callback(endpoint, data) is called repeadedly with every packed recieved.
         """
+
         def callback_wrapper(transfer):
-            if (transfer.getStatus() != usb1.TRANSFER_COMPLETED or
-                    transfer.getActualLength() != size):
+            if (
+                transfer.getStatus() != usb1.TRANSFER_COMPLETED
+                or transfer.getActualLength() != size
+            ):
                 return
 
             data = transfer.getBuffer()
@@ -60,16 +64,19 @@ class USBDevice(object):
 
     def send_control(self, index, data):
         """ Schedules writing control to device """
-        zeros = b'\x00' * (64 - len(data))
+        zeros = b"\x00" * (64 - len(data))
 
-        self._cmsg.insert(0, (
-            0x21,  # request_type
-            0x09,  # request
-            0x0300,  # value
-            index,
-            data + zeros,
-            0		# Timeout
-        ))
+        self._cmsg.insert(
+            0,
+            (
+                0x21,  # request_type
+                0x09,  # request
+                0x0300,  # value
+                index,
+                data + zeros,
+                0,  # Timeout
+            ),
+        )
 
     def overwrite_control(self, index, data):
         """
@@ -89,14 +96,14 @@ class USBDevice(object):
         Schedules synchronous request that requires response.
         Request is done ASAP and provided callback is called with recieved data.
         """
-        self._rmsg.append((
+        self._rmsg.append(
             (
-                0x21,  # request_type
-                0x09,  # request
-                0x0300,  # value
-                index, data
-            ), index, size, callback
-        ))
+                (0x21, 0x09, 0x0300, index, data),  # request_type  # request  # value
+                index,
+                size,
+                callback,
+            )
+        )
 
     def flush(self):
         """ Flushes all prepared control messages to the device """
@@ -108,10 +115,7 @@ class USBDevice(object):
             msg, index, size, callback = self._rmsg.pop()
             self.handle.controlWrite(*msg)
             data = self.handle.controlRead(
-                0xA1,  # request_type
-                0x01,  # request
-                0x0300,  # value
-                index, size
+                0xA1, 0x01, 0x0300, index, size  # request_type  # request  # value
             )
             callback(data)
 
@@ -194,8 +198,11 @@ class USBDriver(object):
         """ Closes all devices and unclaims all interfaces """
         if len(self._devices):
             log.debug("Releasing devices...")
-            to_release, self._devices, self._syspaths = list(
-                self._devices.values()), {}, {}
+            to_release, self._devices, self._syspaths = (
+                list(self._devices.values()),
+                {},
+                {},
+            )
             for d in to_release:
                 d.close()
 
@@ -229,14 +236,15 @@ class USBDriver(object):
                     break
                 except usb1.USBError as e:
                     log.error(
-                        "Failed to open USB device %.4x:%.4x : %s", tp[0], tp[1], e)
+                        "Failed to open USB device %.4x:%.4x : %s", tp[0], tp[1], e
+                    )
                     if tp in self._fail_cbs:
                         self._fail_cbs[tp](syspath, *tp)
                         return
                     if self.daemon:
                         self.daemon.add_error(
                             "usb:%s:%s" % (tp[0], tp[1]),
-                            "Failed to open USB device: %s" % (e,)
+                            "Failed to open USB device: %s" % (e,),
                         )
                     return
         else:
@@ -247,8 +255,7 @@ class USBDriver(object):
         try:
             handled_device = callback(device, handle)
         except usb1.USBErrorBusy as e:
-            log.error("Failed to claim USB device %.4x:%.4x : %s",
-                      tp[0], tp[1], e)
+            log.error("Failed to claim USB device %.4x:%.4x : %s", tp[0], tp[1], e)
             if tp in self._fail_cbs:
                 device.close()
                 self._fail_cbs[tp](*tp)
@@ -257,7 +264,7 @@ class USBDriver(object):
                 if self.daemon:
                     self.daemon.add_error(
                         "usb:%s:%s" % (tp[0], tp[1]),
-                        "Failed to claim USB device: %s" % (e,)
+                        "Failed to claim USB device: %s" % (e,),
                     )
                 self._retry_devices.append((syspath, tp))
                 device.close()
@@ -291,8 +298,13 @@ class USBDriver(object):
         if on_failure:
             self._fail_cbs[vendor_id, product_id] = on_failure
         monitor = self.daemon.get_device_monitor()
-        monitor.add_callback("usb", vendor_id, product_id,
-                             self.handle_new_device, self.handle_removed_device)
+        monitor.add_callback(
+            "usb",
+            vendor_id,
+            product_id,
+            self.handle_new_device,
+            self.handle_removed_device,
+        )
         log.debug("Registered USB driver for %.4x:%.4x", vendor_id, product_id)
 
     def unregister_hotplug_device(self, callback, vendor_id, product_id):
@@ -300,15 +312,14 @@ class USBDriver(object):
             del self._known_ids[vendor_id, product_id]
             if (vendor_id, product_id) in self._fail_cbs:
                 del self._fail_cbs[vendor_id, product_id]
-            log.debug("Unregistred USB driver for %.4x:%.4x",
-                      vendor_id, product_id)
+            log.debug("Unregistred USB driver for %.4x:%.4x", vendor_id, product_id)
 
     def mainloop(self):
         if self._changed > 0:
             self._ctx.handleEventsTimeout()
             self._changed = 0
 
-        for d in list(self._devices.values()):		# TODO: don't use .values() here
+        for d in list(self._devices.values()):  # TODO: don't use .values() here
             try:
                 d.flush()
             except usb1.USBErrorPipe:

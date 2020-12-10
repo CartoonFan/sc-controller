@@ -15,6 +15,7 @@ from scc.constants import LEFT, RIGHT, CPAD
 from scc.config import Config
 from scc.osd import OSDWindow
 from scc.gestures import GestureDetector
+
 BOTH = "BOTH"
 
 log = logging.getLogger("osd.gesture")
@@ -63,7 +64,7 @@ class GestureDisplay(OSDWindow):
         sep = Gtk.VSeparator()
         sep.set_name("osd-gesture-separator")
 
-        self.parent.attach(self._left_draw,  0, 0, 1, 1)
+        self.parent.attach(self._left_draw, 0, 0, 1, 1)
         # self.parent.attach(sep,              1, 0, 1, 1)
         # self.parent.attach(self._right_draw, 2, 0, 1, 1)
 
@@ -84,14 +85,21 @@ class GestureDisplay(OSDWindow):
         """
         self.config = c
         # for x in (self._left_draw, self._right_draw):
-        for x in (self._left_draw, ):
+        for x in (self._left_draw,):
             x.set_colors(**self.config["gesture_colors"])
 
     def _add_arguments(self):
         OSDWindow._add_arguments(self)
-        self.argparser.add_argument('--control-with', '-c', type=str,
-                                    metavar="option", default=LEFT, choices=(LEFT, RIGHT, CPAD),
-                                    help="which pad should be used to generate gesture menu (default: %s)" % (LEFT,))
+        self.argparser.add_argument(
+            "--control-with",
+            "-c",
+            type=str,
+            metavar="option",
+            default=LEFT,
+            choices=(LEFT, RIGHT, CPAD),
+            help="which pad should be used to generate gesture menu (default: %s)"
+            % (LEFT,),
+        )
 
     def parse_argumets(self, argv):
         if not OSDWindow.parse_argumets(self, argv):
@@ -106,9 +114,9 @@ class GestureDisplay(OSDWindow):
 
     def _connect_handlers(self):
         self._eh_ids += [
-            (self.daemon, self.daemon.connect('dead', self.on_daemon_died)),
-            (self.daemon, self.daemon.connect('error', self.on_daemon_died)),
-            (self.daemon, self.daemon.connect('alive', self.on_daemon_connected)),
+            (self.daemon, self.daemon.connect("dead", self.on_daemon_died)),
+            (self.daemon, self.daemon.connect("error", self.on_daemon_died)),
+            (self.daemon, self.daemon.connect("alive", self.on_daemon_connected)),
         ]
 
     def run(self):
@@ -135,8 +143,8 @@ class GestureDisplay(OSDWindow):
             return
 
         self._eh_ids += [
-            (c, c.connect('event', self.on_event)),
-            (c, c.connect('lost', self.on_controller_lost)),
+            (c, c.connect("event", self.on_event)),
+            (c, c.connect("lost", self.on_controller_lost)),
         ]
         c.lock(success, self.on_failed_to_lock, *locks)
 
@@ -154,7 +162,7 @@ class GestureDisplay(OSDWindow):
             self._left_draw.add(x, y)
             self._left_detector.whole(None, x, y, what)
             # TODO: self._right_detector, if there is any use for it later
-            self.emit('gesture-updated', self._left_detector.get_string())
+            self.emit("gesture-updated", self._left_detector.get_string())
 
     def get_gesture(self):
         """ Returns recognized gesture or None if there is not any """
@@ -171,12 +179,14 @@ class GestureDisplay(OSDWindow):
 
 def main():
     import gi
-    gi.require_version('Gtk', '3.0')
-    gi.require_version('Rsvg', '2.0')
-    gi.require_version('GdkX11', '3.0')
+
+    gi.require_version("Gtk", "3.0")
+    gi.require_version("Rsvg", "2.0")
+    gi.require_version("GdkX11", "3.0")
 
     from scc.tools import init_logging
     from scc.paths import get_share_path
+
     init_logging()
 
     gd = GestureDisplay()

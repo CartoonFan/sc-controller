@@ -15,9 +15,10 @@ from scc.osd.osk_actions import OSKAction, CloseOSKAction, OSKCursorAction
 from scc.osd.osk_actions import MoveOSKAction, OSKPressAction
 
 import logging
+
 log = logging.getLogger("AE.SA")
 
-__all__ = ['OSKActionComponent']
+__all__ = ["OSKActionComponent"]
 
 
 class OSKActionComponent(AEComponent):

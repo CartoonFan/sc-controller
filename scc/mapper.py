@@ -1,4 +1,3 @@
-
 from scc.lib import xwrappers as X
 from scc.uinput import UInput, Keyboard, Mouse, Dummy
 from scc.constants import SCButtons, LEFT, RIGHT, CPAD, HapticPos
@@ -13,15 +12,22 @@ from scc.config import Config
 import traceback
 import logging
 import os
+
 log = logging.getLogger("Mapper")
 
 
 class Mapper(object):
     DEBUG = False
 
-    def __init__(self, profile, scheduler, keyboard=b"SCController Keyboard",
-                 mouse=b"SCController Mouse",
-                 gamepad=True, poller=None):
+    def __init__(
+        self,
+        profile,
+        scheduler,
+        keyboard=b"SCController Keyboard",
+        mouse=b"SCController Mouse",
+        gamepad=True,
+        poller=None,
+    ):
         """
         If any of keyboard, mouse or gamepad is set to None, that device
         will not be emulated.
@@ -36,12 +42,11 @@ class Mapper(object):
         # Create virtual devices
         log.debug("Creating virtual devices")
         self.keyboard = self.create_keyboard(keyboard) if keyboard else Dummy()
-        log.debug("Keyboard: %s" % (self.keyboard, ))
+        log.debug("Keyboard: %s" % (self.keyboard,))
         self.mouse = self.create_mouse(mouse) if mouse else Dummy()
-        log.debug("Mouse:    %s" % (self.mouse, ))
-        self.gamepad = self.create_gamepad(
-            gamepad, poller) if gamepad else Dummy()
-        log.debug("Gamepad:  %s" % (self.gamepad, ))
+        log.debug("Mouse:    %s" % (self.mouse,))
+        self.gamepad = self.create_gamepad(gamepad, poller) if gamepad else Dummy()
+        log.debug("Gamepad:  %s" % (self.gamepad,))
 
         # Set by SCCDaemon instance; Used to handle actions
         # from scc.special_actions
@@ -52,7 +57,7 @@ class Mapper(object):
         self.keyrelease_list = []
         # mouse x, y, wheel vertical, horisontal
         self.mouse_movements = [0, 0, 0, 0]
-        self.feedbacks = [None, None]         # left, right
+        self.feedbacks = [None, None]  # left, right
         # for ButtonAction, holds number of times virtual button was pressed without releasing it first
         self.pressed = {}
         self.syn_list = set()
@@ -69,7 +74,7 @@ class Mapper(object):
             self.gamepad = Dummy()
             return
         cfg = Config()
-        keys = ALL_BUTTONS[0:cfg["output"]["buttons"]]
+        keys = ALL_BUTTONS[0 : cfg["output"]["buttons"]]
         vendor = int(cfg["output"]["vendor"], 16)
         product = int(cfg["output"]["product"], 16)
         version = int(cfg["output"]["version"], 16)
@@ -88,11 +93,18 @@ class Mapper(object):
                 break
             i += 1
 
-        ui = UInput(vendor=vendor, product=product, version=version,
-                    name=name, keys=keys, axes=axes, rels=[], rumble=rumble)
+        ui = UInput(
+            vendor=vendor,
+            product=product,
+            version=version,
+            name=name,
+            keys=keys,
+            axes=axes,
+            rels=[],
+            rumble=rumble,
+        )
         if poller and rumble:
-            poller.register(ui.getDescriptor(),
-                            poller.POLLIN, self._rumble_ready)
+            poller.register(ui.getDescriptor(), poller.POLLIN, self._rumble_ready)
         return ui
 
     def create_keyboard(self, name):
@@ -104,12 +116,14 @@ class Mapper(object):
     def _rumble_ready(self, fd, event):
         ef = self.gamepad.ff_read()
         if ef:  # tale of...
-            self.send_feedback(HapticData(
-                HapticPos.BOTH,
-                period=32760,
-                amplitude=max(0, ef.level),
-                count=min(0x7FFF, ef.duration * ef.repetitions / 30)
-            ))
+            self.send_feedback(
+                HapticData(
+                    HapticPos.BOTH,
+                    period=32760,
+                    amplitude=max(0, ef.level),
+                    count=min(0x7FFF, ef.duration * ef.repetitions / 30),
+                )
+            )
 
     def get_gamepad_name(self):
         """
@@ -330,9 +344,10 @@ class Mapper(object):
         self.state = state
         self.buttons = state.buttons
 
-        if self.buttons & SCButtons.LPAD and not self.buttons & (SCButtons.LPADTOUCH | STICKTILT):
-            self.buttons = (
-                self.buttons & ~SCButtons.LPAD) | SCButtons.STICKPRESS
+        if self.buttons & SCButtons.LPAD and not self.buttons & (
+            SCButtons.LPADTOUCH | STICKTILT
+        ):
+            self.buttons = (self.buttons & ~SCButtons.LPAD) | SCButtons.STICKPRESS
 
         fe = self.force_event
         self.force_event = set()
@@ -353,54 +368,87 @@ class Mapper(object):
 
             # Check stick
             if self.controller.flags & ControllerFlags.SEPARATE_STICK:
-                if FE_STICK in fe or self.old_state.stick_x != state.stick_x or self.old_state.stick_y != state.stick_y:
-                    self.profile.stick.whole(
-                        self, state.stick_x, state.stick_y, STICK)
+                if (
+                    FE_STICK in fe
+                    or self.old_state.stick_x != state.stick_x
+                    or self.old_state.stick_y != state.stick_y
+                ):
+                    self.profile.stick.whole(self, state.stick_x, state.stick_y, STICK)
             elif not self.buttons & SCButtons.LPADTOUCH:
-                if FE_STICK in fe or self.old_state.lpad_x != state.lpad_x or self.old_state.lpad_y != state.lpad_y:
-                    self.profile.stick.whole(
-                        self, state.lpad_x, state.lpad_y, STICK)
+                if (
+                    FE_STICK in fe
+                    or self.old_state.lpad_x != state.lpad_x
+                    or self.old_state.lpad_y != state.lpad_y
+                ):
+                    self.profile.stick.whole(self, state.lpad_x, state.lpad_y, STICK)
 
             # Check gyro
             if controller.get_gyro_enabled():
                 self.profile.gyro.gyro(
-                    self, state.gpitch, state.gyaw, state.groll, state.q1, state.q2, state.q3, state.q4)
+                    self,
+                    state.gpitch,
+                    state.gyaw,
+                    state.groll,
+                    state.q1,
+                    state.q2,
+                    state.q3,
+                    state.q4,
+                )
 
             # Check triggers
             if (
                 FE_TRIGGER in fe or state.ltrig != self.old_state.ltrig
             ) and LEFT in self.profile.triggers:
                 self.profile.triggers[LEFT].trigger(
-                    self, state.ltrig, self.old_state.ltrig)
+                    self, state.ltrig, self.old_state.ltrig
+                )
             if (
                 FE_TRIGGER in fe or state.rtrig != self.old_state.rtrig
             ) and RIGHT in self.profile.triggers:
                 self.profile.triggers[RIGHT].trigger(
-                    self, state.rtrig, self.old_state.rtrig)
+                    self, state.rtrig, self.old_state.rtrig
+                )
 
             # Check pads
             # RPAD
             if controller.flags & ControllerFlags.HAS_RSTICK:
-                if FE_PAD in fe or self.old_state.rpad_x != state.rpad_x or self.old_state.rpad_y != state.rpad_y:
+                if (
+                    FE_PAD in fe
+                    or self.old_state.rpad_x != state.rpad_x
+                    or self.old_state.rpad_y != state.rpad_y
+                ):
                     self.profile.pads[RIGHT].whole(
-                        self, state.rpad_x, state.rpad_y, RIGHT)
-            elif FE_PAD in fe or self.buttons & SCButtons.RPADTOUCH or SCButtons.RPADTOUCH & btn_rem:
-                self.profile.pads[RIGHT].whole(
-                    self, state.rpad_x, state.rpad_y, RIGHT)
+                        self, state.rpad_x, state.rpad_y, RIGHT
+                    )
+            elif (
+                FE_PAD in fe
+                or self.buttons & SCButtons.RPADTOUCH
+                or SCButtons.RPADTOUCH & btn_rem
+            ):
+                self.profile.pads[RIGHT].whole(self, state.rpad_x, state.rpad_y, RIGHT)
 
             # LPAD
             if self.controller.flags & ControllerFlags.SEPARATE_STICK:
-                if FE_PAD in fe or self.old_state.lpad_x != state.lpad_x or self.old_state.lpad_y != state.lpad_y:
+                if (
+                    FE_PAD in fe
+                    or self.old_state.lpad_x != state.lpad_x
+                    or self.old_state.lpad_y != state.lpad_y
+                ):
                     self.profile.pads[LEFT].whole(
-                        self, state.lpad_x, state.lpad_y, LEFT)
+                        self, state.lpad_x, state.lpad_y, LEFT
+                    )
             else:
                 if self.buttons & SCButtons.LPADTOUCH:
                     # Pad is being touched now
                     if not self.lpad_touched:
                         self.lpad_touched = True
                     self.profile.pads[LEFT].whole(
-                        self, state.lpad_x, state.lpad_y, LEFT)
-                    if self.old_state.buttons & STICKTILT and not self.buttons & STICKTILT:
+                        self, state.lpad_x, state.lpad_y, LEFT
+                    )
+                    if (
+                        self.old_state.buttons & STICKTILT
+                        and not self.buttons & STICKTILT
+                    ):
                         # LPAD and stick share axes and so when they are used simultaneously (by someone with 3 hands or so :)
                         # this is how mapper can tell that stick was recentered
                         self.profile.stick.whole(self, 0, 0, STICK)
@@ -424,7 +472,8 @@ class Mapper(object):
             ):
                 if self.buttons & SCButtons.CPADTOUCH:
                     self.profile.pads[CPAD].whole(
-                        self, state.cpad_x, state.cpad_y, CPAD)
+                        self, state.cpad_x, state.cpad_y, CPAD
+                    )
                 elif self.old_buttons & SCButtons.CPADTOUCH:
                     self.profile.pads[CPAD].whole(self, 0, 0, CPAD)
         except Exception:

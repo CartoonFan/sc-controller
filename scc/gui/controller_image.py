@@ -16,29 +16,45 @@ import sys
 import copy
 import json
 import logging
+
 log = logging.getLogger("ContImage")
 
 
 class ControllerImage(SVGWidget):
     DEFAULT = "sc"
     BUTTONS_WITH_IMAGES = (
-        SCButtons.A, SCButtons.B, SCButtons.X, SCButtons.Y,
-        SCButtons.BACK, SCButtons.C, SCButtons.START
+        SCButtons.A,
+        SCButtons.B,
+        SCButtons.X,
+        SCButtons.Y,
+        SCButtons.BACK,
+        SCButtons.C,
+        SCButtons.START,
     )
 
     DEFAULT_AXES = (
         # Shared between DS4 and Steam Controller
-        "stick_x", "stick_y", "lpad_x", "lpad_x",
-        "rpad_y", "rpad_y", "ltrig", "rtrig",
+        "stick_x",
+        "stick_y",
+        "lpad_x",
+        "lpad_x",
+        "rpad_y",
+        "rpad_y",
+        "ltrig",
+        "rtrig",
     )
 
     DEFAULT_BUTTONS = [nameof(x) for x in BUTTONS_WITH_IMAGES] + [
         # Used only by Steam Controller
-        nameof(SCButtons.LB), nameof(SCButtons.RB),
-        nameof(SCButtons.LT), nameof(SCButtons.RT),
+        nameof(SCButtons.LB),
+        nameof(SCButtons.RB),
+        nameof(SCButtons.LT),
+        nameof(SCButtons.RT),
         nameof(SCButtons.STICKPRESS),
-        nameof(SCButtons.RPAD), nameof(SCButtons.LPAD),
-        nameof(SCButtons.LGRIP), nameof(SCButtons.RGRIP),
+        nameof(SCButtons.RPAD),
+        nameof(SCButtons.LPAD),
+        nameof(SCButtons.LGRIP),
+        nameof(SCButtons.RGRIP),
     ]
 
     def __init__(self, app, config=None):
@@ -51,8 +67,7 @@ class ControllerImage(SVGWidget):
             self._controller_image.use_config(config)
 
     def _make_controller_image_path(self, img):
-        return os.path.join(self.app.imagepath,
-                            "controller-images/%s.svg" % (img, ))
+        return os.path.join(self.app.imagepath, "controller-images/%s.svg" % (img,))
 
     def get_config(self):
         """
@@ -62,16 +77,15 @@ class ControllerImage(SVGWidget):
 
     def _ensure_config(self, data):
         """ Ensure that required keys are present in config data """
-        data['gui'] = data.get('gui', {})
-        data['gui']['background'] = data['gui'].get("background", "sc")
-        data['gui']['buttons'] = data['gui'].get(
-            "buttons") or self._get_default_images()
-        data["gui"]["no_buttons_in_gui"] = data["gui"].get(
-            "no_buttons_in_gui") or False
-        data['buttons'] = data.get(
-            "buttons") or ControllerImage.DEFAULT_BUTTONS
-        data['axes'] = data.get("axes") or ControllerImage.DEFAULT_AXES
-        data['gyros'] = data.get("gyros", data['gui']["background"] == "sc")
+        data["gui"] = data.get("gui", {})
+        data["gui"]["background"] = data["gui"].get("background", "sc")
+        data["gui"]["buttons"] = (
+            data["gui"].get("buttons") or self._get_default_images()
+        )
+        data["gui"]["no_buttons_in_gui"] = data["gui"].get("no_buttons_in_gui") or False
+        data["buttons"] = data.get("buttons") or ControllerImage.DEFAULT_BUTTONS
+        data["axes"] = data.get("axes") or ControllerImage.DEFAULT_AXES
+        data["gyros"] = data.get("gyros", data["gui"]["background"] == "sc")
         return data
 
     @staticmethod
@@ -94,8 +108,12 @@ class ControllerImage(SVGWidget):
         """
         self.backup = backup
         self.current = self._ensure_config(config or {})
-        self.set_image(os.path.join(self.app.imagepath,
-                                    "controller-images/%s.svg" % (self.current["gui"]["background"], )))
+        self.set_image(
+            os.path.join(
+                self.app.imagepath,
+                "controller-images/%s.svg" % (self.current["gui"]["background"],),
+            )
+        )
         if not self.current["gui"]["no_buttons_in_gui"]:
             self._fill_button_images(self.current["gui"]["buttons"])
         self.hilight({})
@@ -108,8 +126,9 @@ class ControllerImage(SVGWidget):
         """
         if self.backup is None:
             self.backup = copy.deepcopy(self.current)
-        data = json.loads(open(os.path.join(self.app.imagepath,
-                                            "%s.json" % (filename,)), "r").read())
+        data = json.loads(
+            open(os.path.join(self.app.imagepath, "%s.json" % (filename,)), "r").read()
+        )
         self.current["gui"]["background"] = data["gui"]["background"]
         self.use_config(self.current, self.backup)
 
@@ -120,8 +139,9 @@ class ControllerImage(SVGWidget):
         """
         if self.backup is None:
             self.backup = copy.deepcopy(self.current)
-        data = json.loads(open(os.path.join(self.app.imagepath,
-                                            "%s.json" % (filename,)), "r").read())
+        data = json.loads(
+            open(os.path.join(self.app.imagepath, "%s.json" % (filename,)), "r").read()
+        )
         self.current["gui"]["buttons"] = data["gui"]["buttons"]
         self.current["buttons"] = data["buttons"]
         self.use_config(self.current, self.backup)
@@ -132,12 +152,12 @@ class ControllerImage(SVGWidget):
             self.use_config(self.backup, None)
 
     def get_button_groups(self):
-        groups = json.loads(open(os.path.join(self.app.imagepath,
-                                              "button-images", "groups.json"), "r").read())
-        return {
-            x['key']: x['buttons'] for x in groups
-            if x['type'] == "buttons"
-        }
+        groups = json.loads(
+            open(
+                os.path.join(self.app.imagepath, "button-images", "groups.json"), "r"
+            ).read()
+        )
+        return {x["key"]: x["buttons"] for x in groups if x["type"] == "buttons"}
 
     def _get_default_images(self):
         return self.get_button_groups()[ControllerImage.DEFAULT]
@@ -158,7 +178,7 @@ class ControllerImage(SVGWidget):
                 scale = 1.0
                 if "scc-button-scale" in elm.attrib:
                     w, h = SVGEditor.get_size(elm)
-                    scale = float(elm.attrib['scc-button-scale'])
+                    scale = float(elm.attrib["scc-button-scale"])
                     tw, th = w * scale, h * scale
                     if scale < 1.0:
                         x += (w - tw) * 0.5
@@ -166,12 +186,15 @@ class ControllerImage(SVGWidget):
                     else:
                         x -= (tw - w) * 0.25
                         y -= (th - h) * 0.25
-                path = os.path.join(self.app.imagepath, "button-images",
-                                    "%s.svg" % (buttons[i], ))
-                img = SVGEditor.get_element(
-                    SVGEditor.load_from_file(path), "button")
+                path = os.path.join(
+                    self.app.imagepath, "button-images", "%s.svg" % (buttons[i],)
+                )
+                img = SVGEditor.get_element(SVGEditor.load_from_file(path), "button")
                 img.attrib["transform"] = "translate(%s, %s) scale(%s)" % (
-                    x - target_x, y - target_y, scale)
+                    x - target_x,
+                    y - target_y,
+                    scale,
+                )
                 img.attrib["id"] = b
                 SVGEditor.add_element(target, img)
             except Exception as err:

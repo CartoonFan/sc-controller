@@ -19,14 +19,16 @@ class RIBar(Gtk.Revealer):
             response(response_id)
                     Emitted when an action widget (button) is clicked
     """
+
     __gsignals__ = {
         b"response": (GObject.SignalFlags.RUN_FIRST, None, (int,)),
         b"close": (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
 
     # Initialization
-    def __init__(self, label, message_type=Gtk.MessageType.INFO,
-                 infobar=None, *buttons):
+    def __init__(
+        self, label, message_type=Gtk.MessageType.INFO, infobar=None, *buttons
+    ):
         """
         ... where label can be Gtk.Widget or str and buttons are tuples
         of (Gtk.Button, response_id)
@@ -138,8 +140,11 @@ class RIBar(Gtk.Revealer):
     @staticmethod
     def build_button(label, icon_name=None, icon_widget=None, use_stock=False):
         """ Builds button situable for action area """
-        b = Gtk.Button.new_from_stock(label) if use_stock \
+        b = (
+            Gtk.Button.new_from_stock(label)
+            if use_stock
             else Gtk.Button.new_with_label(label)
+        )
         b.set_use_underline(True)
         if not icon_name is None:
             icon_widget = Gtk.Image()

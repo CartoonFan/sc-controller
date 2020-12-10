@@ -11,6 +11,7 @@ from scc.gui.editor import Editor
 import logging
 import types
 import importlib
+
 log = logging.getLogger("SimpleChooser")
 
 

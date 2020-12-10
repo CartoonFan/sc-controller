@@ -8,6 +8,7 @@ from gi.repository import GObject, Gio
 from scc.tools import find_binary
 
 import logging
+
 log = logging.getLogger("CReg.Tester")
 
 
@@ -27,7 +28,7 @@ class Tester(GObject.GObject):
     """
 
     __gsignals__ = {
-        b"error": (GObject.SignalFlags.RUN_FIRST, None, (int, )),
+        b"error": (GObject.SignalFlags.RUN_FIRST, None, (int,)),
         b"ready": (GObject.SignalFlags.RUN_FIRST, None, ()),
         b"finished": (GObject.SignalFlags.RUN_FIRST, None, ()),
         b"axis": (GObject.SignalFlags.RUN_FIRST, None, (int, int)),
@@ -51,11 +52,9 @@ class Tester(GObject.GObject):
     def start(self):
         """ Starts driver test subprocess """
         cmd = [find_binary("scc")] + ["test_" + self.driver, self.device_id]
-        self.subprocess = Gio.Subprocess.new(
-            cmd, Gio.SubprocessFlags.STDOUT_PIPE)
+        self.subprocess = Gio.Subprocess.new(cmd, Gio.SubprocessFlags.STDOUT_PIPE)
         self.subprocess.wait_async(None, self._on_finished)
-        self.subprocess.get_stdout_pipe().read_bytes_async(
-            32, 0, None, self._on_read)
+        self.subprocess.get_stdout_pipe().read_bytes_async(32, 0, None, self._on_read)
 
     def stop(self):
         if self.subprocess:
@@ -66,10 +65,10 @@ class Tester(GObject.GObject):
         if self.errorred:
             return
         if subprocess.get_exit_status() == 0:
-            self.emit('finished')
+            self.emit("finished")
         else:
             self.errorred = True
-            self.emit('error', subprocess.get_exit_status())
+            self.emit("error", subprocess.get_exit_status())
 
     def _on_read(self, stream, result):
         try:
@@ -79,7 +78,7 @@ class Tester(GObject.GObject):
             self.subprocess.send_signal(2)
             if not self.errorred:
                 self.errorred = True
-                self.emit('error', 1)
+                self.emit("error", 1)
             return
         if len(data) > 0:
             self.buffer += data
@@ -90,23 +89,23 @@ class Tester(GObject.GObject):
                 except Exception as e:
                     log.exception(e)
             self.subprocess.get_stdout_pipe().read_bytes_async(
-                32, 0, None, self._on_read)
+                32, 0, None, self._on_read
+            )
 
     def _on_line(self, line):
         if line.startswith("Axis"):
             trash, number, value = line.split(" ")
             number, value = int(number), int(value)
-            self.emit('axis', number, value)
+            self.emit("axis", number, value)
         elif line.startswith("ButtonPress"):
             trash, code = line.split(" ")
-            self.emit('button', int(code), True)
+            self.emit("button", int(code), True)
         elif line.startswith("ButtonRelease"):
             trash, code = line.split(" ")
-            self.emit('button', int(code), False)
+            self.emit("button", int(code), False)
         elif line.startswith("Ready"):
-            self.emit('ready')
+            self.emit("ready")
         elif line.startswith("Axes:"):
             self.axes = [int(x) for x in line.split(" ")[1:] if len(x.strip())]
         elif line.startswith("Buttons:"):
-            self.buttons = [int(x)
-                            for x in line.split(" ")[1:] if len(x.strip())]
+            self.buttons = [int(x) for x in line.split(" ")[1:] if len(x.strip())]

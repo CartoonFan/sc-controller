@@ -12,6 +12,7 @@ from scc.constants import STICK_PAD_MIN, STICK_PAD_MAX, CPAD, CPAD_MIN
 from scc.constants import CPAD_X_MAX, CPAD_Y_MAX
 
 import logging
+
 log = logging.getLogger("Gestures")
 
 
@@ -23,6 +24,7 @@ class GestureDetector(Action):
     GestureAction special action or "Gesture:" message from client,
     it constructs instance of this class and leaves everything to it.
     """
+
     UP = "U"
     DOWN = "D"
     LEFT = "L"
@@ -73,10 +75,12 @@ class GestureDetector(Action):
                 else:
                     x -= STICK_PAD_MIN
                     y = STICK_PAD_MAX - y
-                    x = float(x) / (float(STICK_PAD_MAX -
-                                          STICK_PAD_MIN) / self._resolution)
-                    y = float(y) / (float(STICK_PAD_MAX -
-                                          STICK_PAD_MIN) / self._resolution)
+                    x = float(x) / (
+                        float(STICK_PAD_MAX - STICK_PAD_MIN) / self._resolution
+                    )
+                    y = float(y) / (
+                        float(STICK_PAD_MAX - STICK_PAD_MIN) / self._resolution
+                    )
                 # Check for deadzones around grid lines
                 for i in range(1, self._resolution):
                     if x > i - self._deadzone and x < i + self._deadzone:

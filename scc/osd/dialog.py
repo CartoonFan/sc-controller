@@ -16,6 +16,7 @@ from scc.config import Config
 
 import sys
 import logging
+
 log = logging.getLogger("osd.dialog")
 
 
@@ -37,8 +38,7 @@ class Dialog(OSDWindow):
         self.config = None
         self.feedback = None
         self.controller = None
-        self.xdisplay = X.Display(
-            hash(GdkX11.x11_get_default_xdisplay()))  # Magic
+        self.xdisplay = X.Display(hash(GdkX11.x11_get_default_xdisplay()))  # Magic
 
         self.parent = self.create_parent()
         self.f = Gtk.Fixed()
@@ -98,18 +98,31 @@ class Dialog(OSDWindow):
 
     def _add_arguments(self):
         OSDWindow._add_arguments(self)
-        self.argparser.add_argument('--confirm-with', type=str,
-                                    metavar="button", default=DEFAULT,
-                                    help="button used to confirm choice")
-        self.argparser.add_argument('--cancel-with', type=str,
-                                    metavar="button", default=DEFAULT,
-                                    help="button used to cancel dialog")
-        self.argparser.add_argument('--feedback-amplitude', type=int,
-                                    help="enables and sets power of feedback effect generated when active menu option is changed")
-        self.argparser.add_argument('--text', type=str, metavar='text',
-                                    help="Dialog text")
-        self.argparser.add_argument('items', type=str, nargs='*', metavar='id text',
-                                    help="Dialog buttons")
+        self.argparser.add_argument(
+            "--confirm-with",
+            type=str,
+            metavar="button",
+            default=DEFAULT,
+            help="button used to confirm choice",
+        )
+        self.argparser.add_argument(
+            "--cancel-with",
+            type=str,
+            metavar="button",
+            default=DEFAULT,
+            help="button used to cancel dialog",
+        )
+        self.argparser.add_argument(
+            "--feedback-amplitude",
+            type=int,
+            help="enables and sets power of feedback effect generated when active menu option is changed",
+        )
+        self.argparser.add_argument(
+            "--text", type=str, metavar="text", help="Dialog text"
+        )
+        self.argparser.add_argument(
+            "items", type=str, nargs="*", metavar="id text", help="Dialog buttons"
+        )
 
     def parse_argumets(self, argv):
         if not OSDWindow.parse_argumets(self, argv):
@@ -121,8 +134,7 @@ class Dialog(OSDWindow):
             self.items = MenuData.from_args(self.args.items)
             self._menuid = None
         except ValueError:
-            print >>sys.stderr, '%s: error: invalid number of arguments' % (
-                sys.argv[0])
+            print >>sys.stderr, "%s: error: invalid number of arguments" % (sys.argv[0])
             return False
 
         self._text.set_label(self.args.text)
@@ -140,7 +152,7 @@ class Dialog(OSDWindow):
                 self.items.append(item)
         self.pack_items(self.parent, self.items)
         if not self.items:
-            print >>sys.stderr, '%s: error: no items in menu' % (sys.argv[0])
+            print >>sys.stderr, "%s: error: no items in menu" % (sys.argv[0])
             return False
 
         return True
@@ -159,8 +171,9 @@ class Dialog(OSDWindow):
 
     def select(self, index):
         if self._selected:
-            self._selected.widget.set_name(self._selected.widget.get_name()
-                                           .replace("-selected", ""))
+            self._selected.widget.set_name(
+                self._selected.widget.get_name().replace("-selected", "")
+            )
         if self.items[index].id:
             if (
                 self._selected != self.items[index]
@@ -170,15 +183,16 @@ class Dialog(OSDWindow):
                 self.controller.feedback(*self.feedback)
             self._selected = self.items[index]
             self._selected.widget.set_name(
-                self._selected.widget.get_name() + "-selected")
+                self._selected.widget.get_name() + "-selected"
+            )
             return True
         return False
 
     def _connect_handlers(self):
         self._eh_ids += [
-            (self.daemon, self.daemon.connect('dead', self.on_daemon_died)),
-            (self.daemon, self.daemon.connect('error', self.on_daemon_died)),
-            (self.daemon, self.daemon.connect('alive', self.on_daemon_connected)),
+            (self.daemon, self.daemon.connect("dead", self.on_daemon_died)),
+            (self.daemon, self.daemon.connect("error", self.on_daemon_died)),
+            (self.daemon, self.daemon.connect("alive", self.on_daemon_connected)),
         ]
 
     def run(self):
@@ -213,11 +227,20 @@ class Dialog(OSDWindow):
 
         ccfg = self.config.get_controller_config(self.controller.get_id())
         self._control_with = ccfg["menu_control"]
-        self._confirm_with = ccfg["menu_confirm"] if self.args.confirm_with == DEFAULT else self.args.confirm_with
-        self._cancel_with = ccfg["menu_cancel"] if self.args.cancel_with == DEFAULT else self.args.cancel_with
+        self._confirm_with = (
+            ccfg["menu_confirm"]
+            if self.args.confirm_with == DEFAULT
+            else self.args.confirm_with
+        )
+        self._cancel_with = (
+            ccfg["menu_cancel"]
+            if self.args.cancel_with == DEFAULT
+            else self.args.cancel_with
+        )
 
-        self._eh_ids += [(self.controller,
-                          self.controller.connect('event', self.on_event))]
+        self._eh_ids += [
+            (self.controller, self.controller.connect("event", self.on_event))
+        ]
         locks = [self._control_with, self._confirm_with, self._cancel_with]
         self.controller.lock(success, self.on_failed_to_lock, *locks)
 
@@ -261,13 +284,14 @@ class Dialog(OSDWindow):
         if what == self._control_with:
             self._scon.set_stick(*data)
         elif what == self._cancel_with:
-            if data[0] == 0:    # Button released
+            if data[0] == 0:  # Button released
                 self.quit(-1)
         elif what == self._confirm_with:
-            if data[0] == 0:    # Button released
+            if data[0] == 0:  # Button released
                 if self._selected and self._selected.callback:
                     self._selected.callback(
-                        self, self.daemon, self.controller, self._selected)
+                        self, self.daemon, self.controller, self._selected
+                    )
                 elif self._selected:
                     self.quit(0)
                 else:

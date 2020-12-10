@@ -10,6 +10,7 @@ Callback is called as callback(fd, event) where event is one of select.POLL*
 """
 import select
 import logging
+
 log = logging.getLogger("Poller")
 
 
@@ -43,16 +44,20 @@ class Poller(object):
         self._generate_lists()
 
     def _generate_lists(self):
-        self._pool_in = [fd for fd, events in list(
-            self._events.items()) if events & Poller.POLLIN]
-        self._pool_out = [fd for fd, events in list(
-            self._events.items()) if events & Poller.POLLOUT]
-        self._pool_pri = [fd for fd, events in list(
-            self._events.items()) if events & Poller.POLLPRI]
+        self._pool_in = [
+            fd for fd, events in list(self._events.items()) if events & Poller.POLLIN
+        ]
+        self._pool_out = [
+            fd for fd, events in list(self._events.items()) if events & Poller.POLLOUT
+        ]
+        self._pool_pri = [
+            fd for fd, events in list(self._events.items()) if events & Poller.POLLPRI
+        ]
 
     def poll(self, timeout=0.01):
         inn, out, pri = select.select(
-            self._pool_in, self._pool_out, self._pool_pri, timeout)
+            self._pool_in, self._pool_out, self._pool_pri, timeout
+        )
 
         for fd in inn:
             self._callbacks.get(fd, DO_NOTHING)(fd, Poller.POLLIN)

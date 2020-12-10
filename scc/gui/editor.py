@@ -10,11 +10,11 @@ from gi.repository import Gtk, Gdk
 
 import os
 import logging
+
 log = logging.getLogger("Editor")
 
 
 class ComboSetter(object):
-
     def set_cb(self, cb, key, keyindex=0):
         """
         Sets combobox value.
@@ -28,19 +28,19 @@ class ComboSetter(object):
                 self._recursing = False
                 return True
         else:
-            log.warning(
-                "Failed to set combobox value, key '%s' not found", key)
+            log.warning("Failed to set combobox value, key '%s' not found", key)
         self._recursing = False
         return False
 
 
 class Editor(ComboSetter):
     """ Common stuff for all editor windows """
+
     ERROR_CSS = " #error {background-color:green; color:red;} "
     _error_css_provider = None
 
     def __init__(self):
-        self.added_widget = None		# See add_widget method
+        self.added_widget = None  # See add_widget method
 
     def on_window_key_press_event(self, trash, event):
         """ Checks if pressed key was escape and if yes, closes window """
@@ -49,8 +49,7 @@ class Editor(ComboSetter):
 
     def setup_widgets(self):
         self.builder = Gtk.Builder()
-        self.builder.add_from_file(
-            os.path.join(self.app.gladepath, self.GLADE))
+        self.builder.add_from_file(os.path.join(self.app.gladepath, self.GLADE))
         self.window = self.builder.get_object("Dialog")
         self.builder.connect_signals(self)
 
@@ -62,7 +61,8 @@ class Editor(ComboSetter):
             Gtk.StyleContext.add_provider_for_screen(
                 Gdk.Screen.get_default(),
                 Editor._error_css_provider,
-                Gtk.STYLE_PROVIDER_PRIORITY_USER)
+                Gtk.STYLE_PROVIDER_PRIORITY_USER,
+            )
 
     def hide_dont_destroy(self, w, *a):
         """

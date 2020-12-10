@@ -84,10 +84,7 @@ class MenuData(object):
             raise ValueError("Not items")
 
         # Rearange data into list of pair tuples
-        data = [
-            (data[i * 2], data[(i * 2) + 1])
-            for i in range(0, len(data) / 2)
-        ]
+        data = [(data[i * 2], data[(i * 2) + 1]) for i in range(0, len(data) / 2)]
 
         # Parse data
         m = MenuData()
@@ -110,10 +107,11 @@ class MenuData(object):
             elif "separator" in i:
                 item = Separator(i["name"] if "name" in i else None)
             elif "submenu" in i:
-                item = Submenu(i["submenu"],
-                               i["name"] if "name" in i else None,
-                               icon=i["icon"] if "icon" in i else None,
-                               )
+                item = Submenu(
+                    i["submenu"],
+                    i["name"] if "name" in i else None,
+                    icon=i["icon"] if "icon" in i else None,
+                )
             elif "id" not in i:
                 # Cannot add menu without ID
                 continue
@@ -184,7 +182,7 @@ class MenuItem(object):
         self.icon = icon
         # If defined, called when user chooses menu instead of using action
         self.callback = callback
-        self.widget = None          # May be set by UI code
+        self.widget = None  # May be set by UI code
 
     def describe(self):
         """
@@ -195,15 +193,15 @@ class MenuItem(object):
     def encode(self):
         """ Returns item data as dict storable in json (profile) file """
         if self.action and type(self.action) in (str, str):
-            rv = {'action': self.action}
+            rv = {"action": self.action}
         elif self.action:
             rv = self.action.encode()
         else:
             rv = {}
-        rv['id'] = self.id
-        rv['name'] = self.label
+        rv["id"] = self.id
+        rv["name"] = self.label
         if self.icon:
-            rv['icon'] = self.icon
+            rv["icon"] = self.icon
         return rv
 
 
@@ -254,8 +252,8 @@ class MenuGenerator(object):
         Passed are all keys loaded from json dict that defined this generator.
         __init__ of generator should ignore all unknown keys.
         """
-        self.id = None      # Used only in editor
-        self.icon = None    # same
+        self.id = None  # Used only in editor
+        self.icon = None  # same
 
     def describe(self):
         """

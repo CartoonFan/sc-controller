@@ -10,6 +10,7 @@ from scc.tools import ensure_size
 
 import os
 import logging
+
 log = logging.getLogger("AE")
 
 
@@ -57,8 +58,7 @@ class AEComponent(ComboSetter):
         if self.loaded:
             return False
         self.builder = Gtk.Builder()
-        self.builder.add_from_file(
-            os.path.join(self.app.gladepath, self.GLADE))
+        self.builder.add_from_file(os.path.join(self.app.gladepath, self.GLADE))
         self.widget = self.builder.get_object(self.NAME)
         self.builder.connect_signals(self)
         self.loaded = True
@@ -97,10 +97,9 @@ def describe_action(mode, cls, v):
     Returns "not set" if v is None
     """
     if v is None or type(v) in (int, float, str, str):
-        return _('(not set)')
+        return _("(not set)")
     elif isinstance(v, Action):
-        dsc = v.describe(Action.AC_STICK if cls ==
-                         XYAction else Action.AC_BUTTON)
+        dsc = v.describe(Action.AC_STICK if cls == XYAction else Action.AC_BUTTON)
         if "\n" in dsc:
             dsc = "<small>" + "\n".join(dsc.split("\n")[0:2]) + "</small>"
         return dsc

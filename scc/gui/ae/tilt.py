@@ -12,9 +12,10 @@ from scc.gui.binding_editor import BindingEditor
 
 
 import logging
+
 log = logging.getLogger("AE.Tilt")
 
-__all__ = ['TiltComponent']
+__all__ = ["TiltComponent"]
 
 
 class TiltComponent(AEComponent, BindingEditor):

@@ -8,6 +8,7 @@ from scc.gui.editor import Editor
 
 class AboutDialog(Editor):
     """ Standard looking about dialog """
+
     GLADE = "about.glade"
 
     def __init__(self, app):
@@ -22,9 +23,11 @@ class AboutDialog(Editor):
         try:
             import pkg_resources
             import scc
-            if scc.__file__.startswith(pkg_resources.require("sccontroller")[0].location):
-                app_ver = "v" + \
-                    pkg_resources.require("sccontroller")[0].version
+
+            if scc.__file__.startswith(
+                pkg_resources.require("sccontroller")[0].location
+            ):
+                app_ver = "v" + pkg_resources.require("sccontroller")[0].version
         except:
             # pkg_resources is not available or __version__ file missing
             # There is no reason to crash on this.

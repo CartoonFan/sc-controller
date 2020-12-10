@@ -14,9 +14,10 @@ from scc.gui.ae.menu_action import MenuActionCofC
 from scc.gui.ae import AEComponent
 
 import logging
+
 log = logging.getLogger("AE.SA")
 
-__all__ = ['SpecialActionComponent']
+__all__ = ["SpecialActionComponent"]
 
 
 class SpecialActionComponent(AEComponent, MenuActionCofC):
@@ -39,9 +40,11 @@ class SpecialActionComponent(AEComponent, MenuActionCofC):
         cbConfirmWith = self.builder.get_object("cbConfirmWith")
         cbCancelWith = self.builder.get_object("cbCancelWith")
         cbConfirmWith.set_row_separator_func(
-            lambda model, iter: model.get_value(iter, 0) == "-")
+            lambda model, iter: model.get_value(iter, 0) == "-"
+        )
         cbCancelWith.set_row_separator_func(
-            lambda model, iter: model.get_value(iter, 0) == "-")
+            lambda model, iter: model.get_value(iter, 0) == "-"
+        )
 
     def shown(self):
         if not self._userdata_load_started:
@@ -117,8 +120,18 @@ class SpecialActionComponent(AEComponent, MenuActionCofC):
             return True
         if isinstance(action, OSDAction) and action.action is None:
             return True
-        return isinstance(action, (NoAction, TurnOffAction, ShellCommandAction,
-                                   ChangeProfileAction, KeyboardAction, ClearOSDAction, ResetGyroAction))
+        return isinstance(
+            action,
+            (
+                NoAction,
+                TurnOffAction,
+                ShellCommandAction,
+                ChangeProfileAction,
+                KeyboardAction,
+                ClearOSDAction,
+                ResetGyroAction,
+            ),
+        )
 
     def on_cbActionType_changed(self, *a):
         cbActionType = self.builder.get_object("cbActionType")
@@ -128,8 +141,7 @@ class SpecialActionComponent(AEComponent, MenuActionCofC):
             stActionData.set_visible_child(self.builder.get_object("vbShell"))
             self.on_enCommand_changed()
         elif key == "profile":
-            stActionData.set_visible_child(
-                self.builder.get_object("vbProfile"))
+            stActionData.set_visible_child(self.builder.get_object("vbProfile"))
             self.on_cbProfile_changed()
         elif key == "keyboard":
             stActionData.set_visible_child(self.builder.get_object("nothing"))
@@ -179,8 +191,7 @@ class SpecialActionComponent(AEComponent, MenuActionCofC):
         if self._recursing:
             return
         enCommand = self.builder.get_object("enCommand")
-        self.editor.set_action(ShellCommandAction(
-            enCommand.get_text().decode("utf-8")))
+        self.editor.set_action(ShellCommandAction(enCommand.get_text().decode("utf-8")))
 
     def on_osd_settings_changed(self, *a):
         if self._recursing:
@@ -190,11 +201,13 @@ class SpecialActionComponent(AEComponent, MenuActionCofC):
         cbOSDSize = self.builder.get_object("cbOSDSize")
         timeout = sclOSDTimeout.get_value()
         size = cbOSDSize.get_model().get_value(cbOSDSize.get_active_iter(), 0)
-        self.editor.set_action(OSDAction(
-            0 if timeout > 60.0 else timeout,
-            size,
-            enOSDText.get_text().decode("utf-8"
-                                        )))
+        self.editor.set_action(
+            OSDAction(
+                0 if timeout > 60.0 else timeout,
+                size,
+                enOSDText.get_text().decode("utf-8"),
+            )
+        )
 
     def on_exMenuControl_activate(self, ex, *a):
         rvMenuControl = self.builder.get_object("rvMenuControl")

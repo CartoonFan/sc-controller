@@ -24,6 +24,7 @@ import socket
 import traceback
 import threading
 import logging
+
 log = logging.getLogger("AutoSwitcher")
 
 
@@ -35,8 +36,7 @@ class AutoSwitcher(object):
         self.lock = threading.Lock()
         self.thread = threading.Thread(target=self.connect_daemon)
         self.config = Config()
-        self.mapper = Mapper(None, None, keyboard=None,
-                             mouse=None, gamepad=None)
+        self.mapper = Mapper(None, None, keyboard=None, mouse=None, gamepad=None)
         self.mapper.set_special_actions_handler(self)
         self.enabled = False
         self.socket = None
@@ -51,14 +51,14 @@ class AutoSwitcher(object):
         """ Parses conditions from config """
         parser = TalkingActionParser()
         conds = {}
-        for c in config['autoswitch']:
+        for c in config["autoswitch"]:
             try:
-                astr = c['action']
+                astr = c["action"]
                 if isinstance(astr, dict) and "action" in astr:
                     # Backwards compatibility
                     astr = astr["action"]
                 action = parser.restart(astr).parse()
-                conds[Condition.parse(c['condition'])] = action
+                conds[Condition.parse(c["condition"])] = action
             except Exception as e:
                 # Failure here is not fatal
                 log.error("Failed to parse autoswitcher condition '%s'", c)
@@ -151,24 +151,24 @@ class AutoSwitcher(object):
         path = find_profile(profile_name)
         if path:
             with self.lock:
-                if path != self.current_profile and not self.current_profile.endswith(".mod"):
+                if path != self.current_profile and not self.current_profile.endswith(
+                    ".mod"
+                ):
                     # Switch only if target profile is not active
                     # and active profile is not being editted.
                     try:
-                        if self.config['autoswitch_osd']:
-                            msg = (_("Switched to profile") +
-                                   " " + profile_name)
-                            self.socket.send(
-                                b"OSD: " + msg.encode('utf-8') + b"\n")
-                        self.socket.send(
-                            b"Profile: " + path.encode('utf-8') + b"\n")
+                        if self.config["autoswitch_osd"]:
+                            msg = _("Switched to profile") + " " + profile_name
+                            self.socket.send(b"OSD: " + msg.encode("utf-8") + b"\n")
+                        self.socket.send(b"Profile: " + path.encode("utf-8") + b"\n")
                     except:
                         log.error("Socket write failed")
                         os._exit(2)
                         return
         else:
             log.error(
-                "Cannot switch to profile '%s', profile file not found", self.conds[c])
+                "Cannot switch to profile '%s', profile file not found", self.conds[c]
+            )
 
     def on_sa_turnoff(self, mapper, action):
         with self.lock:
@@ -226,7 +226,11 @@ class Condition(object):
 
     def __str__(self):
         return "<Condition title=%s, exact_title=%s, regexp=%s, wm_class=%s>" % (
-            self.title, self.exact_title, self.regexp, self.wm_class)
+            self.title,
+            self.exact_title,
+            self.regexp,
+            self.wm_class,
+        )
 
     def describe(self):
         """
@@ -248,9 +252,9 @@ class Condition(object):
 
     @staticmethod
     def parse(data):
-        if 'regexp' in data:
+        if "regexp" in data:
             data = dict(data)
-            data['regexp'] = re.compile(data['regexp'])
+            data["regexp"] = re.compile(data["regexp"])
         return Condition(**data)
 
     def encode(self):
@@ -259,13 +263,13 @@ class Condition(object):
         """
         rv = {}
         if self.title:
-            rv['title'] = self.title
+            rv["title"] = self.title
         if self.exact_title:
-            rv['exact_title'] = self.exact_title
+            rv["exact_title"] = self.exact_title
         if self.regexp:
-            rv['regexp'] = self.regexp.pattern
+            rv["regexp"] = self.regexp.pattern
         if self.wm_class:
-            rv['wm_class'] = self.wm_class
+            rv["wm_class"] = self.wm_class
         return rv
 
     def matches(self, window_title, wm_class):
@@ -300,15 +304,18 @@ class Condition(object):
 
 class AutoswitchOptsMenuGenerator(MenuGenerator):
     """ Generates entire Autoswich Options submenu """
+
     GENERATOR_NAME = "autoswitch"
 
     def callback(self, menu, daemon, controller, menuitem):
         def on_response(*a):
             menu.quit(-2)
+
         if menuitem.id in ("as::unassign", "as::assign"):
             if menuitem.id == "as::unassign":
                 AutoSwitcher.unassign(
-                    self.conds, self.title, self.wm_class, self.assigned_prof)
+                    self.conds, self.title, self.wm_class, self.assigned_prof
+                )
             else:
                 if controller.get_profile():
                     profile = os.path.split(controller.get_profile())[-1]
@@ -316,15 +323,12 @@ class AutoswitchOptsMenuGenerator(MenuGenerator):
                         profile = profile[0:-4]
                     if profile.endswith(".sccprofile"):
                         profile = profile[0:-11]
-                    AutoSwitcher.unassign(
-                        self.conds, self.title, self.wm_class, None)
-                    AutoSwitcher.assign(
-                        self.conds, self.title, self.wm_class, profile)
+                    AutoSwitcher.unassign(self.conds, self.title, self.wm_class, None)
+                    AutoSwitcher.assign(self.conds, self.title, self.wm_class, profile)
             cfg = Config()
-            cfg["autoswitch"] = [{
-                "condition": c.encode(),
-                "action": self.conds[c].to_string()
-            } for c in self.conds
+            cfg["autoswitch"] = [
+                {"condition": c.encode(), "action": self.conds[c].to_string()}
+                for c in self.conds
             ]
             cfg.save()
             daemon.request(b"Reconfigure.\n", on_response, on_response)
@@ -355,11 +359,13 @@ class AutoswitchOptsMenuGenerator(MenuGenerator):
                 break
         if win:
             display_title = self.title or _("No Title")
-            rv.append(self.mk_item(None, _("Current Window: %s") %
-                                   (self.title[0:25],)))
+            rv.append(self.mk_item(None, _("Current Window: %s") % (self.title[0:25],)))
             if self.assigned_prof:
-                rv.append(self.mk_item(None, _("Assigned Profile: %s") %
-                                       (self.assigned_prof,)))
+                rv.append(
+                    self.mk_item(
+                        None, _("Assigned Profile: %s") % (self.assigned_prof,)
+                    )
+                )
             else:
                 rv.append(self.mk_item(None, _("No Profile Assigned")))
             rv.append(Separator())
@@ -379,4 +385,6 @@ class AutoswitchOptsMenuGenerator(MenuGenerator):
         return menuitem
 
 
-MENU_GENERATORS[AutoswitchOptsMenuGenerator.GENERATOR_NAME] = AutoswitchOptsMenuGenerator
+MENU_GENERATORS[
+    AutoswitchOptsMenuGenerator.GENERATOR_NAME
+] = AutoswitchOptsMenuGenerator

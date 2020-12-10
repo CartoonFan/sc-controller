@@ -10,6 +10,7 @@ from scc.gui.dwsnc import headerbar
 from scc.modifiers import ModeModifier
 from scc.actions import Action, RingAction, NoAction, MultiAction
 import logging
+
 log = logging.getLogger("RingEditor")
 
 
@@ -31,8 +32,8 @@ class RingEditor(Editor, ComboSetter):
         b = self.builder.get_object
         self.action_widgets = (
             # Order goes: Action Button, Clear Button
-            (b('btInner'),     b('btClearInner')),
-            (b('btOuter'),     b('btClearOuter'))
+            (b("btInner"), b("btClearInner")),
+            (b("btOuter"), b("btClearOuter")),
         )
         headerbar(self.builder.get_object("header"))
 
@@ -83,11 +84,15 @@ class RingEditor(Editor, ComboSetter):
 
     def _choose_editor(self, action, cb):
         if isinstance(action, ModeModifier):
-            from scc.gui.modeshift_editor import ModeshiftEditor    # Cannot be imported @ top
+            from scc.gui.modeshift_editor import (
+                ModeshiftEditor,
+            )  # Cannot be imported @ top
+
             e = ModeshiftEditor(self.app, cb)
             e.set_title(_("Edit Action"))
         else:
             from scc.gui.action_editor import ActionEditor  # Cannot be imported @ top
+
             e = ActionEditor(self.app, cb)
             e.set_title(_("Edit Action"))
             e.hide_macro()
@@ -98,6 +103,7 @@ class RingEditor(Editor, ComboSetter):
         for i in range(0, len(self.action_widgets)):
             button, clearb = self.action_widgets[i]
             if button == clicked_button:
+
                 def on_chosen(id, action):
                     self.actions[i] = action
                     self._update()
@@ -125,6 +131,7 @@ class RingEditor(Editor, ComboSetter):
     def on_btCustomActionEditor_clicked(self, *a):
         """ Handler for 'Custom Editor' button """
         from scc.gui.action_editor import ActionEditor  # Can't be imported on top
+
         e = ActionEditor(self.app, self.ac_callback)
         e.set_input(self.id, self._make_action(), mode=self.mode)
         e.hide_action_buttons()
@@ -147,13 +154,11 @@ class RingEditor(Editor, ComboSetter):
         key = cbMode.get_model().get_value(cbMode.get_active_iter(), 0)
         if key == "inner":
             return MultiAction(
-                self.actions[1],
-                RingAction(self.radius, self.actions[0], NoAction())
+                self.actions[1], RingAction(self.radius, self.actions[0], NoAction())
             )
         if key == "outer":
             return MultiAction(
-                self.actions[0],
-                RingAction(self.radius, NoAction(), self.actions[1])
+                self.actions[0], RingAction(self.radius, NoAction(), self.actions[1])
             )
         return RingAction(self.radius, *self.actions)
 

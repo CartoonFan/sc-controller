@@ -12,9 +12,10 @@ from scc.tools import nameof
 
 
 import logging
+
 log = logging.getLogger("AE.1st")
 
-__all__ = ['FirstPage']
+__all__ = ["FirstPage"]
 
 MARKUP_BUTTON = """
 <big>%(what)s: Quick settings</big>
@@ -95,23 +96,23 @@ class FirstPage(AEComponent):
                 markup = MARKUP_BUTTON
 
             long_names = {
-                'LPAD': _("Left Pad"),
-                'RPAD': _("Right Pad"),
-                'LGRIP': _("Left Grip"),
-                'RGRIP': _("Right Grip"),
-                'LB': _("Left Bumper"),
-                'RB': _("Right Bumper"),
-                'LEFT': _("Left Trigger"),
-                'RIGHT': _("Right Trigger"),
-                'STICK': _("Stick"),
+                "LPAD": _("Left Pad"),
+                "RPAD": _("Right Pad"),
+                "LGRIP": _("Left Grip"),
+                "RGRIP": _("Right Grip"),
+                "LB": _("Left Bumper"),
+                "RB": _("Right Bumper"),
+                "LEFT": _("Left Trigger"),
+                "RIGHT": _("Right Trigger"),
+                "STICK": _("Stick"),
             }
 
             markup = markup % {
-                'what': long_names.get(nameof(self.editor.get_id()),
-                                       nameof(self.editor.get_id()).title())
+                "what": long_names.get(
+                    nameof(self.editor.get_id()), nameof(self.editor.get_id()).title()
+                )
             }
-            self.builder.get_object("lblMarkup").set_markup(
-                markup.strip(" \r\n\t"))
+            self.builder.get_object("lblMarkup").set_markup(markup.strip(" \r\n\t"))
             return True
 
     def on_lblMarkup_activate_link(self, trash, link):

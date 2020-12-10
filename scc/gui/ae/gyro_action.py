@@ -17,9 +17,10 @@ from scc.tools import nameof
 
 import logging
 import re
+
 log = logging.getLogger("AE.GyroAction")
 
-__all__ = ['GyroActionComponent']
+__all__ = ["GyroActionComponent"]
 TRIGGERS = (nameof(SCButtons.LT), nameof(SCButtons.RT))
 
 
@@ -30,30 +31,30 @@ class GyroActionComponent(AEComponent):
     PRIORITY = 3
 
     BUTTONS = (  # in order as displayed in combobox
-        (None,					_('Always Active')),
+        (None, _("Always Active")),
         (None, None),
-        (SCButtons.LT,			_('Left Trigger')),
-        (SCButtons.RT,			_('Right Trigger')),
-        (SCButtons.LB,			_('Left Bumper')),
-        (SCButtons.RB,			_('Right Bumper')),
+        (SCButtons.LT, _("Left Trigger")),
+        (SCButtons.RT, _("Right Trigger")),
+        (SCButtons.LB, _("Left Bumper")),
+        (SCButtons.RB, _("Right Bumper")),
         (None, None),
-        (SCButtons.LPADTOUCH,	_('Left Pad Touched')),
-        (SCButtons.RPADTOUCH,	_('Right Pad Touched')),
-        (SCButtons.LPAD,		_('Left Pad Pressed')),
-        (SCButtons.RPAD,		_('Right Pad Pressed')),
+        (SCButtons.LPADTOUCH, _("Left Pad Touched")),
+        (SCButtons.RPADTOUCH, _("Right Pad Touched")),
+        (SCButtons.LPAD, _("Left Pad Pressed")),
+        (SCButtons.RPAD, _("Right Pad Pressed")),
         (None, None),
-        (SCButtons.LGRIP,		_('Left Grip')),
-        (SCButtons.RGRIP,		_('Right Grip')),
-        (STICK,					_('Stick Tilted')),
+        (SCButtons.LGRIP, _("Left Grip")),
+        (SCButtons.RGRIP, _("Right Grip")),
+        (STICK, _("Stick Tilted")),
         (None, None),
-        (SCButtons.A,			_('A')),
-        (SCButtons.B,			_('B')),
-        (SCButtons.X,			_('X')),
-        (SCButtons.Y,			_('Y')),
+        (SCButtons.A, _("A")),
+        (SCButtons.B, _("B")),
+        (SCButtons.X, _("X")),
+        (SCButtons.Y, _("Y")),
         (None, None),
-        (SCButtons.BACK,		_('Back (select)')),
-        (SCButtons.C,			_('Center')),
-        (SCButtons.START,		_('Start')),
+        (SCButtons.BACK, _("Back (select)")),
+        (SCButtons.C, _("Center")),
+        (SCButtons.START, _("Start")),
     )
 
     def __init__(self, app, editor):
@@ -78,18 +79,22 @@ class GyroActionComponent(AEComponent):
                 return
             if isinstance(action, ModeModifier):
                 self._recursing = True
-                self.builder.get_object("cbInvertGyro").set_active(
-                    bool(action.default))
+                self.builder.get_object("cbInvertGyro").set_active(bool(action.default))
                 self._recursing = False
                 b = list(action.mods.keys())[0]
                 action = action.mods[b] or action.default
                 self.select_gyro_button(b)
             else:
                 self.select_gyro_button(None)
-            if isinstance(action, SensitivityModifier) and isinstance(action.action, MouseAction):
+            if isinstance(action, SensitivityModifier) and isinstance(
+                action.action, MouseAction
+            ):
                 # Mouse (Desktop)
                 self.select_gyro_output("mouse")
-                if len(action.action.parameters) > 0 and action.action.parameters[0] == YAW:
+                if (
+                    len(action.action.parameters) > 0
+                    and action.action.parameters[0] == YAW
+                ):
                     self.select_yaw_roll(YAW)
                 else:
                     self.select_yaw_roll(ROLL)
@@ -267,8 +272,7 @@ class GyroActionComponent(AEComponent):
 
         if item and action:
             if item in TRIGGERS:
-                what = RangeOP(getattr(SCButtons, item),
-                               ">=", sclSoftLevel.get_value())
+                what = RangeOP(getattr(SCButtons, item), ">=", sclSoftLevel.get_value())
             elif item == STICK:
                 what = RangeOP(item, ">=", sclSoftLevel.get_value())
             else:
@@ -316,8 +320,7 @@ def is_gyro_enable(modemod):
 
 
 def fill_buttons(cb):
-    cb.set_row_separator_func(
-        lambda model, iter: model.get_value(iter, 1) is None)
+    cb.set_row_separator_func(lambda model, iter: model.get_value(iter, 1) is None)
     model = cb.get_model()
     for button, text in GyroActionComponent.BUTTONS:
         model.append((None if button is None else nameof(button), text))

@@ -49,9 +49,9 @@ class ChangeProfileAction(Action, SpecialAction):
         if self.name:
             return self.name
         if context == Action.AC_OSD:
-            return _("Profile: %s") % (self.profile, )
+            return _("Profile: %s") % (self.profile,)
         if context == Action.AC_SWITCHER:
-            return _("Switch to %s") % (self.profile, )
+            return _("Switch to %s") % (self.profile,)
         return _("Profile Change")
 
     def get_compatible_modifiers(self):
@@ -117,7 +117,7 @@ class TurnOffAction(Action, SpecialAction):
         return _("Turn Off the Controller")
 
     def to_string(self, multiline=False, pad=0):
-        return (" " * pad) + "%s()" % (self.COMMAND, )
+        return (" " * pad) + "%s()" % (self.COMMAND,)
 
     def get_compatible_modifiers(self):
         return Action.MOD_OSD
@@ -134,7 +134,7 @@ class TurnOffAction(Action, SpecialAction):
 
 class RestartDaemonAction(Action, SpecialAction):
     SA = COMMAND = "restart"
-    ALIASES = ("exit", )
+    ALIASES = ("exit",)
 
     def __init__(self):
         Action.__init__(self)
@@ -145,7 +145,7 @@ class RestartDaemonAction(Action, SpecialAction):
         return _("Restart SCC-Daemon")
 
     def to_string(self, multiline=False, pad=0):
-        return (" " * pad) + "%s()" % (self.COMMAND, )
+        return (" " * pad) + "%s()" % (self.COMMAND,)
 
     def button_release(self, mapper):
         # Execute only when button is released (for same reason as
@@ -221,7 +221,7 @@ class OSDAction(Action, SpecialAction):
         if self.name:
             return self.name
         if self.action:
-            return _("%s (with OSD)") % (self.action.describe(context), )
+            return _("%s (with OSD)") % (self.action.describe(context),)
         elif context == Action.AC_OSD:
             return _("Display '%s'" % self.text)
         return _("OSD Message")
@@ -233,11 +233,9 @@ class OSDAction(Action, SpecialAction):
         if self.size != self.DEFAULT_SIZE:
             parameters.append(str(self.size))
         if self.action:
-            parameters.append(
-                self.action.to_string(multiline=multiline, pad=pad))
+            parameters.append(self.action.to_string(multiline=multiline, pad=pad))
         else:
-            parameters.append("'%s'" %
-                              (str(self.text).encode("string_escape"), ))
+            parameters.append("'%s'" % (str(self.text).encode("string_escape"),))
         return (" " * pad) + "%s(%s)" % (self.COMMAND, ",".join(parameters))
 
     def strip(self):
@@ -304,13 +302,13 @@ class MenuAction(Action, SpecialAction, HapticEnabledAction):
     DEFAULT_POSITION = 10, -10
 
     def __init__(
-            self,
-            menu_id,
-            control_with=DEFAULT,
-            confirm_with=DEFAULT,
-            cancel_with=DEFAULT,
-            show_with_release=False,
-            size=0,
+        self,
+        menu_id,
+        control_with=DEFAULT,
+        confirm_with=DEFAULT,
+        cancel_with=DEFAULT,
+        show_with_release=False,
+        size=0,
     ):
         if control_with == SAME:
             # Little touch of backwards compatibility
@@ -349,13 +347,11 @@ class MenuAction(Action, SpecialAction, HapticEnabledAction):
     def to_string(self, multiline=False, pad=0):
         if self.control_with == DEFAULT:
             dflt = (DEFAULT, DEFAULT, False)
-            vals = (self.confirm_with, self.cancel_with,
-                    self.show_with_release)
+            vals = (self.confirm_with, self.cancel_with, self.show_with_release)
             if dflt == vals:
                 # Special case when menu is assigned to pad
                 if self.size == 0:
-                    return "%s%s('%s')" % (" " * pad, self.COMMAND,
-                                           self.menu_id)
+                    return "%s%s('%s')" % (" " * pad, self.COMMAND, self.menu_id)
                 return "%s%s('%s', %s)" % (
                     " " * pad,
                     self.COMMAND,
@@ -434,21 +430,47 @@ class MenuAction(Action, SpecialAction, HapticEnabledAction):
                 if cancel_with == DEFAULT:
                     cancel_with = SCButtons.B
             if not mapper.was_pressed(cancel_with):
-                self.execute(mapper, "--control-with", what, "-x", str(self.x),
-                             "-y", str(self.y), "--use-cursor", "--size",
-                             str(self.size), "--confirm-with",
-                             nameof(confirm_with), "--cancel-with",
-                             nameof(cancel_with), *params)
+                self.execute(
+                    mapper,
+                    "--control-with",
+                    what,
+                    "-x",
+                    str(self.x),
+                    "-y",
+                    str(self.y),
+                    "--use-cursor",
+                    "--size",
+                    str(self.size),
+                    "--confirm-with",
+                    nameof(confirm_with),
+                    "--cancel-with",
+                    nameof(cancel_with),
+                    *params
+                )
         if what == STICK:
             # Special case, menu is displayed only if is moved enought
             distance = sqrt(x * x + y * y)
-            if (self._stick_distance < MenuAction.MIN_STICK_DISTANCE
-                    and distance > MenuAction.MIN_STICK_DISTANCE):
-                self.execute(mapper,
-                             "--control-with", STICK, "-x", str(self.x), "-y",
-                             str(self.y), "--use-cursor", "--size",
-                             str(self.size), "--confirm-with", "STICKPRESS",
-                             "--cancel-with", STICK, *params)
+            if (
+                self._stick_distance < MenuAction.MIN_STICK_DISTANCE
+                and distance > MenuAction.MIN_STICK_DISTANCE
+            ):
+                self.execute(
+                    mapper,
+                    "--control-with",
+                    STICK,
+                    "-x",
+                    str(self.x),
+                    "-y",
+                    str(self.y),
+                    "--use-cursor",
+                    "--size",
+                    str(self.size),
+                    "--confirm-with",
+                    "STICKPRESS",
+                    "--cancel-with",
+                    STICK,
+                    *params
+                )
             self._stick_distance = distance
 
 
@@ -501,13 +523,13 @@ class RadialMenuAction(MenuAction):
     MENU_TYPE = "radialmenu"
 
     def __init__(
-            self,
-            menu_id,
-            control_with=DEFAULT,
-            confirm_with=DEFAULT,
-            cancel_with=DEFAULT,
-            show_with_release=False,
-            size=0,
+        self,
+        menu_id,
+        control_with=DEFAULT,
+        confirm_with=DEFAULT,
+        cancel_with=DEFAULT,
+        show_with_release=False,
+        size=0,
     ):
         MenuAction.__init__(
             self,
@@ -522,8 +544,7 @@ class RadialMenuAction(MenuAction):
 
     def whole(self, mapper, x, y, what):
         if self.rotation:
-            MenuAction.whole(self, mapper, x, y, what, "--rotation",
-                             self.rotation)
+            MenuAction.whole(self, mapper, x, y, what, "--rotation", self.rotation)
         else:
             MenuAction.whole(self, mapper, x, y, what)
 
@@ -569,14 +590,14 @@ class DialogAction(Action, SpecialAction):
     def to_string(self, multiline=False, pad=0):
         rv = "%s%s(" % (" " * pad, self.COMMAND)
         if self.confirm_with != DEFAULT:
-            rv += "%s, " % (nameof(self.confirm_with), )
+            rv += "%s, " % (nameof(self.confirm_with),)
             if self.cancel_with != DEFAULT:
-                rv += "%s, " % (nameof(self.cancel_with), )
-        rv += "'%s', " % (self.text.encode("string_escape"), )
+                rv += "%s, " % (nameof(self.cancel_with),)
+        rv += "'%s', " % (self.text.encode("string_escape"),)
         if multiline:
             rv += "\n%s" % (" " * (pad + 2))
         for option in self.options:
-            rv += "%s, " % (option.to_string(False), )
+            rv += "%s, " % (option.to_string(False),)
             if multiline:
                 rv += "\n%s" % (" " * (pad + 2))
 
@@ -632,7 +653,7 @@ class KeyboardAction(Action, SpecialAction):
         return _("OSD Keyboard")
 
     def to_string(self, multiline=False, pad=0):
-        return (" " * pad) + "%s()" % (self.COMMAND, )
+        return (" " * pad) + "%s()" % (self.COMMAND,)
 
     def button_press(self, mapper):
         self.execute(mapper)
@@ -670,7 +691,7 @@ class GesturesAction(Action, OSDEnabledAction, SpecialAction):
     """
 
     SA = COMMAND = "gestures"
-    PROFILE_KEYS = ("gestures", )
+    PROFILE_KEYS = ("gestures",)
     PROFILE_KEY_PRIORITY = 2
     DEFAULT_PRECISION = 1.0
 
@@ -692,8 +713,9 @@ class GesturesAction(Action, OSDEnabledAction, SpecialAction):
                 self.gestures[gstr] = i
                 gstr = None
             else:
-                raise ValueError("Invalid parameter for '%s': unexpected %s" %
-                                 (self.COMMAND, i))
+                raise ValueError(
+                    "Invalid parameter for '%s': unexpected %s" % (self.COMMAND, i)
+                )
 
     def get_compatible_modifiers(self):
         return Action.MOD_OSD
@@ -711,8 +733,7 @@ class GesturesAction(Action, OSDEnabledAction, SpecialAction):
             for gstr in self.gestures:
                 a_str = self.gestures[gstr].to_string(True).split("\n")
                 # Key has to be one of SCButtons
-                a_str[0] = (" " * pad) + "  '" + (gstr +
-                                                  "',").ljust(11) + a_str[0]
+                a_str[0] = (" " * pad) + "  '" + (gstr + "',").ljust(11) + a_str[0]
                 for i in range(1, len(a_str)):
                     a_str[i] = (" " * pad) + "  " + a_str[i]
                 a_str[-1] = a_str[-1] + ","
@@ -726,7 +747,7 @@ class GesturesAction(Action, OSDEnabledAction, SpecialAction):
             if self.precision != self.DEFAULT_PRECISION:
                 rv.append(str(self.precision))
             for gstr in self.gestures:
-                rv += ["'%s'" % (gstr, ), self.gestures[gstr].to_string(False)]
+                rv += ["'%s'" % (gstr,), self.gestures[gstr].to_string(False)]
             return self.COMMAND + "(" + ", ".join(rv) + ")"
 
     def compress(self):
@@ -743,8 +764,7 @@ class GesturesAction(Action, OSDEnabledAction, SpecialAction):
         args = []
         ga = GesturesAction()
         ga.gestures = {
-            gstr:
-            parser.from_json_data(data[GesturesAction.PROFILE_KEYS[0]][gstr])
+            gstr: parser.from_json_data(data[GesturesAction.PROFILE_KEYS[0]][gstr])
             for gstr in data[GesturesAction.PROFILE_KEYS[0]]
         }
         if "name" in data:
@@ -763,10 +783,12 @@ class GesturesAction(Action, OSDEnabledAction, SpecialAction):
     def _find_best_match_gesture(self, gesture_string):
         NUM_MATCHES_TO_RETURN = 1
 
-        similar_gestures = get_close_matches(gesture_string,
-                                             list(self.gestures.keys()),
-                                             NUM_MATCHES_TO_RETURN,
-                                             self.precision)
+        similar_gestures = get_close_matches(
+            gesture_string,
+            list(self.gestures.keys()),
+            NUM_MATCHES_TO_RETURN,
+            self.precision,
+        )
         best_gesture = next(iter(similar_gestures), None)
 
         if best_gesture is not None:
@@ -776,8 +798,7 @@ class GesturesAction(Action, OSDEnabledAction, SpecialAction):
     def find_gesture_action(self, gesture_string):
         action = None
         action = action or self._find_exact_gesture(gesture_string)
-        action = action or self._find_ignore_stroke_count_gesture(
-            gesture_string)
+        action = action or self._find_ignore_stroke_count_gesture(gesture_string)
         action = action or self._find_best_match_gesture(gesture_string)
         return action
 

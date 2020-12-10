@@ -15,9 +15,10 @@ from scc.gui.ae import AEComponent, describe_action
 from scc.gui.simple_chooser import SimpleChooser
 
 import logging
+
 log = logging.getLogger("AE.Gyro")
 
-__all__ = ['GyroComponent']
+__all__ = ["GyroComponent"]
 
 
 class GyroComponent(AEComponent):
@@ -40,19 +41,21 @@ class GyroComponent(AEComponent):
         cbGyroButton = self.builder.get_object("cbGyroButton")
         fill_buttons(cbGyroButton)
         self._recursing = False
-        self.buttons = [self.builder.get_object(
-            x) for x in ("btPitch", "btYaw", "btRoll")]
-        self.cbs = [self.builder.get_object(x) for x in (
-            "cbPitchAbs", "cbYawAbs", "cbRollAbs")]
-        self.labels = [self.builder.get_object(
-            x) for x in ("lblPitch", "lblYaw", "lblRoll")]
+        self.buttons = [
+            self.builder.get_object(x) for x in ("btPitch", "btYaw", "btRoll")
+        ]
+        self.cbs = [
+            self.builder.get_object(x) for x in ("cbPitchAbs", "cbYawAbs", "cbRollAbs")
+        ]
+        self.labels = [
+            self.builder.get_object(x) for x in ("lblPitch", "lblYaw", "lblRoll")
+        ]
 
     def set_action(self, mode, action):
         if self.handles(mode, action):
             if isinstance(action, ModeModifier):
                 self._recursing = True
-                self.builder.get_object("cbInvertGyro").set_active(
-                    bool(action.default))
+                self.builder.get_object("cbInvertGyro").set_active(bool(action.default))
                 self._recursing = False
                 b = list(action.mods.keys())[0]
                 action = action.mods[b] or action.default
@@ -71,8 +74,7 @@ class GyroComponent(AEComponent):
                     for i in range(0, 3):
                         if pars[i] is not None:
                             self.axes[i] = pars[i]
-                            self.cbs[i].set_active(
-                                isinstance(a, GyroAbsAction))
+                            self.cbs[i].set_active(isinstance(a, GyroAbsAction))
             self.update()
             self._recursing = False
 
@@ -98,6 +100,7 @@ class GyroComponent(AEComponent):
             self.axes[i] = action.parameters[0]
             self.update()
             self.send()
+
         b = SimpleChooser(self.app, "axis", cb)
         b.set_title(_("Select Axis"))
         b.hide_mouse()
@@ -149,8 +152,9 @@ class GyroComponent(AEComponent):
 
     def update(self, *a):
         for i in range(0, 3):
-            self.labels[i].set_label(describe_action(
-                Action.AC_STICK, AxisAction, self.axes[i]))
+            self.labels[i].set_label(
+                describe_action(Action.AC_STICK, AxisAction, self.axes[i])
+            )
 
     def send(self, *a):
         if self._recursing:

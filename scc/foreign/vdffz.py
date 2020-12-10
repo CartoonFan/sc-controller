@@ -9,6 +9,7 @@ from scc.lib.vdf import parse_vdf
 
 import json
 import logging
+
 log = logging.getLogger("import.vdffz")
 
 
@@ -18,6 +19,6 @@ class VDFFZProfile(VDFProfile):
             data = json.loads(open(filename, "r").read())
         except Exception as e:
             raise ValueError("Failed to parse JSON")
-        if 'ConfigData' not in data:
+        if "ConfigData" not in data:
             raise ValueError("ConfigData missing in JSON")
-        self.load_data(parse_vdf(data['ConfigData'].encode('utf-8')))
+        self.load_data(parse_vdf(data["ConfigData"].encode("utf-8")))

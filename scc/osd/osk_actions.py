@@ -13,10 +13,12 @@ from scc.constants import TRIGGER_HALF, LEFT, RIGHT
 from scc.actions import Action, SpecialAction
 
 import logging
+
 log = logging.getLogger("OSDKeyActs")
 
 
-def _(x): return x
+def _(x):
+    return x
 
 
 class OSKAction(Action, SpecialAction):
@@ -49,7 +51,8 @@ class CloseOSKAction(OSKAction):
     def button_press(self, mapper):
         self.execute(mapper)
 
-    def button_release(self, mapper): pass
+    def button_release(self, mapper):
+        pass
 
 
 class OSKCursorAction(Action, SpecialAction):

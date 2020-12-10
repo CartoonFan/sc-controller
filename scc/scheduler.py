@@ -11,13 +11,13 @@ Use schedule(delay, callback, *data) to register one-time task.
 import time
 import queue
 import logging
+
 log = logging.getLogger("Scheduler")
 
 # TODO: Maybe create actual thread for this? Use poler? Scrap everything and rewrite it in GO?
 
 
 class Scheduler(object):
-
     def __init__(self):
         self._scheduled = queue.PriorityQueue()
         self._next = None
@@ -73,7 +73,6 @@ class Scheduler(object):
 
 
 class Task(object):
-
     def __init__(self, time, callback, data):
         self.time = time
         self.callback = callback

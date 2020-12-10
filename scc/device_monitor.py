@@ -17,10 +17,10 @@ import logging
 log = logging.getLogger("DevMon")
 
 RE_BT_NUMBERS = re.compile(r"[0-9A-F]{4}:([0-9A-F]{4}):([0-9A-F]{4}).*")
-HCIGETCONNLIST = IOR(ord('H'), 212, ctypes.c_int)
+HCIGETCONNLIST = IOR(ord("H"), 212, ctypes.c_int)
 HAVE_BLUETOOTH_LIB = False
 try:
-    btlib_name = find_library('bluetooth')
+    btlib_name = find_library("bluetooth")
     assert btlib_name
     btlib = ctypes.CDLL(btlib_name)
     HAVE_BLUETOOTH_LIB = True
@@ -29,7 +29,6 @@ except:
 
 
 class DeviceMonitor(Monitor):
-
     def __init__(self, *a):
         Monitor.__init__(self, *a)
         self.daemon = None
@@ -65,7 +64,8 @@ class DeviceMonitor(Monitor):
         """ Registers poller and starts listening for events """
         if not HAVE_BLUETOOTH_LIB:
             log.warning(
-                "Failed to load libbluetooth.so, bluetooth support will be incomplete")
+                "Failed to load libbluetooth.so, bluetooth support will be incomplete"
+            )
         poller = self.daemon.poller
         poller.register(self.fileno(), poller.POLLIN, self.on_data_ready)
         Monitor.start(self)
@@ -108,8 +108,9 @@ class DeviceMonitor(Monitor):
         for i in range(cl.conn_num):
             ci = cl.conn_info[i]
             id = "hci%s:%s" % (cl.dev_id, ci.handle)
-            address = ":".join([hex(x).lstrip("0x").zfill(2).upper()
-                                for x in reversed(ci.bdaddr)])
+            address = ":".join(
+                [hex(x).lstrip("0x").zfill(2).upper() for x in reversed(ci.bdaddr)]
+            )
             self.bt_addresses[id] = address
 
     def _dev_for_hci(self, syspath):
@@ -136,13 +137,20 @@ class DeviceMonitor(Monitor):
             if event.action == "bind" and event.initialized:
                 if event.syspath not in self.known_devs:
                     self._on_new_syspath(event.subsystem, event.syspath)
-            elif event.action == "add" and event.initialized and event.subsystem in ("input", "bluetooth"):
+            elif (
+                event.action == "add"
+                and event.initialized
+                and event.subsystem in ("input", "bluetooth")
+            ):
                 # those are not bound
                 if event.syspath not in self.known_devs:
                     if event.subsystem == "bluetooth":
                         self._get_hci_addresses()
                     self._on_new_syspath(event.subsystem, event.syspath)
-            elif event.action in ("remove", "unbind") and event.syspath in self.known_devs:
+            elif (
+                event.action in ("remove", "unbind")
+                and event.syspath in self.known_devs
+            ):
                 vendor, product, cb = self.known_devs.pop(event.syspath)
                 if cb:
                     cb(event.syspath, vendor, product)
@@ -176,20 +184,22 @@ class DeviceMonitor(Monitor):
         May throw all kinds of OSErrors or IOErrors
         """
         if os.path.exists(os.path.join(syspath, "idVendor")):
-            vendor = int(
-                open(os.path.join(syspath, "idVendor")).read().strip(), 16)
-            product = int(
-                open(os.path.join(syspath, "idProduct")).read().strip(), 16)
+            vendor = int(open(os.path.join(syspath, "idVendor")).read().strip(), 16)
+            product = int(open(os.path.join(syspath, "idProduct")).read().strip(), 16)
             return vendor, product
         if subsystem is None:
             subsystem = DeviceMonitor.get_subsystem(syspath)
         if subsystem == "bluetooth":
             # Search for folder that matches regular expression...
-            names = [name for name in os.listdir(syspath)
-                     if os.path.isdir(syspath) and RE_BT_NUMBERS.match(name)]
+            names = [
+                name
+                for name in os.listdir(syspath)
+                if os.path.isdir(syspath) and RE_BT_NUMBERS.match(name)
+            ]
             if len(names) > 0:
                 vendor, product = [
-                    int(x, 16) for x in RE_BT_NUMBERS.match(names[0]).groups()]
+                    int(x, 16) for x in RE_BT_NUMBERS.match(names[0]).groups()
+                ]
                 return vendor, product
             # Above method works for anything _but_ SteamController
             # For that one, following desperate mess is needed
@@ -198,7 +208,8 @@ class DeviceMonitor(Monitor):
                 name = node.split("/")[-1]
                 if RE_BT_NUMBERS.match(name):
                     vendor, product = [
-                        int(x, 16) for x in RE_BT_NUMBERS.match(name).groups()]
+                        int(x, 16) for x in RE_BT_NUMBERS.match(name).groups()
+                    ]
                     return vendor, product
         raise OSError("Cannot determine vendor and product IDs")
 
@@ -257,20 +268,20 @@ class DeviceMonitor(Monitor):
 
 class hci_conn_info(ctypes.Structure):
     _fields_ = [
-        ('handle', ctypes.c_uint16),
-        ('bdaddr', ctypes.c_uint8 * 6),
-        ('type', ctypes.c_uint8),
-        ('out', ctypes.c_uint8),
-        ('state', ctypes.c_uint16),
-        ('link_mode', ctypes.c_uint32),
+        ("handle", ctypes.c_uint16),
+        ("bdaddr", ctypes.c_uint8 * 6),
+        ("type", ctypes.c_uint8),
+        ("out", ctypes.c_uint8),
+        ("state", ctypes.c_uint16),
+        ("link_mode", ctypes.c_uint32),
     ]
 
 
 class hci_conn_list_req(ctypes.Structure):
     _fields_ = [
-        ('dev_id', ctypes.c_uint16),
-        ('conn_num', ctypes.c_uint16),
-        ('conn_info', hci_conn_info * 256),
+        ("dev_id", ctypes.c_uint16),
+        ("conn_num", ctypes.c_uint16),
+        ("conn_info", hci_conn_info * 256),
     ]
 
 

@@ -14,7 +14,7 @@ from .sc_dongle import SCStatus, SCController
 import struct
 import logging
 
-VENDOR_ID = 0x28de
+VENDOR_ID = 0x28DE
 PRODUCT_ID = 0x1102
 ENDPOINT = 3
 CONTROLIDX = 2
@@ -25,6 +25,7 @@ log = logging.getLogger("SCCable")
 
 def init(daemon, config):
     """ Registers hotplug callback for controller dongle """
+
     def cb(device, handle):
         return SCByCable(device, handle, daemon)
 
@@ -33,7 +34,7 @@ def init(daemon, config):
 
 
 class SCByCable(USBDevice, SCController):
-    FORMAT1 = b'>BBBBB13sB2s'
+    FORMAT1 = b">BBBBB13sB2s"
 
     def __init__(self, device, handle, daemon):
         self.daemon = daemon
@@ -48,7 +49,9 @@ class SCByCable(USBDevice, SCController):
 
     def generate_serial(self):
         self._serial = "%s:%s" % (
-            self.device.getBusNumber(), self.device.getPortNumber())
+            self.device.getBusNumber(),
+            self.device.getPortNumber(),
+        )
 
     def disconnected(self):
         # Overrided to skip returning serial# to pool.

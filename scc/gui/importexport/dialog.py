@@ -17,6 +17,7 @@ import tarfile
 import logging
 import json
 import traceback
+
 log = logging.getLogger("IE.Dialog")
 
 
@@ -41,7 +42,7 @@ class Dialog(Editor, ComboSetter, Export, ImportVdf, ImportSccprofile):
         or None if type is not supported.
         """
         try:
-            f = file(filename, 'rb').read(1024)
+            f = file(filename, "rb").read(1024)
         except Exception as e:
             # File not readable
             log.error(traceback.format_exc())
@@ -51,9 +52,9 @@ class Dialog(Editor, ComboSetter, Export, ImportVdf, ImportSccprofile):
                 # Looks like json
                 data = json.loads(open(filename, "r").read())
                 if "buttons" in data and "gyro" in data:
-                    return 'sccprofile'
+                    return "sccprofile"
                 if "GameName" in data and "FileName" in data:
-                    return 'vdffz'
+                    return "vdffz"
         except:
             # Definitelly not json
             pass

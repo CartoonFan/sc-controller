@@ -20,6 +20,7 @@ from scc.config import Config
 
 import os
 import logging
+
 log = logging.getLogger("osd.menu")
 
 
@@ -33,14 +34,21 @@ class Launcher(OSDWindow):
     """
 
     BUTTONS = [
-        "1",        "2 ABC",    "3 DEF",
-        "5 GHI",    "5 JKL",    "6 MNO",
-        "7 PQRS",   "8 TUV",    "9 WXYZ",
-        "",         "0"
+        "1",
+        "2 ABC",
+        "3 DEF",
+        "5 GHI",
+        "5 JKL",
+        "6 MNO",
+        "7 PQRS",
+        "8 TUV",
+        "9 WXYZ",
+        "",
+        "0",
     ]
 
     VALID_CHARS = "12ABC3DEF5GHI5JKL6MNO7PQRS8TUV9WXYZ0"
-    CHAR_TO_NUMBER = {}    # Generated on runtime
+    CHAR_TO_NUMBER = {}  # Generated on runtime
 
     MAX_ROWS = 5
 
@@ -55,16 +63,17 @@ class Launcher(OSDWindow):
         self.config = None
         self.feedback = None
         self.controller = None
-        self.xdisplay = X.Display(
-            hash(GdkX11.x11_get_default_xdisplay()))  # Magic
+        self.xdisplay = X.Display(hash(GdkX11.x11_get_default_xdisplay()))  # Magic
 
         self.create_parent()
         self.create_app_list()
         self.create_buttons()
 
-        cursor = os.path.join(get_share_path(), "images", 'menu-cursor.svg')
-        self.cursors = [Gtk.Image.new_from_file(
-            cursor), Gtk.Image.new_from_file(cursor)]
+        cursor = os.path.join(get_share_path(), "images", "menu-cursor.svg")
+        self.cursors = [
+            Gtk.Image.new_from_file(cursor),
+            Gtk.Image.new_from_file(cursor),
+        ]
         for c in self.cursors:
             c.set_name("osd-menu-cursor")
             c.selected = None
@@ -76,8 +85,8 @@ class Launcher(OSDWindow):
         self._selected = None
         self._menuid = None
         self._eh_ids = []
-        self._confirm_with = 'A'
-        self._cancel_with = 'B'
+        self._confirm_with = "A"
+        self._cancel_with = "B"
 
         if Launcher._app_db is None:
             Launcher._app_db = []
@@ -94,18 +103,22 @@ class Launcher(OSDWindow):
 
     @staticmethod
     def name_to_keys(appinfo):
-        return "".join([
-            Launcher.CHAR_TO_NUMBER[x]
-            for x in appinfo.get_display_name().upper()
-            if x in Launcher.VALID_CHARS
-        ])
+        return "".join(
+            [
+                Launcher.CHAR_TO_NUMBER[x]
+                for x in appinfo.get_display_name().upper()
+                if x in Launcher.VALID_CHARS
+            ]
+        )
 
     @staticmethod
     def string_to_keys_and_spaces(string):
-        return "".join([
-            Launcher.CHAR_TO_NUMBER[x] if x in Launcher.VALID_CHARS else " "
-            for x in string.upper()
-        ])
+        return "".join(
+            [
+                Launcher.CHAR_TO_NUMBER[x] if x in Launcher.VALID_CHARS else " "
+                for x in string.upper()
+            ]
+        )
 
     def create_parent(self):
         self.parent = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -185,14 +198,25 @@ class Launcher(OSDWindow):
 
     def _add_arguments(self):
         OSDWindow._add_arguments(self)
-        self.argparser.add_argument('--confirm-with', type=str,
-                                    metavar="button", default=DEFAULT,
-                                    help="button used to confirm choice")
-        self.argparser.add_argument('--cancel-with', type=str,
-                                    metavar="button", default=DEFAULT,
-                                    help="button used to cancel dialog")
-        self.argparser.add_argument('--feedback-amplitude', type=int,
-                                    help="enables and sets power of feedback effect generated when active menu option is changed")
+        self.argparser.add_argument(
+            "--confirm-with",
+            type=str,
+            metavar="button",
+            default=DEFAULT,
+            help="button used to confirm choice",
+        )
+        self.argparser.add_argument(
+            "--cancel-with",
+            type=str,
+            metavar="button",
+            default=DEFAULT,
+            help="button used to cancel dialog",
+        )
+        self.argparser.add_argument(
+            "--feedback-amplitude",
+            type=int,
+            help="enables and sets power of feedback effect generated when active menu option is changed",
+        )
 
     def parse_argumets(self, argv):
         if not OSDWindow.parse_argumets(self, argv):
@@ -208,7 +232,7 @@ class Launcher(OSDWindow):
         return True
 
     def _set_launchers(self, launchers):
-        launchers = launchers[0:self.MAX_ROWS]
+        launchers = launchers[0 : self.MAX_ROWS]
         for x in self.items:
             x.set_label("")
             x.set_name("osd-hidden-item")
@@ -255,7 +279,7 @@ class Launcher(OSDWindow):
             label[0:index1],
             self.config["osd_colors"]["menuitem_hilight_text"],
             label[index1:index2],
-            label[index2:]
+            label[index2:],
         )
         return label
 
@@ -288,21 +312,19 @@ class Launcher(OSDWindow):
 
     def select(self, index):
         if self._selected:
-            self._selected.set_name(self._selected.get_name()
-                                    .replace("-selected", ""))
+            self._selected.set_name(self._selected.get_name().replace("-selected", ""))
             self._selected = None
         if self.items[index].launcher is not None:
             self._selected = self.items[index]
-            self._selected.set_name(
-                self._selected.get_name() + "-selected")
+            self._selected.set_name(self._selected.get_name() + "-selected")
             return True
         return False
 
     def _connect_handlers(self):
         self._eh_ids += [
-            (self.daemon, self.daemon.connect('dead', self.on_daemon_died)),
-            (self.daemon, self.daemon.connect('error', self.on_daemon_died)),
-            (self.daemon, self.daemon.connect('alive', self.on_daemon_connected)),
+            (self.daemon, self.daemon.connect("dead", self.on_daemon_died)),
+            (self.daemon, self.daemon.connect("error", self.on_daemon_died)),
+            (self.daemon, self.daemon.connect("alive", self.on_daemon_connected)),
         ]
 
     def run(self):
@@ -330,16 +352,31 @@ class Launcher(OSDWindow):
             return
 
         ccfg = self.config.get_controller_config(self.controller.get_id())
-        self._confirm_with = ccfg["menu_confirm"] if self.args.confirm_with == DEFAULT else self.args.confirm_with
-        self._cancel_with = ccfg["menu_cancel"] if self.args.cancel_with == DEFAULT else self.args.cancel_with
+        self._confirm_with = (
+            ccfg["menu_confirm"]
+            if self.args.confirm_with == DEFAULT
+            else self.args.confirm_with
+        )
+        self._cancel_with = (
+            ccfg["menu_cancel"]
+            if self.args.cancel_with == DEFAULT
+            else self.args.cancel_with
+        )
 
         self._eh_ids += [
-            (self.controller, self.controller.connect('event', self.on_event)),
-            (self.controller, self.controller.connect(
-                'lost', self.on_controller_lost)),
+            (self.controller, self.controller.connect("event", self.on_event)),
+            (self.controller, self.controller.connect("lost", self.on_controller_lost)),
         ]
-        locks = [LEFT, RIGHT, STICK, "LPAD", "RPAD", "LB",
-                 self._confirm_with, self._cancel_with]
+        locks = [
+            LEFT,
+            RIGHT,
+            STICK,
+            "LPAD",
+            "RPAD",
+            "LB",
+            self._confirm_with,
+            self._cancel_with,
+        ]
         self.controller.lock(success, self.on_failed_to_lock, *locks)
 
     def quit(self, code=-2):
@@ -388,8 +425,7 @@ class Launcher(OSDWindow):
         max_w = self.grid.get_allocation().width - 2 * pad_w
         max_h = self.grid.get_allocation().height - 2 * pad_h
 
-        x, y = circle_to_square(x / (STICK_PAD_MAX * 2.0),
-                                y / (STICK_PAD_MAX * 2.0))
+        x, y = circle_to_square(x / (STICK_PAD_MAX * 2.0), y / (STICK_PAD_MAX * 2.0))
         x = clamp(pad_w, (pad_w + max_w) * 0.5 + x * max_w, max_w - pad_w)
         y = clamp(pad_h, (pad_h + max_h) * 0.5 + y * max_h * -1, max_h - pad_h)
         x += self.grid.get_allocation().x
@@ -433,10 +469,10 @@ class Launcher(OSDWindow):
         elif what == STICK:
             self._scon.set_stick(*data)
         elif what == self._cancel_with:
-            if data[0] == 0:    # Button released
+            if data[0] == 0:  # Button released
                 self.quit(-1)
         elif what == self._confirm_with:
-            if data[0] == 0:    # Button released
+            if data[0] == 0:  # Button released
                 if self._selected:
                     self._launch()
                     self.quit(0)

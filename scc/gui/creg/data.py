@@ -9,6 +9,7 @@ from scc.constants import STICK_PAD_MAX, STICK_PAD_MIN
 from scc.gui.creg.constants import AXIS_TO_BUTTON
 
 import logging
+
 log = logging.getLogger("CReg.data")
 
 
@@ -39,7 +40,7 @@ class AxisData(object):
         self.max = STICK_PAD_MIN
 
     def __repr__(self):
-        return "<Axis data '%s'>" % (self.name, )
+        return "<Axis data '%s'>" % (self.name,)
 
     def set_position(self, value):
         """

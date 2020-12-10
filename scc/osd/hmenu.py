@@ -16,6 +16,7 @@ from scc.osd.grid_menu import GridMenu
 from scc.osd.menu import MenuIcon
 
 import logging
+
 log = logging.getLogger("osd.hmenu")
 
 

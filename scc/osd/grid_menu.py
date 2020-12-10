@@ -14,6 +14,7 @@ from scc.tools import find_icon
 
 import math
 import logging
+
 log = logging.getLogger("osd.gridmenu")
 
 
@@ -33,7 +34,7 @@ class GridMenu(Menu):
         if self._size > 0:
             self.ipr = self._size
         else:
-            self.ipr = int(math.sqrt(max(1, len(items)-1))+1)
+            self.ipr = int(math.sqrt(max(1, len(items) - 1)) + 1)
             if len(items) == 6:
                 self.ipr = 3  # Special (common) cases
             if len(items) == 8:

@@ -16,6 +16,7 @@ from scc.actions import NoAction
 
 import json
 import logging
+
 log = logging.getLogger("profile")
 
 
@@ -55,13 +56,16 @@ class Profile(object):
     def save_fileobj(self, fileobj):
         """ Saves profile into file-like object. Returns self """
         data = {
-            "_": (self.description if "\n" not in self.description
-                  else self.description.strip("\n").split("\n")),
-            'buttons': {},
-            'stick': self.stick,
-            'gyro': self.gyro,
-            'trigger_left': self.triggers[Profile.LEFT],
-            'trigger_right': self.triggers[Profile.RIGHT],
+            "_": (
+                self.description
+                if "\n" not in self.description
+                else self.description.strip("\n").split("\n")
+            ),
+            "buttons": {},
+            "stick": self.stick,
+            "gyro": self.gyro,
+            "trigger_left": self.triggers[Profile.LEFT],
+            "trigger_right": self.triggers[Profile.RIGHT],
             "pad_left": self.pads[Profile.LEFT],
             "pad_right": self.pads[Profile.RIGHT],
             "cpad": self.pads[Profile.CPAD],
@@ -72,7 +76,7 @@ class Profile(object):
 
         for i in self.buttons:
             if self.buttons[i]:
-                data['buttons'][i.name] = self.buttons[i]
+                data["buttons"][i.name] = self.buttons[i]
 
         # Generate & save json
         jstr = Encoder(sort_keys=True, indent=4).encode(data)
@@ -109,19 +113,18 @@ class Profile(object):
         else:
             self.description = data["_"]
         # Settings - Template
-        self.is_template = bool(
-            data["is_template"]) if "is_template" in data else False
+        self.is_template = bool(data["is_template"]) if "is_template" in data else False
 
         # Buttons
         self.buttons = {}
         for x in SCButtons:
-            self.buttons[x] = self.parser.from_json_data(
-                data["buttons"], x.name)
+            self.buttons[x] = self.parser.from_json_data(data["buttons"], x.name)
         # Pressing stick is interpreted as STICKPRESS button,
         # formely called just STICK
         if "STICK" in data["buttons"] and "STICKPRESS" not in data["buttons"]:
             self.buttons[SCButtons.STICKPRESS] = self.parser.from_json_data(
-                data["buttons"], "STICK")
+                data["buttons"], "STICK"
+            )
 
         # Stick & gyro
         self.stick = self.parser.from_json_data(data, "stick")
@@ -130,15 +133,16 @@ class Profile(object):
         if "triggers" in data:
             # Old format
             # Triggers
-            self.triggers = ({
-                x: self.parser.from_json_data(data["triggers"], x) for x in Profile.TRIGGERS
-            })
+            self.triggers = {
+                x: self.parser.from_json_data(data["triggers"], x)
+                for x in Profile.TRIGGERS
+            }
 
             # Pads
             self.pads = {
-                Profile.LEFT	: self.parser.from_json_data(data, "left_pad"),
-                Profile.RIGHT	: self.parser.from_json_data(data, "right_pad"),
-                Profile.CPAD	: NoAction()
+                Profile.LEFT: self.parser.from_json_data(data, "left_pad"),
+                Profile.RIGHT: self.parser.from_json_data(data, "right_pad"),
+                Profile.CPAD: NoAction(),
             }
         else:
             # New format
@@ -162,12 +166,13 @@ class Profile(object):
                 for invalid_char in ".:/":
                     if invalid_char in id:
                         raise ValueError(
-                            "Invalid character '%s' in menu id '%s'" % (invalid_char, id))
-                self.menus[id] = MenuData.from_json_data(
-                    data["menus"][id], self.parser)
+                            "Invalid character '%s' in menu id '%s'"
+                            % (invalid_char, id)
+                        )
+                self.menus[id] = MenuData.from_json_data(data["menus"][id], self.parser)
 
         # Conversion
-        self.original_version = version		# TODO: This is temporary
+        self.original_version = version  # TODO: This is temporary
         if version < Profile.VERSION:
             self._convert(version)
 
@@ -177,15 +182,17 @@ class Profile(object):
         """ Clears all actions and adds default menu action on center button """
         self.buttons = {x: NoAction() for x in SCButtons}
         self.buttons[SCButtons.C] = HoldModifier(
-            MenuAction("Default.menu"),
-            normalaction=MenuAction("Default.menu")
+            MenuAction("Default.menu"), normalaction=MenuAction("Default.menu")
         )
         self.menus = {}
         self.stick = NoAction()
         self.is_template = False
         self.triggers = {Profile.LEFT: NoAction(), Profile.RIGHT: NoAction()}
-        self.pads = {Profile.LEFT: NoAction(),
-                     Profile.RIGHT: NoAction(), Profile.CPAD: NoAction()}
+        self.pads = {
+            Profile.LEFT: NoAction(),
+            Profile.RIGHT: NoAction(),
+            Profile.CPAD: NoAction(),
+        }
         self.gyro = NoAction()
 
     def get_all_actions(self):
@@ -240,13 +247,13 @@ class Profile(object):
         """ Performs conversion from older profile version """
         if from_version < 1:
             from scc.modifiers import ModeModifier
+
             # Add 'display Default.menu if center button is held' for old profiles
             c = self.buttons[SCButtons.C]
             if not c:
                 # Nothing set to C button
                 self.buttons[SCButtons.C] = HoldModifier(
-                    MenuAction("Default.menu"),
-                    normalaction=MenuAction("Default.menu")
+                    MenuAction("Default.menu"), normalaction=MenuAction("Default.menu")
                 )
             elif hasattr(c, "holdaction") and c.holdaction:
                 # Already set to something, don't overwrite it
@@ -256,16 +263,17 @@ class Profile(object):
                 pass
             else:
                 self.buttons[SCButtons.C] = HoldModifier(
-                    MenuAction("Default.menu"),
-                    normalaction=self.buttons[SCButtons.C]
+                    MenuAction("Default.menu"), normalaction=self.buttons[SCButtons.C]
                 )
         if from_version < 1.1:
             # Convert old scrolling wheel to new representation
             from scc.modifiers import FeedbackModifier, BallModifier
             from scc.actions import MouseAction, XYAction
             from scc.uinput import Rels
-            iswheelaction = (lambda x: isinstance(x, MouseAction) and
-                             x.parameters[0] in (Rels.REL_HWHEEL, Rels.REL_WHEEL))
+
+            iswheelaction = lambda x: isinstance(x, MouseAction) and x.parameters[
+                0
+            ] in (Rels.REL_HWHEEL, Rels.REL_WHEEL)
             for p in (Profile.LEFT, Profile.RIGHT):
                 a, feedback = self.pads[p], None
                 if isinstance(a, FeedbackModifier):
@@ -277,14 +285,14 @@ class Profile(object):
                         if feedback is not None:
                             n = FeedbackModifier(feedback, 4096, 16, n)
                         self.pads[p] = n
-                        log.info("Converted %s to %s",
-                                 a.to_string(), n.to_string())
+                        log.info("Converted %s to %s", a.to_string(), n.to_string())
         if from_version < 1.2:
             # Convert old trigger settings that were done with ButtonAction
             # to new TriggerAction
             from scc.constants import TRIGGER_HALF, TRIGGER_MAX, TRIGGER_CLICK
             from scc.actions import ButtonAction, TriggerAction, MultiAction
             from scc.uinput import Keys
+
             for p in (Profile.LEFT, Profile.RIGHT):
                 if isinstance(self.triggers[p], ButtonAction):
                     buttons, numbers = [], []
@@ -310,14 +318,19 @@ class Profile(object):
                         # Both buttons were set
                         n = MultiAction(
                             TriggerAction(
-                                numbers[0], numbers[1], ButtonAction(buttons[0])),
+                                numbers[0], numbers[1], ButtonAction(buttons[0])
+                            ),
                             TriggerAction(
-                                numbers[1], TRIGGER_MAX, ButtonAction(buttons[1]))
+                                numbers[1], TRIGGER_MAX, ButtonAction(buttons[1])
+                            ),
                         )
 
                     if n:
-                        log.info("Converted %s to %s",
-                                 self.triggers[p].to_string(), n.to_string())
+                        log.info(
+                            "Converted %s to %s",
+                            self.triggers[p].to_string(),
+                            n.to_string(),
+                        )
                         self.triggers[p] = n
         if from_version < 1.3:
             # Action format completly changed in v0.4, but profile foramat is same.
@@ -327,7 +340,7 @@ class Profile(object):
 class Encoder(JSONEncoder):
     def default(self, obj):
         # if type(obj) in (list, tuple):
-        #	return basestring("[" + ", ".join(self.encode(x) for x in obj) + " ]")
+        # 	return basestring("[" + ", ".join(self.encode(x) for x in obj) + " ]")
         if hasattr(obj, "encode"):
             return obj.encode()
         return JSONEncoder.default(self, obj)

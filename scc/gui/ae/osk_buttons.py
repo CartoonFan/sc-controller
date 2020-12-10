@@ -13,9 +13,10 @@ from scc.gui.ae.buttons import ButtonsComponent
 from scc.gui.ae import AEComponent
 
 import logging
+
 log = logging.getLogger("AE.Buttons")
 
-__all__ = ['OSKButtonsComponent']
+__all__ = ["OSKButtonsComponent"]
 
 
 class OSKButtonsComponent(ButtonsComponent):

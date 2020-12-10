@@ -26,6 +26,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 import logging
 import re
 import subprocess
+
 log = logging.getLogger("XI")
 
 RE_DEVICE = re.compile(r"[ \t⎜]+↳ (.*)\tid=([0-9]+)[ \t]+\[([a-z ]+)")
@@ -37,9 +38,11 @@ def get_devices():
     """
     rv = []
     try:
-        lst = (subprocess.Popen(["xinput"], stdout=subprocess.PIPE, stdin=None)
-               .communicate()[0]
-               .decode("utf-8"))
+        lst = (
+            subprocess.Popen(["xinput"], stdout=subprocess.PIPE, stdin=None)
+            .communicate()[0]
+            .decode("utf-8")
+        )
     except:
         # calling xinput failed, return empty list
         return rv

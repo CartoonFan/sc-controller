@@ -17,45 +17,45 @@ _HID_MAX_DESCRIPTOR_SIZE = 4096
 
 class _hidraw_report_descriptor(ctypes.Structure):
     _fields_ = [
-        ('size', ctypes.c_uint),
-        ('value', ctypes.c_ubyte * _HID_MAX_DESCRIPTOR_SIZE),
+        ("size", ctypes.c_uint),
+        ("value", ctypes.c_ubyte * _HID_MAX_DESCRIPTOR_SIZE),
     ]
 
 
 class _hidraw_devinfo(ctypes.Structure):
     _fields_ = [
-        ('bustype', ctypes.c_uint),
-        ('vendor', ctypes.c_short),
-        ('product', ctypes.c_short),
+        ("bustype", ctypes.c_uint),
+        ("vendor", ctypes.c_short),
+        ("product", ctypes.c_short),
     ]
 
 
-_HIDIOCGRDESCSIZE = ioctl_opt.IOR(ord('H'), 0x01, ctypes.c_int)
-_HIDIOCGRDESC = ioctl_opt.IOR(ord('H'), 0x02, _hidraw_report_descriptor)
-_HIDIOCGRAWINFO = ioctl_opt.IOR(ord('H'), 0x03, _hidraw_devinfo)
+_HIDIOCGRDESCSIZE = ioctl_opt.IOR(ord("H"), 0x01, ctypes.c_int)
+_HIDIOCGRDESC = ioctl_opt.IOR(ord("H"), 0x02, _hidraw_report_descriptor)
+_HIDIOCGRAWINFO = ioctl_opt.IOR(ord("H"), 0x03, _hidraw_devinfo)
 
 
-def _HIDIOCGRAWNAME(len): return ioctl_opt.IOC(ioctl_opt.IOC_READ, ord('H'),
-                                               0x04, len)
+def _HIDIOCGRAWNAME(len):
+    return ioctl_opt.IOC(ioctl_opt.IOC_READ, ord("H"), 0x04, len)
 
 
-def _HIDIOCGRAWPHYS(len): return ioctl_opt.IOC(ioctl_opt.IOC_READ, ord('H'),
-                                               0x05, len)
+def _HIDIOCGRAWPHYS(len):
+    return ioctl_opt.IOC(ioctl_opt.IOC_READ, ord("H"), 0x05, len)
 
 
-def _HIDIOCSFEATURE(len): return ioctl_opt.IOC(
-    ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ, ord('H'), 0x06, len)
+def _HIDIOCSFEATURE(len):
+    return ioctl_opt.IOC(ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ, ord("H"), 0x06, len)
 
 
-def _HIDIOCGFEATURE(len): return ioctl_opt.IOC(
-    ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ, ord('H'), 0x07, len)
+def _HIDIOCGFEATURE(len):
+    return ioctl_opt.IOC(ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ, ord("H"), 0x07, len)
 
 
 HIDRAW_FIRST_MINOR = 0
 HIDRAW_MAX_DEVICES = 64
 HIDRAW_BUFFER_SIZE = 64
 
-DevInfo = collections.namedtuple('DevInfo', ['bustype', 'vendor', 'product'])
+DevInfo = collections.namedtuple("DevInfo", ["bustype", "vendor", "product"])
 
 
 class HIDRaw(object):
@@ -87,7 +87,7 @@ class HIDRaw(object):
         self._ioctl(_HIDIOCGRDESCSIZE, size, True)
         descriptor.size = size
         self._ioctl(_HIDIOCGRDESC, descriptor, True)
-        return ''.join(chr(x) for x in descriptor.value[:size.value])
+        return "".join(chr(x) for x in descriptor.value[: size.value])
 
     # TODO: decode descriptor into a python object
     # def getReportDescriptor(self):
@@ -109,7 +109,7 @@ class HIDRaw(object):
         """
         name = ctypes.create_string_buffer(length)
         self._ioctl(_HIDIOCGRAWNAME(length), name, True)
-        return name.value.decode('UTF-8')
+        return name.value.decode("UTF-8")
 
     def getPhysicalAddress(self, length=512):
         """

@@ -38,6 +38,7 @@ import threading
 import traceback
 import subprocess
 import shlex
+
 log = logging.getLogger("SCCDaemon")
 tlog = logging.getLogger("Socket Thread")
 
@@ -47,11 +48,10 @@ class ThreadingUnixStreamServer(ThreadingMixIn, UnixStreamServer):
 
 
 class SCCDaemon(Daemon):
-
     def __init__(self, piddile, socket_file):
         set_logging_level(True, True)
         Daemon.__init__(self, piddile)
-        Config()                    # Generates ~/.config/scc and default config if needed
+        Config()  # Generates ~/.config/scc and default config if needed
         self.started = False
         self.exiting = False
         self.socket_file = socket_file
@@ -59,9 +59,9 @@ class SCCDaemon(Daemon):
         self.dev_monitor = create_device_monitor(self)
         self.scheduler = Scheduler()
         self.xdisplay = None
-        self.sserver = None         # UnixStreamServer instance
+        self.sserver = None  # UnixStreamServer instance
         self.errors = []
-        self.alone = False          # Set by launching script from --alone flag
+        self.alone = False  # Set by launching script from --alone flag
         self.custom_py_loaded = False
         self.osd_daemon = None
         self.default_profile = None
@@ -89,20 +89,27 @@ class SCCDaemon(Daemon):
         cfg = Config()
         self._to_start = set()  # del-eted later by start_drivers
         to_init = []
-        for importer, modname, ispkg in pkgutil.walk_packages(path=drivers.__path__, onerror=lambda x: None):
+        for importer, modname, ispkg in pkgutil.walk_packages(
+            path=drivers.__path__, onerror=lambda x: None
+        ):
             if not ispkg and modname != "driver":
                 if modname == "usb" or cfg["drivers"].get(modname):
                     # 'usb' driver has to be always active
-                    mod = getattr(__import__('scc.drivers.%s' %
-                                             (modname,)).drivers, modname)
+                    mod = getattr(
+                        __import__("scc.drivers.%s" % (modname,)).drivers, modname
+                    )
                     if hasattr(mod, "init"):
                         to_init.append(mod)
                 else:
                     log.warn("Skipping disabled driver '%s'", modname)
 
         from scc.drivers import MOD_INIT_ORDER as order
-        def index_fn(n): return order.index(n) if n in order else 1024
-        def sort_fn(m): return index_fn(m.__name__)
+
+        def index_fn(n):
+            return order.index(n) if n in order else 1024
+
+        def sort_fn(m):
+            return index_fn(m.__name__)
 
         for mod in sorted(to_init, key=sort_fn):
             if getattr(mod, "init")(self, cfg) and hasattr(mod, "start"):
@@ -252,9 +259,13 @@ class SCCDaemon(Daemon):
                 # When OSD is enabled, gesture detection is handled
                 # by scc-osd-daemon.
                 self.osd_daemon.gesture_action = action
-                self._osd('gesture',
-                          "--controller", mapper.get_controller().get_id(),
-                          '--control-with', what)
+                self._osd(
+                    "gesture",
+                    "--controller",
+                    mapper.get_controller().get_id(),
+                    "--control-with",
+                    what,
+                )
                 log.debug("Gesture detection request sent to scc-osd-daemon")
             else:
                 # Otherwise it is handled internally
@@ -263,8 +274,7 @@ class SCCDaemon(Daemon):
                     mapper,
                     what,
                     up_direction,
-                    lambda gesture_string: action.gesture(
-                        mapper, gesture_string)
+                    lambda gesture_string: action.gesture(mapper, gesture_string),
                 )
         if gd:
             gd.enable()
@@ -277,8 +287,7 @@ class SCCDaemon(Daemon):
             try:
                 self.cemuhook = CemuhookServer(self)
             except Exception as e:
-                log.error(
-                    "Failed to initialize CemuHookUDP Motion Provider: %s", e)
+                log.error("Failed to initialize CemuHookUDP Motion Provider: %s", e)
                 return
         self.cemuhook.feed(data)
 
@@ -292,8 +301,7 @@ class SCCDaemon(Daemon):
 
         # Check if scc-osd-daemon is available
         if not self.osd_daemon:
-            log.warning(
-                "Cannot show OSD; there is no scc-osd-daemon registered")
+            log.warning("Cannot show OSD; there is no scc-osd-daemon registered")
             return False
         # Send request
         try:
@@ -308,28 +316,28 @@ class SCCDaemon(Daemon):
     def on_sa_osd(self, mapper, action):
         """ Called when 'osd' action is used """
         with self.lock:
-            self._osd('message', '-t', action.timeout,
-                      '-s', action.size, action.text)
+            self._osd("message", "-t", action.timeout, "-s", action.size, action.text)
 
     def on_sa_clearosd(self, mapper, action):
         """ Called when 'clearosd' action is used """
         with self.lock:
-            self._osd('clear')
+            self._osd("clear")
 
     def on_sa_area(self, mapper, action, x1, y1, x2, y2):
         """ Called when *AreaAction has OSD enabled """
         with self.lock:
-            self._osd('area', '-x', x1, '-y', y1,
-                      '--width', x2-x1, '--height', y2-y1)
+            self._osd(
+                "area", "-x", x1, "-y", y1, "--width", x2 - x1, "--height", y2 - y1
+            )
 
     def on_sa_clear_osd(self, *a):
         with self.lock:
-            self._osd('clear')
+            self._osd("clear")
 
     def on_sa_keyboard(self, mapper, action):
         """ Called when 'keyboard' action is used """
         with self.lock:
-            self._osd('keyboard')
+            self._osd("keyboard")
 
     def on_sa_menu(self, mapper, action, *pars):
         """ Called when 'menu' action is used """
@@ -339,13 +347,11 @@ class SCCDaemon(Daemon):
         if "." in action.menu_id:
             path = find_menu(action.menu_id)
             if not path:
-                log.error("Cannot show menu: Menu '%s' not found",
-                          action.menu_id)
+                log.error("Cannot show menu: Menu '%s' not found", action.menu_id)
                 return
             p += ["--from-file", path]
         else:
-            p += ["--from-profile", mapper.profile.get_filename(),
-                  action.menu_id]
+            p += ["--from-profile", mapper.profile.get_filename(), action.menu_id]
         p += list(pars)
 
         with self.lock:
@@ -412,12 +418,14 @@ class SCCDaemon(Daemon):
         """ Creates connection to X Server """
         if "WAYLAND_DISPLAY" in os.environ:
             log.warning(
-                "Wayland detected. Disabling X11 support, some functionality will be unavailable")
+                "Wayland detected. Disabling X11 support, some functionality will be unavailable"
+            )
             self.xdisplay = None
             return
         if "DISPLAY" not in os.environ:
             log.warning(
-                "DISPLAY env variable not set. Some functionality will be unavailable")
+                "DISPLAY env variable not set. Some functionality will be unavailable"
+            )
             self.xdisplay = None
             return
 
@@ -434,11 +442,11 @@ class SCCDaemon(Daemon):
                 self.subprocs.append(Subprocess("scc-osd-daemon", True))
                 if len(Config()["autoswitch"]):
                     # Start scc-autoswitch-daemon only if there are some switch rules defined
-                    self.subprocs.append(Subprocess(
-                        "scc-autoswitch-daemon", True))
+                    self.subprocs.append(Subprocess("scc-autoswitch-daemon", True))
         else:
             log.warning(
-                "Failed to connect to XServer. Some functionality will be unavailable")
+                "Failed to connect to XServer. Some functionality will be unavailable"
+            )
             self.xdisplay = None
 
     def init_mapper(self):
@@ -446,15 +454,21 @@ class SCCDaemon(Daemon):
         Setups new mapper instance.
         """
         try:
-            mapper = Mapper(Profile(TalkingActionParser()),
-                            self.scheduler, poller=self.poller)
+            mapper = Mapper(
+                Profile(TalkingActionParser()), self.scheduler, poller=self.poller
+            )
         except CannotCreateUInputException as e:
             # Most likely UInput is not available
             # Create mapper with all virtual devices set to Dummies.
             log.exception(e)
             self.add_error("uinput", str(e))
-            mapper = Mapper(Profile(TalkingActionParser()),
-                            self.scheduler, keyboard=None, mouse=None, gamepad=False)
+            mapper = Mapper(
+                Profile(TalkingActionParser()),
+                self.scheduler,
+                keyboard=None,
+                mouse=None,
+                gamepad=False,
+            )
 
         mapper.set_special_actions_handler(self)
         mapper.set_xdisplay(self.xdisplay)
@@ -480,8 +494,7 @@ class SCCDaemon(Daemon):
         mapper = mapper or self.default_mapper
         if self.default_profile == None:
             try:
-                self.default_profile = find_profile(
-                    Config()["recent_profiles"][0])
+                self.default_profile = find_profile(Config()["recent_profiles"][0])
             except:
                 # Broken config is not reason to fail here
                 pass
@@ -571,8 +584,7 @@ class SCCDaemon(Daemon):
         message to indicate that daemon is ready to serve clients.
         """
         with self.lock:
-            self.errors = [(_id, error)
-                           for (_id, error) in self.errors if _id != id]
+            self.errors = [(_id, error) for (_id, error) in self.errors if _id != id]
             if not self.errors:
                 self._send_to_all(b"Ready.\n")
 
@@ -581,12 +593,13 @@ class SCCDaemon(Daemon):
         Sends controller count and list of controllers using provided method
         """
         for c in self.controllers:
-            method(("Controller: %s %s %s %s\n" % (
-                c.get_id(), c.get_type(), c.flags,
-                c.get_gui_config_file()
-            )).encode("utf-8"))
-        method(("Controller Count: %s\n" %
-                (len(self.controllers),)).encode("utf-8"))
+            method(
+                (
+                    "Controller: %s %s %s %s\n"
+                    % (c.get_id(), c.get_type(), c.flags, c.get_gui_config_file())
+                ).encode("utf-8")
+            )
+        method(("Controller Count: %s\n" % (len(self.controllers),)).encode("utf-8"))
 
     def send_profile_info(self, controller, method, mapper=None):
         """
@@ -595,14 +608,18 @@ class SCCDaemon(Daemon):
         """
         mapper = mapper or controller.mapper
         if controller:
-            method(("Controller profile: %s %s\n" % (
-                controller.get_id(),
-                mapper.profile.get_filename()
-            )).encode("utf-8"))
+            method(
+                (
+                    "Controller profile: %s %s\n"
+                    % (controller.get_id(), mapper.profile.get_filename())
+                ).encode("utf-8")
+            )
         if mapper == self.default_mapper:
-            method(("Current profile: %s\n" % (
-                mapper.profile.get_filename(),
-            )).encode("utf-8"))
+            method(
+                ("Current profile: %s\n" % (mapper.profile.get_filename(),)).encode(
+                    "utf-8"
+                )
+            )
             return True
         return False
 
@@ -734,12 +751,13 @@ class SCCDaemon(Daemon):
                 except Exception as e:
                     exc = traceback.format_exc()
                     log.exception(e)
-                    tb = str(exc).encode("utf-8").encode('string_escape')
+                    tb = str(exc).encode("utf-8").encode("string_escape")
                     client.wfile.write(b"Fail: " + tb + b"\n")
         elif message.startswith("OSD:"):
             if not self.osd_daemon:
                 client.wfile.write(
-                    b"Fail: Cannot show OSD; there is no scc-osd-daemon registered\n")
+                    b"Fail: Cannot show OSD; there is no scc-osd-daemon registered\n"
+                )
             else:
                 try:
                     text = message[5:].strip("\t ")
@@ -753,8 +771,7 @@ class SCCDaemon(Daemon):
             try:
                 position, amplitude = message[9:].strip().split(" ", 2)
                 data = HapticData(
-                    getattr(HapticPos, position.strip(" \t\r")),
-                    int(amplitude)
+                    getattr(HapticPos, position.strip(" \t\r")), int(amplitude)
                 )
                 if client.mapper.get_controller():
                     client.mapper.get_controller().feedback(data)
@@ -781,8 +798,7 @@ class SCCDaemon(Daemon):
                     client.wfile.write(b"Fail: no such controller\n")
         elif message.startswith("State."):
             if Config()["enable_sniffing"]:
-                client.wfile.write(b"State: %s\n" %
-                                   (str(client.mapper.state), ))
+                client.wfile.write(b"State: %s\n" % (str(client.mapper.state),))
             else:
                 log.warning("Refused 'State' request: Sniffing disabled")
                 client.wfile.write(b"Fail: Sniffing disabled.\n")
@@ -797,52 +813,61 @@ class SCCDaemon(Daemon):
                 client.mapper.get_controller().set_led_level(number)
         elif message.startswith("Observe:"):
             if Config()["enable_sniffing"]:
-                to_observe = [x for x in message.split(
-                    ":", 1)[1].strip(" \t\r").split(" ")]
+                to_observe = [
+                    x for x in message.split(":", 1)[1].strip(" \t\r").split(" ")
+                ]
                 with self.lock:
                     for l in to_observe:
-                        client.observe_action(
-                            self, SCCDaemon.source_to_constant(l))
+                        client.observe_action(self, SCCDaemon.source_to_constant(l))
                     client.wfile.write(b"OK.\n")
             else:
                 log.warning("Refused 'Observe' request: Sniffing disabled")
                 client.wfile.write(b"Fail: Sniffing disabled.\n")
         elif message.startswith("Replace:"):
             try:
-                l, actionstr = message.split(
-                    ":", 1)[1].strip(" \t\r").split(" ", 1)
+                l, actionstr = message.split(":", 1)[1].strip(" \t\r").split(" ", 1)
                 action = TalkingActionParser().restart(actionstr).parse().compress()
             except Exception as e:
-                e = str(e).encode("utf-8").encode('string_escape')
+                e = str(e).encode("utf-8").encode("string_escape")
                 client.wfile.write(b"Fail: failed to parse: " + e + "\n")
                 return
             with self.lock:
                 try:
-                    if not self._can_lock_action(client.mapper, SCCDaemon.source_to_constant(l)):
+                    if not self._can_lock_action(
+                        client.mapper, SCCDaemon.source_to_constant(l)
+                    ):
                         client.wfile.write(
-                            b"Fail: Cannot lock " + l.encode("utf-8") + b"\n")
+                            b"Fail: Cannot lock " + l.encode("utf-8") + b"\n"
+                        )
                         return
                 except ValueError as e:
-                    tb = str(traceback.format_exc()).encode(
-                        "utf-8").encode('string_escape')
+                    tb = (
+                        str(traceback.format_exc())
+                        .encode("utf-8")
+                        .encode("string_escape")
+                    )
                     client.wfile.write(b"Fail: " + tb + b"\n")
                     return
-                client.replace_action(
-                    self, SCCDaemon.source_to_constant(l), action)
+                client.replace_action(self, SCCDaemon.source_to_constant(l), action)
                 client.wfile.write(b"OK.\n")
         elif message.startswith("Lock:"):
-            to_lock = [x for x in message.split(
-                ":", 1)[1].strip(" \t\r").split(" ")]
+            to_lock = [x for x in message.split(":", 1)[1].strip(" \t\r").split(" ")]
             with self.lock:
                 try:
                     for l in to_lock:
-                        if not self._can_lock_action(client.mapper, SCCDaemon.source_to_constant(l)):
+                        if not self._can_lock_action(
+                            client.mapper, SCCDaemon.source_to_constant(l)
+                        ):
                             client.wfile.write(
-                                b"Fail: Cannot lock " + l.encode("utf-8") + b"\n")
+                                b"Fail: Cannot lock " + l.encode("utf-8") + b"\n"
+                            )
                             return
                 except ValueError as e:
-                    tb = str(traceback.format_exc()).encode(
-                        "utf-8").encode('string_escape')
+                    tb = (
+                        str(traceback.format_exc())
+                        .encode("utf-8")
+                        .encode("string_escape")
+                    )
                     client.wfile.write(b"Fail: " + tb + b"\n")
                     return
                 for l in to_lock:
@@ -861,9 +886,12 @@ class SCCDaemon(Daemon):
                     c.apply_config(cfg.get_controller_config(c.get_id()))
                 # Start or stop scc-autoswitch-daemon as needed
                 need_autoswitch_daemon = len(cfg["autoswitch"]) > 0
-                if need_autoswitch_daemon and self.xdisplay and not self.autoswitch_daemon:
-                    self.subprocs.append(Subprocess(
-                        "scc-autoswitch-daemon", True))
+                if (
+                    need_autoswitch_daemon
+                    and self.xdisplay
+                    and not self.autoswitch_daemon
+                ):
+                    self.subprocs.append(Subprocess("scc-autoswitch-daemon", True))
                 elif not need_autoswitch_daemon and self.autoswitch_daemon:
                     self._remove_subproccess("scc-autoswitch-daemon")
                     self.autoswitch_daemon.close()
@@ -912,8 +940,7 @@ class SCCDaemon(Daemon):
                 what, up_angle = message[8:].strip().split(" ", 2)
                 up_angle = int(up_angle)
             except Exception as e:
-                tb = str(traceback.format_exc()).encode(
-                    "utf-8").encode('string_escape')
+                tb = str(traceback.format_exc()).encode("utf-8").encode("string_escape")
                 client.wfile.write(b"Fail: " + tb + b"\n")
                 return
             with self.lock:
@@ -953,17 +980,18 @@ class SCCDaemon(Daemon):
                     elif "." in menu_id:
                         # TODO: Move this common place
                         data = json.loads(open(menu_id, "r").read())
-                        menudata = MenuData.from_json_data(
-                            data, TalkingActionParser())
+                        menudata = MenuData.from_json_data(data, TalkingActionParser())
                         menuaction = menudata.get_by_id(item_id).action
                     else:
-                        menuaction = client.mapper.profile.menus[menu_id].get_by_id(
-                            item_id).action
+                        menuaction = (
+                            client.mapper.profile.menus[menu_id]
+                            .get_by_id(item_id)
+                            .action
+                        )
                     client.wfile.write(b"OK.\n")
                 except:
                     log.warning("Selected menu item is no longer valid.")
-                    client.wfile.write(
-                        b"Fail: Selected menu item is no longer valid\n")
+                    client.wfile.write(b"Fail: Selected menu item is no longer valid\n")
                 if menuaction:
                     client.mapper.schedule(0, press)
         elif message.startswith("Register:"):
@@ -1006,8 +1034,10 @@ class SCCDaemon(Daemon):
         Should be called while self.lock is acquired.
         """
         # TODO: Probably move to mapper
-        is_locked = (lambda a: isinstance(a, LockedAction) or
-                     (isinstance(a, ObservingAction) and isinstance(a.original_action, LockedAction)))
+        is_locked = lambda a: isinstance(a, LockedAction) or (
+            isinstance(a, ObservingAction)
+            and isinstance(a.original_action, LockedAction)
+        )
 
         if what == STICK:
             if is_locked(mapper.profile.buttons[SCButtons.STICKPRESS]):
@@ -1035,10 +1065,12 @@ class SCCDaemon(Daemon):
             mapper.profile.stick = callback(mapper.profile.stick, *args)
         elif what == SCButtons.LT:
             mapper.profile.triggers[LEFT] = callback(
-                mapper.profile.triggers[LEFT], *args)
+                mapper.profile.triggers[LEFT], *args
+            )
         elif what == SCButtons.RT:
             mapper.profile.triggers[RIGHT] = callback(
-                mapper.profile.triggers[RIGHT], *args)
+                mapper.profile.triggers[RIGHT], *args
+            )
         elif what in SCButtons:
             r = callback(mapper.profile.buttons[what], *args)
             mapper.profile.buttons[what] = r
@@ -1117,6 +1149,7 @@ class Client(object):
 
         Should be called while daemon.lock is acquired.
         """
+
         def cb(gesture):
             # Called while lock is being held
             try:
@@ -1134,11 +1167,13 @@ class Client(object):
 
         Should be called while daemon.lock is acquired.
         """
+
         def lock(action, what):
             # ObservingAction should be above LockedAction
             if isinstance(action, ObservingAction):
                 action.original_action = LockedAction(
-                    what, self, action.original_action)
+                    what, self, action.original_action
+                )
                 return action
             return LockedAction(what, self, action)
 
@@ -1150,8 +1185,7 @@ class Client(object):
 
         Should be called while daemon.lock is acquired.
         """
-        daemon._apply(self.mapper, what,
-                      lambda a: ObservingAction(what, self, a))
+        daemon._apply(self.mapper, what, lambda a: ObservingAction(what, self, a))
 
     def replace_action(self, daemon, what, action):
         """
@@ -1160,8 +1194,9 @@ class Client(object):
 
         Should be called while daemon.lock is acquired.
         """
-        daemon._apply(self.mapper, what,
-                      lambda a: ReplacedAction(what, self, action, a))
+        daemon._apply(
+            self.mapper, what, lambda a: ReplacedAction(what, self, action, a)
+        )
 
     def unlock_actions(self, daemon):
         """ Should be called while daemon.lock is acquired """
@@ -1187,6 +1222,7 @@ class ReportingAction(Action):
     Action used to send requested inputs to client.
     Base for LockedAction and ObservingAction
     """
+
     MIN_DIFFERENCE = 300
 
     def __init__(self, what, client):
@@ -1202,6 +1238,7 @@ class ReportingAction(Action):
 
     def __repr__(self):
         return "<%s of %x>" % (self.__class__.__name__, hash(self.client))
+
     __str__ = __repr__
 
     def _report(self, message):
@@ -1214,24 +1251,28 @@ class ReportingAction(Action):
 
     def trigger(self, mapper, position, old_position):
         if mapper.get_controller():
-            self._report("Event: %s %s %s %s\n" % (
-                mapper.get_controller().get_id(),
-                nameof(self.what), position, old_position
-            ))
+            self._report(
+                "Event: %s %s %s %s\n"
+                % (
+                    mapper.get_controller().get_id(),
+                    nameof(self.what),
+                    position,
+                    old_position,
+                )
+            )
 
     def button_press(self, mapper, number=1):
         if mapper.get_controller():
             if self.what == SCButtons.STICKPRESS:
-                self._report("Event: %s STICKPRESS %s\n" % (
-                    mapper.get_controller().get_id(),
-                    number
-                ))
+                self._report(
+                    "Event: %s STICKPRESS %s\n"
+                    % (mapper.get_controller().get_id(), number)
+                )
             else:
-                self._report("Event: %s %s %s\n" % (
-                    mapper.get_controller().get_id(),
-                    nameof(self.what),
-                    number
-                ))
+                self._report(
+                    "Event: %s %s %s\n"
+                    % (mapper.get_controller().get_id(), nameof(self.what), number)
+                )
 
     def button_release(self, mapper):
         ReportingAction.button_press(self, mapper, 0)
@@ -1240,14 +1281,18 @@ class ReportingAction(Action):
         min_difference = self.MIN_DIFFERENCE
         if what == CPAD:
             min_difference /= 10
-        if (x == 0 or y == 0 or abs(x - self.old_pos[0]) > min_difference
-                or abs(y - self.old_pos[1] > min_difference)):
+        if (
+            x == 0
+            or y == 0
+            or abs(x - self.old_pos[0]) > min_difference
+            or abs(y - self.old_pos[1] > min_difference)
+        ):
             self.old_pos = x, y
             if mapper.get_controller():
-                self._report("Event: %s %s %s %s\n" % (
-                    mapper.get_controller().get_id(),
-                    what, x, y
-                ))
+                self._report(
+                    "Event: %s %s %s %s\n"
+                    % (mapper.get_controller().get_id(), what, x, y)
+                )
 
 
 class LockedAction(ReportingAction):
@@ -1272,6 +1317,7 @@ class LockedAction(ReportingAction):
             if isinstance(a, LockedAction):
                 return a.original_action
             return a
+
         daemon._apply(self.mapper, self.what, _unlock)
         log.debug("%s unlocked", self.what)
 
@@ -1310,8 +1356,12 @@ class ObservingAction(ReportingAction):
         ReportingAction.__init__(self, what, client)
         self.original_action = original_action
         self._store_lock()
-        log.debug("%s on %s observed by %x", self.what,
-                  client.mapper.get_controller(), hash(self.client))
+        log.debug(
+            "%s on %s observed by %x",
+            self.what,
+            client.mapper.get_controller(),
+            hash(self.client),
+        )
 
     def reaply(self, client, daemon):
         client.observe_action(daemon, self.what)
@@ -1332,8 +1382,12 @@ class ObservingAction(ReportingAction):
             return a
 
         daemon._apply(self.mapper, self.what, _unobserve)
-        log.debug("%s on %s no longer observed by %x", self.what,
-                  self.mapper.get_controller(), hash(self.client))
+        log.debug(
+            "%s on %s no longer observed by %x",
+            self.what,
+            self.mapper.get_controller(),
+            hash(self.client),
+        )
 
     def trigger(self, mapper, position, old_position):
         ReportingAction.trigger(self, mapper, position, old_position)
@@ -1363,7 +1417,7 @@ class Subprocess(object):
         self.restart_after = restart_after
         self.args = [sys.executable, find_binary(binary_name)]
         if debug:
-            self.args.append('debug')
+            self.args.append("debug")
         self._killed = False
         self.p = None
         self.t = threading.Thread(target=self._threaded)
@@ -1375,14 +1429,16 @@ class Subprocess(object):
             self.p = subprocess.Popen(self.args, stdin=None)
             self.p.communicate()
             if self.p and self.p.returncode == 8:
-                log.warning("%s exited with code 8; not restarting",
-                            self.binary_name)
+                log.warning("%s exited with code 8; not restarting", self.binary_name)
                 self.p = None
                 return
             self.p = None
             if not self._killed:
-                log.warning("%s died; restarting after %ss",
-                            self.binary_name, self.restart_after)
+                log.warning(
+                    "%s died; restarting after %ss",
+                    self.binary_name,
+                    self.restart_after,
+                )
                 time.sleep(self.restart_after)
 
     def mark_killed(self):

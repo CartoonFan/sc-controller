@@ -4,7 +4,7 @@ import logging
 
 log = logging.getLogger("SCController")
 
-next_id = 1		# Used with fallback controller id generator
+next_id = 1  # Used with fallback controller id generator
 
 
 class Controller(object):
@@ -14,6 +14,7 @@ class Controller(object):
 
     Derived class should implement every method from here.
     """
+
     flags = 0
 
     def __init__(self):
@@ -119,8 +120,8 @@ class HapticData(object):
         # it's float until here, so user still can make pad squeak if he wish
         frequency = int(max(1.0, frequency * 1000.0))
 
-        self.data = data				# send to controller
-        self.frequency = frequency		# used internally
+        self.data = data  # send to controller
+        self.frequency = frequency  # used internally
 
     def with_position(self, position):
         """ Creates copy of HapticData with position value changed """

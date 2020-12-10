@@ -25,9 +25,10 @@ from scc.gui.ae import AEComponent
 
 import os
 import logging
+
 log = logging.getLogger("AE.AxisAction")
 
-__all__ = ['AxisActionComponent']
+__all__ = ["AxisActionComponent"]
 
 
 class AxisActionComponent(AEComponent, TimerManager):
@@ -54,12 +55,17 @@ class AxisActionComponent(AEComponent, TimerManager):
         AEComponent.load(self)
         cbAreaType = self.builder.get_object("cbAreaType")
         cbAreaType.set_row_separator_func(
-            lambda model, iter: model.get_value(iter, 0) == "-")
+            lambda model, iter: model.get_value(iter, 0) == "-"
+        )
         self.on_wayland = "WAYLAND_DISPLAY" in os.environ or not isinstance(
-            Gdk.Display.get_default(), GdkX11.X11Display)
+            Gdk.Display.get_default(), GdkX11.X11Display
+        )
         if self.on_wayland:
             self.builder.get_object("lblArea").set_text(
-                _("Note: Mouse Region option is not available with Wayland-based display server"))
+                _(
+                    "Note: Mouse Region option is not available with Wayland-based display server"
+                )
+            )
             self.builder.get_object("grArea").set_sensitive(False)
 
         # Remove options that are not applicable to currently editted input
@@ -130,8 +136,7 @@ class AxisActionComponent(AEComponent, TimerManager):
                     return
                 self.osd_area_instance = Area()
                 self.osd_area_instance.show()
-            action.update_osd_area(
-                self.osd_area_instance, FakeMapper(self.editor))
+            action.update_osd_area(self.osd_area_instance, FakeMapper(self.editor))
             self.timer("area", 0.5, self.update_osd_area, action)
         elif self.osd_area_instance:
             self.osd_area_instance.quit()
@@ -230,7 +235,8 @@ class AxisActionComponent(AEComponent, TimerManager):
         self.builder.get_object("sbAreaY2").set_value(y2)
         self.builder.get_object("cbAreaOSDEnabled").set_active(self.editor.osd)
         self.builder.get_object("cbAreaClickEnabled").set_active(
-            self.pressing_pad_clicks())
+            self.pressing_pad_clicks()
+        )
         for row in cbAreaType.get_model():
             if key == row[1]:
                 cbAreaType.set_active_iter(row.iter)
@@ -250,13 +256,11 @@ class AxisActionComponent(AEComponent, TimerManager):
         b.show(self.editor.window)
 
     def on_btCircularButton_clicked(self, button, *a):
-        index = 0 if button == self.builder.get_object(
-            "btCircularButton0") else 1
+        index = 0 if button == self.builder.get_object("btCircularButton0") else 1
 
         def cb(action):
             self.circular_buttons[index] = action.button
-            btCircularButton = self.builder.get_object(
-                "btCircularButton%s" % (index, ))
+            btCircularButton = self.builder.get_object("btCircularButton%s" % (index,))
             btCircularButton.set_label(action.describe(Action.AC_PAD))
             self.editor.set_action(self.make_circular_action())
 
@@ -293,7 +297,8 @@ class AxisActionComponent(AEComponent, TimerManager):
 
     def on_cbAreaOSDEnabled_toggled(self, *a):
         self.editor.builder.get_object("cbOSD").set_active(
-            self.builder.get_object("cbAreaOSDEnabled").get_active())
+            self.builder.get_object("cbAreaOSDEnabled").get_active()
+        )
 
     def pressing_pad_clicks(self):
         """
@@ -319,7 +324,8 @@ class AxisActionComponent(AEComponent, TimerManager):
                 if not clicks:
                     # Turn pad press into mouse clicks
                     self.app.set_action(
-                        self.app.current, side, ButtonAction(Keys.BTN_LEFT))
+                        self.app.current, side, ButtonAction(Keys.BTN_LEFT)
+                    )
             else:
                 if clicks:
                     # Clear action created above if checkbox is uncheck
@@ -344,8 +350,9 @@ class AxisActionComponent(AEComponent, TimerManager):
         Constructs Circular Modifier
         """
         if self.circular_axis and any(self.circular_buttons):
-            return CircularModifier(MultiAction(
-                self.circular_axis, ButtonAction(*self.circular_buttons)))
+            return CircularModifier(
+                MultiAction(self.circular_axis, ButtonAction(*self.circular_buttons))
+            )
         if any(self.circular_buttons):
             return CircularModifier(ButtonAction(*self.circular_buttons))
         return CircularModifier(self.circular_axis)
@@ -397,15 +404,23 @@ class AxisActionComponent(AEComponent, TimerManager):
         return _("Joystick / Mouse")
 
     def handles(self, mode, action):
-        if isinstance(action, (NoAction, MouseAction, CircularModifier,
-                               InvalidAction, AreaAction, ButtonAction)):
+        if isinstance(
+            action,
+            (
+                NoAction,
+                MouseAction,
+                CircularModifier,
+                InvalidAction,
+                AreaAction,
+                ButtonAction,
+            ),
+        ):
             return True
         if isinstance(action, BallModifier):
             if isinstance(action.action, XYAction):
-                return (
-                    isinstance(action.action.x, (AxisAction, MouseAction))
-                    and isinstance(action.action.x, (AxisAction, MouseAction))
-                )
+                return isinstance(
+                    action.action.x, (AxisAction, MouseAction)
+                ) and isinstance(action.action.x, (AxisAction, MouseAction))
             return isinstance(action.action, MouseAction)
         if isinstance(action, XYAction):
             p = [None, None]
@@ -431,7 +446,7 @@ class AxisActionComponent(AEComponent, TimerManager):
         action = self.make_area_action()
         self.editor.set_action(action)
         self.update_osd_area(action)
-        for x in ('sbAreaX1', 'sbAreaX2', 'sbAreaY1', 'sbAreaY2'):
+        for x in ("sbAreaX1", "sbAreaX2", "sbAreaY1", "sbAreaY2"):
             spin = self.builder.get_object(x)
             if self.relative_area:
                 spin.get_adjustment().set_upper(100)
@@ -459,7 +474,7 @@ class AxisActionComponent(AEComponent, TimerManager):
         cbAxisOutput = self.builder.get_object("cbAxisOutput")
         stActionData = self.builder.get_object("stActionData")
         key = cbAxisOutput.get_model().get_value(cbAxisOutput.get_active_iter(), 2)
-        if key == 'area':
+        if key == "area":
             stActionData.set_visible_child(self.builder.get_object("grArea"))
             action = self.make_area_action()
             self.update_osd_area(action)
@@ -468,10 +483,9 @@ class AxisActionComponent(AEComponent, TimerManager):
             self.button = self.button or ButtonAction(Keys.BTN_GAMEPAD)
             action = self.button
         elif key == "circular":
-            stActionData.set_visible_child(
-                self.builder.get_object("grCircular"))
+            stActionData.set_visible_child(self.builder.get_object("grCircular"))
             action = self.make_circular_action()
-        elif key == 'mouse':
+        elif key == "mouse":
             stActionData.set_visible_child(self.builder.get_object("vbMose"))
             if not self._recursing and self.editor.friction == 0:
                 # When switching to mouse, enable trackball by default
@@ -479,7 +493,9 @@ class AxisActionComponent(AEComponent, TimerManager):
             action = self.make_mouse_action()
         else:
             stActionData.set_visible_child(self.builder.get_object("nothing"))
-            action = cbAxisOutput.get_model().get_value(cbAxisOutput.get_active_iter(), 0)
+            action = cbAxisOutput.get_model().get_value(
+                cbAxisOutput.get_active_iter(), 0
+            )
             action = self.parser.restart(action).parse()
             self.update_osd_area(None)
 
@@ -509,12 +525,15 @@ class FakeMapper(object):
         simply returns root window.
         """
         root = X.get_default_root_window(self._xdisplay)
-        NET_WM_WINDOW_TYPE_NORMAL = X.intern_atom(self._xdisplay,
-                                                  "_NET_WM_WINDOW_TYPE_NORMAL", False)
-        my_windows = [x.get_xid() for x
-                      in Gdk.Screen.get_default().get_toplevel_windows()]
-        nitems, prop = X.get_window_prop(self._xdisplay,
-                                         root, "_NET_CLIENT_LIST_STACKING", max_size=0x8000)
+        NET_WM_WINDOW_TYPE_NORMAL = X.intern_atom(
+            self._xdisplay, "_NET_WM_WINDOW_TYPE_NORMAL", False
+        )
+        my_windows = [
+            x.get_xid() for x in Gdk.Screen.get_default().get_toplevel_windows()
+        ]
+        nitems, prop = X.get_window_prop(
+            self._xdisplay, root, "_NET_CLIENT_LIST_STACKING", max_size=0x8000
+        )
 
         if nitems > 0:
             for i in reversed(list(range(0, nitems))):
@@ -525,8 +544,9 @@ class FakeMapper(object):
                 if not X.is_window_visible(self._xdisplay, window):
                     # skip minimized and invisible windows
                     continue
-                tp = X.get_window_prop(self._xdisplay, window,
-                                       "_NET_WM_WINDOW_TYPE")[-1]
+                tp = X.get_window_prop(self._xdisplay, window, "_NET_WM_WINDOW_TYPE")[
+                    -1
+                ]
                 if tp is not None:
                     tpval = cast(tp, POINTER(X.Atom)).contents.value
                     X.free(tp)

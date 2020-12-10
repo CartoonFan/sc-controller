@@ -13,10 +13,17 @@ from scc.gui.svg_widget import SVGWidget
 from scc.gui.editor import Editor
 import os
 import logging
+
 log = logging.getLogger("Chooser")
 
-AXIS_ACTION_CLASSES = (AxisAction, MouseAction, HatLeftAction,
-                       HatRightAction, HatUpAction, HatDownAction)
+AXIS_ACTION_CLASSES = (
+    AxisAction,
+    MouseAction,
+    HatLeftAction,
+    HatRightAction,
+    HatUpAction,
+    HatDownAction,
+)
 
 
 class Chooser(Editor):
@@ -27,7 +34,7 @@ class Chooser(Editor):
 
     def __init__(self, app):
         self.app = app
-        self.active_area = None		# Area that is permanently hilighted on the image
+        self.active_area = None  # Area that is permanently hilighted on the image
         self.images = []
         self.axes_allowed = True
         self.mouse_allowed = True
@@ -36,11 +43,10 @@ class Chooser(Editor):
         for id in self.IMAGES:
             parent = self.builder.get_object(id)
             if parent is not None:
-                image = SVGWidget(os.path.join(
-                    self.app.imagepath, self.IMAGES[id]))
-                image.connect('hover', self.on_background_area_hover)
-                image.connect('leave', self.on_background_area_hover, None)
-                image.connect('click', self.on_background_area_click)
+                image = SVGWidget(os.path.join(self.app.imagepath, self.IMAGES[id]))
+                image.connect("hover", self.on_background_area_hover)
+                image.connect("leave", self.on_background_area_hover, None)
+                image.connect("click", self.on_background_area_click)
                 self.images.append(image)
                 if grid_columns:
                     # Grid
@@ -65,10 +71,9 @@ class Chooser(Editor):
                     return
             if not self.mouse_allowed and "MOUSE" in area:
                 return
-        background.hilight({
-            self.active_area: Chooser.ACTIVE_COLOR,
-            area: Chooser.HILIGHT_COLOR
-        })
+        background.hilight(
+            {self.active_area: Chooser.ACTIVE_COLOR, area: Chooser.HILIGHT_COLOR}
+        )
 
     def on_background_area_click(self, trash, area):
         """

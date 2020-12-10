@@ -32,11 +32,12 @@ class TimerManager(object):
                 GLib.source_remove(self._timers[name])
             # Create new one
             self._timers[name] = method(
-                delay, self._callback, name, callback, *data, **kwdata)
+                delay, self._callback, name, callback, *data, **kwdata
+            )
 
     def timer_active(self, name):
         """ Returns True if named timer is active """
-        return (name in self._timers)
+        return name in self._timers
 
     def cancel_timer(self, name):
         """

@@ -18,6 +18,7 @@ from scc.osd import OSDWindow
 import os
 import sys
 import logging
+
 log = logging.getLogger("osd.quickmenu")
 
 
@@ -28,7 +29,7 @@ class QuickMenu(Menu):
 
     def __init__(self, cls="osd-menu"):
         Menu.__init__(self, cls)
-        self._cancel_with = 'START'
+        self._cancel_with = "START"
         self._pressed = []
         self._icons = []
         self._timer = None
@@ -67,15 +68,14 @@ class QuickMenu(Menu):
             item.button = self.BUTTONS[self._button_index]
             self._button_index += 1
 
-            icon_file, has_colors = find_icon(
-                "buttons/%s" % item.button, False)
+            icon_file, has_colors = find_icon("buttons/%s" % item.button, False)
             icon = MenuIcon(icon_file, has_colors)
             label = widget.get_children()[0]
             for c in [] + widget.get_children():
                 widget.remove(c)
             self._icons.append(icon)
             box = Gtk.Box()
-            box.pack_start(icon,  False, True, 0)
+            box.pack_start(icon, False, True, 0)
             box.pack_start(label, True, True, 10)
             widget.add(box)
             return widget
@@ -83,24 +83,44 @@ class QuickMenu(Menu):
 
     def _add_arguments(self):
         OSDWindow._add_arguments(self)
-        self.argparser.add_argument('--cancel-with', type=str,
-                                    metavar="button", default='START',
-                                    help="button used to cancel menu (default: START)")
-        self.argparser.add_argument('--timeout', type=int,
-                                    default=5,
-                                    help="how many seconds before menu is automatically canceled")
-        self.argparser.add_argument('--cancel-with-release', action='store_true',
-                                    help="cancel menu with button release instead of button press")
-        self.argparser.add_argument('--from-profile', '-p', type=str,
-                                    metavar="profile_file menu_name",
-                                    help="load menu items from profile file")
-        self.argparser.add_argument('--from-file', '-f', type=str,
-                                    metavar="filename",
-                                    help="load menu items from json file")
-        self.argparser.add_argument('--print-items', action='store_true',
-                                    help="prints menu items to stdout")
-        self.argparser.add_argument('items', type=str, nargs='*', metavar='id title',
-                                    help="Menu items")
+        self.argparser.add_argument(
+            "--cancel-with",
+            type=str,
+            metavar="button",
+            default="START",
+            help="button used to cancel menu (default: START)",
+        )
+        self.argparser.add_argument(
+            "--timeout",
+            type=int,
+            default=5,
+            help="how many seconds before menu is automatically canceled",
+        )
+        self.argparser.add_argument(
+            "--cancel-with-release",
+            action="store_true",
+            help="cancel menu with button release instead of button press",
+        )
+        self.argparser.add_argument(
+            "--from-profile",
+            "-p",
+            type=str,
+            metavar="profile_file menu_name",
+            help="load menu items from profile file",
+        )
+        self.argparser.add_argument(
+            "--from-file",
+            "-f",
+            type=str,
+            metavar="filename",
+            help="load menu items from json file",
+        )
+        self.argparser.add_argument(
+            "--print-items", action="store_true", help="prints menu items to stdout"
+        )
+        self.argparser.add_argument(
+            "items", type=str, nargs="*", metavar="id title", help="Menu items"
+        )
 
     def _check_on_screen_position(self, quick=False):
         pass
@@ -108,8 +128,9 @@ class QuickMenu(Menu):
     def lock_inputs(self):
         def success(*a):
             log.error("Sucessfully locked input")
-            config = self.controller.load_gui_config(os.path.join(
-                get_share_path(), "images"))
+            config = self.controller.load_gui_config(
+                os.path.join(get_share_path(), "images")
+            )
             if config and config["gui"] and config["gui"]["buttons"]:
                 buttons = config["gui"]["buttons"]
                 try:
@@ -121,6 +142,7 @@ class QuickMenu(Menu):
                         icon.queue_draw()
                 except IndexError:
                     pass
+
         locks = [x for x in self.BUTTONS] + [self._cancel_with]
         self.controller.lock(success, self.on_failed_to_lock, *locks)
 
@@ -147,7 +169,7 @@ class QuickMenu(Menu):
                 self.items.append(item)
         self.pack_items(self.parent, self.items)
         if len(self.items) == 0:
-            print >>sys.stderr, '%s: error: no items in menu' % (sys.argv[0])
+            print >>sys.stderr, "%s: error: no items in menu" % (sys.argv[0])
             return False
 
         return True
@@ -165,19 +187,29 @@ class QuickMenu(Menu):
             self._submenu = QuickMenu()
             sub_pos = list(self.position)
             for i in (0, 1):
-                sub_pos[i] = (sub_pos[i] - self.SUBMENU_OFFSET
-                              if sub_pos[i] < 0 else sub_pos[i] + self.SUBMENU_OFFSET)
+                sub_pos[i] = (
+                    sub_pos[i] - self.SUBMENU_OFFSET
+                    if sub_pos[i] < 0
+                    else sub_pos[i] + self.SUBMENU_OFFSET
+                )
 
             self._submenu.use_config(self.config)
-            self._submenu.parse_argumets(["menu.py",
-                                          "-x", str(sub_pos[0]
-                                                    ), "-y", str(sub_pos[1]),
-                                          "--timeout", str(self._timeout),
-                                          "--from-file", filename
-                                          ])
+            self._submenu.parse_argumets(
+                [
+                    "menu.py",
+                    "-x",
+                    str(sub_pos[0]),
+                    "-y",
+                    str(sub_pos[1]),
+                    "--timeout",
+                    str(self._timeout),
+                    "--from-file",
+                    filename,
+                ]
+            )
             self._submenu.set_is_submenu()
             self._submenu.use_daemon(self.daemon)
-            self._submenu.connect('destroy', self.on_submenu_closed)
+            self._submenu.connect("destroy", self.on_submenu_closed)
             self._submenu.controller = self.controller
             self._submenu.show()
             self.cancel_timer()
@@ -246,18 +278,20 @@ class QuickMenu(Menu):
             self.restart_timer()
             if data[0] == 1:  # Button pressed
                 self.pressed(what)
-            else:				# Released
+            else:  # Released
                 self.released(what)
 
 
 if __name__ == "__main__":
     import gi
-    gi.require_version('Gtk', '3.0')
-    gi.require_version('Rsvg', '2.0')
-    gi.require_version('GdkX11', '3.0')
+
+    gi.require_version("Gtk", "3.0")
+    gi.require_version("Rsvg", "2.0")
+    gi.require_version("GdkX11", "3.0")
 
     from scc.tools import init_logging
     from scc.paths import get_share_path
+
     init_logging()
 
     m = QuickMenu()

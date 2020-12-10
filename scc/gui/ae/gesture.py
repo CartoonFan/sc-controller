@@ -22,9 +22,10 @@ from scc.tools import strip_gesture
 
 import os
 import logging
+
 log = logging.getLogger("AE.PerAxis")
 
-__all__ = ['GestureComponent']
+__all__ = ["GestureComponent"]
 
 
 class GestureComponent(AEComponent):
@@ -43,10 +44,14 @@ class GestureComponent(AEComponent):
         if AEComponent.load(self):
             # Unlike mose region, gesutres kinda work with XWayland
             self.on_wayland = not isinstance(
-                Gdk.Display.get_default(), GdkX11.X11Display)
+                Gdk.Display.get_default(), GdkX11.X11Display
+            )
             if self.on_wayland:
                 self.builder.get_object("lblGestureMessage").set_text(
-                    _("Note: Gestures are not available with Wayland-based display server"))
+                    _(
+                        "Note: Gestures are not available with Wayland-based display server"
+                    )
+                )
                 self.builder.get_object("lblGestureMessage").set_visible(True)
                 self.builder.get_object("gesture").set_sensitive(False)
             else:
@@ -65,18 +70,22 @@ class GestureComponent(AEComponent):
         o = GObject.GObject()
         o.gstr = gstr
         o.action = action
-        iter = lstGestures.append((
-            GestureComponent.nice_gstr(gstr),
-            action.describe(Action.AC_MENU),
-            o
-        ))
+        iter = lstGestures.append(
+            (GestureComponent.nice_gstr(gstr), action.describe(Action.AC_MENU), o)
+        )
         if select:
             tvGestures = self.builder.get_object("tvGestures")
             tvGestures.get_selection().select_iter(iter)
             self.on_tvGestures_cursor_changed()
             self.on_btEditAction_clicked()
 
-    ARROWS = {'U': '↑', 'D': '↓', 'L': '←', 'R': '→', }
+    ARROWS = {
+        "U": "↑",
+        "D": "↓",
+        "L": "←",
+        "R": "→",
+    }
+
     @staticmethod
     def nice_gstr(gstr):
         """
@@ -86,8 +95,9 @@ class GestureComponent(AEComponent):
         if "i" in gstr:
             gstr = strip_gesture(gstr)
 
-        def l(
-            x): return GestureComponent.ARROWS[x] if x in GestureComponent.ARROWS else ""
+        def l(x):
+            return GestureComponent.ARROWS[x] if x in GestureComponent.ARROWS else ""
+
         return "".join(map(l, gstr))
 
     def get_button_title(self):
@@ -134,20 +144,18 @@ class GestureComponent(AEComponent):
 
         def grabbed(gesture):
             self._edited_gesture = gesture
-            txGesture.set_text(
-                GestureComponent.nice_gstr(self._edited_gesture))
+            txGesture.set_text(GestureComponent.nice_gstr(self._edited_gesture))
+
         self._grabber.grab(grabbed)
 
     def on_cbIgnoreStroke_toggled(self, cb):
         txGesture = self.builder.get_object("txGesture")
         if cb.get_active() and "i" not in self._edited_gesture:
             self._edited_gesture = "i" + self._edited_gesture
-            txGesture.set_text(
-                GestureComponent.nice_gstr(self._edited_gesture))
+            txGesture.set_text(GestureComponent.nice_gstr(self._edited_gesture))
         elif not cb.get_active() and "i" in self._edited_gesture:
             self._edited_gesture = self._edited_gesture.strip("i")
-            txGesture.set_text(
-                GestureComponent.nice_gstr(self._edited_gesture))
+            txGesture.set_text(GestureComponent.nice_gstr(self._edited_gesture))
 
     def on_btRemove_clicked(self, *a):
         tvGestures = self.builder.get_object("tvGestures")
@@ -158,6 +166,7 @@ class GestureComponent(AEComponent):
     def on_btAdd_clicked(self, *a):
         def grabbed(gesture):
             self._add_gesture(gesture, NoAction(), True)
+
         tvGestures = self.builder.get_object("tvGestures")
         if len(tvGestures.get_model()) == 0:
             # I believe user will not actually find this option, so OSD checkbox
@@ -173,7 +182,8 @@ class GestureComponent(AEComponent):
 
     def on_btClearTolerance_clicked(self, *a):
         self.builder.get_object("sclPrecision").set_value(
-            GesturesAction.DEFAULT_PRECISION)
+            GesturesAction.DEFAULT_PRECISION
+        )
 
     def on_action_chosen(self, id, action, mark_changed=True):
         tvGestures = self.builder.get_object("tvGestures")
@@ -193,8 +203,7 @@ class GestureComponent(AEComponent):
             item = row[2]
             a.gestures[item.gstr] = item.action
             if item.action.name:
-                a.gestures[item.gstr] = NameModifier(
-                    item.action.name, item.action)
+                a.gestures[item.gstr] = NameModifier(item.action.name, item.action)
         a.precision = self.builder.get_object("sclPrecision").get_value()
         a = OSDAction(a)
         self.editor.set_action(a)
@@ -211,17 +220,16 @@ class GestureGrabber(object):
         self._repeats = 0
         self.gesture_grabber = self.builder.get_object("gesture_grabber")
         self.txGestureGrab = self.builder.get_object("txGestureGrab")
-        self.lblGestureGrabberTitle = self.builder.get_object(
-            "lblGestureGrabberTitle")
+        self.lblGestureGrabberTitle = self.builder.get_object("lblGestureGrabberTitle")
         self.lblGestureStatus = self.builder.get_object("lblGestureStatus")
         self.rvGestureGrab = self.builder.get_object("rvGestureGrab")
         # Can't use autoconnect for this :(
         self.gesture_grabber.connect("delete-event", self.close)
         self.gesture_grabber.connect("destroy", self.close)
         self.builder.get_object("btnStartGestureOver").connect(
-            "clicked", self.start_over)
-        self.builder.get_object(
-            "btnConfirmGesutre").connect("clicked", self.use)
+            "clicked", self.start_over
+        )
+        self.builder.get_object("btnConfirmGesutre").connect("clicked", self.use)
 
     def fail(self, *a):
         """
@@ -244,12 +252,8 @@ class GestureGrabber(object):
         self.disconnect_signals()
         try:
             c = self.editor.app.dm.get_controllers()[0]
-            c.lock(
-                lambda *a: True,  # success_cb
-                self.fail,			# error_cb
-                'A', 'Y'
-            )
-            self._signals = [(c, c.connect('event', self.on_event))]
+            c.lock(lambda *a: True, self.fail, "A", "Y")  # success_cb  # error_cb
+            self._signals = [(c, c.connect("event", self.on_event))]
         except IndexError as e:
             # No controllers
             self.fail()
@@ -281,14 +285,11 @@ class GestureGrabber(object):
 
     def start_over(self, *a):
         if self.editor.get_id() == "RPAD":
-            self.lblGestureGrabberTitle.set_text(
-                _("Draw gesture on RIGHT pad..."))
+            self.lblGestureGrabberTitle.set_text(_("Draw gesture on RIGHT pad..."))
         elif self.editor.get_id() == "CPAD":
-            self.lblGestureGrabberTitle.set_text(
-                _("Draw gesture on Touchpad..."))
+            self.lblGestureGrabberTitle.set_text(_("Draw gesture on Touchpad..."))
         else:
-            self.lblGestureGrabberTitle.set_text(
-                _("Draw gesture on LEFT pad..."))
+            self.lblGestureGrabberTitle.set_text(_("Draw gesture on LEFT pad..."))
         self.lblGestureStatus.set_label("")
         self.txGestureGrab.set_text("")
         self.rvGestureGrab.set_reveal_child(False)
@@ -301,18 +302,15 @@ class GestureGrabber(object):
             self._gd.quit()
         self._gd = GestureDisplay(self.editor.app.config)
         if self.editor.get_id() == "RPAD":
-            self._gd.parse_argumets(
-                ["GestureDisplay", "--control-with", "RIGHT"])
+            self._gd.parse_argumets(["GestureDisplay", "--control-with", "RIGHT"])
         elif self.editor.get_id() == "CPAD":
-            self._gd.parse_argumets(
-                ["GestureDisplay", "--control-with", "CPAD"])
+            self._gd.parse_argumets(["GestureDisplay", "--control-with", "CPAD"])
         else:
-            self._gd.parse_argumets(
-                ["GestureDisplay", "--control-with", "LEFT"])
+            self._gd.parse_argumets(["GestureDisplay", "--control-with", "LEFT"])
         self._gd.use_daemon(self.editor.app.dm)
         self._gd.show()
-        self._gd.connect('gesture-updated', self.on_gesture_updated)
-        self._gd.connect('destroy', self.on_gesture_recognized)
+        self._gd.connect("gesture-updated", self.on_gesture_updated)
+        self._gd.connect("destroy", self.on_gesture_recognized)
         self.lock_buttons()
 
     def on_gesture_updated(self, gd, gstr):
@@ -329,13 +327,15 @@ class GestureGrabber(object):
             self.on_gesture_updated(gd, gd.get_gesture())
             if self._gesture == None:
                 self.lblGestureGrabberTitle.set_text(
-                    _("Repeat same gesture or press A button to confirm..."))
+                    _("Repeat same gesture or press A button to confirm...")
+                )
                 self.rvGestureGrab.set_reveal_child(True)
                 self._gesture = gd.get_gesture()
             elif self._gesture == gd.get_gesture():
                 self._repeats += 1
                 self.lblGestureStatus.set_label(
-                    _("Repeated %s times") % (self._repeats,))
+                    _("Repeated %s times") % (self._repeats,)
+                )
             else:
                 self.lblGestureStatus.set_label(_("Gesture differs"))
 

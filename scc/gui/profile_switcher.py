@@ -18,6 +18,7 @@ from scc.tools import find_profile, find_controller_icon
 import os
 import random
 import logging
+
 log = logging.getLogger("PS")
 
 
@@ -85,11 +86,13 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
         self._combo.add_attribute(rend1, "text", 0)
         self._combo.add_attribute(rend2, "text", 2)
         self._combo.set_row_separator_func(
-            lambda model, iter: model.get_value(iter, 1) is None and model.get_value(iter, 0) == "-")
+            lambda model, iter: model.get_value(iter, 1) is None
+            and model.get_value(iter, 0) == "-"
+        )
         self.update_icon()
 
         # Signals
-        self._combo.connect('changed', self.on_combo_changed)
+        self._combo.connect("changed", self.on_combo_changed)
         self.connect("button_press_event", self.on_button_press)
 
         # Pack
@@ -218,7 +221,7 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
                     self._model.set_value(row.iter, 1, giofile)
                     if self._model.get_value(active, 0) == name:
                         # Active profile was changed
-                        self.emit('changed', name, giofile)
+                        self.emit("changed", name, giofile)
                 return
             prev = row
 
@@ -241,10 +244,10 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
                     self.set_profile(self._current)
                 self._recursing = False
 
-                self.emit('new-clicked', self.get_profile_name())
+                self.emit("new-clicked", self.get_profile_name())
             else:
                 self._current = name
-                self.emit('changed', name, giofile)
+                self.emit("changed", name, giofile)
 
         if self._timer is not None:
             GLib.source_remove(self._timer)
@@ -252,13 +255,13 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
 
     def on_button_press(self, trash, event):
         if event.button == 3:
-            self.emit('right-clicked')
+            self.emit("right-clicked")
 
     def on_savebutton_clicked(self, *a):
-        self.emit('save-clicked')
+        self.emit("save-clicked")
 
     def on_switch_to_clicked(self, *a):
-        self.emit('switch-to-clicked')
+        self.emit("switch-to-clicked")
 
     def on_daemon_dead(self, *a):
         """ Called from App when connection to daemon is lost """
@@ -268,10 +271,12 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
         """ Called when controller profile is changed from daemon """
         if not self.set_profile(profile, True):
             if self._first_time:
+
                 def later():
                     # Cannot be executed right away, as profile-changed is
                     # emitted before DaemonManager finishes initiaalisation
-                    self.emit('unknown-profile', profile)
+                    self.emit("unknown-profile", profile)
+
                 GLib.idle_add(later)
         self._first_time = False
 
@@ -288,8 +293,8 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
             if not self._savebutton:
                 # Save button has to be created
                 self._savebutton = ButtonInRevealer(
-                    "gtk-save", _("Save changes"),
-                    self.on_savebutton_clicked)
+                    "gtk-save", _("Save changes"), self.on_savebutton_clicked
+                )
                 self._box.pack_start(self._savebutton, False, True, 0)
                 self.show_all()
             self._savebutton.set_reveal_child(True)
@@ -316,8 +321,10 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
             if not self._switch_to_button:
                 # Save button has to be created
                 self._switch_to_button = ButtonInRevealer(
-                    "gtk-edit", _("Edit mappings of this controller"),
-                    self.on_switch_to_clicked)
+                    "gtk-edit",
+                    _("Edit mappings of this controller"),
+                    self.on_switch_to_clicked,
+                )
                 self._box.pack_start(self._switch_to_button, False, True, 0)
                 self.show_all()
             self._switch_to_button.set_reveal_child(True)
@@ -338,8 +345,7 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
         if c:
             name = self.config.get_controller_config(c.get_id())["name"]
             self._icon.set_tooltip_text(name)
-            self._signal = c.connect(
-                'profile-changed', self.on_profile_changed)
+            self._signal = c.connect("profile-changed", self.on_profile_changed)
         else:
             self._icon.set_tooltip_text(_("Profile"))
         self.update_icon()
@@ -352,8 +358,9 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
         """ Changes displayed icon to whatever is currently set in config """
         # Called internally and from ControllerSettings
         if not self._controller:
-            self._icon.set_from_file(os.path.join(
-                self.imagepath, "controller-icon.svg"))
+            self._icon.set_from_file(
+                os.path.join(self.imagepath, "controller-icon.svg")
+            )
             return
 
         id = self._controller.get_id()
@@ -362,10 +369,8 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
             icon = find_controller_icon(cfg["icon"])
             self._icon.set_from_file(icon)
         else:
-            log.debug(
-                "There is no icon for controller %s, auto assinging one", id)
-            paths = [get_default_controller_icons_path(),
-                     get_controller_icons_path()]
+            log.debug("There is no icon for controller %s, auto assinging one", id)
+            paths = [get_default_controller_icons_path(), get_controller_icons_path()]
 
             def cb(icons):
                 if id != self._controller.get_id():
@@ -373,13 +378,12 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
                     return
                 icon = None
                 used_icons = {
-                    self.config['controllers'][x]['icon']
-                    for x in self.config['controllers']
-                    if 'icon' in self.config['controllers'][x]
+                    self.config["controllers"][x]["icon"]
+                    for x in self.config["controllers"]
+                    if "icon" in self.config["controllers"][x]
                 }
                 tp = "%s-" % (self._controller.get_type(),)
-                icons = sorted(
-                    (os.path.split(x.get_path())[-1] for x in icons))
+                icons = sorted((os.path.split(x.get_path())[-1] for x in icons))
                 log.debug("Searching for icon type: %s", tp.strip("-"))
                 for i in icons:
                     if i not in used_icons and i.startswith(tp):
@@ -399,12 +403,12 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
 
 
 class ButtonInRevealer(Gtk.Revealer):
-
     def __init__(self, button_name, tooltip, callback):
         Gtk.Revealer.__init__(self)
         self.button = Gtk.Button.new_from_icon_name(
-            button_name, Gtk.IconSize.SMALL_TOOLBAR)
-        self.button.connect('clicked', callback)
+            button_name, Gtk.IconSize.SMALL_TOOLBAR
+        )
+        self.button.connect("clicked", callback)
         self.button.set_tooltip_text(tooltip)
         self.set_reveal_child(False)
         self.set_transition_type(Gtk.RevealerTransitionType.SLIDE_LEFT)

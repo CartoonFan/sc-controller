@@ -18,36 +18,37 @@ from scc.tools import nameof
 
 from gi.repository import Gtk
 import logging
+
 log = logging.getLogger("ModeshiftEditor")
 
 
 class ModeshiftEditor(Editor):
     GLADE = "modeshift_editor.glade"
     BUTTONS = (  # in order as displayed in combobox
-        (SCButtons.A,			_('A')),
-        (SCButtons.B,			_('B')),
-        (SCButtons.X,			_('X')),
-        (SCButtons.Y,			_('Y')),
+        (SCButtons.A, _("A")),
+        (SCButtons.B, _("B")),
+        (SCButtons.X, _("X")),
+        (SCButtons.Y, _("Y")),
         (None, None),
-        (SCButtons.BACK,		_('Back (select)')),
-        (SCButtons.C,			_('Center')),
-        (SCButtons.START,		_('Start')),
+        (SCButtons.BACK, _("Back (select)")),
+        (SCButtons.C, _("Center")),
+        (SCButtons.START, _("Start")),
         (None, None),
-        (SCButtons.LGRIP,		_('Left Grip')),
-        (SCButtons.RGRIP,		_('Right Grip')),
-        (SCButtons.LB,			_('Left Bumper')),
-        (SCButtons.RB,			_('Right Bumper')),
+        (SCButtons.LGRIP, _("Left Grip")),
+        (SCButtons.RGRIP, _("Right Grip")),
+        (SCButtons.LB, _("Left Bumper")),
+        (SCButtons.RB, _("Right Bumper")),
         (None, None),
-        (SCButtons.LT,			_('Left Trigger (full)')),
-        (SCButtons.RT,			_('Right Trigger (full)')),
-        ("Soft LT",				_('Left Trigger (soft)')),
-        ("Soft RT",				_('Right Trigger (soft)')),
+        (SCButtons.LT, _("Left Trigger (full)")),
+        (SCButtons.RT, _("Right Trigger (full)")),
+        ("Soft LT", _("Left Trigger (soft)")),
+        ("Soft RT", _("Right Trigger (soft)")),
         (None, None),
-        (SCButtons.STICKPRESS,	_('Stick Pressed')),
-        (SCButtons.LPAD,		_('Left Pad Pressed')),
-        (SCButtons.RPAD,		_('Right Pad Pressed')),
-        (SCButtons.LPADTOUCH,	_('Left Pad Touched')),
-        (SCButtons.RPADTOUCH,	_('Right Pad Touched')),
+        (SCButtons.STICKPRESS, _("Stick Pressed")),
+        (SCButtons.LPAD, _("Left Pad Pressed")),
+        (SCButtons.RPAD, _("Right Pad Pressed")),
+        (SCButtons.LPADTOUCH, _("Left Pad Touched")),
+        (SCButtons.RPADTOUCH, _("Right Pad Touched")),
     )
 
     def __init__(self, app, callback):
@@ -67,17 +68,18 @@ class ModeshiftEditor(Editor):
 
         cbButtonChooser = self.builder.get_object("cbButtonChooser")
         cbButtonChooser.set_row_separator_func(
-            lambda model, iter: model.get_value(iter, 0) is None)
+            lambda model, iter: model.get_value(iter, 0) is None
+        )
 
         b = self.builder.get_object
         self.action_widgets = (
             # Order goes: Grid, 1st Action Button, Clear Button
             # 1st group, 'pressed'
-            (b('grActions'),		b('btDefault'),		b('btClearDefault')),
+            (b("grActions"), b("btDefault"), b("btClearDefault")),
             # 2nd group, 'hold'
-            (b('grHold'),			b('btHold'),		b('btClearHold')),
+            (b("grHold"), b("btHold"), b("btClearHold")),
             # 2nd group, 'double-click'
-            (b('grDoubleClick'),	b('btDoubleClick'),	b('btClearDoubleClick')),
+            (b("grDoubleClick"), b("btDoubleClick"), b("btClearDoubleClick")),
         )
 
         headerbar(self.builder.get_object("header"))
@@ -96,8 +98,10 @@ class ModeshiftEditor(Editor):
             if type(item) in (str, str):
                 # Special case for soft pull items
                 button = getattr(SCButtons, item.split(" ")[-1])
-                if any((isinstance(x, RangeOP) and x.what == button)
-                       for x in self.actions[self.current_page]):
+                if any(
+                    (isinstance(x, RangeOP) and x.what == button)
+                    for x in self.actions[self.current_page]
+                ):
                     # Skip already added soft pulls
                     continue
 
@@ -152,15 +156,16 @@ class ModeshiftEditor(Editor):
         l.set_xalign(0.0)
         b = Gtk.Button.new_with_label(action.describe(self.mode))
         b.set_property("hexpand", True)
-        b.connect('clicked', self.on_actionb_clicked, index, what)
+        b.connect("clicked", self.on_actionb_clicked, index, what)
         clearb = Gtk.Button()
-        clearb.set_image(Gtk.Image.new_from_stock(
-            "gtk-delete", Gtk.IconSize.SMALL_TOOLBAR))
+        clearb.set_image(
+            Gtk.Image.new_from_stock("gtk-delete", Gtk.IconSize.SMALL_TOOLBAR)
+        )
         clearb.set_relief(Gtk.ReliefStyle.NONE)
-        clearb.connect('clicked', self.on_clearb_clicked, index, what)
-        grActions.attach(l,			0, i, 1, 1)
-        grActions.attach(b,			1, i, 1, 1)
-        grActions.attach(clearb,	2, i, 1, 1)
+        clearb.connect("clicked", self.on_clearb_clicked, index, what)
+        grActions.attach(l, 0, i, 1, 1)
+        grActions.attach(b, 1, i, 1, 1)
+        grActions.attach(clearb, 2, i, 1, 1)
 
         self.actions[index].append([what, action, l, b, clearb])
         grActions.show_all()
@@ -186,9 +191,9 @@ class ModeshiftEditor(Editor):
         # - add it again
         for j in range(i, len(self.actions[index])):
             button, action, l, b, clearb = self.actions[index][j]
-            grActions.attach(l,			0, j + 1, 1, 1)
-            grActions.attach(b,			1, j + 1, 1, 1)
-            grActions.attach(clearb,	2, j + 1, 1, 1)
+            grActions.attach(l, 0, j + 1, 1, 1)
+            grActions.attach(b, 1, j + 1, 1, 1)
+            grActions.attach(clearb, 2, j + 1, 1, 1)
         # Regenereate combobox with removed button added back to it
         # - Store acive item from in combobox
         active, i, index = None, 0, -1
@@ -211,14 +216,17 @@ class ModeshiftEditor(Editor):
 
     def _choose_editor(self, action, cb):
         from scc.gui.ring_editor import RingEditor  # Cannot be imported @ top
+
         if isinstance(action, Macro):
             from scc.gui.macro_editor import MacroEditor  # Cannot be imported @ top
+
             e = MacroEditor(self.app, cb)
             e.set_title(_("Edit Macro"))
         elif RingEditor.is_ring_action(action):
             e = RingEditor(self.app, cb)
         else:
             from scc.gui.action_editor import ActionEditor  # Cannot be imported @ top
+
             e = ActionEditor(self.app, cb)
             e.set_title(_("Edit Action"))
             e.hide_modeshift()
@@ -228,6 +236,7 @@ class ModeshiftEditor(Editor):
         for i in self.actions[index]:
             button, action, l, b, clearb = i
             if button == clicked_button:
+
                 def on_chosen(id, action):
                     b.set_label(action.describe(self.mode))
                     i[1] = action
@@ -240,10 +249,8 @@ class ModeshiftEditor(Editor):
     def on_ntbMore_switch_page(self, ntb, box, index):
         self.current_page = index
         self._fill_button_chooser()
-        self.builder.get_object(
-            "cbButtonChooser").set_sensitive(box.get_sensitive())
-        self.builder.get_object(
-            "btAddAction").set_sensitive(box.get_sensitive())
+        self.builder.get_object("cbButtonChooser").set_sensitive(box.get_sensitive())
+        self.builder.get_object("btAddAction").set_sensitive(box.get_sensitive())
 
     def on_nomodbt_clicked(self, button, *a):
         actionButton = self.action_widgets[self.current_page][1]
@@ -259,13 +266,13 @@ class ModeshiftEditor(Editor):
     def on_nomodclear_clicked(self, button, *a):
         self.nomods[self.current_page] = NoAction()
         actionButton = self.action_widgets[self.current_page][1]
-        actionButton.set_label(
-            self.nomods[self.current_page].describe(self.mode))
+        actionButton.set_label(self.nomods[self.current_page].describe(self.mode))
 
     def on_btAddAction_clicked(self, *a):
         cbButtonChooser = self.builder.get_object("cbButtonChooser")
         item = cbButtonChooser.get_model().get_value(
-            cbButtonChooser.get_active_iter(), 0)
+            cbButtonChooser.get_active_iter(), 0
+        )
         if item.startswith("Soft"):
             b = getattr(SCButtons, item.split(" ")[-1])
             rng = RangeOP(b, ">=", -1)
@@ -287,6 +294,7 @@ class ModeshiftEditor(Editor):
     def on_btCustomActionEditor_clicked(self, *a):
         """ Handler for 'Custom Editor' button """
         from scc.gui.action_editor import ActionEditor  # Can't be imported on top
+
         e = ActionEditor(self.app, self.ac_callback)
         e.set_input(self.id, self._make_action(), mode=self.mode)
         e.hide_action_buttons()
@@ -298,8 +306,7 @@ class ModeshiftEditor(Editor):
         e.show(self.get_transient_for())
 
     def on_cbHoldFeedback_toggled(self, cb, *a):
-        rvHoldFeedbackAmplitude = self.builder.get_object(
-            "rvHoldFeedbackAmplitude")
+        rvHoldFeedbackAmplitude = self.builder.get_object("rvHoldFeedbackAmplitude")
         rvHoldFeedbackAmplitude.set_reveal_child(cb.get_active())
 
     def on_btOK_clicked(self, *a):
@@ -325,8 +332,9 @@ class ModeshiftEditor(Editor):
         action.timeout = self.builder.get_object("adjTime").get_value()
 
         if cbHoldFeedback.get_active():
-            action = FeedbackModifier(HapticPos.BOTH,
-                                      sclHoldFeedback.get_value(), action)
+            action = FeedbackModifier(
+                HapticPos.BOTH, sclHoldFeedback.get_value(), action
+            )
 
         return action
 
@@ -386,8 +394,9 @@ class ModeshiftEditor(Editor):
             lblPressAlone.set_label(_("(pressed alone)"))
             self.mode = mode = mode or Action.AC_BUTTON
 
-        self.set_title("Modeshift for %s" %
-                       (nameof(id) if id in SCButtons else str(id),))
+        self.set_title(
+            "Modeshift for %s" % (nameof(id) if id in SCButtons else str(id),)
+        )
 
         if isinstance(action, FeedbackModifier):
             cbHoldFeedback.set_active(True)
