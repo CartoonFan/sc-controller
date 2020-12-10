@@ -226,9 +226,8 @@ class ControllerRegistration(Editor):
                                 "Skipping unknown gamecontrollerdb mapping %s:%s",
                                 k, v)
                 return True
-            
-        log.debug("Mappings for '%s' not found in gamecontrollerdb",
-                  weird_id)
+
+        log.debug("Mappings for '%s' not found in gamecontrollerdb", weird_id)
 
         return False
 
