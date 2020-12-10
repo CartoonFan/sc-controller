@@ -370,7 +370,7 @@ class HIDController(USBDevice, Controller):
                     log.debug("Found %s bits of nothing", count * size)
                 elif x[1] == ItemType.Data:
                     if kind in AXES:
-                        if not size in ALLOWED_SIZES:
+                        if size not in ALLOWED_SIZES:
                             raise UnparsableDescriptor(
                                 "Axis with invalid size (%s bits)" % (size, ))
                         for i in range(count):
