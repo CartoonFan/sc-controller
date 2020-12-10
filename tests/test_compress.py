@@ -1,10 +1,10 @@
-from scc.uinput import Keys, Axes, Rels
-from scc.constants import SCButtons, HapticPos
-from scc.modifiers import DoubleclickModifier
 from scc.actions import Action, AxisAction
+from scc.constants import HapticPos, SCButtons
 from scc.macros import Macro
-from scc.special_actions import MenuAction
+from scc.modifiers import DoubleclickModifier
 from scc.parser import ActionParser
+from scc.special_actions import MenuAction
+from scc.uinput import Axes, Keys, Rels
 
 parser = ActionParser()
 

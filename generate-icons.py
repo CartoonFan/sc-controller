@@ -1,9 +1,9 @@
 # Used to generate some icons
 # Requires inkscape and imagemagick pacages
 
+import colorsys
 import os
 import subprocess
-import colorsys
 from xml.etree import ElementTree as ET
 
 ICODIR = "./images/"  # Directory with icons
