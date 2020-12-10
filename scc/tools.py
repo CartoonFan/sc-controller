@@ -9,15 +9,21 @@ import imp
 import logging
 import os
 import shlex
-from math import atan2, cos
+from math import atan2
+from math import cos
 from math import pi as PI
-from math import sin, sqrt
+from math import sin
+from math import sqrt
 
-from scc.paths import (get_button_images_path, get_controller_icons_path,
-                       get_default_controller_icons_path,
-                       get_default_menuicons_path, get_default_menus_path,
-                       get_default_profiles_path, get_menuicons_path,
-                       get_menus_path, get_profiles_path)
+from scc.paths import get_button_images_path
+from scc.paths import get_controller_icons_path
+from scc.paths import get_default_controller_icons_path
+from scc.paths import get_default_menuicons_path
+from scc.paths import get_default_menus_path
+from scc.paths import get_default_profiles_path
+from scc.paths import get_menuicons_path
+from scc.paths import get_menus_path
+from scc.paths import get_profiles_path
 
 HAVE_POSIX1E = False
 try:

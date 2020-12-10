@@ -8,7 +8,8 @@ import logging
 
 from scc.actions import Action
 from scc.gui.ae import AEComponent
-from scc.tools import _, nameof
+from scc.tools import _
+from scc.tools import nameof
 
 log = logging.getLogger("AE.1st")
 

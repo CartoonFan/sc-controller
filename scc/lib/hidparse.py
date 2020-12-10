@@ -13,14 +13,29 @@ import ctypes
 import fcntl
 import struct
 
-from scc.lib import IntEnum, ioctl_opt
-from scc.lib.hidparse_data import (Collection, GenericDesktopPage, GlobalItem,
-                                   HidSensorProperty, ItemBase, ItemLength,
-                                   ItemType, LightSensor, LocalItem, MainItem,
-                                   ModifierI2a, MotionSensor,
-                                   OrientationSensor, SensorDataField,
-                                   SensorEvent, SensorPage, SensorSelector,
-                                   Unit, UnitType, UsagePage, page_to_enum)
+from scc.lib import IntEnum
+from scc.lib import ioctl_opt
+from scc.lib.hidparse_data import Collection
+from scc.lib.hidparse_data import GenericDesktopPage
+from scc.lib.hidparse_data import GlobalItem
+from scc.lib.hidparse_data import HidSensorProperty
+from scc.lib.hidparse_data import ItemBase
+from scc.lib.hidparse_data import ItemLength
+from scc.lib.hidparse_data import ItemType
+from scc.lib.hidparse_data import LightSensor
+from scc.lib.hidparse_data import LocalItem
+from scc.lib.hidparse_data import MainItem
+from scc.lib.hidparse_data import ModifierI2a
+from scc.lib.hidparse_data import MotionSensor
+from scc.lib.hidparse_data import OrientationSensor
+from scc.lib.hidparse_data import page_to_enum
+from scc.lib.hidparse_data import SensorDataField
+from scc.lib.hidparse_data import SensorEvent
+from scc.lib.hidparse_data import SensorPage
+from scc.lib.hidparse_data import SensorSelector
+from scc.lib.hidparse_data import Unit
+from scc.lib.hidparse_data import UnitType
+from scc.lib.hidparse_data import UsagePage
 
 # hid.h
 _HID_MAX_DESCRIPTOR_SIZE = 4096

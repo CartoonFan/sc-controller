@@ -4,7 +4,8 @@ SC-Controller - Aliases
 
 This module generates Keys.BTN_x and Axes.AXIS_x aliases when imported
 """
-from scc.uinput import Axes, Keys
+from scc.uinput import Axes
+from scc.uinput import Keys
 
 ALL_BUTTONS = (
     Keys.BTN_START,

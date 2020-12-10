@@ -5,15 +5,27 @@ SC-Controller - Action Editor - Gyro -> Joystick or Mouse component
 import logging
 import re
 
-from scc.actions import (Action, GyroAbsAction, GyroAction, MouseAbsAction,
-                         MouseAction, MultiAction, NoAction, RangeOP)
-from scc.constants import ROLL, STICK, YAW, SCButtons
+from scc.actions import Action
+from scc.actions import GyroAbsAction
+from scc.actions import GyroAction
+from scc.actions import MouseAbsAction
+from scc.actions import MouseAction
+from scc.actions import MultiAction
+from scc.actions import NoAction
+from scc.actions import RangeOP
+from scc.constants import ROLL
+from scc.constants import SCButtons
+from scc.constants import STICK
+from scc.constants import YAW
 from scc.gui.ae import AEComponent
 from scc.gui.parser import GuiActionParser
-from scc.modifiers import ModeModifier, SensitivityModifier
+from scc.modifiers import ModeModifier
+from scc.modifiers import SensitivityModifier
 from scc.special_actions import CemuHookAction
-from scc.tools import _, nameof
-from scc.uinput import Axes, Rels
+from scc.tools import _
+from scc.tools import nameof
+from scc.uinput import Axes
+from scc.uinput import Rels
 
 log = logging.getLogger("AE.GyroAction")
 

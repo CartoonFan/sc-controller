@@ -13,30 +13,51 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-from gi.repository import Gdk, Gio, GLib, Gtk
+from gi.repository import Gdk
+from gi.repository import Gio
+from gi.repository import GLib
+from gi.repository import Gtk
 
 import scc.osd.menu_generators
 from scc.actions import NoAction
 from scc.config import Config
-from scc.constants import (DAEMON_VERSION, LEFT, RIGHT, STICK, STICK_PAD_MAX,
-                           SCButtons)
+from scc.constants import DAEMON_VERSION
+from scc.constants import LEFT
+from scc.constants import RIGHT
+from scc.constants import SCButtons
+from scc.constants import STICK
+from scc.constants import STICK_PAD_MAX
 from scc.custom import load_custom_module
 from scc.gui.binding_editor import BindingEditor
 from scc.gui.controller_image import ControllerImage
-from scc.gui.controller_widget import BUTTONS, GYROS, PADS, STICKS, TRIGGERS
-from scc.gui.daemon_manager import ControllerManager, DaemonManager
-from scc.gui.dwsnc import IS_UNITY, headerbar
-from scc.gui.parser import GuiActionParser, InvalidAction
+from scc.gui.controller_widget import BUTTONS
+from scc.gui.controller_widget import GYROS
+from scc.gui.controller_widget import PADS
+from scc.gui.controller_widget import STICKS
+from scc.gui.controller_widget import TRIGGERS
+from scc.gui.daemon_manager import ControllerManager
+from scc.gui.daemon_manager import DaemonManager
+from scc.gui.dwsnc import headerbar
+from scc.gui.dwsnc import IS_UNITY
+from scc.gui.parser import GuiActionParser
+from scc.gui.parser import InvalidAction
 from scc.gui.profile_switcher import ProfileSwitcher
 from scc.gui.ribar import RIBar
 from scc.gui.statusicon import get_status_icon
 from scc.gui.userdata_manager import UserDataManager
 from scc.modifiers import NameModifier
-from scc.paths import get_config_path, get_profiles_path
+from scc.paths import get_config_path
+from scc.paths import get_profiles_path
 from scc.profile import Profile
-from scc.tools import (_, check_access, find_gksudo, find_profile,
-                       get_profile_name, nameof, profile_is_default,
-                       profile_is_override, set_logging_level)
+from scc.tools import _
+from scc.tools import check_access
+from scc.tools import find_gksudo
+from scc.tools import find_profile
+from scc.tools import get_profile_name
+from scc.tools import nameof
+from scc.tools import profile_is_default
+from scc.tools import profile_is_override
+from scc.tools import set_logging_level
 
 log = logging.getLogger("App")
 

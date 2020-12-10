@@ -8,18 +8,27 @@ Handles gesture recognition settings.
 import logging
 import os
 
-from gi.repository import Gdk, GdkX11, GLib, GObject, Gtk
+from gi.repository import Gdk
+from gi.repository import GdkX11
+from gi.repository import GLib
+from gi.repository import GObject
+from gi.repository import Gtk
 
-from scc.actions import Action, NoAction, XYAction
+from scc.actions import Action
+from scc.actions import NoAction
+from scc.actions import XYAction
 from scc.gui.action_editor import ActionEditor
-from scc.gui.ae import AEComponent, describe_action
+from scc.gui.ae import AEComponent
+from scc.gui.ae import describe_action
 from scc.gui.area_to_action import action_to_area
 from scc.gui.parser import GuiActionParser
 from scc.gui.simple_chooser import SimpleChooser
 from scc.modifiers import NameModifier
 from scc.osd.gesture_display import GestureDisplay
-from scc.special_actions import GesturesAction, OSDAction
-from scc.tools import _, strip_gesture
+from scc.special_actions import GesturesAction
+from scc.special_actions import OSDAction
+from scc.tools import _
+from scc.tools import strip_gesture
 
 log = logging.getLogger("AE.PerAxis")
 

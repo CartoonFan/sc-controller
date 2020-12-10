@@ -6,8 +6,11 @@ Handles all XYActions
 """
 import logging
 
-from scc.actions import Action, NoAction, XYAction
-from scc.gui.ae import AEComponent, describe_action
+from scc.actions import Action
+from scc.actions import NoAction
+from scc.actions import XYAction
+from scc.gui.ae import AEComponent
+from scc.gui.ae import describe_action
 from scc.gui.area_to_action import action_to_area
 from scc.gui.simple_chooser import SimpleChooser
 from scc.tools import _

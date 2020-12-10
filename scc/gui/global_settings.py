@@ -10,29 +10,48 @@ import re
 import sys
 import traceback
 
-from gi.repository import Gdk, GdkPixbuf, GLib, GObject, Gtk
+from gi.repository import Gdk
+from gi.repository import GdkPixbuf
+from gi.repository import GLib
+from gi.repository import GObject
+from gi.repository import Gtk
 
 import scc.osd.osk_actions
-from scc.actions import Action, NoAction
-from scc.constants import LEFT, RIGHT
+from scc.actions import Action
+from scc.actions import NoAction
+from scc.constants import LEFT
+from scc.constants import RIGHT
 from scc.gui.dwsnc import IS_UNITY
-from scc.gui.editor import ComboSetter, Editor
+from scc.gui.editor import ComboSetter
+from scc.gui.editor import Editor
 from scc.gui.osk_binding_editor import OSKBindingEditor
 from scc.gui.parser import GuiActionParser
 from scc.gui.userdata_manager import UserDataManager
-from scc.menu_data import MenuData, MenuGenerator, MenuItem, Separator, Submenu
+from scc.menu_data import MenuData
+from scc.menu_data import MenuGenerator
+from scc.menu_data import MenuItem
+from scc.menu_data import Separator
+from scc.menu_data import Submenu
 from scc.modifiers import SensitivityModifier
 from scc.osd.keyboard import Keyboard as OSDKeyboard
-from scc.osd.menu_generators import (RecentListMenuGenerator,
-                                     WindowListMenuGenerator)
+from scc.osd.menu_generators import RecentListMenuGenerator
+from scc.osd.menu_generators import WindowListMenuGenerator
 from scc.osd.osk_actions import OSKCursorAction
-from scc.paths import (get_config_path, get_menus_path, get_profiles_path,
-                       get_share_path)
-from scc.profile import Encoder, Profile
-from scc.special_actions import (ChangeProfileAction, RestartDaemonAction,
-                                 TurnOffAction)
-from scc.tools import _, find_binary, find_menu, find_profile
-from scc.x11.autoswitcher import AutoSwitcher, Condition
+from scc.paths import get_config_path
+from scc.paths import get_menus_path
+from scc.paths import get_profiles_path
+from scc.paths import get_share_path
+from scc.profile import Encoder
+from scc.profile import Profile
+from scc.special_actions import ChangeProfileAction
+from scc.special_actions import RestartDaemonAction
+from scc.special_actions import TurnOffAction
+from scc.tools import _
+from scc.tools import find_binary
+from scc.tools import find_menu
+from scc.tools import find_profile
+from scc.x11.autoswitcher import AutoSwitcher
+from scc.x11.autoswitcher import Condition
 
 log = logging.getLogger("GS")
 

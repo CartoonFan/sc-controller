@@ -6,12 +6,17 @@ Assigns actions from scc.osd.osk_actions
 """
 import logging
 
-from scc.actions import Action, ButtonAction, NoAction
+from scc.actions import Action
+from scc.actions import ButtonAction
+from scc.actions import NoAction
 from scc.constants import LEFT
 from scc.gui.ae import AEComponent
 from scc.gui.parser import GuiActionParser
-from scc.osd.osk_actions import (CloseOSKAction, MoveOSKAction, OSKAction,
-                                 OSKCursorAction, OSKPressAction)
+from scc.osd.osk_actions import CloseOSKAction
+from scc.osd.osk_actions import MoveOSKAction
+from scc.osd.osk_actions import OSKAction
+from scc.osd.osk_actions import OSKCursorAction
+from scc.osd.osk_actions import OSKPressAction
 from scc.tools import _
 from scc.uinput import Keys
 

@@ -11,8 +11,10 @@ import os
 import sys
 
 from scc.constants import SCButtons
-from scc.gui.svg_widget import SVGEditor, SVGWidget
-from scc.tools import _, nameof
+from scc.gui.svg_widget import SVGEditor
+from scc.gui.svg_widget import SVGWidget
+from scc.tools import _
+from scc.tools import nameof
 
 log = logging.getLogger("ContImage")
 
