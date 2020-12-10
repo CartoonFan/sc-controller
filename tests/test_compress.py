@@ -80,10 +80,6 @@ CASES = {
 		'levels' : [ 10, 80 ],
 		'feedback' : ('BOTH',)
 	},
-	'tilt' : {
-		'action' : 'tilt( button(KEY_D), button(KEY_U), button(KEY_L), button(KEY_R) )',
-		'sensitivity' : (2.0, 3.0, 4.0,)
-	},
 	'ball' : {
 		'action' : 'ball(XY(axis(Axes.ABS_RX), axis(Axes.ABS_RY)))',
 		'sensitivity' : (2.0, 3.0),
