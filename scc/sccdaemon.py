@@ -1042,10 +1042,12 @@ class SCCDaemon(Daemon):
 
         Should be called while self.lock is acquired.
         """
+
         # TODO: Probably move to mapper
-        is_locked = lambda a: isinstance(a, LockedAction) or (isinstance(
-            a, ObservingAction) and isinstance(a.original_action, LockedAction)
-                                                              )
+        def is_locked(a):
+            return isinstance(a, LockedAction) or (
+                isinstance(a, ObservingAction)
+                and isinstance(a.original_action, LockedAction))
 
         if what == STICK:
             if is_locked(mapper.profile.buttons[SCButtons.STICKPRESS]):
