@@ -66,7 +66,6 @@ SDL_AXES = (
     "righttrigger",
 )
 
-
 SDL_DPAD = {
     # Numbers here are indexes to AXIS_ORDER tuple
     # Booleans here are True for positive movements (down/right) and

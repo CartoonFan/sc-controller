@@ -78,7 +78,6 @@ GDK_TO_KEY = {
     Gdk.KEY_Control_R: Keys.KEY_RIGHTCTRL,
 }
 
-
 KEYCODE_TO_KEY = {
     # Row 1
     9: Keys.KEY_ESC,

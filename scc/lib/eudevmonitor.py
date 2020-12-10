@@ -61,7 +61,9 @@ class Eudev:
         l.udev_list_entry_get_name.argtypes = [ctypes.c_void_p]
         l.udev_list_entry_get_name.restype = ctypes.c_char_p
         # monitoring
-        l.udev_monitor_new_from_netlink.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+        l.udev_monitor_new_from_netlink.argtypes = [
+            ctypes.c_void_p, ctypes.c_char_p
+        ]
         l.udev_monitor_new_from_netlink.restype = ctypes.c_void_p
         l.udev_monitor_unref.argtypes = [ctypes.c_void_p]
         l.udev_monitor_enable_receiving.argtypes = [ctypes.c_void_p]
@@ -112,7 +114,9 @@ class Eudev:
                 twoargs = getattr(getattr(Enumerator, name), "twoargs", False)
                 fn = getattr(l, "udev_enumerate_add_" + name)
                 if twoargs:
-                    fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
+                    fn.argtypes = [
+                        ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p
+                    ]
                 else:
                     fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
                 fn.restype = ctypes.c_int
@@ -218,8 +222,9 @@ class Enumerator:
         self._enumeration_started = True
         err = self._eudev._lib.udev_enumerate_scan_devices(self._enumerator)
         if err < 0:
-            raise OSError("udev_enumerate_scan_devices: error %s" % (err,))
-        self._next = self._eudev._lib.udev_enumerate_get_list_entry(self._enumerator)
+            raise OSError("udev_enumerate_scan_devices: error %s" % (err, ))
+        self._next = self._eudev._lib.udev_enumerate_get_list_entry(
+            self._enumerator)
         return self
 
     def __next__(self):
@@ -245,8 +250,8 @@ class Monitor:
     """
 
     DeviceEvent = namedtuple(
-        "DeviceEvent", "action,node,initialized,subsystem,devtype,syspath,devnum"
-    )
+        "DeviceEvent",
+        "action,node,initialized,subsystem,devtype,syspath,devnum")
 
     def __init__(self, eudev, monitor):
         self._eudev = eudev
@@ -270,18 +275,14 @@ class Monitor:
         self._keep_in_mem += pars
         err = fn(self._monitor, *pars)
         if err < 0:
-            raise OSError(
-                "udev_monitor_filter_add_%s: error %s"
-                % (whichone, errno.errorcode.get(err, err))
-            )
+            raise OSError("udev_monitor_filter_add_%s: error %s" %
+                          (whichone, errno.errorcode.get(err, err)))
         self._enabled_matches.add(key)
         if self._monitor_started:
             err = self._eudev._lib.udev_monitor_filter_update(self._monitor)
             if err < 0:
-                raise OSError(
-                    "udev_monitor_filter_update: error %s"
-                    % (errno.errorcode.get(err, err),)
-                )
+                raise OSError("udev_monitor_filter_update: error %s" %
+                              (errno.errorcode.get(err, err), ))
         return self
 
     def match_subsystem_devtype(self, subsystem, devtype=None):
@@ -299,9 +300,8 @@ class Monitor:
     def get_fd(self):
         fileno = self._eudev._lib.udev_monitor_get_fd(self._monitor)
         if fileno < 0:
-            raise OSError(
-                "udev_monitor_get_fd: error %s" % (errno.errorcode.get(fileno, fileno),)
-            )
+            raise OSError("udev_monitor_get_fd: error %s" %
+                          (errno.errorcode.get(fileno, fileno), ))
         return fileno
 
     def enable_receiving(self):
@@ -310,21 +310,18 @@ class Monitor:
             return  # Error, but unimportant
         err = self._eudev._lib.udev_monitor_enable_receiving(self._monitor)
         if err < 0:
-            raise OSError(
-                "udev_monitor_enable_receiving: error %s"
-                % (errno.errorcode.get(err, err))
-            )
+            raise OSError("udev_monitor_enable_receiving: error %s" %
+                          (errno.errorcode.get(err, err)))
         self._monitor_started = True
         return self
 
     def set_receive_buffer_size(self, size):
         """ Returns self for chaining """
-        err = self._eudev._lib.udev_monitor_set_receive_buffer_size(self._monitor, size)
+        err = self._eudev._lib.udev_monitor_set_receive_buffer_size(
+            self._monitor, size)
         if err < 0:
-            raise OSError(
-                "udev_monitor_set_receive_buffer_size: error %s"
-                % (errno.errorcode.get(err, err))
-            )
+            raise OSError("udev_monitor_set_receive_buffer_size: error %s" %
+                          (errno.errorcode.get(err, err)))
         return self
 
     fileno = get_fd  # python stuff likes this name better

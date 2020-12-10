@@ -33,7 +33,6 @@ MARKUP_TRIGGER = """
   • Map to <a href='grab://trigger_button'>Button</a>
 """
 
-
 # TODO: Add haptics here
 MARKUP_PAD = """
 <big>%(what)s: Quick settings</big>
@@ -106,11 +105,12 @@ class FirstPage(AEComponent):
             }
 
             markup = markup % {
-                "what": long_names.get(
-                    nameof(self.editor.get_id()), nameof(self.editor.get_id()).title()
-                )
+                "what":
+                long_names.get(nameof(self.editor.get_id()),
+                               nameof(self.editor.get_id()).title())
             }
-            self.builder.get_object("lblMarkup").set_markup(markup.strip(" \r\n\t"))
+            self.builder.get_object("lblMarkup").set_markup(
+                markup.strip(" \r\n\t"))
             return True
 
     def on_lblMarkup_activate_link(self, trash, link):

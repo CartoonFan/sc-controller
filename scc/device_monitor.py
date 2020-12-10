@@ -39,7 +39,8 @@ class DeviceMonitor(Monitor):
         self.bt_addresses = {}
         self.known_devs = {}
 
-    def add_callback(self, subsystem, vendor_id, product_id, added_cb, removed_cb):
+    def add_callback(self, subsystem, vendor_id, product_id, added_cb,
+                     removed_cb):
         """
         Adds function that is called when eudev monitor detects new, ready
         to use device.
@@ -110,9 +111,10 @@ class DeviceMonitor(Monitor):
         for i in range(cl.conn_num):
             ci = cl.conn_info[i]
             id = "hci%s:%s" % (cl.dev_id, ci.handle)
-            address = ":".join(
-                [hex(x).lstrip("0x").zfill(2).upper() for x in reversed(ci.bdaddr)]
-            )
+            address = ":".join([
+                hex(x).lstrip("0x").zfill(2).upper()
+                for x in reversed(ci.bdaddr)
+            ])
             self.bt_addresses[id] = address
 
     def _dev_for_hci(self, syspath):
@@ -139,20 +141,15 @@ class DeviceMonitor(Monitor):
             if event.action == "bind" and event.initialized:
                 if event.syspath not in self.known_devs:
                     self._on_new_syspath(event.subsystem, event.syspath)
-            elif (
-                event.action == "add"
-                and event.initialized
-                and event.subsystem in ("input", "bluetooth")
-            ):
+            elif (event.action == "add" and event.initialized
+                  and event.subsystem in ("input", "bluetooth")):
                 # those are not bound
                 if event.syspath not in self.known_devs:
                     if event.subsystem == "bluetooth":
                         self._get_hci_addresses()
                     self._on_new_syspath(event.subsystem, event.syspath)
-            elif (
-                event.action in ("remove", "unbind")
-                and event.syspath in self.known_devs
-            ):
+            elif (event.action in ("remove", "unbind")
+                  and event.syspath in self.known_devs):
                 vendor, product, cb = self.known_devs.pop(event.syspath)
                 if cb:
                     cb(event.syspath, vendor, product)
@@ -186,16 +183,17 @@ class DeviceMonitor(Monitor):
         May throw all kinds of OSErrors or IOErrors
         """
         if os.path.exists(os.path.join(syspath, "idVendor")):
-            vendor = int(open(os.path.join(syspath, "idVendor")).read().strip(), 16)
-            product = int(open(os.path.join(syspath, "idProduct")).read().strip(), 16)
+            vendor = int(
+                open(os.path.join(syspath, "idVendor")).read().strip(), 16)
+            product = int(
+                open(os.path.join(syspath, "idProduct")).read().strip(), 16)
             return vendor, product
         if subsystem is None:
             subsystem = DeviceMonitor.get_subsystem(syspath)
         if subsystem == "bluetooth":
             # Search for folder that matches regular expression...
             names = [
-                name
-                for name in os.listdir(syspath)
+                name for name in os.listdir(syspath)
                 if os.path.isdir(syspath) and RE_BT_NUMBERS.match(name)
             ]
             if len(names) > 0:
