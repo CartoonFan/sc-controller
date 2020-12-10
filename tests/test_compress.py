@@ -1,9 +1,9 @@
-from scc.uinput import Axes
-from scc.modifiers import DoubleclickModifier
 from scc.actions import Action, AxisAction
 from scc.macros import Macro
-from scc.special_actions import MenuAction
+from scc.modifiers import DoubleclickModifier
 from scc.parser import ActionParser
+from scc.special_actions import MenuAction
+from scc.uinput import Axes
 
 parser = ActionParser()
 

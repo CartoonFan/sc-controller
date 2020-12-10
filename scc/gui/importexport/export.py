@@ -5,22 +5,15 @@ import os
 import tarfile
 import tempfile
 
-from gi.repository import Gio
-from gi.repository import Gtk
+from gi.repository import Gio, Gtk
 
 from scc.gui.userdata_manager import UserDataManager
-from scc.menu_data import MenuData
-from scc.menu_data import Submenu
-from scc.parser import ActionParser
-from scc.parser import TalkingActionParser
+from scc.menu_data import MenuData, Submenu
+from scc.parser import ActionParser, TalkingActionParser
 from scc.profile import Profile
-from scc.special_actions import ChangeProfileAction
-from scc.special_actions import MenuAction
-from scc.tools import _
-from scc.tools import find_menu
-from scc.tools import find_profile
-from scc.tools import menu_is_default
-from scc.tools import profile_is_default
+from scc.special_actions import ChangeProfileAction, MenuAction
+from scc.tools import (_, find_menu, find_profile, menu_is_default,
+                       profile_is_default)
 
 log = logging.getLogger("IE.Export")
 
