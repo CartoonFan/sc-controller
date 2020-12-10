@@ -283,7 +283,7 @@ class Profile(object):
             from scc.modifiers import BallModifier, FeedbackModifier
             from scc.uinput import Rels
 
-            iswheelaction = lambda x: isinstance(
+            def iswheelaction(x): return isinstance(
                 x, MouseAction) and x.parameters[0] in (Rels.REL_HWHEEL, Rels.
                                                         REL_WHEEL)
             for p in (Profile.LEFT, Profile.RIGHT):

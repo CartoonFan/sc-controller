@@ -657,9 +657,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
                 flags=Gtk.DialogFlags.MODAL,
                 type=Gtk.MessageType.QUESTION,
                 buttons=Gtk.ButtonsType.YES_NO,
-                message_format=
-                _("You are about to save changes over template.\nAre you sure?"
-                  ),
+                message_format=_("You are about to save changes over template.\nAre you sure?"
+                                 ),
             )
             NEW_PROFILE_BUTTON = 7
             d.add_button(_("Create New Profile"), NEW_PROFILE_BUTTON)
@@ -1125,7 +1124,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
             msg += "\n\n" + (_(
                 "Consult your distribution manual, try installing Steam package or <a href='%s'>install required udev rules manually</a>."
             ) % "https://wiki.archlinux.org/index.php/Gamepad#Steam_Controller_not_pairing"
-                             )
+            )
             # TODO: Write howto somewhere instead of linking to ArchWiki
         elif "LIBUSB_ERROR_BUSY" in error:
             msg += "\n" + _(

@@ -221,8 +221,7 @@ class Launcher(OSDWindow):
         self.argparser.add_argument(
             "--feedback-amplitude",
             type=int,
-            help=
-            "enables and sets power of feedback effect generated when active menu option is changed",
+            help="enables and sets power of feedback effect generated when active menu option is changed",
         )
 
     def parse_argumets(self, argv):

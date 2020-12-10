@@ -181,8 +181,7 @@ class Menu(OSDWindow):
         self.argparser.add_argument(
             "--feedback-amplitude",
             type=int,
-            help=
-            "enables and sets power of feedback effect generated when active menu option is changed",
+            help="enables and sets power of feedback effect generated when active menu option is changed",
         )
         self.argparser.add_argument(
             "--from-profile",
@@ -446,7 +445,7 @@ class Menu(OSDWindow):
             # As special case, using LEFT pad on controller with
             # actual DPAD should not display cursor
             if (self._control_with != LEFT or
-                (controller.get_flags() & ControllerFlags.HAS_DPAD) == 0):
+                    (controller.get_flags() & ControllerFlags.HAS_DPAD) == 0):
                 self.enable_cursor()
 
         if getattr(self.args, "feedback_amplitude", None):

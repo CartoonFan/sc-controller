@@ -36,8 +36,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 __all__ = ["Enum", "IntEnum", "unique"]
 
-import sys as _sys
 
+import sys as _sys
 version = 1, 1, 3
 
 pyver = float("%s.%s" % _sys.version_info[:2])
