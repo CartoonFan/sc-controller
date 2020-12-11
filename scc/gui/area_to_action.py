@@ -97,7 +97,7 @@ AREA_TO_ACTION = {
 _CLS_TO_AREA = {}
 for x in AREA_TO_ACTION:
     cls, params = AREA_TO_ACTION[x][0], AREA_TO_ACTION[x][1:]
-    if not cls in _CLS_TO_AREA:
+    if cls not in _CLS_TO_AREA:
         _CLS_TO_AREA[cls] = []
     _CLS_TO_AREA[cls].append((x, params))
 

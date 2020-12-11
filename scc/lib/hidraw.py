@@ -65,7 +65,6 @@ class HIDRaw(object):
     """
     Provides methods to access hidraw device's ioctls.
     """
-
     def __init__(self, device):
         """
         device (file, fileno)

@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - OSD Launcher
 
@@ -13,7 +12,6 @@ import os
 import sys
 
 from gi.repository import Gtk
-
 from scc.actions import Action
 from scc.actions import AxisAction
 from scc.actions import DPadAction
@@ -217,7 +215,6 @@ class Line(object):
 
 class LineCollection(object):
     """ Allows calling add_icon on multiple lines at once """
-
     def __init__(self, *lines):
         self.lines = lines
 

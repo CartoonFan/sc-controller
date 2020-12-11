@@ -909,7 +909,7 @@ libusb_get_config_descriptor.argtypes = [
     libusb_config_descriptor_p_p,
 ]
 # int libusb_get_config_descriptor_by_value(libusb_device *dev,
-#        uint8_t bConfigurationValue, struct libusb_config_descriptor **config);
+# uint8_t bConfigurationValue, struct libusb_config_descriptor **config);
 libusb_get_config_descriptor_by_value = libusb.libusb_get_config_descriptor_by_value
 libusb_get_config_descriptor_by_value.argtypes = [
     libusb_device_p,
@@ -971,7 +971,8 @@ else:
 # int libusb_get_max_packet_size(libusb_device *dev, unsigned char endpoint);
 libusb_get_max_packet_size = libusb.libusb_get_max_packet_size
 libusb_get_max_packet_size.argtypes = [libusb_device_p, c_uchar]
-# int libusb_get_max_iso_packet_size(libusb_device *dev, unsigned char endpoint);
+# int libusb_get_max_iso_packet_size(libusb_device *dev, unsigned char
+# endpoint);
 try:
     libusb_get_max_iso_packet_size = libusb.libusb_get_max_iso_packet_size
 except AttributeError:

@@ -468,7 +468,7 @@ def get_window_title(dpy, window):
                 value = cast(prop, c_char_p).value.decode("utf-8")
                 free(prop)
                 return value
-            except:
+            except BaseException:
                 pass
             free(prop)
     return None

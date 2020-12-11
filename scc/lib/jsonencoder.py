@@ -37,7 +37,6 @@ FLOAT_REPR = repr
 
 def encode_basestring(s):
     """Return a JSON representation of a Python string"""
-
     def replace(match):
         return ESCAPE_DCT[match.group(0)]
 

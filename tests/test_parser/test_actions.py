@@ -1,11 +1,12 @@
 import inspect
 
-from . import _parses_as_itself
-from . import parser
 from scc.actions import *
 from scc.uinput import Axes
 from scc.uinput import Keys
 from scc.uinput import Rels
+
+from . import _parses_as_itself
+from . import parser
 
 
 class TestActions(object):

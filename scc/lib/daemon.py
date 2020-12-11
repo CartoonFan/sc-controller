@@ -14,7 +14,6 @@ class Daemon(object):
     """A generic daemon class.
 
     Usage: subclass the daemon class and override the run() method."""
-
     def __init__(self, pidfile):
         self.pidfile = pidfile
 
@@ -94,7 +93,7 @@ class Daemon(object):
             except IOError:
                 # No such process
                 pass
-            except:
+            except BaseException:
                 message = "pidfile {0} already exist. " + "Daemon already running?\n"
                 sys.stderr.write(message.format(self.pidfile))
                 sys.exit(1)

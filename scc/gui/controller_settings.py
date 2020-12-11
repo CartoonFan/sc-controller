@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Global Settings
 
@@ -9,7 +8,6 @@ import os
 
 from gi.repository import GdkPixbuf
 from gi.repository import GLib
-
 from scc.gui.editor import ComboSetter
 from scc.gui.editor import Editor
 from scc.gui.userdata_manager import UserDataManager
@@ -54,7 +52,7 @@ class ControllerSettings(Editor, UserDataManager, ComboSetter):
                 continue
             try:
                 pb = GdkPixbuf.Pixbuf.new_from_file(path)
-            except:
+            except BaseException:
                 # Failed to load image
                 continue
             lstIcons.append((path, filename, name, pb))
@@ -165,7 +163,7 @@ class ControllerSettings(Editor, UserDataManager, ComboSetter):
                 cbIcon.get_active_iter(), 1)
             if self.profile_switcher:
                 self.profile_switcher.update_icon()
-        except:
+        except BaseException:
             # Just in case there are no icons at all
             pass
 
@@ -177,7 +175,6 @@ class ControllerSettings(Editor, UserDataManager, ComboSetter):
         Schedules config saving in 1s.
         Done to prevent literal madness when user moves slider.
         """
-
         def cb(*a):
             self._timer = None
             self.app.save_config()

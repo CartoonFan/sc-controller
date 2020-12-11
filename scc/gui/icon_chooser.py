@@ -12,7 +12,6 @@ from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GObject
 from gi.repository import Gtk
-
 from scc.gui.dwsnc import headerbar
 from scc.gui.editor import Editor
 from scc.gui.userdata_manager import UserDataManager
@@ -55,7 +54,7 @@ class IconChooser(Editor, UserDataManager):
         for c in DEFAULT_ICON_CATEGORIES:
             try:
                 os.makedirs(os.path.join(get_menuicons_path(), c))
-            except:
+            except BaseException:
                 # Dir. exists
                 pass
 
@@ -79,7 +78,8 @@ class IconChooser(Editor, UserDataManager):
             icon_name = model.get_value(iter, 0)
             return "%s/%s" % (category, icon_name)
         except TypeError:
-            # This part may throw TypeError if either list has nothing selected.
+            # This part may throw TypeError if either list has nothing
+            # selected.
             return None
 
     def on_entName_changed(self, *a):
@@ -172,7 +172,7 @@ class IconChooser(Editor, UserDataManager):
                 # Try to select 1st category, but ignore if that fails
                 tvCategories.get_selection().select_path((0, ))
                 self.on_tvCategories_cursor_changed(tvCategories)
-            except:
+            except BaseException:
                 pass
 
     @staticmethod

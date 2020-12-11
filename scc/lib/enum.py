@@ -33,10 +33,9 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
+import sys as _sys
 
 __all__ = ["Enum", "IntEnum", "unique"]
-
-import sys as _sys
 
 version = 1, 1, 3
 
@@ -81,7 +80,6 @@ class _RouteClassAttributeToGetattr(object):
     class's __getattr__ method; this is done by raising AttributeError.
 
     """
-
     def __init__(self, fget=None):
         self.fget = fget
 
@@ -117,7 +115,6 @@ def _is_sunder(name):
 
 def _make_class_unpicklable(cls):
     """Make the given class un-picklable."""
-
     def _break_on_call_reduce(self, protocol=None):
         raise TypeError("%r cannot be pickled" % self)
 
@@ -132,7 +129,6 @@ class _EnumDict(dict):
     enumeration member names.
 
     """
-
     def __init__(self):
         super(_EnumDict, self).__init__()
         self._member_names = []
@@ -178,7 +174,6 @@ Enum = None
 
 class EnumMeta(type):
     """Metaclass for Enum"""
-
     @classmethod
     def __prepare__(metacls, cls, bases):
         return _EnumDict()

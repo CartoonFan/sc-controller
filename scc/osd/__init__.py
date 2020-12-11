@@ -13,7 +13,6 @@ from gi.repository import GdkX11
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
-
 from scc.config import Config
 from scc.constants import STICK_PAD_MAX
 from scc.constants import STICK_PAD_MIN
@@ -256,7 +255,6 @@ class OSDCssMagic(dict):
         %(background+10)s       - color, 10 values brighter
         %(background-10)s       - color, 10 values darker
     """
-
     def __init__(self, dict_to_wrap):
         self._dict = dict_to_wrap
 

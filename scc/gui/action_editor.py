@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Action Editor
 
@@ -10,7 +9,6 @@ import math
 
 from gi.repository import GLib
 from gi.repository import Gtk
-
 from scc.actions import Action
 from scc.actions import NoAction
 from scc.actions import RingAction
@@ -135,9 +133,11 @@ class ActionEditor(Editor):
         ]  # Sensitivity sliders, labels and 'clear' buttons
         # Feedback settings sliders, labels and 'clear' buttons, plus default value as last item
         self.feedback_widgets = []
-        # Smoothing settings sliders, labels and 'clear' buttons, plus default value as last item
+        # Smoothing settings sliders, labels and 'clear' buttons, plus default
+        # value as last item
         self.smoothing_widgets = []
-        # Deadzone settings sliders, labels and 'clear' buttons, plus default value as last item
+        # Deadzone settings sliders, labels and 'clear' buttons, plus default
+        # value as last item
         self.deadzone_widgets = []
         self.sens = [1.0] * 3  # Sensitivity slider values
         self.sens_defaults = [1.0] * 3  # Clear button clears to this
@@ -707,7 +707,7 @@ class ActionEditor(Editor):
                 action = SensitivityModifier(*sens)
 
         if (cm & Action.MOD_FEEDBACK) != 0:
-            if self.feedback_position != None:
+            if self.feedback_position is not None:
                 # Strip defaults from feedback values
                 feedback = [] + self.feedback
                 while (len(feedback) > 0 and
@@ -728,7 +728,7 @@ class ActionEditor(Editor):
                     action = FeedbackModifier(*feedback)
 
         if (cm & Action.MOD_SMOOTH) != 0:
-            if self.smoothing != None:
+            if self.smoothing is not None:
                 action = SmoothModifier(*(list(self.smoothing) + [action]))
 
         if (cm & Action.MOD_DEADZONE) != 0:
@@ -843,7 +843,7 @@ class ActionEditor(Editor):
         # Feedback
         cbFeedbackSide = self.builder.get_object("cbFeedbackSide")
         lblFeedbackSide = self.builder.get_object("lblFeedbackSide")
-        if self.feedback_position != None:
+        if self.feedback_position is not None:
             cbFeedback = self.builder.get_object("cbFeedback")
             cbFeedbackSide.set_active(
                 FEEDBACK_SIDES.index(self.feedback_position))

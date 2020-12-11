@@ -9,12 +9,11 @@ import os
 import sys
 from xml.etree import ElementTree as ET
 
+import scc.osd.osk_actions
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import GdkX11
 from gi.repository import Gtk
-
-import scc.osd.osk_actions
 from scc.actions import Action
 from scc.config import Config
 from scc.constants import ControllerFlags

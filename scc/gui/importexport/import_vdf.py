@@ -11,7 +11,6 @@ import threading
 from io import StringIO
 
 from gi.repository import GLib
-
 from scc.foreign.vdf import VDFProfile
 from scc.foreign.vdffz import VDFFZProfile
 from scc.lib.vdf import parse_vdf
@@ -176,7 +175,8 @@ class ImportVdf(object):
                 filename = os.path.join(content_path, user, profile_id,
                                         "controller_configuration.vdf")
                 if not os.path.exists(filename):
-                    # If there is no 'controller_configuration.vdf', try finding *_legacy.bin
+                    # If there is no 'controller_configuration.vdf', try
+                    # finding *_legacy.bin
                     filename = self._find_legacy_bin(
                         os.path.join(content_path, user, profile_id))
                 if not filename or not os.path.exists(filename):

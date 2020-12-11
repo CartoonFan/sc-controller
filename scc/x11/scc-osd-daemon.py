@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - OSD Daemon
 
@@ -14,7 +13,6 @@ import gi
 from gi.repository import Gdk
 from gi.repository import GdkX11
 from gi.repository import GLib
-
 from scc.config import Config
 from scc.gui.daemon_manager import DaemonManager
 from scc.osd import OSDWindow
@@ -231,7 +229,7 @@ class OSDDaemon(object):
                     else:
                         log.error("Failed to show menu")
                         self._window = None
-                except:
+                except BaseException:
                     log.error(traceback.format_exc())
                     log.error("Failed to show menu")
                     self._window = None

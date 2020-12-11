@@ -27,7 +27,7 @@ try:
         raise AssertionError
     btlib = ctypes.CDLL(btlib_name)
     HAVE_BLUETOOTH_LIB = True
-except:
+except BaseException:
     pass
 
 

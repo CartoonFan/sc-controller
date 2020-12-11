@@ -176,7 +176,7 @@ class AutoSwitcher(object):
         with self.lock:
             try:
                 self.socket.send(b"Turnoff.\n")
-            except:
+            except BaseException:
                 log.error("Socket write failed")
                 os._exit(2)
 
@@ -184,7 +184,7 @@ class AutoSwitcher(object):
         with self.lock:
             try:
                 self.socket.send(b"Restart.\n")
-            except:
+            except BaseException:
                 log.error("Socket write failed")
                 os._exit(2)
 
@@ -212,6 +212,7 @@ class Condition(object):
     It's possible to combine all three types of title matching with window class
     matching.
     """
+
 
     def __init__(self,
                  exact_title=None,

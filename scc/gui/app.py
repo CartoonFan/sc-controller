@@ -13,12 +13,11 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+import scc.osd.menu_generators
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
-
-import scc.osd.menu_generators
 from scc.actions import NoAction
 from scc.config import Config
 from scc.constants import DAEMON_VERSION
@@ -1143,7 +1142,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
             if self.check():
                 # Check() returns True if error was "handled".
                 return
-            # If check() fails to find error reason, error message is displayed as it is
+            # If check() fails to find error reason, error message is displayed
+            # as it is
 
         if self.osd_mode:
             self.quit()
@@ -1197,7 +1197,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 
     def on_profile_right_clicked(self, ps):
         for name in ("mnuConfigureController", "mnuTurnoffController"):
-            # Disable controller-related menu items if controller is not connected
+            # Disable controller-related menu items if controller is not
+            # connected
             obj = self.builder.get_object(name)
             obj.set_sensitive(ps.get_controller() is not None)
 
@@ -1278,7 +1279,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
             for n in (old_fname, new_fname):
                 try:
                     os.unlink(n + ".mod")
-                except:
+                except BaseException:
                     # non-existing .mod file is expected
                     pass
         except Exception as e:
@@ -1318,7 +1319,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
                 os.unlink(fname)
                 try:
                     os.unlink(fname + ".mod")
-                except:
+                except BaseException:
                     # non-existing .mod file is expected
                     pass
                 for ps in self.profile_switchers:
@@ -1548,7 +1549,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         """ Returns name profile from config file or None if there is none saved """
         try:
             return self.config["recent_profiles"][0]
-        except:
+        except BaseException:
             return None
 
     @staticmethod
@@ -1715,12 +1716,13 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
                 x.decode("utf-8") for x in os.listdir(get_profiles_path())
         ]:
             if name.endswith("~"):
-                # Ignore backups - https://github.com/kozec/sc-controller/issues/440
+                # Ignore backups -
+                # https://github.com/kozec/sc-controller/issues/440
                 continue
             try:
                 p = Profile(ActionParser())
                 p.load(os.path.join(get_profiles_path(), name))
-            except:
+            except BaseException:
                 # Just ignore invalid profiles here
                 continue
             if p.original_version < 1.4:
@@ -1756,7 +1758,6 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 
 class UndoRedo(object):
     """ Just dummy container """
-
     def __init__(self, id, before, after):
         self.id = id
         self.before = before

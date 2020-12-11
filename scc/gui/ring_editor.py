@@ -185,7 +185,8 @@ class RingEditor(Editor, ComboSetter):
             self.actions = [action.inner, action.outer]
             self.set_cb(cbMode, "two")
         elif RingEditor.is_ring_action(action):
-            # Goes here only if action is MultiAciton with RingAction as 2nd item
+            # Goes here only if action is MultiAciton with RingAction as 2nd
+            # item
             ring = action.actions[1]
             self.radius = ring.radius
             if ring.inner:

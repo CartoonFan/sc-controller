@@ -221,7 +221,6 @@ class UInput(object):
 
     See Gamepad, Mouse, Keyboard for examples
     """
-
     def __init__(
             self,
             vendor,
@@ -256,7 +255,7 @@ class UInput(object):
         try:
             if self._lib.uinput_module_version() != UNPUT_MODULE_VERSION:
                 raise Exception()
-        except:
+        except BaseException:
             import sys
 
             print >> sys.stderr, "Invalid native module version. Please, recompile 'libuinput.so'"
@@ -388,7 +387,6 @@ class Gamepad(UInput):
     """
     Gamepad uinput class, create a Xbox360 gamepad device
     """
-
     def __init__(self, name):
         super(Gamepad, self).__init__(
             vendor=0x045E,
@@ -558,7 +556,6 @@ class Keyboard(UInput):
     autorepead delay and period are preset respectively to 250ms and 33ms
     setDelayPeriod permits to update these values
     """
-
     def __init__(self, name):
         super(Keyboard, self).__init__(
             vendor=0x28DE,
@@ -611,7 +608,6 @@ class Keyboard(UInput):
 
 class Dummy(object):
     """ Fake uinput device that does nothing, but has all required methods """
-
     def __init__(self, *a, **b):
         pass
 

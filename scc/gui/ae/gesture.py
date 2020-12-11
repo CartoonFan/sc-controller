@@ -10,7 +10,6 @@ import logging
 from gi.repository import Gdk
 from gi.repository import GdkX11
 from gi.repository import GObject
-
 from scc.actions import Action
 from scc.actions import NoAction
 from scc.gui.action_editor import ActionEditor
@@ -332,7 +331,7 @@ class GestureGrabber(object):
             return
         if gd.get_gesture():
             self.on_gesture_updated(gd, gd.get_gesture())
-            if self._gesture == None:
+            if self._gesture is None:
                 self.lblGestureGrabberTitle.set_text(
                     _("Repeat same gesture or press A button to confirm..."))
                 self.rvGestureGrab.set_reveal_child(True)

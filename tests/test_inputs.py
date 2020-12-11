@@ -28,7 +28,6 @@ parser = ActionParser()
 
 def input_test(fn):
     """ Decorator that creates usable mapper """
-
     def wrapper(*a):
         _time = time.time
 

@@ -10,13 +10,12 @@ import re
 import sys
 import traceback
 
+import scc.osd.osk_actions
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
-
-import scc.osd.osk_actions
 from scc.actions import Action
 from scc.actions import NoAction
 from scc.constants import LEFT
@@ -118,7 +117,11 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
             p = GdkPixbuf.Pixbuf.new_from_file(
                 os.path.join(self.app.imagepath, "controller-icons",
                              drv + "-4.svg"))
+<<<<<<< HEAD
         except:
+=======
+        except BaseException:
+>>>>>>> CartoonFan-restyle-1
             log.warning("Failed to load gamepad icon for driver '%s'", drv)
             p = self._gamepad_icons["unknown"]
         self._gamepad_icons[drv] = p
@@ -329,7 +332,6 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         Schedules config saving in 3s.
         Done to prevent literal madness when user moves slider.
         """
-
         def cb(*a):
             self._timer = None
             self.app.save_config()
@@ -502,7 +504,7 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         elif condition.regexp:
             try:
                 entTitle.set_text(condition.regexp.pattern)
-            except:
+            except BaseException:
                 entTitle.set_text("")
             cbRegExp.set_active(True)
             cbMatchTitle.set_active(True)

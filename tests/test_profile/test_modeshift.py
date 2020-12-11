@@ -1,6 +1,7 @@
-from . import parser
 from scc.constants import SCButtons
 from scc.modifiers import *
+
+from . import parser
 
 
 class TestModeshift(object):
@@ -8,7 +9,6 @@ class TestModeshift(object):
     Tests various combinations of modeshift and modifiers.
     Most are based on stuff that was failing in past.
     """
-
     def test_146_1(self):
         """
         https://github.com/kozec/sc-controller/issues/146

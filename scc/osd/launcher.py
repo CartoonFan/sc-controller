@@ -13,7 +13,6 @@ from gi.repository import GdkX11
 from gi.repository import Gio
 from gi.repository import Gtk
 from gi.repository import Pango
-
 from scc.config import Config
 from scc.constants import DEFAULT
 from scc.constants import LEFT
@@ -400,7 +399,7 @@ class Launcher(OSDWindow):
         try:
             start = self.items.index(self._selected)
             i = start + direction
-        except:
+        except BaseException:
             pass
         while True:
             if i == start:

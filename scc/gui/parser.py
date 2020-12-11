@@ -31,7 +31,6 @@ class GuiActionParser(ActionParser):
     ActionParser that stores original string and
     returns InvalidAction instance when parsing fails
     """
-
     def restart(self, string):
         self.string = string
         return ActionParser.restart(self, string)

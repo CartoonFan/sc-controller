@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Action Editor
 
@@ -7,7 +6,6 @@ Allows to edit button or trigger action.
 import logging
 
 from gi.repository import Gtk
-
 from scc.actions import Action
 from scc.actions import NoAction
 from scc.actions import RangeOP
@@ -136,7 +134,7 @@ class ModeshiftEditor(Editor):
             while model.get_value(model[0].iter, 0) is None:
                 model.remove(model[0].iter)
             cbButtonChooser.set_active(0)
-        except:
+        except BaseException:
             pass
 
         i = len(self.actions[index]) + 1
@@ -201,7 +199,7 @@ class ModeshiftEditor(Editor):
         active, i, index = None, 0, -1
         try:
             active = model.get_value(cbButtonChooser.get_active_iter(), 0)
-        except:
+        except BaseException:
             pass
         # Clear entire combobox
         model.clear()

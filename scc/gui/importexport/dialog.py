@@ -7,15 +7,16 @@ import logging
 import tarfile
 import traceback
 
-from .export import Export
-from .import_sccprofile import ImportSccprofile
-from .import_vdf import ImportVdf
 from scc.gui.editor import ComboSetter
 from scc.gui.editor import Editor
 from scc.tools import _
 from scc.tools import find_profile
 from scc.tools import profile_is_default
 from scc.tools import profile_is_override
+
+from .export import Export
+from .import_sccprofile import ImportSccprofile
+from .import_vdf import ImportVdf
 
 log = logging.getLogger("IE.Dialog")
 
@@ -54,7 +55,7 @@ class Dialog(Editor, ComboSetter, Export, ImportVdf, ImportSccprofile):
                     return "sccprofile"
                 if "GameName" in data and "FileName" in data:
                     return "vdffz"
-        except:
+        except BaseException:
             # Definitelly not json
             pass
 
@@ -66,7 +67,7 @@ class Dialog(Editor, ComboSetter, Export, ImportVdf, ImportSccprofile):
                 any_profile = any([x.endswith(".sccprofile") for x in names])
                 if any_profile and "profile-name" in names:
                     return "sccprofile.tar.gz"
-            except:
+            except BaseException:
                 # Not a tarball
                 pass
 

@@ -71,7 +71,8 @@ class Mapper(object):
         # mouse x, y, wheel vertical, horisontal
         self.mouse_movements = [0, 0, 0, 0]
         self.feedbacks = [None, None]  # left, right
-        # for ButtonAction, holds number of times virtual button was pressed without releasing it first
+        # for ButtonAction, holds number of times virtual button was pressed
+        # without releasing it first
         self.pressed = {}
         self.syn_list = set()
         self.buttons, self.old_buttons = 0, 0
@@ -92,7 +93,7 @@ class Mapper(object):
         product = int(cfg["output"]["product"], 16)
         version = int(cfg["output"]["version"], 16)
         name = cfg["output"]["name"]
-        rumble = cfg["output"]["rumble"] and poller != None
+        rumble = cfg["output"]["rumble"] and poller is not None
         axes = []
         i = 0
         for min, max in cfg["output"]["axes"]:

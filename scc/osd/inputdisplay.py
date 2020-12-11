@@ -7,7 +7,6 @@ import signal
 import sys
 
 from gi.repository import Gtk
-
 from scc.constants import LEFT
 from scc.constants import RIGHT
 from scc.constants import SCButtons

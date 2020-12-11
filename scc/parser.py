@@ -261,7 +261,8 @@ class ActionParser(object):
                     "Expected ',' or end of parameter list after parameter '%s'"
                     % (parameters[-1], ))
 
-        # Code shouldn't reach here, unless there is not closing ')' in parameter list
+        # Code shouldn't reach here, unless there is not closing ')' in
+        # parameter list
         raise ParseError("Unmatched parenthesis")
 
     def _create_action(self, cls, *pars):
@@ -369,7 +370,6 @@ class TalkingActionParser(ActionParser):
     ActionParser that returns None when parsing fails instead of
     trowing exception and outputs message to stderr
     """
-
     def restart(self, string):
         self.string = string
         return ActionParser.restart(self, string)

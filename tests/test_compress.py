@@ -191,7 +191,6 @@ class TestCompress(object):
     Tests Aciton.compress method.
     Basically, tests how various combinations of modifiers interacts together.
     """
-
     def test_tests(self):
         # Test if there is key in CASES for every action that suppports
         # setting feedback or sensitivity.

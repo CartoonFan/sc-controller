@@ -819,7 +819,6 @@ class USBTransferHelper(object):
     have an error status. You can check individual packet status by calling
     getISOSetupList on transfer object in your callback.
     """
-
     def __init__(self, transfer=None):
         """
         Create a transfer callback dispatcher.
@@ -916,7 +915,6 @@ class USBPollerThread(threading.Thread):
 
     See http://libusb.sourceforge.net/api-1.0/mtasync.html .
     """
-
     def __init__(self, context, poller, exc_callback=None):
         """
         Create a poller thread for given context.
@@ -1004,7 +1002,6 @@ class USBPoller(object):
     will result in unnecessarily long pauses in some threads. Opening and/or
     closing devices while polling can cause race conditions to occur.
     """
-
     def __init__(self, context, poller):
         """
         Create a poller for given context.
@@ -2543,7 +2540,6 @@ class USBContext(object):
         Callback must return whether it must be unregistered (any true value
         to be unregistered, any false value to be kept registered).
         """
-
         def wrapped_callback(context_p, device_p, event, _):
             if addressof(context_p.contents) != addressof(
                     self.__context_p.contents):
@@ -2643,7 +2639,6 @@ class LibUSBContext(USBContext):
     """
     Backward-compatibility alias for USBContext.
     """
-
     def __init__(self):
         warnings.warn(
             "LibUSBContext is being renamed to USBContext",

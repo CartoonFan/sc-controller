@@ -165,7 +165,6 @@ class Enumerator:
 
     All match_* methods are returning self for chaining.
     """
-
     def __init__(self, eudev, enumerator):
         self._eudev = eudev
         self._enumerator = enumerator

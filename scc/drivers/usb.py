@@ -20,7 +20,6 @@ log = logging.getLogger("USB")
 
 class USBDevice(object):
     """ Base class for all handled usb devices """
-
     def __init__(self, device, handle):
         self.device = device
         self.handle = handle
@@ -35,7 +34,6 @@ class USBDevice(object):
 
         callback(endpoint, data) is called repeadedly with every packed recieved.
         """
-
         def callback_wrapper(transfer):
             if (transfer.getStatus() != usb1.TRANSFER_COMPLETED
                     or transfer.getActualLength() != size):
@@ -171,12 +169,12 @@ class USBDevice(object):
         """ Called after device is disconnected """
         try:
             self.unclaim()
-        except:
+        except BaseException:
             pass
         try:
             self.handle.resetDevice()
             self.handle.close()
-        except:
+        except BaseException:
             pass
 
 

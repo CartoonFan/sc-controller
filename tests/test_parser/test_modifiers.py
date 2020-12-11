@@ -1,7 +1,5 @@
 import inspect
 
-from . import _parse_compressed
-from . import _parses_as_itself
 from scc.actions import Action
 from scc.actions import AxisAction
 from scc.actions import ButtonAction
@@ -11,6 +9,9 @@ from scc.constants import SCButtons
 from scc.modifiers import *
 from scc.uinput import Axes
 from scc.uinput import Keys
+
+from . import _parse_compressed
+from . import _parses_as_itself
 
 
 class TestModifiers(object):
@@ -318,7 +319,8 @@ class TestModifiers(object):
                              ).strip().get_speed() != (2.0, 3.0, 4.0):
             raise AssertionError
 
-        # Basic modifiers, sensitivity should always end applied to mouse() action
+        # Basic modifiers, sensitivity should always end applied to mouse()
+        # action
         a = _parse_compressed("sens(2, 3, click(mouse()))")
         if not isinstance(a.action, MouseAction) or a.action.get_speed() != (
                 2.0,

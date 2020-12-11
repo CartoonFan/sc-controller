@@ -6,7 +6,6 @@ import os
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
-
 from scc.actions import Action
 from scc.actions import NoAction
 from scc.actions import XYAction

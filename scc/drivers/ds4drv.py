@@ -377,7 +377,8 @@ class DS4EvdevController(EvdevController):
                         new_state = new_state._replace(
                             **{axis: int(event.value * factor)})
         except IOError:
-            # Errors here are not even reported, evdev class handles important ones
+            # Errors here are not even reported, evdev class handles important
+            # ones
             return
 
         if new_state is not self._state:
@@ -417,7 +418,8 @@ class DS4EvdevController(EvdevController):
                                                        cpad_x=0,
                                                        cpad_y=0)
         except IOError:
-            # Errors here are not even reported, evdev class handles important ones
+            # Errors here are not even reported, evdev class handles important
+            # ones
             return
 
         if new_state is not self._state:
@@ -431,7 +433,7 @@ class DS4EvdevController(EvdevController):
             try:
                 self.poller.unregister(device.fd)
                 device.ungrab()
-            except:
+            except BaseException:
                 pass
 
     def get_gyro_enabled(self):
@@ -463,7 +465,6 @@ class DS4EvdevController(EvdevController):
 
 def init(daemon, config):
     """ Registers hotplug callback for ds4 device """
-
     def hid_callback(device, handle):
         return DS4Controller(device, daemon, handle, None, None)
 
@@ -480,7 +481,8 @@ def init(daemon, config):
         if not controllerdevice:
             log.warning("Failed to determine controller device")
             return None
-        # 2nd, find motion sensor and touchpad with physical address matching controllerdevice
+        # 2nd, find motion sensor and touchpad with physical address matching
+        # controllerdevice
         gyro, touchpad = None, None
         phys = device.phys.split("/")[0]
         for device in devices:

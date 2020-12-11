@@ -11,7 +11,6 @@ from ctypes import POINTER
 from gi.repository import Gdk
 from gi.repository import GdkX11
 from gi.repository import GLib
-
 from scc.actions import Action
 from scc.actions import AreaAction
 from scc.actions import AxisAction
@@ -518,7 +517,6 @@ class FakeMapper(object):
     and get_active_window() that returns any other window but window that
     belongs to SC-Controller gui application.
     """
-
     def __init__(self, editor):
         self._xdisplay = X.Display(hash(GdkX11.x11_get_default_xdisplay()))
         self.editor = editor

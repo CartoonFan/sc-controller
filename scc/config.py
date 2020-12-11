@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Config
 
@@ -202,7 +201,8 @@ class Config(object):
             for key in self.CONTROLLER_DEFAULTS:
                 if key not in rv:
                     if key in ("input_rotation_l", "input_rotation_r"):
-                        # Special case, just to not change behavior for existing users
+                        # Special case, just to not change behavior for
+                        # existing users
                         rv[key] = 0
                     else:
                         rv[key] = self.CONTROLLER_DEFAULTS[key]

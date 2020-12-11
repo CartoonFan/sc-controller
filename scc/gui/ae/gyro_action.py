@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Action Editor - Gyro -> Joystick or Mouse component
 """
@@ -222,7 +221,7 @@ class GyroActionComponent(AEComponent):
         elif item is not None:
             button = nameof(item.name)
         for row in model:
-            if button == row[0] and row[1] != None:
+            if button == row[0] and row[1] is not None:
                 cb.set_active_iter(row.iter)
                 self._recursing = False
                 return

@@ -7,7 +7,6 @@ import tempfile
 
 from gi.repository import Gio
 from gi.repository import Gtk
-
 from scc.gui.userdata_manager import UserDataManager
 from scc.menu_data import MenuData
 from scc.menu_data import Submenu

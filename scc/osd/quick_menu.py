@@ -10,7 +10,6 @@ import sys
 
 from gi.repository import GLib
 from gi.repository import Gtk
-
 from scc.config import Config
 from scc.menu_data import MenuItem
 from scc.menu_data import Submenu

@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - OSD Menu Generators
 
@@ -13,7 +12,6 @@ from ctypes import POINTER
 from gi.repository import Gdk
 from gi.repository import GdkX11
 from gi.repository import Gio
-
 from scc.lib import xwrappers as X
 from scc.menu_data import MENU_GENERATORS
 from scc.menu_data import MenuGenerator

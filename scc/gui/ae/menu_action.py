@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Action Editor - common part of "DPAD or menu" and "Special Action",
 two components with MenuAction selectable.
@@ -7,7 +6,6 @@ import logging
 import os
 
 from gi.repository import Gtk
-
 from scc.actions import NoAction
 from scc.constants import DEFAULT
 from scc.constants import SAME
@@ -371,7 +369,8 @@ class MenuActionCofC(UserDataManager):
 
             params += [self.get_control_with(), cow, caw]
 
-            # Hide / apply and display 'Items per row' selector if it exists in UI
+            # Hide / apply and display 'Items per row' selector if it exists in
+            # UI
             if self.builder.get_object("rvMenuSize"):
                 spMenuSize = self.builder.get_object("spMenuSize")
                 menu_type = cbm.get_model().get_value(cbm.get_active_iter(), 1)

@@ -7,7 +7,6 @@ Assigns emulated button to physical button
 import logging
 
 from gi.repository import Gtk
-
 from scc.actions import Action
 from scc.actions import AxisAction
 from scc.actions import ButtonAction
@@ -84,7 +83,8 @@ class ButtonsComponent(AEComponent, Chooser):
                 self.keys.add(action.actions[0].button)
                 is_repeat = True
             elif isinstance(action, Cycle):
-                # There is only one case when self.handles returns True for Cycle
+                # There is only one case when self.handles returns True for
+                # Cycle
                 self.keys.add(action.actions[0].action.button)
                 is_togle = True
             cbToggle.set_active(is_togle)
@@ -99,7 +99,8 @@ class ButtonsComponent(AEComponent, Chooser):
         return _("Key or Button")
 
     def handles(self, mode, action):
-        # Handles ButtonAction and MultiAction if all subactions are ButtonAction
+        # Handles ButtonAction and MultiAction if all subactions are
+        # ButtonAction
         if isinstance(action, (ButtonAction, NoAction, InvalidAction)):
             return True
         if isinstance(action, AxisAction):

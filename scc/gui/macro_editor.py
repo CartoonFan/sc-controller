@@ -8,7 +8,6 @@ import logging
 from collections import namedtuple
 
 from gi.repository import Gtk
-
 from scc.actions import Action
 from scc.actions import ButtonAction
 from scc.actions import NoAction
@@ -282,7 +281,6 @@ class MacroEditor(Editor):
 
     def on_actionb_clicked(self, button, i, action_data):
         """ Handler clicking on action name """
-
         def on_chosen(id, action):
             readd = [x.action for x in self.actions]
             readd[i] = action

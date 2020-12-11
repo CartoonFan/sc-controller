@@ -63,7 +63,6 @@ log = logging.getLogger("SCDongle")
 
 def init(daemon, config):
     """ Registers hotplug callback for controller dongle """
-
     def cb(device, handle):
         return Dongle(device, handle, daemon)
 
@@ -301,7 +300,8 @@ class SCController(Controller):
 
     def disconnected(self):
         # If ignore_serials config option is enabled, fake serial used by this
-        # controller is stored away and reused when next controller is connected
+        # controller is stored away and reused when next controller is
+        # connected
         if Config()["ignore_serials"]:
             self._driver._available_serials.add(self._serial)
 

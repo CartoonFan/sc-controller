@@ -478,7 +478,6 @@ class HIDController(USBDevice, Controller):
         as some controllers are presenting descriptor that are completly
         broken and kernel already deals with it.
         """
-
         def recursive_search(pattern, path):
             for name in os.listdir(path):
                 full_path = os.path.join(path, name)
@@ -582,7 +581,8 @@ class HIDController(USBDevice, Controller):
         # TODO: This!
         pass
 
-    # def configure(self, idle_timeout=None, enable_gyros=None, led_level=None):
+    # def configure(self, idle_timeout=None, enable_gyros=None,
+    # led_level=None):
 
     def set_led_level(self, level):
         # TODO: This?

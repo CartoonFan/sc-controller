@@ -767,7 +767,8 @@ class ModeModifier(Modifier):
     MIN_TRIGGER = (
         2  # When trigger is bellow this position, list of held_triggers is cleared
     )
-    # When abs(stick) < MIN_STICK, stick is considered released and held_sticks is cleared
+    # When abs(stick) < MIN_STICK, stick is considered released and
+    # held_sticks is cleared
     MIN_STICK = 2
     PROFILE_KEY_PRIORITY = 2
 
@@ -959,7 +960,7 @@ class ModeModifier(Modifier):
         def cb(mapper):
             try:
                 return c.__proc.poll() == 0
-            except:
+            except BaseException:
                 return False
 
         c.name = cb.name = c.to_string(
@@ -1007,7 +1008,7 @@ class ModeModifier(Modifier):
             try:
                 if c.__proc:
                     c.__proc.kill()
-            except:
+            except BaseException:
                 pass
             c.__proc = None
 
@@ -1642,7 +1643,8 @@ class CircularAbsModifier(Modifier, WholeHapticAction):
             if self.haptic:
                 if self.angle is not None:
                     diff = self.angle - angle
-                    # Ensure we don't wrap from pi to -pi creating a large delta
+                    # Ensure we don't wrap from pi to -pi creating a large
+                    # delta
                     if angle > PI:
                         # Subtract a full rotation to counter the wrapping
                         angle -= 2 * PI

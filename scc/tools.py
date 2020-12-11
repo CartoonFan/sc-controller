@@ -164,7 +164,6 @@ def shsplit(s):
 
 def static_vars(**kwargs):
     """Static variable func decorator"""
-
     def decorate(func):
         """inner function used to add kwargs attribute to a func"""
         for k in kwargs:

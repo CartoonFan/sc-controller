@@ -13,7 +13,6 @@ import logging
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
-
 from scc.constants import SCButtons
 from scc.gui.gdk_to_key import KEY_TO_GDK
 from scc.gui.gdk_to_key import KEY_TO_KEYCODE
@@ -46,7 +45,6 @@ class OSDModeMapper(SlaveMapper):
 
 class OSDModeKeyboard(object):
     """ Emulates uinput keyboard emulator """
-
     def __init__(self, mapper):
         self.mapper = mapper
         self.display = Gdk.Display.get_default()
@@ -81,7 +79,6 @@ class OSDModeKeyboard(object):
 
 class OSDModeMouse(object):
     """ Emulates uinput keyboard emulator too """
-
     def __init__(self, mapper):
         self.mapper = mapper
         self.display = Gdk.Display.get_default()

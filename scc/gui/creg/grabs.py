@@ -24,7 +24,6 @@ class InputGrabber(object):
     Base class for input grabbing. Waits for physical button being pressed
     by default.
     """
-
     def __init__(self, parent, what, text=_("Press a button...")):
         self.parent = parent
         self.what = what
@@ -72,7 +71,6 @@ class TriggerGrabber(InputGrabber):
     InputGrabber modified to grab trigger bindings.
     That may be button or axis with at least 0-250 range is accepted.
     """
-
     def __init__(self, parent, what, text=_("Pull a trigger...")):
         InputGrabber.__init__(self, parent, what, text)
         self.orig_pos = {k: parent._input_axes[k] for k in parent._input_axes}
@@ -119,7 +117,6 @@ class StickGrabber(TriggerGrabber):
     InputGrabber modified to grab stick or pad bindings, in two phases for
     both X and Y axis.
     """
-
     def __init__(self, parent, what):
         TriggerGrabber.__init__(self,
                                 parent,

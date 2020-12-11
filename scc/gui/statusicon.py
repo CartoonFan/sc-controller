@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
 Syncthing-GTK - StatusIcon
@@ -10,7 +9,6 @@ import os
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
-
 from scc.gui.dwsnc import IS_GNOME
 from scc.gui.dwsnc import IS_UNITY
 from scc.tools import _  # gettext function
@@ -176,7 +174,6 @@ class StatusIconDummy(StatusIcon):
     """
     Dummy status icon implementation that does nothing
     """
-
     def __init__(self, *args, **kwargs):
         StatusIcon.__init__(self, *args, **kwargs)
 
@@ -194,7 +191,6 @@ class StatusIconGTK3(StatusIcon):
     """
     Gtk.StatusIcon based status icon backend
     """
-
     def __init__(self, *args, **kwargs):
         StatusIcon.__init__(self, *args, **kwargs)
 
@@ -258,7 +254,6 @@ class StatusIconAppIndicator(StatusIconDBus):
     """
     Unity's AppIndicator3.Indicator based status icon backend
     """
-
     def __init__(self, *args, **kwargs):
         StatusIcon.__init__(self, *args, **kwargs)
 
@@ -364,7 +359,8 @@ class StatusIconProxy(StatusIcon):
                 except NotImplementedError:
                     continue
 
-            # At least the dummy backend should have been loaded at this point...
+            # At least the dummy backend should have been loaded at this
+            # point...
             if not self._status_fb:
                 raise AssertionError
 
@@ -429,5 +425,6 @@ def get_status_icon(*args, **kwargs):
 
         return StatusIconDummy(*args, **kwargs)
 
-    # Use proxy backend to determine the correct backend while the application is running
+    # Use proxy backend to determine the correct backend while the application
+    # is running
     return StatusIconProxy(*args, **kwargs)

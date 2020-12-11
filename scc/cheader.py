@@ -54,7 +54,6 @@ OPERATORS = {
 
 def eval_expr(expr):
     """ Eval and expression inside a #define using a suppart of python grammar """
-
     def _eval(node):
         if isinstance(node, ast.Num):
             return node.n
@@ -173,7 +172,7 @@ def defines(base, include):
             else:
                 name = tok
             fname = os.path.normpath(os.path.abspath(os.path.join(base, name)))
-            if os.path.isfile(fname) and not fname in parsed:
+            if os.path.isfile(fname) and fname not in parsed:
                 parsed.add(fname)
                 lexer.push_source(open(fname))
         else:

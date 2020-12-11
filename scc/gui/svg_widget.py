@@ -254,7 +254,6 @@ class Area:
         "KEY",
     )
     """ Basicaly just rectangle with name """
-
     def __init__(self, element, transform):
         self.name = element.attrib["id"].split("_")[1]
         if self.name in Area.SPECIAL_CASES:
@@ -358,7 +357,6 @@ class SVGEditor(object):
 
         Returns self.
         """
-
         def recursive(element):
             for child in list(element):
                 if (child.tag.endswith("metadata")
@@ -669,7 +667,6 @@ class SVGEditor(object):
 
         Returns self.
         """
-
         def walk(xml):
             for child in xml:
                 if "id" in child.attrib:

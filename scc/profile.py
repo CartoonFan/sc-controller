@@ -111,7 +111,7 @@ class Profile(object):
         # Version
         try:
             version = float(data["version"])
-        except:
+        except BaseException:
             version = 0
 
         # Settings - Description
@@ -260,7 +260,8 @@ class Profile(object):
         if from_version < 1:
             from scc.modifiers import ModeModifier
 
-            # Add 'display Default.menu if center button is held' for old profiles
+            # Add 'display Default.menu if center button is held' for old
+            # profiles
             c = self.buttons[SCButtons.C]
             if not c:
                 # Nothing set to C button
@@ -324,7 +325,8 @@ class Profile(object):
                         # Trigger range was not specified, assume defaults
                         numbers = (TRIGGER_HALF, TRIGGER_CLICK)
                     elif len(numbers) == 1:
-                        # Only lower range was specified, add default upper range
+                        # Only lower range was specified, add default upper
+                        # range
                         numbers.append(TRIGGER_CLICK)
                     if len(buttons) == 1:
                         # If only one button was set, trigger should work like
@@ -347,14 +349,16 @@ class Profile(object):
                         )
                         self.triggers[p] = n
         if from_version < 1.3:
-            # Action format completly changed in v0.4, but profile foramat is same.
+            # Action format completly changed in v0.4, but profile foramat is
+            # same.
             pass
 
 
 class Encoder(JSONEncoder):
     def default(self, obj):
         # if type(obj) in (list, tuple):
-        # 	return basestring("[" + ", ".join(self.encode(x) for x in obj) + " ]")
+        # return basestring("[" + ", ".join(self.encode(x) for x in obj) + "
+        # ]")
         if hasattr(obj, "encode"):
             return obj.encode()
         return JSONEncoder.default(self, obj)

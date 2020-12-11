@@ -205,7 +205,8 @@ class SCCDaemon(Daemon):
                 log.debug("Turning gyrosensor OFF")
                 mapper.get_controller().set_gyro_enabled(False)
         elif not mapper.profile.gyro and p.gyro:
-            # Turn on gyro sensor that was turned off, if profile has gyro action set
+            # Turn on gyro sensor that was turned off, if profile has gyro
+            # action set
             if mapper.get_controller():
                 log.debug("Turning gyrosensor ON")
                 mapper.get_controller().set_gyro_enabled(True)
@@ -235,7 +236,7 @@ class SCCDaemon(Daemon):
         for client in self.clients:
             try:
                 client.wfile.write(message_str)
-            except:
+            except BaseException:
                 pass
 
     def on_sa_turnoff(self, mapper, action):
@@ -458,6 +459,7 @@ class SCCDaemon(Daemon):
                 self.subprocs.append(Subprocess("scc-osd-daemon", True))
                 if Config()["autoswitch"]:
                     # Start scc-autoswitch-daemon only if there are some switch rules defined
+
                     self.subprocs.append(
                         Subprocess("scc-autoswitch-daemon", True))
         else:
@@ -509,7 +511,7 @@ class SCCDaemon(Daemon):
 
     def load_default_profile(self, mapper=None):
         mapper = mapper or self.default_mapper
-        if self.default_profile == None:
+        if self.default_profile is None:
             try:
                 self.default_profile = find_profile(
                     Config()["recent_profiles"][0])
@@ -640,7 +642,8 @@ class SCCDaemon(Daemon):
         Sends info about all profiles assigned to all
         controllers using provided method.
         """
-        # As special case, at least default_mapper profile has to be sent always
+        # As special case, at least default_mapper profile has to be sent
+        # always
         default_sent = False
         for c in self.controllers:
             default_sent = self.send_profile_info(c, method) or default_sent
@@ -907,7 +910,7 @@ class SCCDaemon(Daemon):
                 try:
                     client.wfile.write(b"OK.\n")
                     self._send_to_all("Reconfigured.\n".encode("utf-8"))
-                except:
+                except BaseException:
                     pass
         elif message.startswith("Rescan."):
             cbs = []
@@ -916,7 +919,7 @@ class SCCDaemon(Daemon):
                 # Respond first
                 try:
                     client.wfile.write(b"OK.\n")
-                except:
+                except BaseException:
                     pass
             # Do stuff later
             # (this cannot be done while self.lock is held, as creating new
@@ -995,7 +998,7 @@ class SCCDaemon(Daemon):
                         menuaction = (client.mapper.profile.menus[menu_id].
                                       get_by_id(item_id).action)
                     client.wfile.write(b"OK.\n")
-                except:
+                except BaseException:
                     log.warning("Selected menu item is no longer valid.")
                     client.wfile.write(
                         b"Fail: Selected menu item is no longer valid\n")
@@ -1144,7 +1147,7 @@ class Client(object):
         """ Closes connection to this client """
         try:
             self.connection.shutdown(True)
-        except:
+        except BaseException:
             pass
 
     def request_gesture(self, daemon, what, up_angle):
@@ -1154,12 +1157,11 @@ class Client(object):
 
         Should be called while daemon.lock is acquired.
         """
-
         def cb(gesture):
             # Called while lock is being held
             try:
                 self.wfile.write(b"Gesture: %s %s\n" % (what, gesture))
-            except:
+            except BaseException:
                 pass
 
         gd = daemon._start_gesture(self.mapper, what, up_angle, cb)
@@ -1172,7 +1174,6 @@ class Client(object):
 
         Should be called while daemon.lock is acquired.
         """
-
         def lock(action, what):
             # ObservingAction should be above LockedAction
             if isinstance(action, ObservingAction):
@@ -1289,7 +1290,6 @@ class ReportingAction(Action):
 
 class LockedAction(ReportingAction):
     """ Temporal action used to send requested inputs to client """
-
     def __init__(self, what, client, original_action):
         ReportingAction.__init__(self, what, client)
         self.original_action = original_action
@@ -1343,7 +1343,6 @@ class ObservingAction(ReportingAction):
     """
     Similar to LockedAction, send inputs to client *and* executes actions.
     """
-
     def __init__(self, what, client, original_action):
         ReportingAction.__init__(self, what, client)
         self.original_action = original_action
@@ -1403,7 +1402,6 @@ class Subprocess(object):
     Part of scc-daemon executed as another process, killed along with scc-daemon.
     Currently scc-osd-daemon and scc-windowswitch-daemon.
     """
-
     def __init__(self, binary_name, debug, restart_after=5):
         self.binary_name = binary_name
         self.restart_after = restart_after

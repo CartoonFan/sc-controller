@@ -8,15 +8,14 @@ import os
 import sys
 from math import sqrt
 
+import scc.osd.menu_generators
+import scc.x11.autoswitcher
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import GdkX11
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
-
-import scc.osd.menu_generators
-import scc.x11.autoswitcher
 from scc.config import Config
 from scc.constants import ControllerFlags
 from scc.constants import DEFAULT
@@ -368,7 +367,7 @@ class Menu(OSDWindow):
                 raise AssertionError
             y_offset = m.get_geometry().y
             screen_height = m.get_geometry().height
-        except:
+        except BaseException:
             y_offset = 0
             screen_height = self.get_window().get_screen().get_height()
         y -= y_offset
@@ -484,7 +483,7 @@ class Menu(OSDWindow):
         try:
             start = self.items.index(self._selected)
             i = start + direction
-        except:
+        except BaseException:
             pass
         while True:
             if i == start:
@@ -614,7 +613,6 @@ class Menu(OSDWindow):
 
 class MenuIcon(Gtk.DrawingArea):
     """ Auti-sized, auto-recolored icon for menus """
-
     def __init__(self, filename, has_colors=False):
         Gtk.DrawingArea.__init__(self)
         self.connect("size_allocate", self.on_size_allocate)

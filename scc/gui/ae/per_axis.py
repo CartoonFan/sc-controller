@@ -53,7 +53,6 @@ class PerAxisComponent(AEComponent):
 
     def on_btAxisX_clicked(self, *a):
         """ 'Select X Axis Action' handler """
-
         def cb(action):
             self.x = action
             self.update()
@@ -63,7 +62,6 @@ class PerAxisComponent(AEComponent):
 
     def on_btAxisY_clicked(self, *a):
         """ 'Select Y Axis Action' handler """
-
         def cb(action):
             self.y = action
             self.update()

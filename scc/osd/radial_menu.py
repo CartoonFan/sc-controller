@@ -161,7 +161,8 @@ class RadialMenu(Menu):
             icon_file, has_colors = (find_icon(i.icon, False) if hasattr(
                 i, "icon") else (None, False))
             if icon_file:
-                # Icon - hide all text and place MenuIcon widget on top of image
+                # Icon - hide all text and place MenuIcon widget on top of
+                # image
                 self.editor.remove_element(
                     SVGEditor.get_element(i.widget, "menuitem_text"))
                 self.editor.remove_element(
@@ -175,7 +176,7 @@ class RadialMenu(Menu):
                 self.b.get_parent().put(i.icon_widget, 200, 200)
                 self.items_with_icon.append(i)
             else:
-                # No icon - rotate text in arc to other direction to keep it horisontal
+                # No icon - rotate text in arc to other direction to keep it horizontal
                 if SVGEditor.get_element(i.widget,
                                          "menuitem_text") is not None:
                     l = SVGEditor.get_element(i.widget, "menuitem_text")

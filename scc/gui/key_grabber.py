@@ -8,7 +8,6 @@ import logging
 import os
 
 from gi.repository import Gtk
-
 from scc.gui.gdk_to_key import keyevent_to_key
 from scc.uinput import Keys
 
@@ -131,7 +130,7 @@ class KeyGrabber(object):
         """
         for key in MODIFIERS:
             if self.builder.get_object("tg" + key.name) == obj:
-                if obj.get_active() and not key in self.active_mods:
+                if obj.get_active() and key not in self.active_mods:
                     self.active_mods.append(key)
                     self.builder.get_object("lblKey").set_label(
                         merge_modifiers(self.active_mods))

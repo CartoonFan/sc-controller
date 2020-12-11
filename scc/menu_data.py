@@ -12,7 +12,6 @@ from scc.tools import _
 
 class MenuData(object):
     """ Contains list of menu items. Indexable """
-
     def __init__(self, *items):
         self.__items = list(items)
 
@@ -175,7 +174,6 @@ class MenuData(object):
 
 class MenuItem(object):
     """ Really just dummy container """
-
     def __init__(self, id, label, action=None, callback=None, icon=None):
         self.id = id
         self.label = label
@@ -208,7 +206,6 @@ class MenuItem(object):
 
 class Separator(MenuItem):
     """ Internally, separator is MenuItem without action and id """
-
     def __init__(self, label=None):
         MenuItem.__init__(self, None, label)
 
@@ -225,7 +222,6 @@ class Separator(MenuItem):
 
 class Submenu(MenuItem):
     """ Internally, separator is MenuItem without action and id """
-
     def __init__(self, filename, label=None, icon=None):
         if not label:
             label = ".".join(os.path.split(filename)[-1].split(".")[0:-1])
@@ -247,7 +243,6 @@ class Submenu(MenuItem):
 class MenuGenerator(object):
     GENERATOR_NAME = None
     """ Generates list of MenuItems """
-
     def __init__(self, **b):
         """
         Passed are all keys loaded from json dict that defined this generator.

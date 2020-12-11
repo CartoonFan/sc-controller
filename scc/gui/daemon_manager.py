@@ -14,7 +14,6 @@ import os
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
-
 from scc.gui import BUTTON_ORDER
 from scc.paths import get_daemon_socket
 from scc.tools import find_binary
@@ -147,7 +146,7 @@ class DaemonManager(GObject.GObject):
         self.connecting = False
         try:
             self.connection = sc.connect_finish(results)
-            if self.connection == None:
+            if self.connection is None:
                 raise Exception("Unknown error")
         except Exception as e:
             self._on_daemon_died()
@@ -160,7 +159,7 @@ class DaemonManager(GObject.GObject):
         """ Called when daemon sends some data """
         try:
             response = sc.read_bytes_finish(results)
-            if response == None:
+            if response is None:
                 raise Exception("No data recieved")
         except Exception as e:
             # Broken sonnection, daemon was probbaly terminated
@@ -467,7 +466,7 @@ class ControllerManager(GObject.GObject):
             index = BUTTON_ORDER.index(button)
             name = ControllerManager.DEFAULT_ICONS[index]
             name = config["gui"]["buttons"][index]
-        except:
+        except BaseException:
             pass
         return name
 

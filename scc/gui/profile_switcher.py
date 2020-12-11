@@ -15,7 +15,6 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
-
 from scc.gui.userdata_manager import UserDataManager
 from scc.paths import get_controller_icons_path
 from scc.paths import get_default_controller_icons_path
@@ -143,7 +142,7 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
                 self._model.insert(0, (name, giofile, None))
                 self._combo.set_active(0)
 
-        return giofile != None
+        return giofile is not None
 
     def set_allow_new(self, allow):
         """

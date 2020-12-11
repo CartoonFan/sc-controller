@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 import logging
 
 from scc.constants import HapticPos
@@ -105,6 +104,7 @@ class Controller(object):
 
 class HapticData(object):
     """ Simple container to hold haptic feedback settings """
+
 
     def __init__(self,
                  position,

@@ -10,7 +10,6 @@ import traceback
 
 from gi.repository import GObject
 from gi.repository import Gtk
-
 from scc.actions import Action
 from scc.actions import NoAction
 from scc.gui.action_editor import ActionEditor
@@ -354,7 +353,7 @@ class MenuEditor(Editor):
         elif self.original_type == MenuEditor.TYPE_INTERNAL:
             try:
                 del self.app.current.menus[self.original_id]
-            except:
+            except BaseException:
                 pass
         elif self.original_type == MenuEditor.TYPE_GLOBAL:
             try:
@@ -362,7 +361,7 @@ class MenuEditor(Editor):
                                     "%s.menu" % (self.original_id, ))
                 log.debug("Removing %s", path)
                 os.unlink(path)
-            except:
+            except BaseException:
                 pass
 
     def _generate_menudata(self):

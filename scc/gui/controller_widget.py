@@ -13,7 +13,6 @@ import os
 from gi.repository import Gdk
 from gi.repository import Gtk
 from gi.repository import Pango
-
 from scc.actions import Action
 from scc.actions import MultiAction
 from scc.constants import GYRO
@@ -161,7 +160,8 @@ class ControllerStick(ControllerWidget):
             self.app.show_editor(self.id)
 
     def on_cursor_motion(self, trash, event):
-        # self.icon.get_allocation().x + self.icon.get_allocation().width	# yields nonsense
+        # self.icon.get_allocation().x + self.icon.get_allocation().width #
+        # yields nonsense
         ix2 = 74
         # Check if cursor is placed on icon
         if event.x < ix2:
@@ -275,7 +275,7 @@ class ControllerGyro(ControllerWidget):
             rv = []
             for a in action.actions:
                 d = a.describe(self.ACTION_CONTEXT)
-                if not d in rv:
+                if d not in rv:
                     rv.append(d)
             self.label.set_label("\n".join(rv))
             return

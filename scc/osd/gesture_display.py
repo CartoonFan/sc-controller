@@ -8,7 +8,6 @@ import logging
 
 from gi.repository import GObject
 from gi.repository import Gtk
-
 from scc.config import Config
 from scc.constants import CPAD
 from scc.constants import LEFT

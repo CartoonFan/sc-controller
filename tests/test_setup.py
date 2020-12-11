@@ -7,7 +7,6 @@ class TestSetup(object):
     """
     Tests if SCC should be installable.
     """
-
     def test_packages(self):
         """
         Tests if every known Action is documentated in docs/actions.md

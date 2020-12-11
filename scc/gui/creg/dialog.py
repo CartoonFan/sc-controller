@@ -15,7 +15,6 @@ import evdev
 from gi.repository import GdkPixbuf
 from gi.repository import GLib
 from gi.repository import Gtk
-
 from scc.config import Config
 from scc.constants import SCButtons
 from scc.constants import STICK_PAD_MAX
@@ -50,7 +49,8 @@ class ControllerRegistration(Editor):
     UNASSIGNED_COLOR = "#FFFF0000"  # ARGB
     OBSERVE_COLORS = (
         App.OBSERVE_COLOR,
-        # Following just replaces 'full alpha' in ARGB with various alpha values
+        # Following just replaces 'full alpha' in ARGB with various alpha
+        # values
         App.OBSERVE_COLOR.replace("#FF", "#DF"),
         App.OBSERVE_COLOR.replace("#FF", "#BF"),
         App.OBSERVE_COLOR.replace("#FF", "#9F"),
@@ -379,7 +379,7 @@ class ControllerRegistration(Editor):
                                         buffRawData.get_end_iter(), True)
         try:
             os.makedirs(os.path.join(get_config_path(), "devices"))
-        except:
+        except BaseException:
             pass
 
         filename = self._evdevice.name.decode("utf-8").strip().replace("/", "")

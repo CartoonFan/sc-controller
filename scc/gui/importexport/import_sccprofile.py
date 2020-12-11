@@ -6,8 +6,6 @@ import tarfile
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
-
-from .export import Export
 from scc.gui.parser import GuiActionParser
 from scc.menu_data import MenuData
 from scc.profile import Encoder
@@ -18,6 +16,8 @@ from scc.special_actions import ShellCommandAction
 from scc.tools import _
 from scc.tools import get_menus_path
 from scc.tools import get_profiles_path
+
+from .export import Export
 
 log = logging.getLogger("IE.ImportSSCC")
 

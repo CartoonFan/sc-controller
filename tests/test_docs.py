@@ -8,7 +8,6 @@ class TestDocs(object):
 
     (one case on one environment so far)
     """
-
     def test_every_action_has_docs(self):
         """
         Tests if every known Action is documentated in docs/actions.md

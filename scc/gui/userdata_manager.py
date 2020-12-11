@@ -11,7 +11,6 @@ import logging
 import os
 
 from gi.repository import Gio
-
 from scc.gui.parser import GuiActionParser
 from scc.paths import get_default_menuicons_path
 from scc.paths import get_default_menus_path
@@ -116,7 +115,7 @@ class UserDataManager(object):
             log.warning("enumerate_children_finish for %s failed: %s",
                         pdir.get_path(), e)
             data[i] = None, []
-        if not None in data:
+        if None not in data:
             files = {}
             try:
                 for pdir, enumerator in data:

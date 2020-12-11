@@ -8,7 +8,6 @@ import logging
 
 from gi.repository import GLib
 from gi.repository import Gtk
-
 from scc.osd import OSDWindow
 from scc.special_actions import OSDAction
 

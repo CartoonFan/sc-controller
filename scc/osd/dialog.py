@@ -9,7 +9,6 @@ import sys
 
 from gi.repository import GdkX11
 from gi.repository import Gtk
-
 from scc.config import Config
 from scc.constants import DEFAULT
 from scc.gui.daemon_manager import DaemonManager
@@ -256,7 +255,7 @@ class Dialog(OSDWindow):
         try:
             start = self.items.index(self._selected)
             i = start + direction
-        except:
+        except BaseException:
             pass
         while True:
             if i == start:

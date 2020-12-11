@@ -40,7 +40,7 @@ class CustomActionComponent(AEComponent):
         try:
             txCustomAction = self.builder.get_object("txCustomAction")
             txCustomAction.set_monospace(True)
-        except:
+        except BaseException:
             pass
 
     def set_action(self, mode, action):

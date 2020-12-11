@@ -103,7 +103,7 @@ class EvdevController(Controller):
                 else:
                     sc = getattr(SCButtons, value)
                     self._button_map[keycode] = sc
-            except:
+            except BaseException:
                 pass
         for x, value in list(config.get("axes", {}).items()):
             code, axis = int(x), value.get("axis")
@@ -121,7 +121,7 @@ class EvdevController(Controller):
         self.poller.unregister(self.device.fd)
         try:
             self.device.ungrab()
-        except:
+        except BaseException:
             pass
         self.device.close()
 
@@ -312,7 +312,8 @@ class EvdevController(Controller):
         # TODO: This!
         pass
 
-    # def configure(self, idle_timeout=None, enable_gyros=None, led_level=None):
+    # def configure(self, idle_timeout=None, enable_gyros=None,
+    # led_level=None):
 
     def set_led_level(self, level):
         # TODO: This?

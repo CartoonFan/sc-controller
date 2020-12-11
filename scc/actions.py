@@ -55,7 +55,8 @@ from scc.uinput import Rels
 
 log = logging.getLogger("Actions")
 
-# Default delay after action, if used in macro. May be overriden using sleep() action.
+# Default delay after action, if used in macro. May be overriden using
+# sleep() action.
 DEFAULT_DELAY = 0.01
 MOUSE_BUTTONS = (
     Keys.BTN_LEFT,
@@ -444,7 +445,8 @@ class RangeOP(object):
             raise ValueError("Unknown operator: '%s'" % (op, ))
 
         if what == SCButtons.LT:
-            # TODO: Somehow unify names here, LT button is related to ltrig axis and so on
+            # TODO: Somehow unify names here, LT button is related to ltrig
+            # axis and so on
             self.axis_name = "ltrig"
         elif what == SCButtons.RT:
             self.axis_name = "rtrig"
@@ -513,7 +515,6 @@ class RangeOP(object):
 
 class HapticEnabledAction(object):
     """ Action that can generate haptic feedback """
-
     def __init__(self):
         self.haptic = None
 
@@ -529,7 +530,6 @@ class HapticEnabledAction(object):
 
 class OSDEnabledAction(object):
     """ Action that displays some sort of OSD when executed """
-
     def __init__(self):
         self.osd_enabled = False
 
@@ -803,7 +803,6 @@ class WholeHapticAction(HapticEnabledAction):
     finger moves over pad.
     MouseAction, CircularModifier, XYAction and BallModifier currently.
     """
-
     def __init__(self):
         HapticEnabledAction.__init__(self)
         self.reset_wholehaptic()
@@ -1027,12 +1026,14 @@ class AreaAction(Action, SpecialAction, OSDEnabledAction):
     def __init__(self, x1, y1, x2, y2):
         Action.__init__(self, x1, y1, x2, y2)
         OSDEnabledAction.__init__(self)
-        # Make sure that lower number is first - movement gets inverted otherwise
+        # Make sure that lower number is first - movement gets inverted
+        # otherwise
         if x2 < x1:
             x1, x2 = x2, x1
         if y2 < y1:
             y1, y2 = y2, y1
-        # orig_position will store mouse position to return to when finger leaves pad
+        # orig_position will store mouse position to return to when finger
+        # leaves pad
         self.orig_position = None
         self.coords = x1, y1, x2, y2
         # needs_query_screen is True if any coordinate has to be computed
@@ -1342,7 +1343,6 @@ class ResetGyroAction(Action):
 
 class MultichildAction(Action):
     """ Mixin with nice looking to_string() method """
-
     def compress(self):
         self.actions = [x.compress() for x in self.actions]
         return self
@@ -2577,19 +2577,22 @@ class HipfireAction(Action, HapticEnabledAction):
         self.fullpress_action.button_release(mapper)
 
     def trigger(self, mapper, position, old_position):
-        # Checks the current position of the trigger and apply the action based on three possible range: [None, PARTIALPRESS, FULLPRESS]
+        # Checks the current position of the trigger and apply the action based
+        # on three possible range: [None, PARTIALPRESS, FULLPRESS]
 
         # Checks full press first to prevent unnecessary conditional evaluation
         if position >= self.fullpress_level and old_position < self.fullpress_level:
             self.range = "FULLPRESS"
             # Entered now in full press range and activate fully pressed action
 
-            # Checks if it's in exclusive mode and if partial press is active before activating
+            # Checks if it's in exclusive mode and if partial press is active
+            # before activating
             if (self.mode == HIPFIRE_EXCLUSIVE) and self.partialpress_active:
                 return
 
             self._full_press(mapper)
-            # Cancel any pending timer to prevent partially pressed action from activating
+            # Cancel any pending timer to prevent partially pressed action from
+            # activating
             if self.waiting_task:
                 mapper.cancel_task(self.waiting_task)
                 self.waiting_task = None
@@ -2614,7 +2617,8 @@ class HipfireAction(Action, HapticEnabledAction):
 
             # Spliting conditional for treating the sensible mode
             # in this mode after reaching the partial press level, releasing the trigger a little will cause it to deactivate the action
-            # allowing fast repeatly presses without needing to release the trigger the all the way back
+            # allowing fast repeatly presses without needing to release the
+            # trigger the all the way back
             if self.mode == HIPFIRE_SENSIBLE:
                 if position > old_position and self.sensible_state == "READY":
                     # Create the new partial press point while pressing the trigger and the trigger is in its initial state

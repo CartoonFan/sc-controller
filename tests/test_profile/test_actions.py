@@ -1,11 +1,11 @@
 import inspect
 
-from . import parser
 from scc.actions import *
 from scc.modifiers import BallModifier
 from scc.uinput import Axes
 from scc.uinput import Keys
 from scc.uinput import Rels
+
 
 
 class TestActions(object):
@@ -108,9 +108,13 @@ class TestActions(object):
         """
         Tests if MouseAction is parsed correctly from json.
         """
-        if parser.from_json_data({"action": "mouse()"})._mouse_axis != None:
+        if parser.from_json_data({
+                "action": "mouse()"
+        })._mouse_axis is not None:
             raise AssertionError
-        if parser.from_json_data({"action": "trackpad()"})._mouse_axis != None:
+        if parser.from_json_data({
+                "action": "trackpad()"
+        })._mouse_axis is not None:
             raise AssertionError
         if (parser.from_json_data({
                 "action": "mouse(REL_WHEEL)"
