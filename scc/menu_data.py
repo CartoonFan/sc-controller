@@ -83,7 +83,8 @@ class MenuData(object):
             raise ValueError("Not items")
 
         # Rearange data into list of pair tuples
-        data = [(data[i * 2], data[(i * 2) + 1]) for i in range(0, len(data) / 2)]
+        data = [(data[i * 2], data[(i * 2) + 1])
+                for i in range(0, len(data) / 2)]
 
         # Parse data
         m = MenuData()

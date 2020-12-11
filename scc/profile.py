@@ -116,12 +116,14 @@ class Profile(object):
         else:
             self.description = data["_"]
         # Settings - Template
-        self.is_template = bool(data["is_template"]) if "is_template" in data else False
+        self.is_template = bool(
+            data["is_template"]) if "is_template" in data else False
 
         # Buttons
         self.buttons = {}
         for x in SCButtons:
-            self.buttons[x] = self.parser.from_json_data(data["buttons"], x.name)
+            self.buttons[x] = self.parser.from_json_data(
+                data["buttons"], x.name)
         # Pressing stick is interpreted as STICKPRESS button,
         # formely called just STICK
         if "STICK" in data["buttons"] and "STICKPRESS" not in data["buttons"]:
@@ -172,7 +174,8 @@ class Profile(object):
                             "Invalid character '%s' in menu id '%s'"
                             % (invalid_char, id)
                         )
-                self.menus[id] = MenuData.from_json_data(data["menus"][id], self.parser)
+                self.menus[id] = MenuData.from_json_data(
+                    data["menus"][id], self.parser)
 
         # Conversion
         self.original_version = version  # TODO: This is temporary
@@ -291,7 +294,8 @@ class Profile(object):
                         if feedback is not None:
                             n = FeedbackModifier(feedback, 4096, 16, n)
                         self.pads[p] = n
-                        log.info("Converted %s to %s", a.to_string(), n.to_string())
+                        log.info("Converted %s to %s",
+                                 a.to_string(), n.to_string())
         if from_version < 1.2:
             # Convert old trigger settings that were done with ButtonAction
             # to new TriggerAction
@@ -324,10 +328,12 @@ class Profile(object):
                         # Both buttons were set
                         n = MultiAction(
                             TriggerAction(
-                                numbers[0], numbers[1], ButtonAction(buttons[0])
+                                numbers[0], numbers[1], ButtonAction(
+                                    buttons[0])
                             ),
                             TriggerAction(
-                                numbers[1], TRIGGER_MAX, ButtonAction(buttons[1])
+                                numbers[1], TRIGGER_MAX, ButtonAction(
+                                    buttons[1])
                             ),
                         )
 

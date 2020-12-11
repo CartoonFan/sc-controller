@@ -46,7 +46,8 @@ class RadialMenu(Menu):
         self.items_with_icon = []
 
     def create_parent(self):
-        background = os.path.join(get_share_path(), "images", "radial-menu.svg")
+        background = os.path.join(
+            get_share_path(), "images", "radial-menu.svg")
         self.b = SVGWidget(background)
         self.b.connect("size-allocate", self.on_size_allocate)
         self.recolor()
@@ -57,7 +58,8 @@ class RadialMenu(Menu):
         source_colors = {}
         try:
             # Try to read json file and bail out if it fails
-            desc = os.path.join(get_share_path(), "images", "radial-menu.svg.json")
+            desc = os.path.join(get_share_path(), "images",
+                                "radial-menu.svg.json")
             source_colors = json.loads(open(desc, "r").read())["colors"]
         except Exception as e:
             log.warning("Failed to load keyboard description")
@@ -67,7 +69,8 @@ class RadialMenu(Menu):
 
         for k in RadialMenu.RECOLOR_BACKGROUNDS:
             if k in config["osd_colors"] and k in source_colors:
-                editor.recolor_background(source_colors[k], config["osd_colors"][k])
+                editor.recolor_background(
+                    source_colors[k], config["osd_colors"][k])
         editor.recolor_background(
             source_colors["background"], config["osd_colors"]["background"]
         )
@@ -75,7 +78,8 @@ class RadialMenu(Menu):
         for k in RadialMenu.RECOLOR_STROKES:
             if k in config["osd_colors"] and k in source_colors:
                 print("REC", source_colors[k], config["osd_colors"][k])
-                editor.recolor_strokes(source_colors[k], config["osd_colors"][k])
+                editor.recolor_strokes(
+                    source_colors[k], config["osd_colors"][k])
 
         editor.commit()
 
@@ -154,18 +158,22 @@ class RadialMenu(Menu):
                 )
             # Rotate arc to correct position
             i.a = (360.0 / float(len(self.items))) * float(index)
-            SVGEditor.rotate(i.widget, i.a, image_width * 0.5, image_width * 0.5)
+            SVGEditor.rotate(i.widget, i.a, image_width *
+                             0.5, image_width * 0.5)
             # Check if there is any icon
             icon_file, has_colors = (
-                find_icon(i.icon, False) if hasattr(i, "icon") else (None, False)
+                find_icon(i.icon, False) if hasattr(
+                    i, "icon") else (None, False)
             )
             if icon_file:
                 # Icon - hide all text and place MenuIcon widget on top of image
                 self.editor.remove_element(
                     SVGEditor.get_element(i.widget, "menuitem_text")
                 )
-                self.editor.remove_element(SVGEditor.get_element(i.widget, "line0"))
-                self.editor.remove_element(SVGEditor.get_element(i.widget, "line2"))
+                self.editor.remove_element(
+                    SVGEditor.get_element(i.widget, "line0"))
+                self.editor.remove_element(
+                    SVGEditor.get_element(i.widget, "line2"))
                 i.icon_widget = MenuIcon(icon_file, has_colors)
                 i.icon_widget.set_name("osd-radial-menu-icon")
                 i.icon_widget.set_size_request(
@@ -186,14 +194,18 @@ class RadialMenu(Menu):
                 label = i.label.split("\n")
                 first_line = 0
                 if len(label) == 1:
-                    self.editor.remove_element(SVGEditor.get_element(i.widget, "line0"))
-                    self.editor.remove_element(SVGEditor.get_element(i.widget, "line2"))
+                    self.editor.remove_element(
+                        SVGEditor.get_element(i.widget, "line0"))
+                    self.editor.remove_element(
+                        SVGEditor.get_element(i.widget, "line2"))
                     first_line = 1
                 elif len(label) == 2:
-                    self.editor.remove_element(SVGEditor.get_element(i.widget, "line0"))
+                    self.editor.remove_element(
+                        SVGEditor.get_element(i.widget, "line0"))
                     first_line = 1
                 for line in range(len(label)):
-                    l = SVGEditor.get_element(i.widget, "line%s" % (first_line + line,))
+                    l = SVGEditor.get_element(
+                        i.widget, "line%s" % (first_line + line,))
                     if l is None:
                         break
                     SVGEditor.set_text(l, label[line])
@@ -248,7 +260,8 @@ class RadialMenu(Menu):
             self._selected.icon_widget.set_name("osd-radial-menu-icon")
         self._selected = i
         if hasattr(self._selected, "icon_widget") and self._selected.icon_widget:
-            self._selected.icon_widget.set_name("osd-radial-menu-icon-selected")
+            self._selected.icon_widget.set_name(
+                "osd-radial-menu-icon-selected")
         self.b.hilight(
             {
                 "menuitem_" + i.id: "#" + self.config["osd_colors"]["menuitem_hilight"],

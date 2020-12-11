@@ -21,7 +21,8 @@ class TestActions(object):
                     continue
                 method_name = "test_%s" % (cls.COMMAND,)
                 if not hasattr(self, method_name):
-                    raise AssertionError("There is no test for %s" % (cls.COMMAND))
+                    raise AssertionError(
+                        "There is no test for %s" % (cls.COMMAND))
 
     def test_none(self):
         """

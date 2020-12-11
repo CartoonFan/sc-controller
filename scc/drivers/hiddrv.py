@@ -271,7 +271,8 @@ class HIDController(USBDevice, Controller):
     def _load_hid_descriptor(self, config, max_size, vid, pid, test_mode):
         hid_descriptor = HIDController.find_sys_devices_descriptor(vid, pid)
         if hid_descriptor is None:
-            hid_descriptor = self.handle.getRawDescriptor(LIBUSB_DT_REPORT, 0, 512)
+            hid_descriptor = self.handle.getRawDescriptor(
+                LIBUSB_DT_REPORT, 0, 512)
         open("report", "wb").write(b"".join([chr(x) for x in hid_descriptor]))
         self._build_hid_decoder(hid_descriptor, config, max_size)
         self._packet_size = self._decoder.packet_size
@@ -295,7 +296,8 @@ class HIDController(USBDevice, Controller):
                     # Not used here
                     pass
                 else:
-                    buttons[keycode] = self.button_to_bit(getattr(SCButtons, value))
+                    buttons[keycode] = self.button_to_bit(
+                        getattr(SCButtons, value))
         else:
             buttons = list(range(BUTTON_COUNT))
 
@@ -381,7 +383,8 @@ class HIDController(USBDevice, Controller):
                         for i in range(count):
                             if next_axis < AXIS_COUNT:
                                 log.debug(
-                                    "Found axis #%s at bit %s", int(next_axis), total
+                                    "Found axis #%s at bit %s", int(
+                                        next_axis), total
                                 )
                                 if config:
                                     target, axis_data = self._build_axis_maping(
@@ -408,10 +411,12 @@ class HIDController(USBDevice, Controller):
                     elif kind == GenericDesktopPage.Hatswitch:
                         if count * size != 4:
                             raise UnparsableDescriptor(
-                                "Invalid size for Hatswitch (%sb)" % (count * size,)
+                                "Invalid size for Hatswitch (%sb)" % (
+                                    count * size,)
                             )
                         if next_axis + 1 < AXIS_COUNT:
-                            log.debug("Found hat #%s at bit %s", int(next_axis), total)
+                            log.debug("Found hat #%s at bit %s",
+                                      int(next_axis), total)
                             if config:
                                 target, axis_data = self._build_axis_maping(
                                     next_axis, config, AxisMode.HATSWITCH
@@ -583,7 +588,8 @@ class HIDController(USBDevice, Controller):
     def input(self, endpoint, data):
         if _lib.decode(ctypes.byref(self._decoder), data):
             if self.mapper:
-                self.mapper.input(self, self._decoder.old_state, self._decoder.state)
+                self.mapper.input(
+                    self, self._decoder.old_state, self._decoder.state)
 
     def apply_config(self, config):
         # TODO: This?
@@ -645,7 +651,8 @@ class HIDDrv(object):
                 try:
                     config = json.loads(open(config_file, "r").read())
                 except Exception:
-                    log.warning("Ignoring file that cannot be parsed: %s", name)
+                    log.warning(
+                        "Ignoring file that cannot be parsed: %s", name)
                     continue
 
                 self.config_files[vid, pid] = config_file.decode("utf-8")

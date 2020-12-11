@@ -27,7 +27,8 @@ class AboutDialog(Editor):
             if scc.__file__.startswith(
                 pkg_resources.require("sccontroller")[0].location
             ):
-                app_ver = "v" + pkg_resources.require("sccontroller")[0].version
+                app_ver = "v" + \
+                    pkg_resources.require("sccontroller")[0].version
         except:
             # pkg_resources is not available or __version__ file missing
             # There is no reason to crash on this.

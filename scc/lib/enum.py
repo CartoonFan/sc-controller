@@ -36,8 +36,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 __all__ = ["Enum", "IntEnum", "unique"]
 
-import sys as _sys
 
+import sys as _sys
 version = 1, 1, 3
 
 pyver = float("%s.%s" % _sys.version_info[:2])
@@ -100,7 +100,8 @@ class _RouteClassAttributeToGetattr(object):
 def _is_descriptor(obj):
     """Returns True if obj is a descriptor, False otherwise."""
     return (
-        hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
+        hasattr(obj, "__get__") or hasattr(
+            obj, "__set__") or hasattr(obj, "__delete__")
     )
 
 
@@ -246,7 +247,8 @@ class EnumMeta(type):
         # the shortcut of storing members in the class dict
         base_attributes = {a for b in bases for a in b.__dict__}
         # create our new Enum type
-        enum_class = super(EnumMeta, metacls).__new__(metacls, cls, bases, classdict)
+        enum_class = super(EnumMeta, metacls).__new__(
+            metacls, cls, bases, classdict)
         enum_class._member_names_ = []  # names in random order
         if OrderedDict is not None:
             enum_class._member_map_ = OrderedDict()
@@ -368,7 +370,8 @@ class EnumMeta(type):
             # if the user defined their own __new__, save it before it gets
             # clobbered in case they subclass later
             if save_new:
-                setattr(enum_class, "__member_new__", enum_class.__dict__["__new__"])
+                setattr(enum_class, "__member_new__",
+                        enum_class.__dict__["__new__"])
             setattr(enum_class, "__new__", Enum.__dict__["__new__"])
         return enum_class
 
@@ -406,7 +409,8 @@ class EnumMeta(type):
         # nicer error message when someone tries to delete an attribute
         # (see issue19025).
         if attr in cls._member_map_:
-            raise AttributeError("%s: cannot delete Enum member." % cls.__name__)
+            raise AttributeError(
+                "%s: cannot delete Enum member." % cls.__name__)
         super(EnumMeta, cls).__delattr__(attr)
 
     def __dir__(self):
@@ -491,7 +495,8 @@ class EnumMeta(type):
                 try:
                     class_name = class_name.encode("ascii")
                 except UnicodeEncodeError:
-                    raise TypeError("%r is not representable in ASCII" % class_name)
+                    raise TypeError(
+                        "%r is not representable in ASCII" % class_name)
         metacls = cls.__class__
         if type is None:
             bases = (cls,)

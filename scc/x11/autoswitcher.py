@@ -34,7 +34,8 @@ class AutoSwitcher(object):
         self.lock = threading.Lock()
         self.thread = threading.Thread(target=self.connect_daemon)
         self.config = Config()
-        self.mapper = Mapper(None, None, keyboard=None, mouse=None, gamepad=None)
+        self.mapper = Mapper(None, None, keyboard=None,
+                             mouse=None, gamepad=None)
         self.mapper.set_special_actions_handler(self)
         self.enabled = False
         self.socket = None
@@ -157,8 +158,10 @@ class AutoSwitcher(object):
                     try:
                         if self.config["autoswitch_osd"]:
                             msg = _("Switched to profile") + " " + profile_name
-                            self.socket.send(b"OSD: " + msg.encode("utf-8") + b"\n")
-                        self.socket.send(b"Profile: " + path.encode("utf-8") + b"\n")
+                            self.socket.send(
+                                b"OSD: " + msg.encode("utf-8") + b"\n")
+                        self.socket.send(
+                            b"Profile: " + path.encode("utf-8") + b"\n")
                     except:
                         log.error("Socket write failed")
                         os._exit(2)
@@ -321,8 +324,10 @@ class AutoswitchOptsMenuGenerator(MenuGenerator):
                         profile = profile[0:-4]
                     if profile.endswith(".sccprofile"):
                         profile = profile[0:-11]
-                    AutoSwitcher.unassign(self.conds, self.title, self.wm_class, None)
-                    AutoSwitcher.assign(self.conds, self.title, self.wm_class, profile)
+                    AutoSwitcher.unassign(
+                        self.conds, self.title, self.wm_class, None)
+                    AutoSwitcher.assign(
+                        self.conds, self.title, self.wm_class, profile)
             cfg = Config()
             cfg["autoswitch"] = [
                 {"condition": c.encode(), "action": self.conds[c].to_string()}
@@ -357,7 +362,8 @@ class AutoswitchOptsMenuGenerator(MenuGenerator):
                 break
         if win:
             display_title = self.title or _("No Title")
-            rv.append(self.mk_item(None, _("Current Window: %s") % (self.title[0:25],)))
+            rv.append(self.mk_item(None, _("Current Window: %s") %
+                                   (self.title[0:25],)))
             if self.assigned_prof:
                 rv.append(
                     self.mk_item(

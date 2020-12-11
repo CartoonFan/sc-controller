@@ -60,7 +60,8 @@ class TestActions(object):
         ):
             raise AssertionError
         if not isinstance(
-            parser.from_json_data({"action": "hatright(ABS_X)"}), HatRightAction
+            parser.from_json_data(
+                {"action": "hatright(ABS_X)"}), HatRightAction
         ):
             raise AssertionError
 
@@ -125,7 +126,8 @@ class TestActions(object):
         Tests if AreaAction are parsed correctly from json.
         """
         if not isinstance(
-            parser.from_json_data({"action": "area(10, 10, 50, 50)"}), AreaAction
+            parser.from_json_data(
+                {"action": "area(10, 10, 50, 50)"}), AreaAction
         ):
             raise AssertionError
         if parser.from_json_data({"action": "area(10, 10, 50, 50)"}).coords != (
@@ -141,7 +143,8 @@ class TestActions(object):
         Tests if  RelAreaAction are parsed correctly from json.
         """
         if not isinstance(
-            parser.from_json_data({"action": "relarea(10, 10, 50, 50)"}), RelAreaAction
+            parser.from_json_data(
+                {"action": "relarea(10, 10, 50, 50)"}), RelAreaAction
         ):
             raise AssertionError
         if parser.from_json_data({"action": "relarea(10, 10, 50, 50)"}).coords != (
@@ -157,7 +160,8 @@ class TestActions(object):
         Tests if WinAreaAction are parsed correctly from json.
         """
         if not isinstance(
-            parser.from_json_data({"action": "winarea(10, 10, 50, 50)"}), WinAreaAction
+            parser.from_json_data(
+                {"action": "winarea(10, 10, 50, 50)"}), WinAreaAction
         ):
             raise AssertionError
         if parser.from_json_data({"action": "winarea(10, 10, 50, 50)"}).coords != (
@@ -204,7 +208,8 @@ class TestActions(object):
         if parser.from_json_data({"action": "gyro(ABS_X, ABS_Y)"}).axes[2] is not None:
             raise AssertionError
         if (
-            parser.from_json_data({"action": "gyro(ABS_X, ABS_Y, ABS_Z)"}).axes[2]
+            parser.from_json_data(
+                {"action": "gyro(ABS_X, ABS_Y, ABS_Z)"}).axes[2]
             != Axes.ABS_Z
         ):
             raise AssertionError
@@ -233,7 +238,8 @@ class TestActions(object):
         ):
             raise AssertionError
         if (
-            parser.from_json_data({"action": "gyroabs(ABS_X, ABS_Y, ABS_Z)"}).axes[2]
+            parser.from_json_data(
+                {"action": "gyroabs(ABS_X, ABS_Y, ABS_Z)"}).axes[2]
             != Axes.ABS_Z
         ):
             raise AssertionError
@@ -254,7 +260,8 @@ class TestActions(object):
         """
         # With only one button
         if (
-            parser.from_json_data({"action": "tilt( button(KEY_D) )"}).actions[0].button
+            parser.from_json_data(
+                {"action": "tilt( button(KEY_D) )"}).actions[0].button
             != Keys.KEY_D
         ):
             raise AssertionError
@@ -311,7 +318,8 @@ class TestActions(object):
         """
         Tests if MultiAction is parsed correctly from json.
         """
-        a = parser.from_json_data({"action": "button(KEY_X) and button(KEY_Y)"})
+        a = parser.from_json_data(
+            {"action": "button(KEY_X) and button(KEY_Y)"})
         if not isinstance(a, MultiAction):
             raise AssertionError
         if not isinstance(a.actions[0], ButtonAction):
@@ -428,7 +436,8 @@ class TestActions(object):
         """
         Tests if TriggerAction is parsed correctly from json.
         """
-        a = parser.from_json_data({"action": "button(KEY_X)", "levels": [10, 80]})
+        a = parser.from_json_data(
+            {"action": "button(KEY_X)", "levels": [10, 80]})
 
         if not isinstance(a, TriggerAction):
             raise AssertionError

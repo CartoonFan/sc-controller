@@ -82,7 +82,8 @@ class KeyboardImage(Gtk.DrawingArea):
         self._hilight = ()
         self._pressed = ()
         self._button_images = {}
-        self._help_areas = [self.get_limit("HELP_LEFT"), self.get_limit("HELP_RIGHT")]
+        self._help_areas = [self.get_limit(
+            "HELP_LEFT"), self.get_limit("HELP_RIGHT")]
         self._help_lines = ([], [])
 
         # TODO: It would be cool to use user-set font here, but cairo doesn't
@@ -252,7 +253,8 @@ class KeyboardImage(Gtk.DrawingArea):
                     x_bearing, y_bearing, width, trash, x_advance, y_advance = extents
                     ctx.save()
                     ctx.translate(
-                        xx - height + (height - iw) * 0.5, 1 + yy - (ascent + ih) * 0.5
+                        xx - height + (height - iw) * 0.5, 1 +
+                        yy - (ascent + ih) * 0.5
                     )
                     Gdk.cairo_set_source_pixbuf(ctx, image, 0, 0)
                     ctx.paint()
@@ -261,7 +263,8 @@ class KeyboardImage(Gtk.DrawingArea):
                 else:
                     ctx.save()
                     ctx.translate(
-                        1 + xx + (height - iw) * 0.5, 1 + yy - (ascent + ih) * 0.5
+                        1 + xx + (height - iw) * 0.5, 1 +
+                        yy - (ascent + ih) * 0.5
                     )
                     Gdk.cairo_set_source_pixbuf(ctx, image, 0, 0)
                     ctx.paint()
@@ -310,7 +313,8 @@ class Keyboard(OSDWindow, TimerManager):
         self.kbimage = os.path.join(get_config_path(), "keyboard.svg")
         if not os.path.exists(self.kbimage):
             # Prefer image in ~/.config/scc, but load default one as fallback
-            self.kbimage = os.path.join(get_share_path(), "images", "keyboard.svg")
+            self.kbimage = os.path.join(
+                get_share_path(), "images", "keyboard.svg")
 
         TimerManager.__init__(self)
         OSDWindow.__init__(self, "osd-keyboard")
@@ -521,10 +525,12 @@ class Keyboard(OSDWindow, TimerManager):
         ]
 
         # TODO: Single-handed mode for PS4 posponed
-        locks = [LEFT, RIGHT, STICK, "STICKPRESS"] + [b.name for b in SCButtons]
+        locks = [LEFT, RIGHT, STICK, "STICKPRESS"] + \
+            [b.name for b in SCButtons]
         if (c.get_flags() & ControllerFlags.HAS_CPAD) == 0:
             # Two pads, two hands
-            locks = [LEFT, RIGHT, STICK, "STICKPRESS"] + [b.name for b in SCButtons]
+            locks = [LEFT, RIGHT, STICK, "STICKPRESS"] + \
+                [b.name for b in SCButtons]
             self.cursors[CPAD].hide()
         else:
             # Single-handed mode
@@ -549,7 +555,8 @@ class Keyboard(OSDWindow, TimerManager):
                 if isinstance(
                     self.profile.triggers[i], scc.osd.osk_actions.OSKPressAction
                 ):
-                    self.profile.triggers[i] = scc.osd.osk_actions.OSKPressAction(CPAD)
+                    self.profile.triggers[i] = scc.osd.osk_actions.OSKPressAction(
+                        CPAD)
 
         self._controller = c
         c.lock(success, self.on_failed_to_lock, *locks)
@@ -684,7 +691,8 @@ class Keyboard(OSDWindow, TimerManager):
                     if button.name.startswith("KEY_") and hasattr(Keys, button.name):
                         key = getattr(Keys, button.name)
                         if self._pressed[cursor] is not None:
-                            self.mapper.keyboard.releaseEvent([self._pressed[cursor]])
+                            self.mapper.keyboard.releaseEvent(
+                                [self._pressed[cursor]])
                         self.mapper.keyboard.pressEvent([key])
                         self._pressed[cursor] = key
                         self._pressed_areas[cursor] = button

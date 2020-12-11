@@ -71,7 +71,8 @@ def init_logging(prefix="", suffix=""):
 
     def _log(self, level, msg, args, exc_info=None, extra=None):
         args = tuple(
-            [(str(c).decode("utf-8") if isinstance(c, str) else c) for c in args]
+            [(str(c).decode("utf-8") if isinstance(c, str) else c)
+             for c in args]
         )
         msg = msg if isinstance(msg, str) else str(msg).decode("utf-8")
         old_log(self, level, msg, args, exc_info, extra)
@@ -151,7 +152,8 @@ def shjoin(lst):
     """ Joins list into shell-escaped, utf-8 encoded string """
     s = [str(x).encode("utf-8") for x in lst]
     #   - escape quotes
-    s = [x.encode("string_escape") if (b'"' in x or b"'" in x) else x for x in s]
+    s = [x.encode("string_escape") if (
+        b'"' in x or b"'" in x) else x for x in s]
     #   - quote strings with spaces
     s = [b"'%s'" % (x,) if b" " in x else x for x in s]
     return b" ".join(s)
@@ -361,10 +363,12 @@ def find_library(libname):
     for extension in so_extensions:
         search_paths += [
             os.path.abspath(
-                os.path.normpath(os.path.join(base_path, "..", libname + extension))
+                os.path.normpath(os.path.join(
+                    base_path, "..", libname + extension))
             ),
             os.path.abspath(
-                os.path.normpath(os.path.join(base_path, "../..", libname + extension))
+                os.path.normpath(os.path.join(
+                    base_path, "../..", libname + extension))
             ),
         ]
 
@@ -375,7 +379,8 @@ def find_library(libname):
 
     if not lib:
         raise OSError(
-            "Cant find %s.so. searched at:\n %s" % (libname, "\n".join(search_paths))
+            "Cant find %s.so. searched at:\n %s" % (
+                libname, "\n".join(search_paths))
         )
     return ctypes.CDLL(lib)
 

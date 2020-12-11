@@ -29,5 +29,6 @@ class TestSetup(object):
             if ispkg:
                 if modname not in packages:
                     raise AssertionError(
-                        "Package '%s' is not being installed by setup.py" % (modname,)
+                        "Package '%s' is not being installed by setup.py" % (
+                            modname,)
                     )

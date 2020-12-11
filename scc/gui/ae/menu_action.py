@@ -78,8 +78,10 @@ class MenuActionCofC(UserDataManager):
         if isinstance(action, PositionModifier):
             # Load menu position modifier, if used
             x, y = action.position
-            self.builder.get_object("cbMenuPosX").set_active(0 if x >= 0 else 1)
-            self.builder.get_object("cbMenuPosY").set_active(0 if y >= 0 else 1)
+            self.builder.get_object(
+                "cbMenuPosX").set_active(0 if x >= 0 else 1)
+            self.builder.get_object(
+                "cbMenuPosY").set_active(0 if y >= 0 else 1)
             self.builder.get_object("spMenuPosX").set_value(abs(x))
             self.builder.get_object("spMenuPosY").set_value(abs(y))
             action = action.action
@@ -97,7 +99,8 @@ class MenuActionCofC(UserDataManager):
         cbConfirmWith = self.builder.get_object("cbConfirmWith")
         cbCancelWith = self.builder.get_object("cbCancelWith")
         cbMenuAutoConfirm = self.builder.get_object("cbMenuAutoConfirm")
-        cbMenuConfirmWithClick = self.builder.get_object("cbMenuConfirmWithClick")
+        cbMenuConfirmWithClick = self.builder.get_object(
+            "cbMenuConfirmWithClick")
         cbMenuAutoCancel = self.builder.get_object("cbMenuAutoCancel")
         if cbControlWith:
             self.set_cb(cbControlWith, nameof(action.control_with), 1)
@@ -164,7 +167,8 @@ class MenuActionCofC(UserDataManager):
     def on_cbMenus_button_press_event(self, trash, event):
         if event.button == 3:
             mnuMenu = self.builder.get_object("mnuMenu")
-            mnuMenu.popup(None, None, None, None, 3, Gtk.get_current_event_time())
+            mnuMenu.popup(None, None, None, None, 3,
+                          Gtk.get_current_event_time())
 
     def on_mnuMenuNew_activate(self, *a):
         self.on_new_menu_selected()
@@ -208,7 +212,8 @@ class MenuActionCofC(UserDataManager):
 
     def on_menus_loaded(self, menus):
         cb = self.builder.get_object("cbMenus")
-        cb.set_row_separator_func(lambda model, iter: model.get_value(iter, 1) is None)
+        cb.set_row_separator_func(
+            lambda model, iter: model.get_value(iter, 1) is None)
         model = cb.get_model()
         model.clear()
         i, current_index = 0, 0
@@ -267,7 +272,8 @@ class MenuActionCofC(UserDataManager):
         'cbMenuAutoCancel' are all present, this method prevents them from
         being checked in nonsensical way.
         """
-        cbMenuConfirmWithClick = self.builder.get_object("cbMenuConfirmWithClick")
+        cbMenuConfirmWithClick = self.builder.get_object(
+            "cbMenuConfirmWithClick")
         cbMenuAutoConfirm = self.builder.get_object("cbMenuAutoConfirm")
         cbMenuAutoCancel = self.builder.get_object("cbMenuAutoCancel")
         if widget.get_active():
@@ -287,7 +293,8 @@ class MenuActionCofC(UserDataManager):
         """ Called when user changes any menu settings """
         if self._recursing:
             return
-        cbMenuConfirmWithClick = self.builder.get_object("cbMenuConfirmWithClick")
+        cbMenuConfirmWithClick = self.builder.get_object(
+            "cbMenuConfirmWithClick")
         cbMenuAutoConfirm = self.builder.get_object("cbMenuAutoConfirm")
         cbMenuAutoCancel = self.builder.get_object("cbMenuAutoCancel")
         lblControlWith = self.builder.get_object("lblControlWith")

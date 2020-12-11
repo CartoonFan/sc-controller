@@ -163,7 +163,8 @@ class ButtonsComponent(AEComponent, Chooser):
         Same as above, but adds another key to action
         """
         kg = KeyGrabber(self.app)
-        kg.grab(self.editor.window, self.editor._action, self.on_additional_key_grabbed)
+        kg.grab(self.editor.window, self.editor._action,
+                self.on_additional_key_grabbed)
 
     def on_cbToggle_toggled(self, cbToggle):
         cbRepeat = self.builder.get_object("cbRepeat")

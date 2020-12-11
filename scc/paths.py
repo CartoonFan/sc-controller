@@ -10,7 +10,8 @@ python can't handle.
 All this is needed since I want to have entire thing installable, runnable
 from source tarball *and* debugable in working folder.
 """
-import os, sys
+import os
+import sys
 
 
 def get_config_path():

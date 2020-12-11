@@ -51,7 +51,8 @@ class OSKBindingEditor(Editor, BindingEditor):
             ae.set_input(id, self.current.buttons[id], mode=Action.AC_OSK)
             ae.show(self.window)
         elif id in TRIGGERS:
-            ae = self.choose_editor(self.current.triggers[id], _("%s Trigger") % (id,))
+            ae = self.choose_editor(
+                self.current.triggers[id], _("%s Trigger") % (id,))
             ae.set_input(id, self.current.triggers[id], mode=Action.AC_OSK)
             ae.show(self.window)
 
@@ -65,7 +66,8 @@ class OSKBindingEditor(Editor, BindingEditor):
         Calls on_profile_saved when done
         """
         self.current.save(
-            os.path.join(get_profiles_path(), OSDKeyboard.OSK_PROF_NAME + ".sccprofile")
+            os.path.join(get_profiles_path(),
+                         OSDKeyboard.OSK_PROF_NAME + ".sccprofile")
         )
         # OSK reloads profile when daemon reports configuration change
         self.app.dm.reconfigure()
