@@ -36,9 +36,7 @@ class RadialMenu(Menu):
     MIN_DISTANCE = 3000  # Minimal cursor distance from center (in px^2)
     ICON_SIZE = 96
 
-    def __init__(
-        self,
-    ):
+    def __init__(self, ):
         Menu.__init__(self, "osd-radial-menu")
         self.angle = 0
         self.rotation = 0
@@ -46,7 +44,8 @@ class RadialMenu(Menu):
         self.items_with_icon = []
 
     def create_parent(self):
-        background = os.path.join(get_share_path(), "images", "radial-menu.svg")
+        background = os.path.join(get_share_path(), "images",
+                                  "radial-menu.svg")
         self.b = SVGWidget(background)
         self.b.connect("size-allocate", self.on_size_allocate)
         self.recolor()
@@ -57,7 +56,8 @@ class RadialMenu(Menu):
         source_colors = {}
         try:
             # Try to read json file and bail out if it fails
-            desc = os.path.join(get_share_path(), "images", "radial-menu.svg.json")
+            desc = os.path.join(get_share_path(), "images",
+                                "radial-menu.svg.json")
             source_colors = json.loads(open(desc, "r").read())["colors"]
         except Exception as e:
             log.warning("Failed to load keyboard description")
@@ -67,15 +67,16 @@ class RadialMenu(Menu):
 
         for k in RadialMenu.RECOLOR_BACKGROUNDS:
             if k in config["osd_colors"] and k in source_colors:
-                editor.recolor_background(source_colors[k], config["osd_colors"][k])
-        editor.recolor_background(
-            source_colors["background"], config["osd_colors"]["background"]
-        )
+                editor.recolor_background(source_colors[k],
+                                          config["osd_colors"][k])
+        editor.recolor_background(source_colors["background"],
+                                  config["osd_colors"]["background"])
 
         for k in RadialMenu.RECOLOR_STROKES:
             if k in config["osd_colors"] and k in source_colors:
                 print("REC", source_colors[k], config["osd_colors"][k])
-                editor.recolor_strokes(source_colors[k], config["osd_colors"][k])
+                editor.recolor_strokes(source_colors[k],
+                                       config["osd_colors"][k])
 
         editor.commit()
 
@@ -155,28 +156,29 @@ class RadialMenu(Menu):
                 )
             # Rotate arc to correct position
             i.a = (360.0 / float(len(self.items))) * float(index)
-            SVGEditor.rotate(i.widget, i.a, image_width * 0.5, image_width * 0.5)
+            SVGEditor.rotate(i.widget, i.a, image_width * 0.5,
+                             image_width * 0.5)
             # Check if there is any icon
-            icon_file, has_colors = (
-                find_icon(i.icon, False) if hasattr(i, "icon") else (None, False)
-            )
+            icon_file, has_colors = (find_icon(i.icon, False) if hasattr(
+                i, "icon") else (None, False))
             if icon_file:
                 # Icon - hide all text and place MenuIcon widget on top of image
                 self.editor.remove_element(
-                    SVGEditor.get_element(i.widget, "menuitem_text")
-                )
-                self.editor.remove_element(SVGEditor.get_element(i.widget, "line0"))
-                self.editor.remove_element(SVGEditor.get_element(i.widget, "line2"))
+                    SVGEditor.get_element(i.widget, "menuitem_text"))
+                self.editor.remove_element(
+                    SVGEditor.get_element(i.widget, "line0"))
+                self.editor.remove_element(
+                    SVGEditor.get_element(i.widget, "line2"))
                 i.icon_widget = MenuIcon(icon_file, has_colors)
                 i.icon_widget.set_name("osd-radial-menu-icon")
-                i.icon_widget.set_size_request(
-                    self.ICON_SIZE * self.scale, self.ICON_SIZE * self.scale
-                )
+                i.icon_widget.set_size_request(self.ICON_SIZE * self.scale,
+                                               self.ICON_SIZE * self.scale)
                 self.b.get_parent().put(i.icon_widget, 200, 200)
                 self.items_with_icon.append(i)
             else:
                 # No icon - rotate text in arc to other direction to keep it horisontal
-                if SVGEditor.get_element(i.widget, "menuitem_text") is not None:
+                if SVGEditor.get_element(i.widget,
+                                         "menuitem_text") is not None:
                     l = SVGEditor.get_element(i.widget, "menuitem_text")
                     l.attrib["id"] = "text_" + i.id
                     l.attrib["transform"] = "%s rotate(%s)" % (
@@ -187,14 +189,18 @@ class RadialMenu(Menu):
                 label = i.label.split("\n")
                 first_line = 0
                 if len(label) == 1:
-                    self.editor.remove_element(SVGEditor.get_element(i.widget, "line0"))
-                    self.editor.remove_element(SVGEditor.get_element(i.widget, "line2"))
+                    self.editor.remove_element(
+                        SVGEditor.get_element(i.widget, "line0"))
+                    self.editor.remove_element(
+                        SVGEditor.get_element(i.widget, "line2"))
                     first_line = 1
                 elif len(label) == 2:
-                    self.editor.remove_element(SVGEditor.get_element(i.widget, "line0"))
+                    self.editor.remove_element(
+                        SVGEditor.get_element(i.widget, "line0"))
                     first_line = 1
                 for line in range(0, len(label)):
-                    l = SVGEditor.get_element(i.widget, "line%s" % (first_line + line,))
+                    l = SVGEditor.get_element(i.widget,
+                                              "line%s" % (first_line + line, ))
                     if l is None:
                         break
                     SVGEditor.set_text(l, label[line])
@@ -234,9 +240,8 @@ class RadialMenu(Menu):
         X.flush_gc(self.xdisplay, gc)
         X.flush(self.xdisplay)
 
-        X.shape_combine_mask(
-            self.xdisplay, win, X.SHAPE_BOUNDING, 0, 0, pixmap, X.SHAPE_SET
-        )
+        X.shape_combine_mask(self.xdisplay, win, X.SHAPE_BOUNDING, 0, 0,
+                             pixmap, X.SHAPE_SET)
 
         X.flush(self.xdisplay)
 
@@ -247,16 +252,16 @@ class RadialMenu(Menu):
             if self._selected.icon_widget:
                 self._selected.icon_widget.set_name("osd-radial-menu-icon")
         self._selected = i
-        if hasattr(self._selected, "icon_widget") and self._selected.icon_widget:
-            self._selected.icon_widget.set_name("osd-radial-menu-icon-selected")
-        self.b.hilight(
-            {
-                "menuitem_" + i.id: "#" + self.config["osd_colors"]["menuitem_hilight"],
-                "text_"
-                + i.id: "#"
-                + self.config["osd_colors"]["menuitem_hilight_text"],
-            }
-        )
+        if hasattr(self._selected,
+                   "icon_widget") and self._selected.icon_widget:
+            self._selected.icon_widget.set_name(
+                "osd-radial-menu-icon-selected")
+        self.b.hilight({
+            "menuitem_" + i.id:
+            "#" + self.config["osd_colors"]["menuitem_hilight"],
+            "text_" + i.id:
+            "#" + self.config["osd_colors"]["menuitem_hilight_text"],
+        })
 
     def on_event(self, daemon, what, data):
         if self._submenu:
@@ -274,11 +279,9 @@ class RadialMenu(Menu):
                 x, y = rx, ry
 
             max_w = self.get_allocation().width * self.scale - (
-                self.cursor.get_allocation().width * 1.0
-            )
+                self.cursor.get_allocation().width * 1.0)
             max_h = self.get_allocation().height * self.scale - (
-                self.cursor.get_allocation().height * 1.0
-            )
+                self.cursor.get_allocation().height * 1.0)
             cx = ((x * 0.75 / (STICK_PAD_MAX * 2.0)) + 0.5) * max_w
             cy = (0.5 - (y * 0.75 / (STICK_PAD_MAX * 2.0))) * max_h
 
