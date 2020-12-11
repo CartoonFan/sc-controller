@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 import os
 
 from scc.actions import Action
@@ -155,13 +154,8 @@ class Box(object):
                 self.height + lh + self.SPACING,
             )
             self.icount = max(self.icount, len(line.icons))
-<<<<<<< HEAD
         self.width += 2 * self.PADDING + self.icount * (gen.line_height +
                                                         self.SPACING)
-=======
-        self.width += 2 * self.PADDING + self.icount * \
-            (gen.line_height + self.SPACING)
->>>>>>> CartoonFan-restyle-1
         self.height = max(self.height, self.min_height)
 
         anchor_x, anchor_y = self.anchor
