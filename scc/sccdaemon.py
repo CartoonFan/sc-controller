@@ -456,7 +456,7 @@ class SCCDaemon(Daemon):
                 m.set_xdisplay(self.xdisplay)
             if not self.alone:
                 self.subprocs.append(Subprocess("scc-osd-daemon", True))
-                if len(Config()["autoswitch"]):
+                if Config()["autoswitch"]:
                     # Start scc-autoswitch-daemon only if there are some switch rules defined
                     self.subprocs.append(
                         Subprocess("scc-autoswitch-daemon", True))

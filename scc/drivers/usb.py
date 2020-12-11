@@ -104,11 +104,11 @@ class USBDevice(object):
 
     def flush(self):
         """ Flushes all prepared control messages to the device """
-        while len(self._cmsg):
+        while self._cmsg:
             msg = self._cmsg.pop()
             self.handle.controlWrite(*msg)
 
-        while len(self._rmsg):
+        while self._rmsg:
             msg, index, size, callback = self._rmsg.pop()
             self.handle.controlWrite(*msg)
             data = self.handle.controlRead(
@@ -198,7 +198,7 @@ class USBDriver(object):
 
     def on_exit(self, *a):
         """ Closes all devices and unclaims all interfaces """
-        if len(self._devices):
+        if self._devices:
             log.debug("Releasing devices...")
             to_release, self._devices, self._syspaths = (
                 list(self._devices.values()),
@@ -331,7 +331,7 @@ class USBDriver(object):
                 log.error("USB device %s disconnected durring flush", d)
                 d.close()
                 break
-        if len(self._retry_devices):
+        if self._retry_devices:
             if time.time() > self._retry_devices_timer:
                 self._retry_devices_timer = time.time() + 5.0
                 lst, self._retry_devices = self._retry_devices, []
