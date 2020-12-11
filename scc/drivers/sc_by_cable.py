@@ -9,13 +9,14 @@ Shares a lot of classes with sc_dongle.py
 import logging
 import struct
 
+from scc.drivers.usb import register_hotplug_device
+from scc.drivers.usb import USBDevice
+from scc.lib.usb1 import USBError
+
 from .sc_dongle import ControllerInput
 from .sc_dongle import SCController
 from .sc_dongle import SCStatus
 from .sc_dongle import TUP_FORMAT
-from scc.drivers.usb import register_hotplug_device
-from scc.drivers.usb import USBDevice
-from scc.lib.usb1 import USBError
 
 VENDOR_ID = 0x28DE
 PRODUCT_ID = 0x1102
@@ -28,7 +29,6 @@ log = logging.getLogger("SCCable")
 
 def init(daemon, config):
     """ Registers hotplug callback for controller dongle """
-
     def cb(device, handle):
         return SCByCable(device, handle, daemon)
 
@@ -61,11 +61,11 @@ class SCByCable(USBDevice, SCController):
         pass
 
     def __repr__(self):
-        return "<SCByCable %s>" % (self.get_id(),)
+        return "<SCByCable %s>" % (self.get_id(), )
 
     def on_serial_got(self):
         log.debug("Got wired SC with serial %s", self._serial)
-        self._id = "sc%s" % (self._serial,)
+        self._id = "sc%s" % (self._serial, )
         self.set_input_interrupt(ENDPOINT, 64, self._wait_input)
 
     def _wait_input(self, endpoint, data):
@@ -90,7 +90,8 @@ class SCByCable(USBDevice, SCController):
                 self.flush()
             except USBError as e:
                 log.exception(e)
-                log.error("Error while communicating with device, baling out...")
+                log.error(
+                    "Error while communicating with device, baling out...")
                 self.force_restart()
 
     def close(self):

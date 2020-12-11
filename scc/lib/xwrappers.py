@@ -43,7 +43,7 @@ def _load_lib(*names):
             return CDLL(l)
         except OSError:
             pass
-    raise OSError("Failed to load %s, library not found" % (names[0],))
+    raise OSError("Failed to load %s, library not found" % (names[0], ))
 
 
 libXFixes = _load_lib("libXfixes.so", "libXfixes.so.3")
@@ -148,15 +148,15 @@ free.argtypes = [c_void_p]
 
 create_region = libXFixes.XFixesCreateRegion
 create_region.__doc__ = (
-    "Creates rectanglular region for use with set_window_shape_region"
-)
+    "Creates rectanglular region for use with set_window_shape_region")
 create_region.argtypes = [c_void_p, POINTER(XRectangle), c_int]
 create_region.restype = XserverRegion
 
 set_window_shape_region = libXFixes.XFixesSetWindowShapeRegion
 set_window_shape_region.__doc__ = "Sets region in which window accepts inputs"
 set_window_shape_region.argtypes = [
-    c_void_p, XID, c_int, c_int, c_int, XserverRegion]
+    c_void_p, XID, c_int, c_int, c_int, XserverRegion
+]
 
 destroy_region = libXFixes.XFixesDestroyRegion
 destroy_region.__doc__ = "Frees region created by create_region"
@@ -172,15 +172,8 @@ flush.argtypes = [c_void_p]
 warp_pointer = libX11.XWarpPointer
 warp_pointer.__doc__ = "Very, very, V*E*R*Y complicated shit used to move cursor"
 warp_pointer.argtypes = [
-    c_void_p,
-    XID,
-    XID,
-    c_int,
-    c_int,
-    c_int,
-    c_int,
-    c_int,
-    c_int]
+    c_void_p, XID, XID, c_int, c_int, c_int, c_int, c_int, c_int
+]
 
 query_pointer = libX11.XQueryPointer
 query_pointer.__doc__ = "Returns a lot of nonsense along with mouse cursor position"
@@ -274,13 +267,8 @@ create_pixmap_from_bitmap.restype = Pixmap
 
 write_bitmap = libX11.XWriteBitmapFile
 write_bitmap.argtypes = [
-    c_void_p,
-    c_char_p,
-    Pixmap,
-    c_uint,
-    c_uint,
-    c_int,
-    c_int]
+    c_void_p, c_char_p, Pixmap, c_uint, c_uint, c_int, c_int
+]
 write_bitmap.restype = c_int
 
 free_pixmap = libX11.XFreePixmap
@@ -306,27 +294,13 @@ fill_rectangle.argtypes = [c_void_p, XID, GC, c_int, c_int, c_uint, c_uint]
 
 draw_arc = libX11.XDrawArc
 draw_arc.argtypes = [
-    c_void_p,
-    Pixmap,
-    GC,
-    c_int,
-    c_int,
-    c_uint,
-    c_uint,
-    c_int,
-    c_int]
+    c_void_p, Pixmap, GC, c_int, c_int, c_uint, c_uint, c_int, c_int
+]
 
 fill_arc = libX11.XFillArc
 fill_arc.argtypes = [
-    c_void_p,
-    Pixmap,
-    GC,
-    c_int,
-    c_int,
-    c_uint,
-    c_uint,
-    c_int,
-    c_int]
+    c_void_p, Pixmap, GC, c_int, c_int, c_uint, c_uint, c_int, c_int
+]
 
 set_foreground = libX11.XSetForeground
 set_foreground.__doc__ = "Sets foreground color for drawing on graphics context"
@@ -339,13 +313,8 @@ set_background.argtypes = set_foreground.argtypes
 shape_combine_mask = libXext.XShapeCombineMask
 shape_combine_mask.__doc__ = "Sets 1-bit transparency mask for window"
 shape_combine_mask.argtypes = [
-    c_void_p,
-    XID,
-    c_int,
-    c_int,
-    c_int,
-    Pixmap,
-    c_int]
+    c_void_p, XID, c_int, c_int, c_int, Pixmap, c_int
+]
 
 # Wrapped functions
 _xkb_get_state = libX11.XkbGetState
@@ -379,11 +348,8 @@ def get_window_geometry(dpy, win):
     get_window_attributes(dpy, win, byref(attrs))
     x, y = c_int(), c_int()
     trash = XID()
-    if translate_coordinates(
-            dpy, win, get_default_root_window(dpy),
-            0, 0, byref(x),
-            byref(y),
-            byref(trash)):
+    if translate_coordinates(dpy, win, get_default_root_window(dpy), 0, 0,
+                             byref(x), byref(y), byref(trash)):
         return x.value, y.value, attrs.width, attrs.height
     # translate_coordinates failed
     return attrs.x, attrs.y, attrs.width, attrs.height
@@ -441,18 +407,18 @@ def get_window_prop(dpy, window, prop_name, max_size=2):
     prop = c_void_p()
 
     if SUCCESS == get_window_property(
-        dpy,
-        window,
-        prop_atom,
-        0,
-        max_size,
-        False,
-        ANYPROPERTYTYPE,
-        byref(type_return),
-        byref(format_return),
-        byref(nitems),
-        byref(bytes_after),
-        byref(prop),
+            dpy,
+            window,
+            prop_atom,
+            0,
+            max_size,
+            False,
+            ANYPROPERTYTYPE,
+            byref(type_return),
+            byref(format_return),
+            byref(nitems),
+            byref(bytes_after),
+            byref(prop),
     ):
         return nitems.value, prop
     return -1, None
@@ -463,9 +429,8 @@ def get_current_window(dpy):
     Returns active window or root window if there is no active.
     """
     # Try using WM-provided info first
-    trash, prop = get_window_prop(
-        dpy, get_default_root_window(dpy), "_NET_ACTIVE_WINDOW"
-    )
+    trash, prop = get_window_prop(dpy, get_default_root_window(dpy),
+                                  "_NET_ACTIVE_WINDOW")
     if prop is not None:
         rv = cast(prop, POINTER(Atom)).contents.value
         free(prop)

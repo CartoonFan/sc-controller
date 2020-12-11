@@ -17,7 +17,6 @@ class AxisData(object):
     (Almost) dumb container.
     Stores position, center and limits for single axis.
     """
-
     def __init__(self, name, xy, min=STICK_PAD_MAX, max=STICK_PAD_MIN):
         self.name = name
         self.area = name.split("_")[0].upper()
@@ -39,7 +38,7 @@ class AxisData(object):
         self.max = STICK_PAD_MIN
 
     def __repr__(self):
-        return "<Axis data '%s'>" % (self.name,)
+        return "<Axis data '%s'>" % (self.name, )
 
     def set_position(self, value):
         """
@@ -73,7 +72,6 @@ class DPadEmuData(object):
 
     This class stores mapping of one button to one half of axis.
     """
-
     def __init__(self, axis_data, positive):
         self.axis_data = axis_data
         self.positive = positive

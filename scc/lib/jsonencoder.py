@@ -37,7 +37,6 @@ FLOAT_REPR = repr
 
 def encode_basestring(s):
     """Return a JSON representation of a Python string"""
-
     def replace(match):
         return ESCAPE_DCT[match.group(0)]
 
@@ -268,16 +267,13 @@ class JSONEncoder(object):
 
             if not allow_nan:
                 raise ValueError(
-                    "Out of range float values are not JSON compliant: " + repr(o))
+                    "Out of range float values are not JSON compliant: " +
+                    repr(o))
 
             return text
 
-        if (
-            _one_shot
-            and c_make_encoder is not None
-            and self.indent is None
-            and not self.sort_keys
-        ):
+        if (_one_shot and c_make_encoder is not None and self.indent is None
+                and not self.sort_keys):
             _iterencode = c_make_encoder(
                 markers,
                 self.default,

@@ -10,7 +10,6 @@ awfull with larger number of items.
 import logging
 
 from gi.repository import Gtk
-
 from scc.constants import STICK_PAD_MIN
 from scc.menu_data import Separator
 from scc.menu_data import Submenu

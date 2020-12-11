@@ -8,7 +8,6 @@ import logging
 
 from gi.repository import GLib
 from gi.repository import Gtk
-
 from scc.osd import OSDWindow
 from scc.special_actions import OSDAction
 
@@ -26,7 +25,7 @@ class Message(OSDWindow):
 
     def show(self):
         self.l = Gtk.Label()
-        self.l.set_name("osd-label-%s" % (self.size,))
+        self.l.set_name("osd-label-%s" % (self.size, ))
         self.l.set_label(self.text)
 
         self.add(self.l)

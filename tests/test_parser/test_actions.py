@@ -1,11 +1,12 @@
 import inspect
 
-from . import _parses_as_itself
-from . import parser
 from scc.actions import *
 from scc.uinput import Axes
 from scc.uinput import Keys
 from scc.uinput import Rels
+
+from . import _parses_as_itself
+from . import parser
 
 
 class TestActions(object):
@@ -15,15 +16,14 @@ class TestActions(object):
         """
         for cls in list(Action.ALL.values()):
             if "/actions.py" in inspect.getfile(cls):
-                if HatAction in cls.__bases__ or cls in (NoAction,):
+                if HatAction in cls.__bases__ or cls in (NoAction, ):
                     # Skip over some hard-coded cases, these have
                     # tests merged together under weird names
                     continue
-                method_name = "test_%s" % (cls.COMMAND,)
+                method_name = "test_%s" % (cls.COMMAND, )
                 if not hasattr(self, method_name):
-                    raise AssertionError(
-                        "There is no test for %s" %
-                        (cls.COMMAND))
+                    raise AssertionError("There is no test for %s" %
+                                         (cls.COMMAND))
 
     def test_none(self):
         """
@@ -138,11 +138,8 @@ class TestActions(object):
             raise AssertionError
         if not _parses_as_itself(GyroAction(Axes.ABS_X, Axes.ABS_Y)):
             raise AssertionError
-        if not _parses_as_itself(
-            GyroAction(
-                Axes.ABS_X,
-                Axes.ABS_Y,
-                Axes.ABS_Z)):
+        if not _parses_as_itself(GyroAction(Axes.ABS_X, Axes.ABS_Y,
+                                            Axes.ABS_Z)):
             raise AssertionError
 
     def test_gyroabs(self):
@@ -155,10 +152,7 @@ class TestActions(object):
         if not _parses_as_itself(GyroAbsAction(Axes.ABS_X, Axes.ABS_Y)):
             raise AssertionError
         if not _parses_as_itself(
-            GyroAbsAction(
-                Axes.ABS_X,
-                Axes.ABS_Y,
-                Axes.ABS_Z)):
+                GyroAbsAction(Axes.ABS_X, Axes.ABS_Y, Axes.ABS_Z)):
             raise AssertionError
 
     def test_resetgyro(self):
@@ -179,13 +173,12 @@ class TestActions(object):
             raise AssertionError
         # With all buttons
         if not _parses_as_itself(
-            TiltAction(
-                ButtonAction(Keys.KEY_D),
-                ButtonAction(Keys.KEY_U),
-                ButtonAction(Keys.KEY_L),
-                ButtonAction(Keys.KEY_R),
-            )
-        ):
+                TiltAction(
+                    ButtonAction(Keys.KEY_D),
+                    ButtonAction(Keys.KEY_U),
+                    ButtonAction(Keys.KEY_L),
+                    ButtonAction(Keys.KEY_R),
+                )):
             raise AssertionError
 
     def test_trackball(self):
@@ -209,18 +202,11 @@ class TestActions(object):
             raise AssertionError
         # With one trigger setting
         if not _parses_as_itself(
-            ButtonAction(
-                Keys.BTN_LEFT,
-                Keys.BTN_RIGHT,
-                10)):
+                ButtonAction(Keys.BTN_LEFT, Keys.BTN_RIGHT, 10)):
             raise AssertionError
         # With two trigger settings
         if not _parses_as_itself(
-            ButtonAction(
-                Keys.BTN_LEFT,
-                Keys.BTN_RIGHT,
-                10,
-                90)):
+                ButtonAction(Keys.BTN_LEFT, Keys.BTN_RIGHT, 10, 90)):
             raise AssertionError
 
     def test_multiaction(self):
@@ -229,12 +215,11 @@ class TestActions(object):
         same action.
         """
         if not _parses_as_itself(
-            MultiAction(
-                ButtonAction(Keys.BTN_LEFT),
-                ButtonAction(Keys.BTN_RIGHT),
-                ButtonAction(Keys.BTN_MIDDLE),
-            )
-        ):
+                MultiAction(
+                    ButtonAction(Keys.BTN_LEFT),
+                    ButtonAction(Keys.BTN_RIGHT),
+                    ButtonAction(Keys.BTN_MIDDLE),
+                )):
             raise AssertionError
 
     def test_dpad(self):
@@ -244,24 +229,22 @@ class TestActions(object):
         """
         # Default diagonal rage
         if not _parses_as_itself(
-            DPadAction(
-                ButtonAction(Keys.BTN_LEFT),
-                ButtonAction(Keys.BTN_RIGHT),
-                ButtonAction(Keys.BTN_MIDDLE),
-                ButtonAction(Keys.KEY_A),
-            )
-        ):
+                DPadAction(
+                    ButtonAction(Keys.BTN_LEFT),
+                    ButtonAction(Keys.BTN_RIGHT),
+                    ButtonAction(Keys.BTN_MIDDLE),
+                    ButtonAction(Keys.KEY_A),
+                )):
             raise AssertionError
         # Modified diagonal rage
         if not _parses_as_itself(
-            DPadAction(
-                33,
-                ButtonAction(Keys.BTN_RIGHT),
-                ButtonAction(Keys.KEY_A),
-                ButtonAction(Keys.BTN_LEFT),
-                ButtonAction(Keys.BTN_MIDDLE),
-            )
-        ):
+                DPadAction(
+                    33,
+                    ButtonAction(Keys.BTN_RIGHT),
+                    ButtonAction(Keys.KEY_A),
+                    ButtonAction(Keys.BTN_LEFT),
+                    ButtonAction(Keys.BTN_MIDDLE),
+                )):
             raise AssertionError
 
     def test_ring(self):
@@ -270,17 +253,16 @@ class TestActions(object):
         parsed back to same action.
         """
         if not _parses_as_itself(
-            RingAction(
-                0.1,
-                DPadAction(
-                    ButtonAction(Keys.BTN_LEFT),
-                    ButtonAction(Keys.BTN_RIGHT),
-                    ButtonAction(Keys.BTN_MIDDLE),
-                    ButtonAction(Keys.KEY_A),
-                ),
-                XYAction(AxisAction(Axes.ABS_X), AxisAction(Axes.ABS_Y)),
-            )
-        ):
+                RingAction(
+                    0.1,
+                    DPadAction(
+                        ButtonAction(Keys.BTN_LEFT),
+                        ButtonAction(Keys.BTN_RIGHT),
+                        ButtonAction(Keys.BTN_MIDDLE),
+                        ButtonAction(Keys.KEY_A),
+                    ),
+                    XYAction(AxisAction(Axes.ABS_X), AxisAction(Axes.ABS_Y)),
+                )):
             raise AssertionError
 
     def test_dpad8(self):
@@ -290,32 +272,30 @@ class TestActions(object):
         """
         # Default diagonal rage
         if not _parses_as_itself(
-            DPad8Action(
-                ButtonAction(Keys.BTN_LEFT),
-                ButtonAction(Keys.BTN_RIGHT),
-                ButtonAction(Keys.BTN_MIDDLE),
-                ButtonAction(Keys.KEY_A),
-                ButtonAction(Keys.KEY_B),
-                ButtonAction(Keys.KEY_C),
-                ButtonAction(Keys.KEY_D),
-                ButtonAction(Keys.KEY_E),
-            )
-        ):
+                DPad8Action(
+                    ButtonAction(Keys.BTN_LEFT),
+                    ButtonAction(Keys.BTN_RIGHT),
+                    ButtonAction(Keys.BTN_MIDDLE),
+                    ButtonAction(Keys.KEY_A),
+                    ButtonAction(Keys.KEY_B),
+                    ButtonAction(Keys.KEY_C),
+                    ButtonAction(Keys.KEY_D),
+                    ButtonAction(Keys.KEY_E),
+                )):
             raise AssertionError
         # Modified diagonal rage
         if not _parses_as_itself(
-            DPad8Action(
-                61,
-                ButtonAction(Keys.BTN_RIGHT),
-                ButtonAction(Keys.KEY_C),
-                ButtonAction(Keys.KEY_A),
-                ButtonAction(Keys.BTN_LEFT),
-                ButtonAction(Keys.KEY_E),
-                ButtonAction(Keys.KEY_B),
-                ButtonAction(Keys.KEY_D),
-                ButtonAction(Keys.BTN_MIDDLE),
-            )
-        ):
+                DPad8Action(
+                    61,
+                    ButtonAction(Keys.BTN_RIGHT),
+                    ButtonAction(Keys.KEY_C),
+                    ButtonAction(Keys.KEY_A),
+                    ButtonAction(Keys.BTN_LEFT),
+                    ButtonAction(Keys.KEY_E),
+                    ButtonAction(Keys.KEY_B),
+                    ButtonAction(Keys.KEY_D),
+                    ButtonAction(Keys.BTN_MIDDLE),
+                )):
             raise AssertionError
 
     def test_XY(self):
@@ -324,8 +304,7 @@ class TestActions(object):
         same action.
         """
         if not _parses_as_itself(
-            XYAction(AxisAction(Axes.ABS_X), AxisAction(Axes.ABS_Y))
-        ):
+                XYAction(AxisAction(Axes.ABS_X), AxisAction(Axes.ABS_Y))):
             raise AssertionError
 
     def test_relXY(self):
@@ -334,8 +313,7 @@ class TestActions(object):
         same action.
         """
         if not _parses_as_itself(
-            RelXYAction(AxisAction(Axes.ABS_RX), AxisAction(Axes.ABS_RY))
-        ):
+                RelXYAction(AxisAction(Axes.ABS_RX), AxisAction(Axes.ABS_RY))):
             raise AssertionError
 
     def test_trigger(self):
@@ -344,7 +322,5 @@ class TestActions(object):
         same action.
         """
         if not _parses_as_itself(
-            TriggerAction(
-                15, 234, ButtonAction(
-                Keys.KEY_A))):
+                TriggerAction(15, 234, ButtonAction(Keys.KEY_A))):
             raise AssertionError

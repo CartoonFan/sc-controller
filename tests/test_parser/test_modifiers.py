@@ -1,7 +1,5 @@
 import inspect
 
-from . import _parse_compressed
-from . import _parses_as_itself
 from scc.actions import Action
 from scc.actions import AxisAction
 from scc.actions import ButtonAction
@@ -12,6 +10,9 @@ from scc.modifiers import *
 from scc.uinput import Axes
 from scc.uinput import Keys
 
+from . import _parse_compressed
+from . import _parses_as_itself
+
 
 class TestModifiers(object):
     def test_tests(self):
@@ -20,11 +21,10 @@ class TestModifiers(object):
         """
         for cls in list(Action.ALL.values()):
             if "/modifiers.py" in inspect.getfile(cls):
-                method_name = "test_%s" % (cls.COMMAND,)
+                method_name = "test_%s" % (cls.COMMAND, )
                 if not hasattr(self, method_name):
-                    raise AssertionError(
-                        "There is no test for %s modifier" % (cls.COMMAND)
-                    )
+                    raise AssertionError("There is no test for %s modifier" %
+                                         (cls.COMMAND))
 
     def test_name(self):
         """
@@ -80,26 +80,22 @@ class TestModifiers(object):
         """
         Tests if CircularModifier is parsed
         """
-        if not isinstance(
-                _parse_compressed("circular(axis(ABS_X))"),
-                CircularModifier):
+        if not isinstance(_parse_compressed("circular(axis(ABS_X))"),
+                          CircularModifier):
             raise AssertionError
-        if not isinstance(
-            _parse_compressed("circular(axis(REL_WHEEL))"), CircularModifier
-        ):
+        if not isinstance(_parse_compressed("circular(axis(REL_WHEEL))"),
+                          CircularModifier):
             raise AssertionError
 
     def test_circularabs(self):
         """
         Tests if CircularAbsModifier is parsed
         """
-        if not isinstance(
-            _parse_compressed("circularabs(axis(ABS_X))"), CircularAbsModifier
-        ):
+        if not isinstance(_parse_compressed("circularabs(axis(ABS_X))"),
+                          CircularAbsModifier):
             raise AssertionError
-        if not isinstance(
-                _parse_compressed("circularabs(axis(REL_WHEEL))"),
-                CircularAbsModifier):
+        if not isinstance(_parse_compressed("circularabs(axis(REL_WHEEL))"),
+                          CircularAbsModifier):
             raise AssertionError
 
     def test_ball(self):
@@ -165,12 +161,10 @@ class TestModifiers(object):
         Tests if ModeModifier is parsed
         """
         # Without default
-        a = _parse_compressed(
-            """mode(
+        a = _parse_compressed("""mode(
             A, axis(ABS_X),
             B, axis(ABS_Y)
-        )"""
-        )
+        )""")
         if not isinstance(a, ModeModifier):
             raise AssertionError
         if not isinstance(a.mods[SCButtons.A], AxisAction):
@@ -179,13 +173,11 @@ class TestModifiers(object):
             raise AssertionError
 
         # With default
-        a = _parse_compressed(
-            """mode(
+        a = _parse_compressed("""mode(
             A, axis(ABS_X),
             B, axis(ABS_Y),
             button(KEY_A)
-        )"""
-        )
+        )""")
         if not isinstance(a, ModeModifier):
             raise AssertionError
         if not isinstance(a.mods[SCButtons.A], AxisAction):
@@ -210,10 +202,8 @@ class TestModifiers(object):
         a = _parse_compressed("doubleclick(axis(ABS_X), axis(ABS_Y))")
         if not isinstance(a.action, AxisAction) or a.action.id != Axes.ABS_X:
             raise AssertionError
-        if (
-            not isinstance(a.normalaction, AxisAction)
-            or a.normalaction.id != Axes.ABS_Y
-        ):
+        if (not isinstance(a.normalaction, AxisAction)
+                or a.normalaction.id != Axes.ABS_Y):
             raise AssertionError
         if a.holdaction:
             raise AssertionError
@@ -222,10 +212,8 @@ class TestModifiers(object):
         if not (isinstance(a.action, AxisAction)
                 and a.action.id == Axes.ABS_X):
             raise AssertionError
-        if (
-            not isinstance(a.normalaction, AxisAction)
-            or a.normalaction.id != Axes.ABS_Y
-        ):
+        if (not isinstance(a.normalaction, AxisAction)
+                or a.normalaction.id != Axes.ABS_Y):
             raise AssertionError
         if a.holdaction:
             raise AssertionError
@@ -245,14 +233,11 @@ class TestModifiers(object):
             raise AssertionError
         # With hold and normal action
         a = _parse_compressed("hold(axis(ABS_X), axis(ABS_Y))")
-        if not isinstance(
-                a.holdaction,
-                AxisAction) or a.holdaction.id != Axes.ABS_X:
+        if not isinstance(a.holdaction,
+                          AxisAction) or a.holdaction.id != Axes.ABS_X:
             raise AssertionError
-        if (
-            not isinstance(a.normalaction, AxisAction)
-            or a.normalaction.id != Axes.ABS_Y
-        ):
+        if (not isinstance(a.normalaction, AxisAction)
+                or a.normalaction.id != Axes.ABS_Y):
             raise AssertionError
         if a.action:
             raise AssertionError
@@ -261,10 +246,8 @@ class TestModifiers(object):
         if not (isinstance(a.holdaction, AxisAction)
                 and a.holdaction.id == Axes.ABS_X):
             raise AssertionError
-        if (
-            not isinstance(a.normalaction, AxisAction)
-            or a.normalaction.id != Axes.ABS_Y
-        ):
+        if (not isinstance(a.normalaction, AxisAction)
+                or a.normalaction.id != Axes.ABS_Y):
             raise AssertionError
         if a.action:
             raise AssertionError
@@ -277,22 +260,18 @@ class TestModifiers(object):
         are parsed as expected
         """
         a = _parse_compressed(
-            "doubleclick(axis(ABS_X), hold(axis(ABS_Y), axis(ABS_Z)))"
-        )
+            "doubleclick(axis(ABS_X), hold(axis(ABS_Y), axis(ABS_Z)))")
         if not (isinstance(a.action, AxisAction)
                 and a.action.id == Axes.ABS_X):
             raise AssertionError
         if not (isinstance(a.holdaction, AxisAction)
                 and a.holdaction.id == Axes.ABS_Y):
             raise AssertionError
-        if (
-            not isinstance(a.normalaction, AxisAction)
-            or a.normalaction.id != Axes.ABS_Z
-        ):
+        if (not isinstance(a.normalaction, AxisAction)
+                or a.normalaction.id != Axes.ABS_Z):
             raise AssertionError
         a = _parse_compressed(
-            "hold(axis(ABS_X), doubleclick(axis(ABS_Y), axis(ABS_Z)))"
-        )
+            "hold(axis(ABS_X), doubleclick(axis(ABS_Y), axis(ABS_Z)))")
         if not (isinstance(a.holdaction, AxisAction)
                 and a.holdaction.id == Axes.ABS_X):
             raise AssertionError
@@ -303,21 +282,18 @@ class TestModifiers(object):
                 and a.normalaction.id == Axes.ABS_Z):
             raise AssertionError
         a = _parse_compressed(
-            "doubleclick(hold(axis(ABS_RX), axis(ABS_RY)), axis(ABS_Z))"
-        )
+            "doubleclick(hold(axis(ABS_RX), axis(ABS_RY)), axis(ABS_Z))")
         if not (isinstance(a.action, AxisAction)
                 and a.action.id == Axes.ABS_RY):
             raise AssertionError
-        if not isinstance(
-                a.holdaction,
-                AxisAction) or a.holdaction.id != Axes.ABS_RX:
+        if not isinstance(a.holdaction,
+                          AxisAction) or a.holdaction.id != Axes.ABS_RX:
             raise AssertionError
         if not (isinstance(a.normalaction, AxisAction)
                 and a.normalaction.id == Axes.ABS_Z):
             raise AssertionError
         a = _parse_compressed(
-            "hold(doubleclick(axis(ABS_Z), axis(ABS_RZ)), axis(ABS_X))"
-        )
+            "hold(doubleclick(axis(ABS_Z), axis(ABS_RZ)), axis(ABS_X))")
         if not isinstance(a.action, AxisAction) or a.action.id != Axes.ABS_Z:
             raise AssertionError
         if not (isinstance(a.holdaction, AxisAction)
@@ -333,39 +309,34 @@ class TestModifiers(object):
         back to same.
         """
         # Simple stuff
-        if _parse_compressed(
-                "sens(2, axis(ABS_X))").strip().get_speed() != (2.0,):
+        if _parse_compressed("sens(2, axis(ABS_X))").strip().get_speed() != (
+                2.0, ):
             raise AssertionError
-        if _parse_compressed(
-                "sens(2, 3, mouse())").strip().get_speed() != (2.0, 3.0):
+        if _parse_compressed("sens(2, 3, mouse())").strip().get_speed() != (
+                2.0, 3.0):
             raise AssertionError
-        if _parse_compressed(
-            "sens(2, 3, 4, gyro(ABS_RZ, ABS_RX, ABS_Z))"
-        ).strip().get_speed() != (2.0, 3.0, 4.0):
+        if _parse_compressed("sens(2, 3, 4, gyro(ABS_RZ, ABS_RX, ABS_Z))"
+                             ).strip().get_speed() != (2.0, 3.0, 4.0):
             raise AssertionError
 
         # Basic modifiers, sensitivity should always end applied to mouse()
         # action
         a = _parse_compressed("sens(2, 3, click(mouse()))")
         if not isinstance(a.action, MouseAction) or a.action.get_speed() != (
-            2.0,
-            3.0,
+                2.0,
+                3.0,
         ):
             raise AssertionError
         a = _parse_compressed("sens(2, 3, deadzone(2.0, mouse()))")
-        if not (
-            isinstance(
-                a.action,
-                MouseAction) and a.action.get_speed() == (
-                2.0,
-                3.0)):
+        if not (isinstance(a.action, MouseAction)
+                and a.action.get_speed() == (2.0, 3.0)):
             raise AssertionError
 
         # Special case, sensitivity should be applied to ball(), not mouse()
         a = _parse_compressed("sens(2, 3, ball(mouse()))")
         if not isinstance(a.action, MouseAction) or a.action.get_speed() != (
-            1.0,
-            1.0,
+                1.0,
+                1.0,
         ):
             raise AssertionError
         if not isinstance(a, BallModifier) or a.get_speed() != (2.0, 3.0):
@@ -378,34 +349,23 @@ class TestModifiers(object):
         """
         # TODO: Here, with actual tests
         if not _parses_as_itself(
-            FeedbackModifier(
-                HapticPos.BOTH,
-                MouseAction())):
+                FeedbackModifier(HapticPos.BOTH, MouseAction())):
             raise AssertionError
         if not _parses_as_itself(
-            FeedbackModifier(
-                HapticPos.BOTH,
-                10,
-                MouseAction())):
+                FeedbackModifier(HapticPos.BOTH, 10, MouseAction())):
             raise AssertionError
         if not _parses_as_itself(
-            FeedbackModifier(HapticPos.BOTH, 10, 8, MouseAction())
-        ):
+                FeedbackModifier(HapticPos.BOTH, 10, 8, MouseAction())):
             raise AssertionError
         if not _parses_as_itself(
-            FeedbackModifier(HapticPos.BOTH, 10, 8, 512, MouseAction())
-        ):
+                FeedbackModifier(HapticPos.BOTH, 10, 8, 512, MouseAction())):
             raise AssertionError
         # Bellow was failing in past
         if not _parses_as_itself(
-            FeedbackModifier(
-                HapticPos.LEFT,
-                MouseAction())):
+                FeedbackModifier(HapticPos.LEFT, MouseAction())):
             raise AssertionError
         if not _parses_as_itself(
-            FeedbackModifier(
-                HapticPos.RIGHT,
-                MouseAction())):
+                FeedbackModifier(HapticPos.RIGHT, MouseAction())):
             raise AssertionError
 
     def test_rotate(self):

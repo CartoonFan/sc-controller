@@ -10,7 +10,6 @@ import traceback
 
 from gi.repository import GObject
 from gi.repository import Gtk
-
 from scc.actions import Action
 from scc.actions import NoAction
 from scc.gui.action_editor import ActionEditor
@@ -54,10 +53,8 @@ class MenuEditor(Editor):
 
     def setup_widgets(self):
         self.builder = Gtk.Builder()
-        self.builder.add_from_file(
-            os.path.join(
-                self.app.gladepath,
-                self.GLADE))
+        self.builder.add_from_file(os.path.join(self.app.gladepath,
+                                                self.GLADE))
         lblItemIconName = self.builder.get_object("lblItemIconName")
         vbChangeItemIcon = self.builder.get_object("vbChangeItemIcon")
         self.window = self.builder.get_object("Dialog")
@@ -94,13 +91,11 @@ class MenuEditor(Editor):
                     item.label = a.get_name()
                 elif isinstance(item, Submenu):
                     i[0].item = item = Submenu(
-                        a.get_current_page().get_selected_menu(), a.get_name()
-                    )
+                        a.get_current_page().get_selected_menu(), a.get_name())
                     item.icon = self.selected_icon
                 elif isinstance(item, RecentListMenuGenerator):
                     i[0].item = item = RecentListMenuGenerator(
-                        rows=a.get_current_page().get_row_count()
-                    )
+                        rows=a.get_current_page().get_row_count())
                 elif isinstance(item, MenuItem):
                     item.action = a
                     item.label = item.action.describe(Action.AC_OSD)
@@ -115,12 +110,10 @@ class MenuEditor(Editor):
         self._remove_original()
         if self.builder.get_object("rbInProfile").get_active():
             self._save_to_profile(
-                self.builder.get_object("entName").get_text().decode("utf-8")
-            )
+                self.builder.get_object("entName").get_text().decode("utf-8"))
         else:
             self._save_to_file(
-                self.builder.get_object("entName").get_text().decode("utf-8")
-            )
+                self.builder.get_object("entName").get_text().decode("utf-8"))
         self.close()
 
     def on_tvItems_cursor_changed(self, *a):
@@ -160,11 +153,8 @@ class MenuEditor(Editor):
             e.set_title(_("Edit Submenu"))
             e.hide_action_str()
             e.hide_clear()
-            (
-                e.force_page(e.load_component("menu_only"), True)
-                .allow_menus(True, False)
-                .set_selected_menu(item.filename)
-            )
+            (e.force_page(e.load_component("menu_only"), True).allow_menus(
+                True, False).set_selected_menu(item.filename))
             e.set_menu_item(item, _("Menu Label"))
             self.selected_icon = item.icon
             self.setup_menu_icon(e)
@@ -196,7 +186,7 @@ class MenuEditor(Editor):
         model = tvItems.get_model()
         o = GObject.GObject()
         if not item.id:
-            item.id = "_auto_id_%s" % (self.next_auto_id,)
+            item.id = "_auto_id_%s" % (self.next_auto_id, )
             self.next_auto_id += 1
         o.item = item
         iter = model.append((o, o.item.describe()))
@@ -253,7 +243,7 @@ class MenuEditor(Editor):
         else:
             # Menu stored as file
             if id != self.original_id:
-                path = os.path.join(get_menus_path(), "%s.menu" % (id,))
+                path = os.path.join(get_menus_path(), "%s.menu" % (id, ))
                 if os.path.exists(path):
                     self._bad_id_duplicate()
                     return
@@ -269,15 +259,13 @@ class MenuEditor(Editor):
 
     def _bad_id_duplicate(self, *a):
         self.builder.get_object("lblNope").set_label(
-            _("Invalid Menu ID: Menu with same ID already exists.")
-        )
+            _("Invalid Menu ID: Menu with same ID already exists."))
         self.builder.get_object("rvInvalidID").set_reveal_child(True)
         self.builder.get_object("btSave").set_sensitive(False)
 
     def _bad_id_chars(self, *a):
         self.builder.get_object("lblNope").set_label(
-            _("Invalid Menu ID: Please, don't use dots (.) or slashes (/).")
-        )
+            _("Invalid Menu ID: Please, don't use dots (.) or slashes (/)."))
         self.builder.get_object("rvInvalidID").set_reveal_child(True)
         self.builder.get_object("btSave").set_sensitive(False)
 
@@ -345,7 +333,7 @@ class MenuEditor(Editor):
 
     def _load_items_from_file(self, id):
         for p in (get_menus_path(), get_default_menus_path()):
-            path = os.path.join(p, "%s.menu" % (id,))
+            path = os.path.join(p, "%s.menu" % (id, ))
             if os.path.exists(path):
                 return MenuData.from_file(path, TalkingActionParser())
         # Menu file not found
@@ -369,9 +357,8 @@ class MenuEditor(Editor):
                 pass
         elif self.original_type == MenuEditor.TYPE_GLOBAL:
             try:
-                path = os.path.join(
-                    get_menus_path(), "%s.menu" %
-                    (self.original_id,))
+                path = os.path.join(get_menus_path(),
+                                    "%s.menu" % (self.original_id, ))
                 log.debug("Removing %s", path)
                 os.unlink(path)
             except BaseException:
@@ -385,7 +372,7 @@ class MenuEditor(Editor):
         data = MenuData(*[i[0].item for i in model])
         i = 1
         for item in data:
-            item.id = "item%s" % (i,)
+            item.id = "item%s" % (i, )
             i += 1
         return data
 
@@ -404,7 +391,7 @@ class MenuEditor(Editor):
         """
         Stores menu in json file
         """
-        id = "%s.menu" % (id,)
+        id = "%s.menu" % (id, )
         path = os.path.join(get_menus_path(), id)
         data = self._generate_menudata()
         jstr = Encoder(sort_keys=True, indent=4).encode(data)

@@ -105,9 +105,10 @@ class FirstPage(AEComponent):
             }
 
             markup = markup % {
-                "what": long_names.get(
-                    nameof(self.editor.get_id()),
-                    nameof(self.editor.get_id()).title())}
+                "what":
+                long_names.get(nameof(self.editor.get_id()),
+                               nameof(self.editor.get_id()).title())
+            }
             self.builder.get_object("lblMarkup").set_markup(
                 markup.strip(" \r\n\t"))
             return True

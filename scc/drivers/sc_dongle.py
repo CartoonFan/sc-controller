@@ -52,12 +52,10 @@ INPUT_FORMAT = [
 FORMATS, NAMES = list(zip(*INPUT_FORMAT))
 TUP_FORMAT = "<" + "".join(FORMATS)
 ControllerInput = namedtuple(
-    "ControllerInput", " ".join([x for x in NAMES if not x.startswith("ukn_")])
-)
+    "ControllerInput",
+    " ".join([x for x in NAMES if not x.startswith("ukn_")]))
 SCI_NULL = ControllerInput._make(
-    struct.unpack(
-        "<" + "".join(FORMATS),
-        b"\x00" * 64))
+    struct.unpack("<" + "".join(FORMATS), b"\x00" * 64))
 STICKPRESS = 0b1000000000000000000000000000000
 
 log = logging.getLogger("SCDongle")
@@ -65,7 +63,6 @@ log = logging.getLogger("SCDongle")
 
 def init(daemon, config):
     """ Registers hotplug callback for controller dongle """
-
     def cb(device, handle):
         return Dongle(device, handle, daemon)
 
@@ -186,7 +183,7 @@ class SCController(Controller):
         return "sc"
 
     def __repr__(self):
-        return "<SCWireless %s>" % (self.get_id(),)
+        return "<SCWireless %s>" % (self.get_id(), )
 
     def input(self, idata):
         if self.mapper:
@@ -199,8 +196,7 @@ class SCController(Controller):
             if self._input_rotation_l:
                 lx, ly = idata.lpad_x, idata.lpad_y
                 if idata.buttons & SCButtons.LPADTOUCH:
-                    s, c = sin(
-                        self._input_rotation_l), cos(
+                    s, c = sin(self._input_rotation_l), cos(
                         self._input_rotation_l)
                     lx = int(idata.lpad_x * c - idata.lpad_y * s)
                     ly = int(idata.lpad_x * s + idata.lpad_y * c)
@@ -271,11 +267,8 @@ class SCController(Controller):
         self._driver.make_request(
             self._ccidx,
             cb,
-            struct.pack(
-                ">BBB61x",
-                SCPacketType.GET_SERIAL,
-                SCPacketLength.GET_SERIAL,
-                0x01),
+            struct.pack(">BBB61x", SCPacketType.GET_SERIAL,
+                        SCPacketLength.GET_SERIAL, 0x01),
         )
 
     def generate_serial(self):
@@ -407,14 +400,8 @@ class SCController(Controller):
         # Mercilessly stolen from scraw library
         self._driver.send_control(
             self._ccidx,
-            struct.pack(
-                "<BBBBBB",
-                SCPacketType.OFF,
-                0x04,
-                0x6F,
-                0x66,
-                0x66,
-                0x21),
+            struct.pack("<BBBBBB", SCPacketType.OFF, 0x04, 0x6F, 0x66, 0x66,
+                        0x21),
         )
 
     def get_gyro_enabled(self):

@@ -7,7 +7,6 @@ import tempfile
 
 from gi.repository import Gio
 from gi.repository import Gtk
-
 from scc.gui.userdata_manager import UserDataManager
 from scc.menu_data import MenuData
 from scc.menu_data import Submenu
@@ -64,7 +63,7 @@ class Export(UserDataManager):
             model.append((i, f, name))
             i += 1
         if current_index >= 0:
-            tvProfiles.set_cursor((current_index,))
+            tvProfiles.set_cursor((current_index, ))
 
     def _add_refereced_profile(self, model, giofile, used):
         """
@@ -88,9 +87,9 @@ class Export(UserDataManager):
         for menu in profile.menus:
             for item in profile.menus[menu]:
                 if isinstance(item, Submenu):
-                    self._add_refereced_menu(
-                        model, os.path.split(item.filename)[-1], used
-                    )
+                    self._add_refereced_menu(model,
+                                             os.path.split(item.filename)[-1],
+                                             used)
                 if hasattr(item, "action"):
                     self._parse_action(model, item.action, used)
         return True
@@ -108,16 +107,14 @@ class Export(UserDataManager):
                 # Default and hidden, don't bother user with it
                 return
             if filename:
-                model.append(
-                    (
-                        not menu_is_default(menu_id),
-                        _("Menu"),
-                        name,
-                        filename,
-                        True,
-                        self.TP_MENU,
-                    )
-                )
+                model.append((
+                    not menu_is_default(menu_id),
+                    _("Menu"),
+                    name,
+                    filename,
+                    True,
+                    self.TP_MENU,
+                ))
                 try:
                     menu = MenuData.from_file(filename, ActionParser())
                 except Exception as e:
@@ -127,21 +124,19 @@ class Export(UserDataManager):
                 for item in menu:
                     if isinstance(item, Submenu):
                         self._add_refereced_menu(
-                            model, os.path.split(item.filename)[-1], used
-                        )
+                            model,
+                            os.path.split(item.filename)[-1], used)
                     if hasattr(item, "action"):
                         self._parse_action(model, item.action, used)
             else:
-                model.append(
-                    (
-                        False,
-                        _("Menu"),
-                        _("%s (not found)") % (name,),
-                        "",
-                        False,
-                        self.TP_MENU,
-                    )
-                )
+                model.append((
+                    False,
+                    _("Menu"),
+                    _("%s (not found)") % (name, ),
+                    "",
+                    False,
+                    self.TP_MENU,
+                ))
 
     def _parse_action(self, model, action, used):
         """
@@ -152,30 +147,25 @@ class Export(UserDataManager):
                 filename = find_profile(action.profile)
                 used.add(action.profile)
                 if filename:
-                    model.append(
-                        (
-                            not profile_is_default(action.profile),
-                            _("Profile"),
-                            action.profile,
-                            filename,
-                            True,
-                            self.TP_PROFILE,
-                        )
-                    )
+                    model.append((
+                        not profile_is_default(action.profile),
+                        _("Profile"),
+                        action.profile,
+                        filename,
+                        True,
+                        self.TP_PROFILE,
+                    ))
                     self._add_refereced_profile(
-                        model, Gio.File.new_for_path(filename), used
-                    )
+                        model, Gio.File.new_for_path(filename), used)
                 else:
-                    model.append(
-                        (
-                            False,
-                            _("Profile"),
-                            _("%s (not found)") % (action.profile,),
-                            "",
-                            False,
-                            self.TP_PROFILE,
-                        )
-                    )
+                    model.append((
+                        False,
+                        _("Profile"),
+                        _("%s (not found)") % (action.profile, ),
+                        "",
+                        False,
+                        self.TP_PROFILE,
+                    ))
         elif isinstance(action, MenuAction):
             self._add_refereced_menu(model, action.menu_id, used)
 
@@ -243,12 +233,11 @@ class Export(UserDataManager):
         else:
             f.set_name("SC-Controller Profile")
             fmt = "sccprofile"
-        f.add_pattern("*.%s" % (fmt,))
+        f.add_pattern("*.%s" % (fmt, ))
 
         # Create dialog
-        d = Gtk.FileChooserNative.new(
-            _("Export to File..."), self.window, Gtk.FileChooserAction.SAVE
-        )
+        d = Gtk.FileChooserNative.new(_("Export to File..."), self.window,
+                                      Gtk.FileChooserAction.SAVE)
         d.add_filter(f)
         d.set_do_overwrite_confirmation(True)
         # Set default filename
@@ -304,8 +293,9 @@ class Export(UserDataManager):
                 out = tempfile.NamedTemporaryFile()
                 profile.load(filename)
                 profile.save(out.name)
-                tar.add(out.name, arcname=os.path.split(
-                    filename)[-1], recursive=False)
+                tar.add(out.name,
+                        arcname=os.path.split(filename)[-1],
+                        recursive=False)
             except Exception as e:
                 # Profile that cannot be parsed shouldn't be exported
                 log.error(e)
@@ -315,10 +305,10 @@ class Export(UserDataManager):
         def export_menu(tar, filename):
             try:
                 menu = MenuData.from_json_data(
-                    json.loads(open(filename, "r").read()), ActionParser()
-                )
-                tar.add(filename, arcname=os.path.split(
-                    filename)[-1], recursive=False)
+                    json.loads(open(filename, "r").read()), ActionParser())
+                tar.add(filename,
+                        arcname=os.path.split(filename)[-1],
+                        recursive=False)
             except Exception as e:
                 # Menu that cannot be parsed shouldn't be exported
                 log.error(e)

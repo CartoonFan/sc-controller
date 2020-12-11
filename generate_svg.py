@@ -1,17 +1,21 @@
 #!/usr/bin/env python2
-from scc.tools import _
+import os
 
-from scc.actions import Action, DPadAction, XYAction, MouseAction
-from scc.modifiers import ModeModifier, DoubleclickModifier
-from scc.special_actions import MenuAction
-from scc.parser import TalkingActionParser
+from scc.actions import Action
+from scc.actions import DPadAction
+from scc.actions import MouseAction
+from scc.actions import XYAction
 from scc.constants import SCButtons
-from scc.profile import Profile
-from scc.tools import nameof
-from scc.uinput import Rels
 from scc.gui.svg_widget import SVGEditor
 from scc.lib import IntEnum
-import os
+from scc.modifiers import DoubleclickModifier
+from scc.modifiers import ModeModifier
+from scc.parser import TalkingActionParser
+from scc.profile import Profile
+from scc.special_actions import MenuAction
+from scc.tools import _
+from scc.tools import nameof
+from scc.uinput import Rels
 
 
 class Align(IntEnum):
@@ -43,14 +47,12 @@ class Line(object):
         return self
 
     def to_string(self):
-        return "%-10s: %s" % (
-            ",".join([x for x in self.icons if x]),
-            self.text)
+        return "%-10s: %s" % (",".join([x
+                                        for x in self.icons if x]), self.text)
 
 
 class LineCollection(object):
     """ Allows calling add_icon on multiple lines at once """
-
     def __init__(self, *lines):
         self.lines = lines
 
@@ -97,8 +99,8 @@ class Box(object):
             lines = [self.add(icon, context, action.default)]
             for x in action.mods:
                 lines.append(
-                    self.add(nameof(x), context, action.mods[x]).add_icon(icon)
-                )
+                    self.add(nameof(x), context,
+                             action.mods[x]).add_icon(icon))
             return LineCollection(*lines)
         elif isinstance(action, DoubleclickModifier):
             lines = []
@@ -106,14 +108,12 @@ class Box(object):
                 lines.append(self.add(icon, context, action.normalaction))
             if action.action:
                 lines.append(
-                    self.add(
-                        "DOUBLECLICK",
-                        context,
-                        action.action).add_icon(icon))
+                    self.add("DOUBLECLICK", context,
+                             action.action).add_icon(icon))
             if action.holdaction:
                 lines.append(
-                    self.add("HOLD", context, action.holdaction).add_icon(icon)
-                )
+                    self.add("HOLD", context,
+                             action.holdaction).add_icon(icon))
             return LineCollection(*lines)
 
         action = action.strip()
@@ -130,11 +130,8 @@ class Box(object):
                 self.add("DPAD_RIGHT", Action.AC_BUTTON, action.actions[3]),
             )
         elif isinstance(action, XYAction):
-            if isinstance(
-                    action.x,
-                    MouseAction) and isinstance(
-                    action.y,
-                    MouseAction):
+            if isinstance(action.x, MouseAction) and isinstance(
+                    action.y, MouseAction):
                 if action.x.get_axis() in (Rels.REL_HWHEEL, Rels.REL_WHEEL):
                     # Special case, pad bound to wheel
                     line = Line(icon, _("Mouse Wheel"))
@@ -184,7 +181,7 @@ class Box(object):
             style="opacity:1;fill-opacity:0.0;stroke-width:2.0;",
             fill="#000000",
             stroke="#06a400",
-            id="box_%s" % (self.name,),
+            id="box_%s" % (self.name, ),
             width=self.width,
             height=self.height,
             x=self.x,
@@ -212,7 +209,11 @@ class Box(object):
             x = self.x + self.PADDING + self.icount * (h + self.SPACING)
             y += h
             txt = SVGEditor.add_element(
-                root, "text", x=x, y=y, style=gen.label_template.attrib["style"])
+                root,
+                "text",
+                x=x,
+                y=y,
+                style=gen.label_template.attrib["style"])
             SVGEditor.set_text(txt, line.text)
             y += self.SPACING
 
@@ -237,7 +238,7 @@ class Box(object):
             elif self.align & Align.RIGHT != 0:
                 edges = [[x1, y1], [x2, y2]]
 
-        targets = SVGEditor.get_element(root, "markers_%s" % (self.name,))
+        targets = SVGEditor.get_element(root, "markers_%s" % (self.name, ))
         if targets is None:
             return
         i = 0
@@ -281,17 +282,11 @@ class Generator(object):
         boxes = []
 
         box_bcs = Box(0, self.PADDING, Align.TOP, "bcs")
-        box_bcs.add(
-            "BACK",
-            Action.AC_BUTTON,
-            profile.buttons.get(
-                SCButtons.BACK))
+        box_bcs.add("BACK", Action.AC_BUTTON,
+                    profile.buttons.get(SCButtons.BACK))
         box_bcs.add("C", Action.AC_BUTTON, profile.buttons.get(SCButtons.C))
-        box_bcs.add(
-            "START",
-            Action.AC_BUTTON,
-            profile.buttons.get(
-                SCButtons.START))
+        box_bcs.add("START", Action.AC_BUTTON,
+                    profile.buttons.get(SCButtons.START))
         boxes.append(box_bcs)
 
         box_left = Box(
@@ -302,17 +297,11 @@ class Generator(object):
             min_height=self.full_height * 0.5,
             min_width=self.full_width * 0.2,
         )
-        box_left.add(
-            "LEFT",
-            Action.AC_TRIGGER,
-            profile.triggers.get(
-                profile.LEFT))
+        box_left.add("LEFT", Action.AC_TRIGGER,
+                     profile.triggers.get(profile.LEFT))
         box_left.add("LB", Action.AC_BUTTON, profile.buttons.get(SCButtons.LB))
-        box_left.add(
-            "LGRIP",
-            Action.AC_BUTTON,
-            profile.buttons.get(
-                SCButtons.LGRIP))
+        box_left.add("LGRIP", Action.AC_BUTTON,
+                     profile.buttons.get(SCButtons.LGRIP))
         box_left.add("LPAD", Action.AC_PAD, profile.pads.get(profile.LEFT))
         boxes.append(box_left)
 
@@ -324,36 +313,25 @@ class Generator(object):
             min_height=self.full_height * 0.5,
             min_width=self.full_width * 0.2,
         )
-        box_right.add(
-            "RIGHT",
-            Action.AC_TRIGGER,
-            profile.triggers.get(
-                profile.RIGHT))
-        box_right.add(
-            "RB",
-            Action.AC_BUTTON,
-            profile.buttons.get(
-                SCButtons.RB))
-        box_right.add(
-            "RGRIP",
-            Action.AC_BUTTON,
-            profile.buttons.get(
-                SCButtons.RGRIP))
+        box_right.add("RIGHT", Action.AC_TRIGGER,
+                      profile.triggers.get(profile.RIGHT))
+        box_right.add("RB", Action.AC_BUTTON,
+                      profile.buttons.get(SCButtons.RB))
+        box_right.add("RGRIP", Action.AC_BUTTON,
+                      profile.buttons.get(SCButtons.RGRIP))
         box_right.add("RPAD", Action.AC_PAD, profile.pads.get(profile.RIGHT))
         boxes.append(box_right)
 
-        box_abxy = Box(
-            4 * self.PADDING, self.PADDING, Align.RIGHT | Align.BOTTOM, "abxy"
-        )
+        box_abxy = Box(4 * self.PADDING, self.PADDING,
+                       Align.RIGHT | Align.BOTTOM, "abxy")
         box_abxy.add("A", Action.AC_BUTTON, profile.buttons.get(SCButtons.A))
         box_abxy.add("B", Action.AC_BUTTON, profile.buttons.get(SCButtons.B))
         box_abxy.add("X", Action.AC_BUTTON, profile.buttons.get(SCButtons.X))
         box_abxy.add("Y", Action.AC_BUTTON, profile.buttons.get(SCButtons.Y))
         boxes.append(box_abxy)
 
-        box_stick = Box(
-            4 * self.PADDING, self.PADDING, Align.LEFT | Align.BOTTOM, "stick"
-        )
+        box_stick = Box(4 * self.PADDING, self.PADDING,
+                        Align.LEFT | Align.BOTTOM, "stick")
         box_stick.add("STICK", Action.AC_STICK, profile.stick)
         boxes.append(box_stick)
 

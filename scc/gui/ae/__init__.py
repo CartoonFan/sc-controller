@@ -6,7 +6,6 @@ import os
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
-
 from scc.actions import Action
 from scc.actions import NoAction
 from scc.actions import XYAction
@@ -61,10 +60,8 @@ class AEComponent(ComboSetter):
         if self.loaded:
             return False
         self.builder = Gtk.Builder()
-        self.builder.add_from_file(
-            os.path.join(
-                self.app.gladepath,
-                self.GLADE))
+        self.builder.add_from_file(os.path.join(self.app.gladepath,
+                                                self.GLADE))
         self.widget = self.builder.get_object(self.NAME)
         self.builder.connect_signals(self)
         self.loaded = True

@@ -101,7 +101,7 @@ class Macro(Action):
         for a in self.actions:
             if hasattr(a, "set_speed"):
                 return a.get_speed()
-        return (1.0,)
+        return (1.0, )
 
     def button_release(self, mapper):
         self._active = False
@@ -110,21 +110,21 @@ class Macro(Action):
         if self.name:
             return self.name
         if self.repeat:
-            return "repeat " + "; ".join([x.describe(context)
-                                          for x in self.actions])
+            return "repeat " + "; ".join(
+                [x.describe(context) for x in self.actions])
         return "; ".join([x.describe(context) for x in self.actions])
 
     def to_string(self, multiline=False, pad=0):
         lst = "; ".join([x.to_string() for x in self.actions])
         if self.repeat:
-            return (" " * pad) + ("repeat(%s)" % (lst,))
+            return (" " * pad) + ("repeat(%s)" % (lst, ))
         return (" " * pad) + lst
 
     def __str__(self):
         if self.repeat:
-            return "<[repeat %s ]>" % (
-                "; ".join([str(x) for x in self.actions]),)
-        return "<[ %s ]>" % ("; ".join([str(x) for x in self.actions]),)
+            return "<[repeat %s ]>" % ("; ".join(
+                [str(x) for x in self.actions]), )
+        return "<[ %s ]>" % ("; ".join([str(x) for x in self.actions]), )
 
     __repr__ = __str__
 
@@ -146,17 +146,14 @@ class Type(Macro):
         params = []
         shift = False
         for letter in string:
-            if (
-                (letter >= "a" and letter <= "z") or (letter >= "0" and letter <= "9")
-            ) and hasattr(Keys, ("KEY_" + letter).upper()):
+            if ((letter >= "a" and letter <= "z") or
+                (letter >= "0" and letter <= "9")) and hasattr(
+                    Keys, ("KEY_" + letter).upper()):
                 if shift:
                     params.append(ReleaseAction(Keys.KEY_LEFTSHIFT))
                     shift = False
                 params.append(
-                    ButtonAction(
-                        getattr(
-                            Keys,
-                            ("KEY_" + letter).upper())))
+                    ButtonAction(getattr(Keys, ("KEY_" + letter).upper())))
                 continue
             if letter == " ":
                 params.append(ButtonAction(Keys.KEY_SPACE))
@@ -168,12 +165,13 @@ class Type(Macro):
                     shift = True
                 params.append(ButtonAction(getattr(Keys, "KEY_" + letter)))
                 continue
-            raise ValueError("Invalid character for type(): '%s'" % (letter,))
+            raise ValueError("Invalid character for type(): '%s'" % (letter, ))
         Macro.__init__(self, *params)
         self.letters = string
 
     def to_string(self, multiline=False, pad=0):
-        return (" " * pad) + self.COMMAND + "(" + repr(self.letters).strip("u") + ")"
+        return (" " * pad) + self.COMMAND + "(" + repr(
+            self.letters).strip("u") + ")"
 
 
 class Cycle(Macro):
@@ -211,7 +209,7 @@ class Cycle(Macro):
         return (" " * pad) + self.COMMAND + "(" + lst + ")"
 
     def __str__(self):
-        return "<cycle %s >" % ("; ".join([str(x) for x in self.actions]),)
+        return "<cycle %s >" % ("; ".join([str(x) for x in self.actions]), )
 
     __repr__ = __str__
 
@@ -248,9 +246,9 @@ class SleepAction(Action):
         if self.name:
             return self.name
         if self.delay < 1.0:
-            return _("Wait %sms") % (int(self.delay * 1000),)
-        s = ("%0.2f" % (self.delay,)).strip(".0")
-        return _("Wait %ss") % (s,)
+            return _("Wait %sms") % (int(self.delay * 1000), )
+        s = ("%0.2f" % (self.delay, )).strip(".0")
+        return _("Wait %ss") % (s, )
 
     def to_string(self, multiline=False, pad=0):
         return (" " * pad) + "%s(%0.3f)" % (self.COMMAND, self.delay)
@@ -369,10 +367,8 @@ class TapAction(PressAction):
         return None
 
     def _rel_tap_press(self, mapper):
-        if (
-            self.button not in mapper.pressed
-            or mapper.pressed[self.button] < self.COUNTER_VAL
-        ):
+        if (self.button not in mapper.pressed
+                or mapper.pressed[self.button] < self.COUNTER_VAL):
             # Something else tried to _release_ button in meanwhile, bail out
             mapper.pressed[self.button] = 1
             ButtonAction._button_release(mapper, self.button)

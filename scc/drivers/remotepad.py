@@ -5,13 +5,18 @@ SC Controller - remotepad driver
 This is implementation or protocol used by Retroarch's Remote RetroPad core.
 Based on https://github.com/libretro/RetroArch/blob/master/cores/libretro-net-retropad.
 """
-from scc.tools import find_library
-from scc.constants import ControllerFlags
-from scc.controller import Controller
-from ctypes import CFUNCTYPE, POINTER, byref, cast, c_void_p
+import ctypes
 import logging
 import socket
-import ctypes
+from ctypes import byref
+from ctypes import c_void_p
+from ctypes import cast
+from ctypes import CFUNCTYPE
+from ctypes import POINTER
+
+from scc.constants import ControllerFlags
+from scc.controller import Controller
+from scc.tools import find_library
 
 log = logging.getLogger("remotepad")
 
@@ -66,16 +71,14 @@ class RemoteJoypadMessage(ctypes.Structure):
 
 
 class RemotePadController(Controller):
-    flags = (
-        ControllerFlags.HAS_DPAD
-        | ControllerFlags.NO_GRIPS
-        | ControllerFlags.HAS_RSTICK
-        | ControllerFlags.SEPARATE_STICK
-    )
+    flags = (ControllerFlags.HAS_DPAD
+             | ControllerFlags.NO_GRIPS
+             | ControllerFlags.HAS_RSTICK
+             | ControllerFlags.SEPARATE_STICK)
 
     def __init__(self, driver, address):
         Controller.__init__(self)
-        self._id = "rpad%s" % (self._id,)
+        self._id = "rpad%s" % (self._id, )
         self._driver = driver
         self._address = address
         self._enabled = True
@@ -146,9 +149,7 @@ class Driver:
 
         self._lib.remotepad_input(
             controller._pad,
-            cast(
-                ctypes.c_char_p(data),
-                POINTER(RemoteJoypadMessage)))
+            cast(ctypes.c_char_p(data), POINTER(RemoteJoypadMessage)))
 
 
 def init(daemon, config):

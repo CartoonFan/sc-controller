@@ -8,9 +8,9 @@ classes by user and breaking everything in very creative ways.
 load_custom_module function needs to be called by daemon and GUI, so it exists
 in separate module.
 """
+import os
 
 from scc.paths import get_config_path
-import os
 
 
 def load_custom_module(log, who_calls="daemon"):
@@ -24,16 +24,12 @@ def load_custom_module(log, who_calls="daemon"):
     filename = os.path.join(get_config_path(), "custom.py")
     if os.path.exists(filename):
         log.warning("=" * 60)
-        log.warning("Loading %s" % (filename,))
-        log.warning(
-            "If you don't know what this means or you haven't "
-            "created it, stop daemon right now and remove this file."
-        )
+        log.warning("Loading %s" % (filename, ))
+        log.warning("If you don't know what this means or you haven't "
+                    "created it, stop daemon right now and remove this file.")
         log.warning("")
-        log.warning(
-            "Also try removing it if %s crashes "
-            "shortly after this message." % (who_calls,)
-        )
+        log.warning("Also try removing it if %s crashes "
+                    "shortly after this message." % (who_calls, ))
 
         import imp
 

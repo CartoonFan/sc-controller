@@ -12,7 +12,6 @@ from scc.tools import _
 
 class MenuData(object):
     """ Contains list of menu items. Indexable """
-
     def __init__(self, *items):
         self.__items = list(items)
 
@@ -84,7 +83,8 @@ class MenuData(object):
 
         # Rearange data into list of pair tuples
         data = [(data[i * 2], data[(i * 2) + 1])
-                for i in range(0, len(data) / 2)]
+                for i in range(0,
+                               len(data) / 2)]
 
         # Parse data
         m = MenuData()
@@ -174,7 +174,6 @@ class MenuData(object):
 
 class MenuItem(object):
     """ Really just dummy container """
-
     def __init__(self, id, label, action=None, callback=None, icon=None):
         self.id = id
         self.label = label
@@ -207,13 +206,12 @@ class MenuItem(object):
 
 class Separator(MenuItem):
     """ Internally, separator is MenuItem without action and id """
-
     def __init__(self, label=None):
         MenuItem.__init__(self, None, label)
 
     def describe(self):
         if self.label:
-            return _("----[ %s ]----") % (self.label,)
+            return _("----[ %s ]----") % (self.label, )
         return _("---- Separator ----")
 
     def encode(self):
@@ -224,7 +222,6 @@ class Separator(MenuItem):
 
 class Submenu(MenuItem):
     """ Internally, separator is MenuItem without action and id """
-
     def __init__(self, filename, label=None, icon=None):
         if not label:
             label = ".".join(os.path.split(filename)[-1].split(".")[0:-1])
@@ -246,7 +243,6 @@ class Submenu(MenuItem):
 class MenuGenerator(object):
     GENERATOR_NAME = None
     """ Generates list of MenuItems """
-
     def __init__(self, **b):
         """
         Passed are all keys loaded from json dict that defined this generator.
@@ -259,7 +255,7 @@ class MenuGenerator(object):
         """
         Returns user-friendly description of MenuItem or MenuGenerator.
         """
-        return "[ %s ] " % (self.__class__.__name__,)
+        return "[ %s ] " % (self.__class__.__name__, )
 
     def encode(self):
         """ Returns generator data as dict storable in json (profile) file """

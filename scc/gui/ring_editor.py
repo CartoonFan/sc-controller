@@ -49,17 +49,14 @@ class RingEditor(Editor, ComboSetter):
         """
         if isinstance(obj, RingAction):
             return True
-        return (
-            isinstance(obj, MultiAction)
-            and len(obj.actions) >= 2
-            and isinstance(obj.actions[1], RingAction)
-        )
+        return (isinstance(obj, MultiAction) and len(obj.actions) >= 2
+                and isinstance(obj.actions[1], RingAction))
 
     def on_adjRadius_value_changed(self, scale, *a):
         self.radius = scale.get_value()
 
     def on_sclRadius_format_value(self, scale, value):
-        return "%s%%" % (int(value * 100),)
+        return "%s%%" % (int(value * 100), )
 
     def on_Dialog_destroy(self, *a):
         self.remove_added_widget()
@@ -88,14 +85,14 @@ class RingEditor(Editor, ComboSetter):
 
     def _choose_editor(self, action, cb):
         if isinstance(action, ModeModifier):
-            from scc.gui.modeshift_editor import (
-                ModeshiftEditor,
-            )  # Cannot be imported @ top
+            from scc.gui.modeshift_editor import \
+                ModeshiftEditor  # Cannot be imported @ top
 
             e = ModeshiftEditor(self.app, cb)
             e.set_title(_("Edit Action"))
         else:
-            from scc.gui.action_editor import ActionEditor  # Cannot be imported @ top
+            from scc.gui.action_editor import \
+                ActionEditor  # Cannot be imported @ top
 
             e = ActionEditor(self.app, cb)
             e.set_title(_("Edit Action"))
@@ -134,7 +131,8 @@ class RingEditor(Editor, ComboSetter):
 
     def on_btCustomActionEditor_clicked(self, *a):
         """ Handler for 'Custom Editor' button """
-        from scc.gui.action_editor import ActionEditor  # Can't be imported on top
+        from scc.gui.action_editor import \
+            ActionEditor  # Can't be imported on top
 
         e = ActionEditor(self.app, self.ac_callback)
         e.set_input(self.id, self._make_action(), mode=self.mode)
@@ -159,17 +157,11 @@ class RingEditor(Editor, ComboSetter):
         if key == "inner":
             return MultiAction(
                 self.actions[1],
-                RingAction(
-                    self.radius,
-                    self.actions[0],
-                    NoAction()))
+                RingAction(self.radius, self.actions[0], NoAction()))
         if key == "outer":
             return MultiAction(
                 self.actions[0],
-                RingAction(
-                    self.radius,
-                    NoAction(),
-                    self.actions[1]))
+                RingAction(self.radius, NoAction(), self.actions[1]))
         return RingAction(self.radius, *self.actions)
 
     def _update(self):

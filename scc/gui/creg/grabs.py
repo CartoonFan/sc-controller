@@ -24,7 +24,6 @@ class InputGrabber(object):
     Base class for input grabbing. Waits for physical button being pressed
     by default.
     """
-
     def __init__(self, parent, what, text=_("Press a button...")):
         self.parent = parent
         self.what = what
@@ -46,8 +45,7 @@ class InputGrabber(object):
     def set_mapping(self, keycode, what):
         parent = self.parent
 
-        if isinstance(
-                what, AxisData) and what in list(
+        if isinstance(what, AxisData) and what in list(
                 parent._mappings.values()):
             for c in list(parent._mappings.keys()):
                 if parent._mappings[c] == what:
@@ -73,7 +71,6 @@ class TriggerGrabber(InputGrabber):
     InputGrabber modified to grab trigger bindings.
     That may be button or axis with at least 0-250 range is accepted.
     """
-
     def __init__(self, parent, what, text=_("Pull a trigger...")):
         InputGrabber.__init__(self, parent, what, text)
         self.orig_pos = {k: parent._input_axes[k] for k in parent._input_axes}
@@ -94,8 +91,10 @@ class TriggerGrabber(InputGrabber):
             self.orig_pos[number] = 0
 
         # Get avgerage absolute change for all axes
-        avg = float(sum([abs(self.orig_pos[k] - self.new_pos[k])
-                         for k in self.new_pos])) / float(len(self.new_pos))
+        avg = float(
+            sum([
+                abs(self.orig_pos[k] - self.new_pos[k]) for k in self.new_pos
+            ])) / float(len(self.new_pos))
 
         # Get absolute change for _this_ axis
         change = abs(self.orig_pos[number] - self.new_pos[number])
@@ -118,11 +117,11 @@ class StickGrabber(TriggerGrabber):
     InputGrabber modified to grab stick or pad bindings, in two phases for
     both X and Y axis.
     """
-
     def __init__(self, parent, what):
-        TriggerGrabber.__init__(
-            self, parent, what, text=_("Move stick left and right...")
-        )
+        TriggerGrabber.__init__(self,
+                                parent,
+                                what,
+                                text=_("Move stick left and right..."))
         self.xy = X
         self.grabbed = [None, None]
 

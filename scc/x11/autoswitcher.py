@@ -34,12 +34,11 @@ class AutoSwitcher(object):
         self.lock = threading.Lock()
         self.thread = threading.Thread(target=self.connect_daemon)
         self.config = Config()
-        self.mapper = Mapper(
-            None,
-            None,
-            keyboard=None,
-            mouse=None,
-            gamepad=None)
+        self.mapper = Mapper(None,
+                             None,
+                             keyboard=None,
+                             mouse=None,
+                             gamepad=None)
         self.mapper.set_special_actions_handler(self)
         self.enabled = False
         self.socket = None
@@ -85,8 +84,8 @@ class AutoSwitcher(object):
         if action is not None:
             cmpwith = action.to_string()
         for c in list(conds.keys()):
-            if (action is None or conds[c].to_string() ==
-                    cmpwith) and c.matches(title, wm_class):
+            if (action is None or conds[c].to_string()
+                    == cmpwith) and c.matches(title, wm_class):
                 del conds[c]
                 count += 1
         log.debug("Removed %s autoswitcher conditions", count)
@@ -160,18 +159,17 @@ class AutoSwitcher(object):
                     try:
                         if self.config["autoswitch_osd"]:
                             msg = _("Switched to profile") + " " + profile_name
-                            self.socket.send(
-                                b"OSD: " + msg.encode("utf-8") + b"\n")
-                        self.socket.send(
-                            b"Profile: " + path.encode("utf-8") + b"\n")
+                            self.socket.send(b"OSD: " + msg.encode("utf-8") +
+                                             b"\n")
+                        self.socket.send(b"Profile: " + path.encode("utf-8") +
+                                         b"\n")
                     except BaseException:
                         log.error("Socket write failed")
                         os._exit(2)
                         return
         else:
-            log.error(
-                "Cannot switch to profile '%s', profile file not found",
-                self.conds[c])
+            log.error("Cannot switch to profile '%s', profile file not found",
+                      self.conds[c])
 
     def on_sa_turnoff(self, mapper, action):
         with self.lock:
@@ -213,13 +211,11 @@ class Condition(object):
     It's possible to combine all three types of title matching with window class
     matching.
     """
-
-    def __init__(
-            self,
-            exact_title=None,
-            title=None,
-            regexp=None,
-            wm_class=None):
+    def __init__(self,
+                 exact_title=None,
+                 title=None,
+                 regexp=None,
+                 wm_class=None):
         """
         At least one parameter has to be specified; regexp has to be
         compiled regular expression.
@@ -234,7 +230,11 @@ class Condition(object):
 
     def __str__(self):
         return "<Condition title=%s, exact_title=%s, regexp=%s, wm_class=%s>" % (
-            self.title, self.exact_title, self.regexp, self.wm_class, )
+            self.title,
+            self.exact_title,
+            self.regexp,
+            self.wm_class,
+        )
 
     def describe(self):
         """
@@ -243,13 +243,13 @@ class Condition(object):
         """
         rv = []
         if self.title:
-            rv += [_("title contains '%s'") % (self.title,)]
+            rv += [_("title contains '%s'") % (self.title, )]
         if self.exact_title:
-            rv += [_("title is '%s'") % (self.exact_title,)]
+            rv += [_("title is '%s'") % (self.exact_title, )]
         if self.regexp:
-            rv += [_("title matches '%s'") % (self.regexp.pattern,)]
+            rv += [_("title matches '%s'") % (self.regexp.pattern, )]
         if self.wm_class:
-            rv += [_("class is '%s'") % (self.wm_class,)]
+            rv += [_("class is '%s'") % (self.wm_class, )]
         if rv:
             return _(" and ").join(rv)
         return _("matches nothing")
@@ -317,9 +317,8 @@ class AutoswitchOptsMenuGenerator(MenuGenerator):
 
         if menuitem.id in ("as::unassign", "as::assign"):
             if menuitem.id == "as::unassign":
-                AutoSwitcher.unassign(
-                    self.conds, self.title, self.wm_class, self.assigned_prof
-                )
+                AutoSwitcher.unassign(self.conds, self.title, self.wm_class,
+                                      self.assigned_prof)
             else:
                 if controller.get_profile():
                     profile = os.path.split(controller.get_profile())[-1]
@@ -327,15 +326,15 @@ class AutoswitchOptsMenuGenerator(MenuGenerator):
                         profile = profile[0:-4]
                     if profile.endswith(".sccprofile"):
                         profile = profile[0:-11]
-                    AutoSwitcher.unassign(
-                        self.conds, self.title, self.wm_class, None)
-                    AutoSwitcher.assign(
-                        self.conds, self.title, self.wm_class, profile)
+                    AutoSwitcher.unassign(self.conds, self.title,
+                                          self.wm_class, None)
+                    AutoSwitcher.assign(self.conds, self.title, self.wm_class,
+                                        profile)
             cfg = Config()
-            cfg["autoswitch"] = [
-                {"condition": c.encode(), "action": self.conds[c].to_string()}
-                for c in self.conds
-            ]
+            cfg["autoswitch"] = [{
+                "condition": c.encode(),
+                "action": self.conds[c].to_string()
+            } for c in self.conds]
             cfg.save()
             daemon.request(b"Reconfigure.\n", on_response, on_response)
         else:
@@ -365,15 +364,14 @@ class AutoswitchOptsMenuGenerator(MenuGenerator):
                 break
         if win:
             display_title = self.title or _("No Title")
-            rv.append(self.mk_item(
-                None, _("Current Window: %s") %
-                (self.title[0: 25],)))
+            rv.append(
+                self.mk_item(None,
+                             _("Current Window: %s") % (self.title[0:25], )))
             if self.assigned_prof:
                 rv.append(
                     self.mk_item(
-                        None, _("Assigned Profile: %s") % (self.assigned_prof,)
-                    )
-                )
+                        None,
+                        _("Assigned Profile: %s") % (self.assigned_prof, )))
             else:
                 rv.append(self.mk_item(None, _("No Profile Assigned")))
             rv.append(Separator())
@@ -394,5 +392,4 @@ class AutoswitchOptsMenuGenerator(MenuGenerator):
 
 
 MENU_GENERATORS[
-    AutoswitchOptsMenuGenerator.GENERATOR_NAME
-] = AutoswitchOptsMenuGenerator
+    AutoswitchOptsMenuGenerator.GENERATOR_NAME] = AutoswitchOptsMenuGenerator
