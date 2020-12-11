@@ -278,16 +278,14 @@ class Action(object):
         Called when action is executed by pressing physical gamepad button.
         'button_release' will be called later.
         """
-        log.warn("Action %s can't handle button press event",
-                 self.__class__.__name__)
+        log.warn("Action %s can't handle button press event", self.__class__.__name__)
 
     def button_release(self, mapper):
         """
         Called when action executed by pressing physical gamepad button is
         expected to stop.
         """
-        log.warn("Action %s can't handle button release event",
-                 self.__class__.__name__)
+        log.warn("Action %s can't handle button release event", self.__class__.__name__)
 
     def axis(self, mapper, position, what):
         """
@@ -329,8 +327,7 @@ class Action(object):
         'what' is one of LEFT, RIGHT, STICK (from scc.constants), describing what is
         being updated
         """
-        log.warn("Action %s can't handle whole stick event",
-                 self.__class__.__name__)
+        log.warn("Action %s can't handle whole stick event", self.__class__.__name__)
 
     def whole_blocked(self, mapper, x, y, what):
         """
@@ -354,8 +351,7 @@ class Action(object):
 
         'what' can be None.
         """
-        log.warn("Action %s can't handle incremental changes",
-                 self.__class__.__name__)
+        log.warn("Action %s can't handle incremental changes", self.__class__.__name__)
 
     def cancel(self, mapper):
         """
@@ -410,8 +406,7 @@ class Action(object):
         'position' contains current trigger position.
         'old_position' contains last known trigger position.
         """
-        log.warn("Action %s can't handle trigger event",
-                 self.__class__.__name__)
+        log.warn("Action %s can't handle trigger event", self.__class__.__name__)
 
 
 class RangeOP(object):
@@ -682,13 +677,11 @@ class AxisAction(Action):
         return axis
 
     def button_press(self, mapper):
-        mapper.gamepad.axisEvent(
-            self.id, AxisAction.clamp_axis(self.id, self.max))
+        mapper.gamepad.axisEvent(self.id, AxisAction.clamp_axis(self.id, self.max))
         mapper.syn_list.add(mapper.gamepad)
 
     def button_release(self, mapper):
-        mapper.gamepad.axisEvent(
-            self.id, AxisAction.clamp_axis(self.id, self.min))
+        mapper.gamepad.axisEvent(self.id, AxisAction.clamp_axis(self.id, self.min))
         mapper.syn_list.add(mapper.gamepad)
 
     @staticmethod
@@ -725,8 +718,7 @@ class AxisAction(Action):
         self.axis(mapper, clamp(STICK_PAD_MIN, dx, STICK_PAD_MAX), None)
 
     def trigger(self, mapper, position, old_position):
-        p = float(position * self.speed - TRIGGER_MIN) / \
-            (TRIGGER_MAX - TRIGGER_MIN)
+        p = float(position * self.speed - TRIGGER_MIN) / (TRIGGER_MAX - TRIGGER_MIN)
         p = int((p * (self.max - self.min)) + self.min)
         p = AxisAction.clamp_axis(self.id, p)
         AxisAction.old_positions[self.id] = p
@@ -926,12 +918,10 @@ class MouseAction(WholeHapticAction, Action):
 
     def whole(self, mapper, x, y, what):
         if what == STICK:
-            mapper.mouse_move(
-                x * self.speed[0] * 0.01, y * self.speed[1] * 0.01)
+            mapper.mouse_move(x * self.speed[0] * 0.01, y * self.speed[1] * 0.01)
             mapper.force_event.add(FE_STICK)
         elif what == RIGHT and mapper.controller_flags() & ControllerFlags.HAS_RSTICK:
-            mapper.mouse_move(
-                x * self.speed[0] * 0.01, y * self.speed[1] * 0.01)
+            mapper.mouse_move(x * self.speed[0] * 0.01, y * self.speed[1] * 0.01)
             mapper.force_event.add(FE_PAD)
         else:  # left or right pad
             if mapper.is_touched(what):
@@ -1149,8 +1139,7 @@ class WinAreaAction(AreaAction):
     def transform_coords(self, mapper):
         if not self.needs_query_screen:
             return self.coords
-        w_size = X.get_window_size(
-            mapper.get_xdisplay(), mapper.get_current_window())
+        w_size = X.get_window_size(mapper.get_xdisplay(), mapper.get_current_window())
         x1, y1, x2, y2 = self.coords
         if x1 < 0:
             x1 = w_size[0] + x1
@@ -1174,16 +1163,14 @@ class WinAreaAction(AreaAction):
         return x1, y1, x2, y2
 
     def set_mouse(self, mapper, x, y):
-        X.set_mouse_pos(mapper.get_xdisplay(), x, y,
-                        mapper.get_current_window())
+        X.set_mouse_pos(mapper.get_xdisplay(), x, y, mapper.get_current_window())
 
 
 class RelWinAreaAction(WinAreaAction):
     COMMAND = "relwinarea"
 
     def transform_coords(self, mapper):
-        w_size = X.get_window_size(
-            mapper.get_xdisplay(), mapper.get_current_window())
+        w_size = X.get_window_size(mapper.get_xdisplay(), mapper.get_current_window())
         x1, y1, x2, y2 = self.coords
         x1 = w_size[0] * x1
         y1 = w_size[1] * y1
@@ -1228,8 +1215,7 @@ class GyroAction(Action):
             # 'gyro' cannot map to mouse, but 'mouse' does that.
             if axis in Axes or isinstance(axis, int):
                 mapper.gamepad.axisEvent(
-                    axis, AxisAction.clamp_axis(
-                        axis, pyr[i] * self.speed[i] * -10)
+                    axis, AxisAction.clamp_axis(axis, pyr[i] * self.speed[i] * -10)
                 )
                 mapper.syn_list.add(mapper.gamepad)
 
@@ -1283,13 +1269,11 @@ class GyroAbsAction(HapticEnabledAction, GyroAction):
             pyr = [q1 / 10430.37, q2 / 10430.37, q3 / 10430.37]  # 2**15 / PI
         else:
             pyr = list(
-                quat2euler(q1 / 32768.0, q2 / 32768.0,
-                           q3 / 32768.0, q4 / 32768.0)
+                quat2euler(q1 / 32768.0, q2 / 32768.0, q3 / 32768.0, q4 / 32768.0)
             )
         for i in self.GYROAXES:
             self.ir[i] = self.ir[i] or pyr[i]
-            pyr[i] = anglediff(self.ir[i], pyr[i]) * \
-                (2 ** 15) * self.speed[2] * 2 / PI
+            pyr[i] = anglediff(self.ir[i], pyr[i]) * (2 ** 15) * self.speed[2] * 2 / PI
         if self.haptic:
             oor = False  # oor - Out Of Range
             for i in self.GYROAXES:
@@ -1321,8 +1305,7 @@ class GyroAbsAction(HapticEnabledAction, GyroAction):
             elif axis == Rels.REL_X:
                 mapper.mouse_move(
                     AxisAction.clamp_axis(
-                        axis, pyr[i] * GyroAbsAction.MOUSE_FACTOR *
-                        self.speed[i]
+                        axis, pyr[i] * GyroAbsAction.MOUSE_FACTOR * self.speed[i]
                     ),
                     0,
                 )
@@ -1330,8 +1313,7 @@ class GyroAbsAction(HapticEnabledAction, GyroAction):
                 mapper.mouse_move(
                     0,
                     AxisAction.clamp_axis(
-                        axis, pyr[i] * GyroAbsAction.MOUSE_FACTOR *
-                        self.speed[i]
+                        axis, pyr[i] * GyroAbsAction.MOUSE_FACTOR * self.speed[i]
                     ),
                 )
 
@@ -1429,8 +1411,7 @@ class TiltAction(MultichildAction):
 
     def gyro(self, mapper, *pyr):
         q1, q2, q3, q4 = pyr[-4:]
-        pyr = quat2euler(q1 / 32768.0, q2 / 32768.0,
-                         q3 / 32768.0, q4 / 32768.0)
+        pyr = quat2euler(q1 / 32768.0, q2 / 32768.0, q3 / 32768.0, q4 / 32768.0)
         for j in (0, 1, 2):
             i = j * 2
             if self.actions[i]:
@@ -1525,8 +1506,7 @@ class ButtonAction(HapticEnabledAction, Action):
     STICK_DEADZONE = 100
 
     def __init__(self, button1, button2=None, minustrigger=None, plustrigger=None):
-        Action.__init__(self, button1, *strip_none(button2,
-                                                   minustrigger, plustrigger))
+        Action.__init__(self, button1, *strip_none(button2, minustrigger, plustrigger))
         HapticEnabledAction.__init__(self)
         self.button = button1 or None
         self.button2 = button2 or None
@@ -1696,8 +1676,7 @@ class ButtonAction(HapticEnabledAction, Action):
         # TODO: Remove this, call to TriggerAction instead
         if self.button2 is None:
             if p >= TRIGGER_HALF and old_p < TRIGGER_HALF:
-                ButtonAction._button_press(
-                    mapper, self.button, haptic=self.haptic)
+                ButtonAction._button_press(mapper, self.button, haptic=self.haptic)
             elif p < TRIGGER_HALF and old_p >= TRIGGER_HALF:
                 ButtonAction._button_release(mapper, self.button)
         else:
@@ -1714,8 +1693,7 @@ class ButtonAction(HapticEnabledAction, Action):
                 if self._pressed_key != self.button2:
                     if self._pressed_key is not None:
                         ButtonAction._button_release(mapper, self._pressed_key)
-                    ButtonAction._button_press(
-                        mapper, self.button2, haptic=self.haptic)
+                    ButtonAction._button_press(mapper, self.button2, haptic=self.haptic)
                     self._pressed_key = self.button2
                     self._released = False
             else:
@@ -1974,8 +1952,7 @@ class DPadAction(MultichildAction, HapticEnabledAction):
     def to_string(self, multiline=False, pad=0, prefixparams=""):
         if self.diagonal_rage != DPadAction.DEFAULT_DIAGONAL_RANGE:
             return MultichildAction.to_string(
-                self, multiline, pad, prefixparams="%s, " % (
-                    self.diagonal_rage,)
+                self, multiline, pad, prefixparams="%s, " % (self.diagonal_rage,)
             )
         return MultichildAction.to_string(self, multiline, pad)
 
@@ -2124,12 +2101,10 @@ class RingAction(MultichildAction):
         if "radius" in data:
             args.append(float(data["radius"]))
         args.append(
-            parser.from_json_data(
-                data["inner"]) if "inner" in data else NoAction()
+            parser.from_json_data(data["inner"]) if "inner" in data else NoAction()
         )
         args.append(
-            parser.from_json_data(
-                data["outer"]) if "outer" in data else NoAction()
+            parser.from_json_data(data["outer"]) if "outer" in data else NoAction()
         )
         return RingAction(*args)
 
@@ -2657,8 +2632,7 @@ class HipfireAction(Action, HapticEnabledAction):
                     mapper.cancel_task(self.waiting_task)
                     self.waiting_task = None
                 # Start the timer to execute the action if the full press range is not reached before timeout
-                self.waiting_task = mapper.schedule(
-                    self.timeout, self.on_timeout)
+                self.waiting_task = mapper.schedule(self.timeout, self.on_timeout)
 
             # Spliting conditional for treating the sensible mode
             # in this mode after reaching the partial press level, releasing the trigger a little will cause it to deactivate the action
@@ -2697,8 +2671,7 @@ class HipfireAction(Action, HapticEnabledAction):
                         mapper.cancel_task(self.waiting_task)
                         self.waiting_task = None
                     # start the timer to execute the action if the full press is not reached before timeout
-                    self.waiting_task = mapper.schedule(
-                        self.timeout, self.on_timeout)
+                    self.waiting_task = mapper.schedule(self.timeout, self.on_timeout)
 
         # Normal release of the partial press, deactivates the partially pressed action if it was active or if the time was still going schedule a short press
         elif (

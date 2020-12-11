@@ -84,12 +84,10 @@ class EvdevController(Controller):
         self.poller = None
         if daemon:
             self.poller = daemon.get_poller()
-            self.poller.register(
-                self.device.fd, self.poller.POLLIN, self.input)
+            self.poller.register(self.device.fd, self.poller.POLLIN, self.input)
             self.device.grab()
             self._id = self._generate_id()
-        self._state = EvdevControllerInput(
-            *[0] * len(EvdevControllerInput._fields))
+        self._state = EvdevControllerInput(*[0] * len(EvdevControllerInput._fields))
         self._padpressemu_task = None
 
     def _parse_config(self, config):
@@ -184,16 +182,14 @@ class EvdevController(Controller):
                     ):
                         b = new_state.buttons | SCButtons.LPAD | SCButtons.LPADTOUCH
                         need_cancel_padpressemu = True
-                        new_state = new_state._replace(
-                            buttons=b, **{axis: value})
+                        new_state = new_state._replace(buttons=b, **{axis: value})
                     elif not new_state.buttons & SCButtons.RPADTOUCH and axis in (
                         "rpad_x",
                         "rpad_y",
                     ):
                         b = new_state.buttons | SCButtons.RPADTOUCH
                         need_cancel_padpressemu = True
-                        new_state = new_state._replace(
-                            buttons=b, **{axis: value})
+                        new_state = new_state._replace(buttons=b, **{axis: value})
                     else:
                         new_state = new_state._replace(**{axis: value})
                 elif event.type == ecodes.EV_KEY and event.code in self._button_map:
@@ -216,8 +212,7 @@ class EvdevController(Controller):
                         value = 0
                     else:
                         value = clamp(
-                            cal.clamp_min, int(
-                                value * cal.clamp_max), cal.clamp_max
+                            cal.clamp_min, int(value * cal.clamp_max), cal.clamp_max
                         )
                     axis = self._axis_map[event.code]
                     if not new_state.buttons & SCButtons.LPADTOUCH and axis in (
@@ -226,16 +221,14 @@ class EvdevController(Controller):
                     ):
                         b = new_state.buttons | SCButtons.LPAD | SCButtons.LPADTOUCH
                         need_cancel_padpressemu = True
-                        new_state = new_state._replace(
-                            buttons=b, **{axis: value})
+                        new_state = new_state._replace(buttons=b, **{axis: value})
                     elif not new_state.buttons & SCButtons.RPADTOUCH and axis in (
                         "rpad_x",
                         "rpad_y",
                     ):
                         b = new_state.buttons | SCButtons.RPADTOUCH
                         need_cancel_padpressemu = True
-                        new_state = new_state._replace(
-                            buttons=b, **{axis: value})
+                        new_state = new_state._replace(buttons=b, **{axis: value})
                     else:
                         new_state = new_state._replace(**{axis: value})
         except IOError as e:
@@ -484,8 +477,7 @@ if HAVE_EVDEV:
 
 def init(daemon, config):
     if not HAVE_EVDEV:
-        log.warning(
-            "Failed to enable Evdev driver: 'python-evdev' package is missing.")
+        log.warning("Failed to enable Evdev driver: 'python-evdev' package is missing.")
         return False
 
     _evdevdrv.set_daemon(daemon)
@@ -559,8 +551,7 @@ def evdevdrv_test(args):
     caps = dev.capabilities(verbose=False)
     print("Buttons:", " ".join([str(x) for x in caps.get(ecodes.EV_KEY, [])]))
     print(
-        "Axes:", " ".join([str(axis)
-                           for (axis, trash) in caps.get(ecodes.EV_ABS, [])])
+        "Axes:", " ".join([str(axis) for (axis, trash) in caps.get(ecodes.EV_ABS, [])])
     )
     print("Ready")
     sys.stdout.flush()

@@ -81,14 +81,12 @@ class OSDWindow(Gtk.Window):
             colors[x] = config["osd_colors"][x]
         colors = OSDCssMagic(colors)
         try:
-            css_file = os.path.join(
-                get_share_path(), "osd-styles", config["osd_style"])
+            css_file = os.path.join(get_share_path(), "osd-styles", config["osd_style"])
             css = file(css_file, "r").read()
             if (Gtk.get_major_version(), Gtk.get_minor_version()) > (3, 20):
                 css += OSDWindow.CSS_3_20
             OSDWindow.css_provider = Gtk.CssProvider()
-            OSDWindow.css_provider.load_from_data(
-                (css % colors).encode("utf-8"))
+            OSDWindow.css_provider.load_from_data((css % colors).encode("utf-8"))
             Gtk.StyleContext.add_provider_for_screen(
                 Gdk.Screen.get_default(),
                 OSDWindow.css_provider,
@@ -106,8 +104,7 @@ class OSDWindow(Gtk.Window):
             css = file(css_file, "r").read()
             if (Gtk.get_major_version(), Gtk.get_minor_version()) > (3, 20):
                 css += OSDWindow.CSS_3_20
-            OSDWindow.css_provider.load_from_data(
-                (css % colors).encode("utf-8"))
+            OSDWindow.css_provider.load_from_data((css % colors).encode("utf-8"))
             Gtk.StyleContext.add_provider_for_screen(
                 Gdk.Screen.get_default(),
                 OSDWindow.css_provider,

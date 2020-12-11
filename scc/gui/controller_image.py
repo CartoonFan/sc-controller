@@ -79,10 +79,8 @@ class ControllerImage(SVGWidget):
         data["gui"]["buttons"] = (
             data["gui"].get("buttons") or self._get_default_images()
         )
-        data["gui"]["no_buttons_in_gui"] = data["gui"].get(
-            "no_buttons_in_gui") or False
-        data["buttons"] = data.get(
-            "buttons") or ControllerImage.DEFAULT_BUTTONS
+        data["gui"]["no_buttons_in_gui"] = data["gui"].get("no_buttons_in_gui") or False
+        data["buttons"] = data.get("buttons") or ControllerImage.DEFAULT_BUTTONS
         data["axes"] = data.get("axes") or ControllerImage.DEFAULT_AXES
         data["gyros"] = data.get("gyros", data["gui"]["background"] == "sc")
         return data
@@ -110,8 +108,7 @@ class ControllerImage(SVGWidget):
         self.set_image(
             os.path.join(
                 self.app.imagepath,
-                "controller-images/%s.svg" % (
-                    self.current["gui"]["background"],),
+                "controller-images/%s.svg" % (self.current["gui"]["background"],),
             )
         )
         if not self.current["gui"]["no_buttons_in_gui"]:
@@ -127,8 +124,7 @@ class ControllerImage(SVGWidget):
         if self.backup is None:
             self.backup = copy.deepcopy(self.current)
         data = json.loads(
-            open(os.path.join(self.app.imagepath, "%s.json" %
-                              (filename,)), "r").read()
+            open(os.path.join(self.app.imagepath, "%s.json" % (filename,)), "r").read()
         )
         self.current["gui"]["background"] = data["gui"]["background"]
         self.use_config(self.current, self.backup)
@@ -141,8 +137,7 @@ class ControllerImage(SVGWidget):
         if self.backup is None:
             self.backup = copy.deepcopy(self.current)
         data = json.loads(
-            open(os.path.join(self.app.imagepath, "%s.json" %
-                              (filename,)), "r").read()
+            open(os.path.join(self.app.imagepath, "%s.json" % (filename,)), "r").read()
         )
         self.current["gui"]["buttons"] = data["gui"]["buttons"]
         self.current["buttons"] = data["buttons"]
@@ -156,8 +151,7 @@ class ControllerImage(SVGWidget):
     def get_button_groups(self):
         groups = json.loads(
             open(
-                os.path.join(self.app.imagepath,
-                             "button-images", "groups.json"), "r"
+                os.path.join(self.app.imagepath, "button-images", "groups.json"), "r"
             ).read()
         )
         return {x["key"]: x["buttons"] for x in groups if x["type"] == "buttons"}
@@ -190,11 +184,9 @@ class ControllerImage(SVGWidget):
                         x -= (tw - w) * 0.25
                         y -= (th - h) * 0.25
                 path = os.path.join(
-                    self.app.imagepath, "button-images", "%s.svg" % (
-                        buttons[i],)
+                    self.app.imagepath, "button-images", "%s.svg" % (buttons[i],)
                 )
-                img = SVGEditor.get_element(
-                    SVGEditor.load_from_file(path), "button")
+                img = SVGEditor.get_element(SVGEditor.load_from_file(path), "button")
                 img.attrib["transform"] = "translate(%s, %s) scale(%s)" % (
                     x - target_x,
                     y - target_y,

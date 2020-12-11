@@ -72,8 +72,7 @@ class Launcher(OSDWindow):
         self.config = None
         self.feedback = None
         self.controller = None
-        self.xdisplay = X.Display(
-            hash(GdkX11.x11_get_default_xdisplay()))  # Magic
+        self.xdisplay = X.Display(hash(GdkX11.x11_get_default_xdisplay()))  # Magic
 
         self.create_parent()
         self.create_app_list()
@@ -242,7 +241,7 @@ class Launcher(OSDWindow):
         return True
 
     def _set_launchers(self, launchers):
-        launchers = launchers[0: self.MAX_ROWS]
+        launchers = launchers[0 : self.MAX_ROWS]
         for x in self.items:
             x.set_label("")
             x.set_name("osd-hidden-item")
@@ -322,8 +321,7 @@ class Launcher(OSDWindow):
 
     def select(self, index):
         if self._selected:
-            self._selected.set_name(
-                self._selected.get_name().replace("-selected", ""))
+            self._selected.set_name(self._selected.get_name().replace("-selected", ""))
             self._selected = None
         if self.items[index].launcher is not None:
             self._selected = self.items[index]
@@ -376,8 +374,7 @@ class Launcher(OSDWindow):
 
         self._eh_ids += [
             (self.controller, self.controller.connect("event", self.on_event)),
-            (self.controller, self.controller.connect(
-                "lost", self.on_controller_lost)),
+            (self.controller, self.controller.connect("lost", self.on_controller_lost)),
         ]
         locks = [
             LEFT,
@@ -437,8 +434,7 @@ class Launcher(OSDWindow):
         max_w = self.grid.get_allocation().width - 2 * pad_w
         max_h = self.grid.get_allocation().height - 2 * pad_h
 
-        x, y = circle_to_square(x / (STICK_PAD_MAX * 2.0),
-                                y / (STICK_PAD_MAX * 2.0))
+        x, y = circle_to_square(x / (STICK_PAD_MAX * 2.0), y / (STICK_PAD_MAX * 2.0))
         x = clamp(pad_w, (pad_w + max_w) * 0.5 + x * max_w, max_w - pad_w)
         y = clamp(pad_h, (pad_h + max_h) * 0.5 + y * max_h * -1, max_h - pad_h)
         x += self.grid.get_allocation().x

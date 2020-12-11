@@ -96,8 +96,7 @@ class TestModifiers(object):
         ):
             raise AssertionError
         if not isinstance(
-            _parse_compressed(
-                "circularabs(axis(REL_WHEEL))"), CircularAbsModifier
+            _parse_compressed("circularabs(axis(REL_WHEEL))"), CircularAbsModifier
         ):
             raise AssertionError
 
@@ -289,8 +288,7 @@ class TestModifiers(object):
         if not (isinstance(a.action, AxisAction) and a.action.id == Axes.ABS_Y):
             raise AssertionError
         if not (
-            isinstance(a.normalaction,
-                       AxisAction) and a.normalaction.id == Axes.ABS_Z
+            isinstance(a.normalaction, AxisAction) and a.normalaction.id == Axes.ABS_Z
         ):
             raise AssertionError
         a = _parse_compressed(
@@ -301,8 +299,7 @@ class TestModifiers(object):
         if not isinstance(a.holdaction, AxisAction) or a.holdaction.id != Axes.ABS_RX:
             raise AssertionError
         if not (
-            isinstance(a.normalaction,
-                       AxisAction) and a.normalaction.id == Axes.ABS_Z
+            isinstance(a.normalaction, AxisAction) and a.normalaction.id == Axes.ABS_Z
         ):
             raise AssertionError
         a = _parse_compressed(
@@ -311,13 +308,11 @@ class TestModifiers(object):
         if not isinstance(a.action, AxisAction) or a.action.id != Axes.ABS_Z:
             raise AssertionError
         if not (
-            isinstance(
-                a.holdaction, AxisAction) and a.holdaction.id == Axes.ABS_RZ
+            isinstance(a.holdaction, AxisAction) and a.holdaction.id == Axes.ABS_RZ
         ):
             raise AssertionError
         if not (
-            isinstance(a.normalaction,
-                       AxisAction) and a.normalaction.id == Axes.ABS_X
+            isinstance(a.normalaction, AxisAction) and a.normalaction.id == Axes.ABS_X
         ):
             raise AssertionError
 
@@ -345,8 +340,7 @@ class TestModifiers(object):
             raise AssertionError
         a = _parse_compressed("sens(2, 3, deadzone(2.0, mouse()))")
         if not (
-            isinstance(a.action, MouseAction) and a.action.get_speed() == (
-                2.0, 3.0)
+            isinstance(a.action, MouseAction) and a.action.get_speed() == (2.0, 3.0)
         ):
             raise AssertionError
 

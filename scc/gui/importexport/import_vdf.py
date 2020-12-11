@@ -27,8 +27,7 @@ class ImportVdf(object):
 
     def __init__(self):
         self._profile = None
-        self._lstVdfProfiles = self.builder.get_object(
-            "tvVdfProfiles").get_model()
+        self._lstVdfProfiles = self.builder.get_object("tvVdfProfiles").get_model()
         self._q_games = collections.deque()
         self._q_profiles = collections.deque()
         self._s_games = threading.Semaphore(0)
@@ -121,20 +120,17 @@ class ImportVdf(object):
                 break
             if gameid.isdigit():
                 name = _("Unknown App ID %s") % (gameid)
-                filename = os.path.join(
-                    sa_path, "appmanifest_%s.acf" % (gameid,))
+                filename = os.path.join(sa_path, "appmanifest_%s.acf" % (gameid,))
                 self._lock.acquire()
                 if os.path.exists(filename):
                     try:
                         data = parse_vdf(open(filename, "r"))
                         name = data["appstate"]["name"]
                     except Exception as e:
-                        log.error(
-                            "Failed to load app manifest for '%s'", gameid)
+                        log.error("Failed to load app manifest for '%s'", gameid)
                         log.exception(e)
                 else:
-                    log.warning(
-                        "Skiping non-existing app manifest '%s'", filename)
+                    log.warning("Skiping non-existing app manifest '%s'", filename)
                 self._lock.release()
             else:
                 name = gameid
@@ -190,15 +186,13 @@ class ImportVdf(object):
                 try:
                     data = parse_vdf(open(filename, "r"))
                     name = data["controller_mappings"]["title"]
-                    GLib.idle_add(self._set_profile_name,
-                                  index, name, filename)
+                    GLib.idle_add(self._set_profile_name, index, name, filename)
                     break
                 except Exception as e:
                     log.error("Failed to read profile name from '%s'", filename)
                     log.exception(e)
             else:
-                log.warning("Profile %s for game %s not found.",
-                            profile_id, gameid)
+                log.warning("Profile %s for game %s not found.", profile_id, gameid)
                 name = _("(not found)")
                 GLib.idle_add(self._set_profile_name, index, name, None)
             self._lock.release()
@@ -282,8 +276,7 @@ class ImportVdf(object):
             lblASetList.set_text(
                 "\n".join(
                     [
-                        self.gen_aset_name(
-                            txName.get_text().decode("utf-8").strip(), x)
+                        self.gen_aset_name(txName.get_text().decode("utf-8").strip(), x)
                         for x in self._profile.action_sets
                         if x != "default"
                     ]
@@ -292,8 +285,7 @@ class ImportVdf(object):
         else:
             lblASetsNotice.set_visible(False)
             lblASetList.set_visible(False)
-        btNext.set_sensitive(self.check_name(
-            txName.get_text().decode("utf-8")))
+        btNext.set_sensitive(self.check_name(txName.get_text().decode("utf-8")))
 
     def on_preload_finished(self, callback, *data):
         """
@@ -397,20 +389,17 @@ class ImportVdf(object):
                 swError.set_visible(True)
                 lblError.set_visible(True)
 
-                lblVdfImportFinished.set_text(
-                    _("Profile imported with warnings"))
+                lblVdfImportFinished.set_text(_("Profile imported with warnings"))
 
                 tvError.get_buffer().set_text(error_log.getvalue())
                 txName.set_text(self._profile.name)
             else:
-                lblVdfImportFinished.set_text(
-                    _("Profile sucessfully imported"))
+                lblVdfImportFinished.set_text(_("Profile sucessfully imported"))
                 txName.set_text(self._profile.name)
             self.on_txName_changed()
 
     def vdf_import_confirmed(self, *a):
-        name = self.builder.get_object(
-            "txName").get_text().decode("utf-8").strip()
+        name = self.builder.get_object("txName").get_text().decode("utf-8").strip()
 
         if len(self._profile.action_sets) > 1:
             # Update ChangeProfileActions with correct profile names

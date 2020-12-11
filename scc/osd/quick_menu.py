@@ -72,8 +72,7 @@ class QuickMenu(Menu):
             item.button = self.BUTTONS[self._button_index]
             self._button_index += 1
 
-            icon_file, has_colors = find_icon(
-                "buttons/%s" % item.button, False)
+            icon_file, has_colors = find_icon("buttons/%s" % item.button, False)
             icon = MenuIcon(icon_file, has_colors)
             label = widget.get_children()[0]
             for c in [] + widget.get_children():

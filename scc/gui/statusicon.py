@@ -283,8 +283,7 @@ class StatusIconAppIndicator(StatusIconDBus):
     def _set_visible(self, active):
         StatusIcon._set_visible(self, active)
 
-        self._tray.set_status(
-            self._status_active if active else self._status_passive)
+        self._tray.set_status(self._status_active if active else self._status_passive)
 
     def is_clickable(self):
         return False
@@ -316,8 +315,7 @@ class StatusIconProxy(StatusIcon):
             # Try loading GTK native status icon
             self._status_gtk = StatusIconGTK3(*args, **kwargs)
             self._status_gtk.connect(b"clicked", self._on_click)
-            self._status_gtk.connect(
-                b"notify::active", self._on_notify_active_gtk)
+            self._status_gtk.connect(b"notify::active", self._on_notify_active_gtk)
             self._on_notify_active_gtk()
 
             log.info("Using backend StatusIconGTK3 (primary)")
@@ -417,12 +415,10 @@ def get_status_icon(*args, **kwargs):
     if "STATUS_BACKEND" in os.environ:
         kwargs["force"] = True
 
-        status_icon_backend_name = "StatusIcon%s" % (
-            os.environ.get("STATUS_BACKEND"))
+        status_icon_backend_name = "StatusIcon%s" % (os.environ.get("STATUS_BACKEND"))
         if status_icon_backend_name in globals():
             try:
-                status_icon = globals()[status_icon_backend_name](
-                    *args, **kwargs)
+                status_icon = globals()[status_icon_backend_name](*args, **kwargs)
                 log.info(
                     "StatusIcon: Using requested backend %s"
                     % (status_icon_backend_name)

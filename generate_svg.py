@@ -104,8 +104,7 @@ class Box(object):
                 lines.append(self.add(icon, context, action.normalaction))
             if action.action:
                 lines.append(
-                    self.add("DOUBLECLICK", context,
-                             action.action).add_icon(icon)
+                    self.add("DOUBLECLICK", context, action.action).add_icon(icon)
                 )
             if action.holdaction:
                 lines.append(
@@ -151,8 +150,7 @@ class Box(object):
                 self.height + lh + self.SPACING,
             )
             self.icount = max(self.icount, len(line.icons))
-        self.width += 2 * self.PADDING + self.icount * \
-            (gen.line_height + self.SPACING)
+        self.width += 2 * self.PADDING + self.icount * (gen.line_height + self.SPACING)
         self.height = max(self.height, self.min_height)
 
         anchor_x, anchor_y = self.anchor
@@ -264,10 +262,8 @@ class Generator(object):
         svg = SVGEditor(file("images/binding-display.svg").read())
         background = SVGEditor.get_element(svg, "background")
         self.label_template = SVGEditor.get_element(svg, "label_template")
-        self.line_height = int(
-            float(self.label_template.attrib.get("height") or 8))
-        self.char_width = int(
-            float(self.label_template.attrib.get("width") or 8))
+        self.line_height = int(float(self.label_template.attrib.get("height") or 8))
+        self.char_width = int(float(self.label_template.attrib.get("width") or 8))
         self.full_width = int(float(background.attrib.get("width") or 800))
         self.full_height = int(float(background.attrib.get("height") or 800))
 
@@ -275,11 +271,9 @@ class Generator(object):
         boxes = []
 
         box_bcs = Box(0, self.PADDING, Align.TOP, "bcs")
-        box_bcs.add("BACK", Action.AC_BUTTON,
-                    profile.buttons.get(SCButtons.BACK))
+        box_bcs.add("BACK", Action.AC_BUTTON, profile.buttons.get(SCButtons.BACK))
         box_bcs.add("C", Action.AC_BUTTON, profile.buttons.get(SCButtons.C))
-        box_bcs.add("START", Action.AC_BUTTON,
-                    profile.buttons.get(SCButtons.START))
+        box_bcs.add("START", Action.AC_BUTTON, profile.buttons.get(SCButtons.START))
         boxes.append(box_bcs)
 
         box_left = Box(
@@ -290,11 +284,9 @@ class Generator(object):
             min_height=self.full_height * 0.5,
             min_width=self.full_width * 0.2,
         )
-        box_left.add("LEFT", Action.AC_TRIGGER,
-                     profile.triggers.get(profile.LEFT))
+        box_left.add("LEFT", Action.AC_TRIGGER, profile.triggers.get(profile.LEFT))
         box_left.add("LB", Action.AC_BUTTON, profile.buttons.get(SCButtons.LB))
-        box_left.add("LGRIP", Action.AC_BUTTON,
-                     profile.buttons.get(SCButtons.LGRIP))
+        box_left.add("LGRIP", Action.AC_BUTTON, profile.buttons.get(SCButtons.LGRIP))
         box_left.add("LPAD", Action.AC_PAD, profile.pads.get(profile.LEFT))
         boxes.append(box_left)
 
@@ -306,12 +298,9 @@ class Generator(object):
             min_height=self.full_height * 0.5,
             min_width=self.full_width * 0.2,
         )
-        box_right.add("RIGHT", Action.AC_TRIGGER,
-                      profile.triggers.get(profile.RIGHT))
-        box_right.add("RB", Action.AC_BUTTON,
-                      profile.buttons.get(SCButtons.RB))
-        box_right.add("RGRIP", Action.AC_BUTTON,
-                      profile.buttons.get(SCButtons.RGRIP))
+        box_right.add("RIGHT", Action.AC_TRIGGER, profile.triggers.get(profile.RIGHT))
+        box_right.add("RB", Action.AC_BUTTON, profile.buttons.get(SCButtons.RB))
+        box_right.add("RGRIP", Action.AC_BUTTON, profile.buttons.get(SCButtons.RGRIP))
         box_right.add("RPAD", Action.AC_PAD, profile.pads.get(profile.RIGHT))
         boxes.append(box_right)
 

@@ -114,8 +114,7 @@ class VDFProfile(Profile):
             return MultiAction.make(*[self.parse_action(x) for x in lst_or_str])
         # Split string into binding type, name and parameters
         binding, params = lst_or_str.split(" ", 1)
-        params, name = params.split(
-            ",", 1) if "," in params else (params, None)
+        params, name = params.split(",", 1) if "," in params else (params, None)
         params = params.split(" ")
         if name:
             name = name.strip()
@@ -146,14 +145,12 @@ class VDFProfile(Profile):
         elif binding in ("mode_shift"):
             if button is None:
                 log.warning(
-                    "Ignoring modeshift assigned to no button: '%s'" % (
-                        lst_or_str,)
+                    "Ignoring modeshift assigned to no button: '%s'" % (lst_or_str,)
                 )
                 return NoAction()
             if button not in VDFProfile.BUTTON_TO_BUTTON:
                 log.warning(
-                    "Ignoring modeshift assigned to unknown button: '%s'" % (
-                        button,)
+                    "Ignoring modeshift assigned to unknown button: '%s'" % (button,)
                 )
                 return NoAction()
             self.modeshift_buttons[VDFProfile.BUTTON_TO_BUTTON[button]] = (
@@ -168,8 +165,7 @@ class VDFProfile(Profile):
                 self.action_set_switches.add(cpa)
                 return cpa
 
-            log.warning("Ignoring controller_action '%s' binding" %
-                        (params[0],))
+            log.warning("Ignoring controller_action '%s' binding" % (params[0],))
             return NoAction()
         elif binding == "mouse_wheel":
             if params[0].lower() == "scroll_down":
@@ -269,8 +265,7 @@ class VDFProfile(Profile):
                 if k in bdef["activators"]:
                     # TODO: Handle multiple bindings
                     bindings = ensure_list(bdef["activators"][k])[0]
-                    a = self.parse_action(
-                        bindings["bindings"]["binding"], button)
+                    a = self.parse_action(bindings["bindings"]["binding"], button)
                     a = VDFProfile.parse_modifiers(bindings, a, Profile.RIGHT)
                     # holly...
                 act_actions.append(a)
@@ -338,12 +333,10 @@ class VDFProfile(Profile):
         elif mode == "joystick_move":
             if side == Profile.LEFT:
                 # Left
-                action = XYAction(AxisAction(Axes.ABS_X),
-                                  AxisAction(Axes.ABS_Y))
+                action = XYAction(AxisAction(Axes.ABS_X), AxisAction(Axes.ABS_Y))
             else:
                 # Right
-                action = XYAction(AxisAction(Axes.ABS_RX),
-                                  AxisAction(Axes.ABS_RY))
+                action = XYAction(AxisAction(Axes.ABS_RX), AxisAction(Axes.ABS_RY))
         elif mode == "joystick_camera":
             output_joystick = 0
             if "output_joystick" in settings:
@@ -358,16 +351,14 @@ class VDFProfile(Profile):
                 )
             else:
                 # TODO: Absolute mouse? Doesn't seems to do anything in Steam
-                action = BallModifier(
-                    SensitivityModifier(0.1, 0.1, MouseAction()))
+                action = BallModifier(SensitivityModifier(0.1, 0.1, MouseAction()))
         elif mode == "mouse_joystick":
             action = BallModifier(
                 XYAction(AxisAction(Axes.ABS_RX), AxisAction(Axes.ABS_RY))
             )
         elif mode == "scrollwheel":
             action = BallModifier(
-                XYAction(MouseAction(Rels.REL_HWHEEL),
-                         MouseAction(Rels.REL_WHEEL))
+                XYAction(MouseAction(Rels.REL_HWHEEL), MouseAction(Rels.REL_WHEEL))
             )
         elif mode == "touch_menu":
             # Touch menu is converted to GridMenu
@@ -410,15 +401,13 @@ class VDFProfile(Profile):
                 action = MouseAction()
         elif mode == "mouse_wheel":
             action = BallModifier(
-                XYAction(MouseAction(Rels.REL_HWHEEL),
-                         MouseAction(Rels.REL_WHEEL))
+                XYAction(MouseAction(Rels.REL_HWHEEL), MouseAction(Rels.REL_WHEEL))
             )
         elif mode == "trigger":
             actions = []
             if "click" in inputs:
                 actions.append(
-                    TriggerAction(
-                        TRIGGER_CLICK, self.parse_button(inputs["click"]))
+                    TriggerAction(TRIGGER_CLICK, self.parse_button(inputs["click"]))
                 )
 
             if side == Profile.LEFT:
@@ -430,10 +419,8 @@ class VDFProfile(Profile):
         elif mode == "mouse_region":
             # Read value and assume dafaults
             scale = float(settings["scale"]) if "scale" in settings else 100.0
-            x = float(settings["position_x"]
-                      ) if "position_x" in settings else 50.0
-            y = float(settings["position_y"]
-                      ) if "position_y" in settings else 50.0
+            x = float(settings["position_x"]) if "position_x" in settings else 50.0
+            y = float(settings["position_y"]) if "position_y" in settings else 50.0
             w = (
                 float(settings["sensitivity_horiz_scale"])
                 if "sensitivity_horiz_scale" in settings

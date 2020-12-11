@@ -27,8 +27,7 @@ class TestSpecialActions(object):
                     continue
                 method_name = "test_%s" % (cls.COMMAND,)
                 if not hasattr(self, method_name):
-                    raise AssertionError(
-                        "There is no test for %s" % (cls.COMMAND))
+                    raise AssertionError("There is no test for %s" % (cls.COMMAND))
 
     def test_profile(self):
         """
@@ -118,8 +117,7 @@ class TestSpecialActions(object):
         back to same action.
         """
         if not _parses_as_itself(
-            DialogAction("Some Text", NameModifier(
-                "Option", OSDAction("display this")))
+            DialogAction("Some Text", NameModifier("Option", OSDAction("display this")))
         ):
             raise AssertionError
         if not _parses_as_itself(

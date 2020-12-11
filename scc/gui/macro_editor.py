@@ -129,8 +129,7 @@ class MacroEditor(Editor):
                 button_action=b,
             )
 
-            c.connect("changed", self.on_buttonaction_type_change,
-                      i - 1, action_data)
+            c.connect("changed", self.on_buttonaction_type_change, i - 1, action_data)
             grActions.attach(c, 0, i, 1, 1)
             grActions.attach(b, 1, i, 1, 1)
         elif isinstance(action, SleepAction):
@@ -138,8 +137,7 @@ class MacroEditor(Editor):
             l = Gtk.Label("")
             l.set_xalign(0.0)
             l.set_size_request(100, -1)
-            s = Gtk.Scale.new_with_range(
-                Gtk.Orientation.HORIZONTAL, 5, 5000, 5)
+            s = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 5, 5000, 5)
             s.set_draw_value(False)
             s.set_value(action.delay * 1000)
             action_data = ActionData(
@@ -252,8 +250,7 @@ class MacroEditor(Editor):
         elif cb.get_active() == 1:
             self.actions[i] = action_data._replace(action=PressAction(action))
         else:
-            self.actions[i] = action_data._replace(
-                action=ReleaseAction(action))
+            self.actions[i] = action_data._replace(action=ReleaseAction(action))
         self.update_action_field()
 
     def _clear_grid(self):
@@ -367,8 +364,7 @@ class MacroEditor(Editor):
         cbMacroType = self.builder.get_object("cbMacroType")
         self.id = id
         self.mode = mode
-        self.set_title("Macro for %s" %
-                       (id.name if id in SCButtons else str(id),))
+        self.set_title("Macro for %s" % (id.name if id in SCButtons else str(id),))
         if isinstance(action, Cycle):
             cbMacroType.set_active(2)
         elif action.repeat:

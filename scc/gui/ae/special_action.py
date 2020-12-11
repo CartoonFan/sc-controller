@@ -144,8 +144,7 @@ class SpecialActionComponent(AEComponent, MenuActionCofC):
             stActionData.set_visible_child(self.builder.get_object("vbShell"))
             self.on_enCommand_changed()
         elif key == "profile":
-            stActionData.set_visible_child(
-                self.builder.get_object("vbProfile"))
+            stActionData.set_visible_child(self.builder.get_object("vbProfile"))
             self.on_cbProfile_changed()
         elif key == "keyboard":
             stActionData.set_visible_child(self.builder.get_object("nothing"))
@@ -195,8 +194,7 @@ class SpecialActionComponent(AEComponent, MenuActionCofC):
         if self._recursing:
             return
         enCommand = self.builder.get_object("enCommand")
-        self.editor.set_action(ShellCommandAction(
-            enCommand.get_text().decode("utf-8")))
+        self.editor.set_action(ShellCommandAction(enCommand.get_text().decode("utf-8")))
 
     def on_osd_settings_changed(self, *a):
         if self._recursing:

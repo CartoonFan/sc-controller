@@ -171,22 +171,19 @@ class TestInputs(object):
 
         # Create movements over left pad
         # - A
-        state = ZERO_STATE._replace(
-            buttons=SCButtons.LPADTOUCH, lpad_x=STICK_PAD_MIN)
+        state = ZERO_STATE._replace(buttons=SCButtons.LPADTOUCH, lpad_x=STICK_PAD_MIN)
         mapper.input(mapper.controller, ZERO_STATE, state)
         if Keys.KEY_A not in mapper.keyboard.pressed:
             raise AssertionError
         mapper.input(mapper.controller, state, ZERO_STATE)
         # - S
-        state = ZERO_STATE._replace(
-            buttons=SCButtons.LPADTOUCH, lpad_y=STICK_PAD_MIN)
+        state = ZERO_STATE._replace(buttons=SCButtons.LPADTOUCH, lpad_y=STICK_PAD_MIN)
         mapper.input(mapper.controller, ZERO_STATE, state)
         if Keys.KEY_S not in mapper.keyboard.pressed:
             raise AssertionError
         mapper.input(mapper.controller, state, ZERO_STATE)
         # - D
-        state = ZERO_STATE._replace(
-            buttons=SCButtons.LPADTOUCH, lpad_x=STICK_PAD_MAX)
+        state = ZERO_STATE._replace(buttons=SCButtons.LPADTOUCH, lpad_x=STICK_PAD_MAX)
         mapper.input(mapper.controller, ZERO_STATE, state)
         if Keys.KEY_D not in mapper.keyboard.pressed:
             raise AssertionError
@@ -198,8 +195,7 @@ class TestInputs(object):
         Tests joystick camera, mapping trackball to right joystick
         """
         mapper.profile.pads[Profile.RIGHT] = (
-            parser.restart(
-                "ball(XY(" "	axis(Axes.ABS_RX)," "	axis(Axes.ABS_RY)" "))")
+            parser.restart("ball(XY(" "	axis(Axes.ABS_RX)," "	axis(Axes.ABS_RY)" "))")
         ).parse()
 
         # Create movement over right pad
@@ -256,8 +252,7 @@ class TestInputs(object):
             raise AssertionError
 
         # Press button again
-        _state, state = state, state._replace(
-            buttons=SCButtons.B | SCButtons.A)
+        _state, state = state, state._replace(buttons=SCButtons.B | SCButtons.A)
         mapper.input(mapper.controller, _state, state)
         if Keys.KEY_V not in mapper.keyboard.pressed:
             raise AssertionError

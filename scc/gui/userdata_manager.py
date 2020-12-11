@@ -69,8 +69,7 @@ class UserDataManager(object):
 
     def load_profile_list(self, category=None):
         paths = [get_default_profiles_path(), get_profiles_path()]
-        self.load_user_data(paths, "*.sccprofile",
-                            category, self.on_profiles_loaded)
+        self.load_user_data(paths, "*.sccprofile", category, self.on_profiles_loaded)
 
     def load_menu_list(self, category=None):
         paths = [get_default_menus_path(), get_menus_path()]
