@@ -2,7 +2,7 @@
 SC-Controller - Scripts
 
 Contains code for most of what can be done using 'scc' script.
-Created so scc-* stuff doesn't polute /usr/bin.
+Created so scc-* stuff doesn't pollute /usr/bin.
 """
 import os
 import subprocess
