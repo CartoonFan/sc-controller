@@ -10,7 +10,7 @@ import sys
 from math import atan2
 from math import cos
 from math import pi as PI
-from math import sin 
+from math import sin
 
 from scc.config import Config
 from scc.constants import STICK
@@ -270,7 +270,7 @@ class RadialMenu(Menu):
             return Menu.on_event(self, daemon, what, data)
 
         x, y = data
-            # Special case, both confirm_with and cancel_with can be set to STICK
+        # Special case, both confirm_with and cancel_with can be set to STICK
         if (
             self._cancel_with == STICK
             and self._control_with == STICK
