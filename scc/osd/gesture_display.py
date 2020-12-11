@@ -1,7 +1,7 @@
 """
 SC-Controller - Grid OSD Menu
 
-Works as OSD menu, but displays item in (as rectangluar as possible - and
+Works as OSD menu, but displays item in (as rectangular as possible - and
 that's usually not very much) grid.
 """
 import logging
@@ -28,8 +28,8 @@ class GestureDisplay(OSDWindow):
     OSD Window that displays gesture as it is being generated.
 
     Signals:
-      gesture-updated(gesture)      Emited repeadedly while gesture is being drawn.
-                                    May be emited multiple times with same gesture.
+      gesture-updated(gesture)      Emitted repeatedly while gesture is being drawn.
+                                    May be emitted multiple times with same gesture.
     """
 
     EPILOG = """Exit codes:
