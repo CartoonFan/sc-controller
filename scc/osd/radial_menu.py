@@ -10,7 +10,7 @@ import sys
 from math import atan2
 from math import cos
 from math import pi as PI
-from math import sin 
+from math import sin
 
 from scc.config import Config
 from scc.constants import STICK
@@ -135,14 +135,13 @@ class RadialMenu(Menu):
         # in 'root' object coordinate space
         image_width = pb.get_width()
 
-        index = 0
         item_offset = 360.0 / len(self.items)
         a1 = (-90.0 - item_offset * 0.5) * PI / 180.0
         a2 = (-90.0 + item_offset * 0.5) * PI / 180.0
         for i in self.items_with_icon:
             i.icon_widget.get_parent().remove_child(i.icon_widget)
         self.items_with_icon = []
-        for i in items:
+        for index, i in enumerate(items):
             # Set size of each arc
             if SVGEditor.get_element(i.widget, "arc") is not None:
                 l = SVGEditor.get_element(i.widget, "arc")
@@ -198,7 +197,7 @@ class RadialMenu(Menu):
                     self.editor.remove_element(
                         SVGEditor.get_element(i.widget, "line0"))
                     first_line = 1
-                for line in range(0, len(label)):
+                for line in range(len(label)):
                     l = SVGEditor.get_element(i.widget,
                                               "line%s" % (first_line + line, ))
                     if l is None:
@@ -206,8 +205,6 @@ class RadialMenu(Menu):
                     SVGEditor.set_text(l, label[line])
             # Continue with next menu item
             i.index = index
-
-            index += 1
 
         self.editor.remove_element("menuitem_template")
         self.editor.commit()
@@ -248,9 +245,9 @@ class RadialMenu(Menu):
     def select(self, i):
         if isinstance(i, int):
             i = self.items[i]
-        if self._selected and hasattr(self._selected, "icon_widget"):
-            if self._selected.icon_widget:
-                self._selected.icon_widget.set_name("osd-radial-menu-icon")
+        if (self._selected and hasattr(self._selected, "icon_widget")
+                and self._selected.icon_widget):
+            self._selected.icon_widget.set_name("osd-radial-menu-icon")
         self._selected = i
         if hasattr(self._selected,
                    "icon_widget") and self._selected.icon_widget:
@@ -266,40 +263,40 @@ class RadialMenu(Menu):
     def on_event(self, daemon, what, data):
         if self._submenu:
             return self._submenu.on_event(daemon, what, data)
-        if what == self._control_with:
-            x, y = data
-            # Special case, both confirm_with and cancel_with can be set to STICK
-            if self._cancel_with == STICK and self._control_with == STICK:
-                if self._control_equals_cancel(daemon, x, y):
-                    return
-
-            if self.rotation:
-                rx = x * cos(self.rotation) - y * sin(self.rotation)
-                ry = x * sin(self.rotation) + y * cos(self.rotation)
-                x, y = rx, ry
-
-            max_w = self.get_allocation().width * self.scale - (
-                self.cursor.get_allocation().width * 1.0)
-            max_h = self.get_allocation().height * self.scale - (
-                self.cursor.get_allocation().height * 1.0)
-            cx = ((x * 0.75 / (STICK_PAD_MAX * 2.0)) + 0.5) * max_w
-            cy = (0.5 - (y * 0.75 / (STICK_PAD_MAX * 2.0))) * max_h
-
-            cx -= self.cursor.get_allocation().width * 0.5
-            cy -= self.cursor.get_allocation().height * 0.5
-            self.f.move(self.cursor, int(cx), int(cy))
-
-            if abs(x) + abs(y) > RadialMenu.MIN_DISTANCE:
-                angle = atan2(x, y) * 180.0 / PI
-                half_width = 180.0 / len(self.items)
-                for i in self.items:
-                    if abs(degdiff(i.a, angle)) < half_width:
-                        if self._selected != i:
-                            if self.feedback and self.controller:
-                                self.controller.feedback(*self.feedback)
-                            self.select(i)
-        else:
+        if what != self._control_with:
             return Menu.on_event(self, daemon, what, data)
+
+        x, y = data
+        # Special case, both confirm_with and cancel_with can be set to STICK
+        if (self._cancel_with == STICK and self._control_with == STICK
+                and self._control_equals_cancel(daemon, x, y)):
+            return
+
+        if self.rotation:
+            rx = x * cos(self.rotation) - y * sin(self.rotation)
+            ry = x * sin(self.rotation) + y * cos(self.rotation)
+            x, y = rx, ry
+
+        max_w = self.get_allocation().width * self.scale - (
+            self.cursor.get_allocation().width * 1.0)
+        max_h = self.get_allocation().height * self.scale - (
+            self.cursor.get_allocation().height * 1.0)
+        cx = ((x * 0.75 / (STICK_PAD_MAX * 2.0)) + 0.5) * max_w
+        cy = (0.5 - (y * 0.75 / (STICK_PAD_MAX * 2.0))) * max_h
+
+        cx -= self.cursor.get_allocation().width * 0.5
+        cy -= self.cursor.get_allocation().height * 0.5
+        self.f.move(self.cursor, int(cx), int(cy))
+
+        if abs(x) + abs(y) > RadialMenu.MIN_DISTANCE:
+            angle = atan2(x, y) * 180.0 / PI
+            half_width = 180.0 / len(self.items)
+            for i in self.items:
+                if abs(degdiff(i.a,
+                               angle)) < half_width and self._selected != i:
+                    if self.feedback and self.controller:
+                        self.controller.feedback(*self.feedback)
+                    self.select(i)
 
 
 if __name__ == "__main__":
