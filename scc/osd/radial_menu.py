@@ -10,7 +10,7 @@ import sys
 from math import atan2
 from math import cos
 from math import pi as PI
-from math import sin 
+from math import sin
 
 from scc.config import Config
 from scc.constants import STICK
@@ -245,11 +245,8 @@ class RadialMenu(Menu):
     def select(self, i):
         if isinstance(i, int):
             i = self.items[i]
-        if (
-            self._selected
-            and hasattr(self._selected, "icon_widget")
-            and self._selected.icon_widget
-        ):
+        if (self._selected and hasattr(self._selected, "icon_widget")
+                and self._selected.icon_widget):
             self._selected.icon_widget.set_name("osd-radial-menu-icon")
         self._selected = i
         if hasattr(self._selected,
@@ -270,12 +267,9 @@ class RadialMenu(Menu):
             return Menu.on_event(self, daemon, what, data)
 
         x, y = data
-            # Special case, both confirm_with and cancel_with can be set to STICK
-        if (
-            self._cancel_with == STICK
-            and self._control_with == STICK
-            and self._control_equals_cancel(daemon, x, y)
-        ):
+        # Special case, both confirm_with and cancel_with can be set to STICK
+        if (self._cancel_with == STICK and self._control_with == STICK
+                and self._control_equals_cancel(daemon, x, y)):
             return
 
         if self.rotation:
@@ -298,7 +292,8 @@ class RadialMenu(Menu):
             angle = atan2(x, y) * 180.0 / PI
             half_width = 180.0 / len(self.items)
             for i in self.items:
-                if abs(degdiff(i.a, angle)) < half_width and self._selected != i:
+                if abs(degdiff(i.a,
+                               angle)) < half_width and self._selected != i:
                     if self.feedback and self.controller:
                         self.controller.feedback(*self.feedback)
                     self.select(i)
