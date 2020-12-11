@@ -10,7 +10,7 @@ import sys
 from math import atan2
 from math import cos
 from math import pi as PI
-from math import sin 
+from math import sin
 
 from scc.config import Config
 from scc.constants import STICK
