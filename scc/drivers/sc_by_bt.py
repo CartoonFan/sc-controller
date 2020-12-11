@@ -247,7 +247,7 @@ class SCByBt(SCController):
 
     def flush(self):
         """ Flushes all prepared control messages to the device """
-        while len(self._cmsg):
+        while self._cmsg:
             msg = self._cmsg.pop()
             self._hidrawdev.sendFeatureReport(msg)
 

@@ -1652,7 +1652,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         uri = None
         if str(data.get_data_type()) == "text/uri-list":
             # Only file can be dropped here
-            if len(data.get_uris()):
+            if data.get_uris():
                 uri = data.get_uris()[0]
         elif str(data.get_data_type()) == "text/plain":
             # This can be anything, so try to extract uri from it
