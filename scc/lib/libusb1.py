@@ -786,8 +786,7 @@ libusb_capability = Enum({
     "LIBUSB_CAP_HAS_CAPABILITY": 0x0000,
     # Hotplug support is available.
     "LIBUSB_CAP_HAS_HOTPLUG": 0x0001,
-    # The library can access HID devices without requiring user
-    # intervention.
+    # The library can access HID devices without requiring user intervention.
     "LIBUSB_CAP_HAS_HID_ACCESS": 0x0100,
     # The library supports detaching of the default USB driver.
     "LIBUSB_CAP_SUPPORTS_DETACH_KERNEL_DRIVER": 0x0101,
@@ -1115,8 +1114,8 @@ def libusb_fill_control_transfer(transfer_p, dev_handle, buffer, callback,
     if buffer is not None:
         setup = cast(buffer, libusb_control_setup_p).contents
         # pylint: disable=undefined-variable
-        transfer.length = LIBUSB_CONTROL_SETUP_SIZE + \
-            libusb_le16_to_cpu(setup.wLength)
+        transfer.length = LIBUSB_CONTROL_SETUP_SIZE + libusb_le16_to_cpu(
+            setup.wLength)
         # pylint: enable=undefined-variable
     transfer.user_data = user_data
     transfer.callback = callback
@@ -1168,15 +1167,15 @@ def libusb_fill_interrupt_transfer(transfer_p, dev_handle, endpoint, buffer,
 
 
 def libusb_fill_iso_transfer(
-    transfer_p,
-    dev_handle,
-    endpoint,
-    buffer,
-    length,
-    num_iso_packets,
-    callback,
-    user_data,
-    timeout,
+        transfer_p,
+        dev_handle,
+        endpoint,
+        buffer,
+        length,
+        num_iso_packets,
+        callback,
+        user_data,
+        timeout,
 ):
     transfer = transfer_p.contents
     transfer.dev_handle = dev_handle

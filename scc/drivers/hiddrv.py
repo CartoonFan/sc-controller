@@ -423,8 +423,7 @@ class HIDController(USBDevice, Controller):
                                     next_axis].data.hatswitch.min = STICK_PAD_MIN
                                 self._decoder.axes[
                                     next_axis].data.hatswitch.max = STICK_PAD_MAX
-                            # Hatswitch is little special as it covers 2 axes
-                            # at once
+                            # Hatswitch is little special as it covers 2 axes at once
                             next_axis = next_axis + 2
                             if next_axis < AXIS_COUNT:
                                 next_axis = AxisType(next_axis)

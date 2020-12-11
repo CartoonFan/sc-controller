@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Action Editor - Gyro -> Joystick or Mouse component
 """
@@ -330,8 +329,8 @@ def is_gyro_enable(modemod):
 
 
 def fill_buttons(cb):
-    cb.set_row_separator_func(
-        lambda model, iter: model.get_value(iter, 1) is None)
+    cb.set_row_separator_func(lambda model, iter: model.get_value(iter, 1) is
+                              None)
     model = cb.get_model()
     for button, text in GyroActionComponent.BUTTONS:
         model.append((None if button is None else nameof(button), text))

@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Action Editor
 
@@ -72,8 +71,8 @@ class ModeshiftEditor(Editor):
         Editor.setup_widgets(self)
 
         cbButtonChooser = self.builder.get_object("cbButtonChooser")
-        cbButtonChooser.set_row_separator_func(
-            lambda model, iter: model.get_value(iter, 0) is None)
+        cbButtonChooser.set_row_separator_func(lambda model, iter: model.
+                                               get_value(iter, 0) is None)
 
         b = self.builder.get_object
         self.action_widgets = (

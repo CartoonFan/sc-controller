@@ -237,7 +237,7 @@ class Menu(OSDWindow):
             try:
                 self._menuid = self.args.from_file
                 self.items = MenuData.from_file(self.args.from_file)
-            except BaseException:
+            except:
                 print >> sys.stderr, "%s: error: failed to load menu file" % (
                     sys.argv[0])
                 return False

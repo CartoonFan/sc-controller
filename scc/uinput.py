@@ -222,16 +222,16 @@ class UInput(object):
     See Gamepad, Mouse, Keyboard for examples
     """
     def __init__(
-        self,
-        vendor,
-        product,
-        version,
-        name,
-        keys,
-        axes,
-        rels,
-        keyboard=False,
-        rumble=False,
+            self,
+            vendor,
+            product,
+            version,
+            name,
+            keys,
+            axes,
+            rels,
+            keyboard=False,
+            rumble=False,
     ):
         self._lib = None
         self._k = keys

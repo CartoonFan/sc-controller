@@ -84,8 +84,9 @@ class AutoSwitcher(object):
         if action is not None:
             cmpwith = action.to_string()
         for c in list(conds.keys()):
-            if (action is None or conds[c].to_string()
-                    == cmpwith) and c.matches(title, wm_class):
+            if (action is None
+                    or conds[c].to_string() == cmpwith) and c.matches(
+                        title, wm_class):
                 del conds[c]
                 count += 1
         log.debug("Removed %s autoswitcher conditions", count)
@@ -163,7 +164,7 @@ class AutoSwitcher(object):
                                              b"\n")
                         self.socket.send(b"Profile: " + path.encode("utf-8") +
                                          b"\n")
-                    except BaseException:
+                    except:
                         log.error("Socket write failed")
                         os._exit(2)
                         return
@@ -211,6 +212,8 @@ class Condition(object):
     It's possible to combine all three types of title matching with window class
     matching.
     """
+
+
     def __init__(self,
                  exact_title=None,
                  title=None,

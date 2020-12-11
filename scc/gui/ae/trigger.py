@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Action Editor - Trigger-as-button Component
 
@@ -206,8 +205,8 @@ class TriggerComponent(AEComponent, BindingEditor):
                     HIPFIRE_NORMAL,
                     timeout,
                 ))
-        elif (trigger_style
-              == "HIPFIRE_EXCLUSIVE") and self.half and self.full:
+        elif (trigger_style == "HIPFIRE_EXCLUSIVE"
+              ) and self.half and self.full:
             actions.append(
                 HipfireAction(
                     half_level,
@@ -289,8 +288,8 @@ class TriggerComponent(AEComponent, BindingEditor):
     def on_btAnalog_clicked(self, *a):
         """ 'Analog Output' handler """
         b = SimpleChooser(
-            self.app, "axis",
-            lambda action: self.on_action_chosen("analog", action))
+            self.app,
+            "axis", lambda action: self.on_action_chosen("analog", action))
         b.set_title(_("Select Analog Axis"))
         b.display_action(Action.AC_STICK, AxisAction(self.analog))
         b.show(self.editor.window)

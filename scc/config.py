@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Config
 
@@ -88,8 +87,7 @@ class Config(object):
         # enable_sniffing - If enabled, another program with write access to
         # ~/.config/scc can ask daemon to send notifications about all
         # (or only some) inputs.
-        # This enables GUI to display which physical button was pressed to
-        # user.
+        # This enables GUI to display which physical button was pressed to user.
         "enable_sniffing":
         False,
         # Style and colors used by OSD

@@ -69,13 +69,13 @@ class Box(object):
     MIN_HEIGHT = 50
 
     def __init__(
-        self,
-        anchor_x,
-        anchor_y,
-        align,
-        name,
-        min_width=MIN_WIDTH,
-        min_height=MIN_HEIGHT,
+            self,
+            anchor_x,
+            anchor_y,
+            align,
+            name,
+            min_width=MIN_WIDTH,
+            min_height=MIN_HEIGHT,
     ):
         self.name = name
         self.lines = []
@@ -155,8 +155,13 @@ class Box(object):
                 self.height + lh + self.SPACING,
             )
             self.icount = max(self.icount, len(line.icons))
+<<<<<<< HEAD
+        self.width += 2 * self.PADDING + self.icount * (gen.line_height +
+                                                        self.SPACING)
+=======
         self.width += 2 * self.PADDING + self.icount * \
             (gen.line_height + self.SPACING)
+>>>>>>> CartoonFan-restyle-1
         self.height = max(self.height, self.min_height)
 
         anchor_x, anchor_y = self.anchor

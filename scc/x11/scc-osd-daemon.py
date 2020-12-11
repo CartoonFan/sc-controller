@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - OSD Daemon
 
@@ -134,11 +133,12 @@ class OSDDaemon(object):
         """ Called after on-screen keyboard is hidden from the screen """
         self._window = None
         if gd.get_exit_code() == 0:
-            self.daemon.request("Gestured: %s" % (gd.get_gesture(), ),
-                                lambda *a: False, lambda *a: False)
+            self.daemon.request(
+                "Gestured: %s" %
+                (gd.get_gesture(), ), lambda *a: False, lambda *a: False)
         else:
-            self.daemon.request("Gestured: x", lambda *a: False,
-                                lambda *a: False)
+            self.daemon.request(
+                "Gestured: x", lambda *a: False, lambda *a: False)
 
     @staticmethod
     def _is_menu_message(m):

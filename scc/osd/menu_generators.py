@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - OSD Menu Generators
 
@@ -132,7 +131,7 @@ class WindowListMenuGenerator(MenuGenerator):
         skip_taskbar = X.intern_atom(dpy, "_NET_WM_STATE_SKIP_TASKBAR", True)
         wlist = cast(wlist, POINTER(X.XID))[0:count]
         for win in wlist:
-            if skip_taskbar not in X.get_wm_state(dpy, win):
+            if not skip_taskbar in X.get_wm_state(dpy, win):
                 title = X.get_window_title(dpy, win)[0:self.MAX_LENGHT]
                 menuitem = MenuItem(str(win), title)
                 menuitem.callback = WindowListMenuGenerator.callback

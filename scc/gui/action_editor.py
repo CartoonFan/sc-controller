@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Action Editor
 
@@ -132,8 +131,7 @@ class ActionEditor(Editor):
         self.c_buttons = {}  # Component-to-button dict
         self.sens_widgets = [
         ]  # Sensitivity sliders, labels and 'clear' buttons
-        # Feedback settings sliders, labels and 'clear' buttons, plus default
-        # value as last item
+        # Feedback settings sliders, labels and 'clear' buttons, plus default value as last item
         self.feedback_widgets = []
         # Smoothing settings sliders, labels and 'clear' buttons, plus default
         # value as last item
@@ -712,8 +710,9 @@ class ActionEditor(Editor):
             if self.feedback_position is not None:
                 # Strip defaults from feedback values
                 feedback = [] + self.feedback
-                while (len(feedback) > 0 and feedback[-1]
-                       == self.feedback_widgets[len(feedback) - 1][-1]):
+                while (len(feedback) > 0 and
+                       feedback[-1] == self.feedback_widgets[len(feedback) -
+                                                             1][-1]):
                     feedback = feedback[0:-1]
 
                 cbFeedbackSide = self.builder.get_object("cbFeedbackSide")

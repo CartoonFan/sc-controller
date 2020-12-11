@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Global Settings
 
@@ -122,10 +121,10 @@ class ControllerSettings(Editor, UserDataManager, ComboSetter):
         self.set_cb(cbControlWith, cfg["menu_control"], keyindex=1)
         self.set_cb(cbConfirmWith, cfg["menu_confirm"], keyindex=1)
         self.set_cb(cbCancelWith, cfg["menu_cancel"], keyindex=1)
-        cbConfirmWith.set_row_separator_func(
-            lambda model, iter: model.get_value(iter, 0) == "-")
-        cbCancelWith.set_row_separator_func(
-            lambda model, iter: model.get_value(iter, 0) == "-")
+        cbConfirmWith.set_row_separator_func(lambda model, iter: model.
+                                             get_value(iter, 0) == "-")
+        cbCancelWith.set_row_separator_func(lambda model, iter: model.
+                                            get_value(iter, 0) == "-")
         self._recursing = False
 
     def save_config(self, *a):

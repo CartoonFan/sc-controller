@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
 Syncthing-GTK - StatusIcon
@@ -268,8 +267,7 @@ class StatusIconAppIndicator(StatusIconDBus):
             raise NotImplementedError
 
         category = appindicator.IndicatorCategory.APPLICATION_STATUS
-        # Whatever icon is set here will be used as a tooltip icon during the
-        # entire time to icon is shown
+        # Whatever icon is set here will be used as a tooltip icon during the entire time to icon is shown
         self._tray = appindicator.Indicator.new("sc-controller",
                                                 self._get_icon(), category)
         self._tray.set_menu(self._get_popupmenu())

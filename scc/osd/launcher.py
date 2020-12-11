@@ -361,10 +361,12 @@ class Launcher(OSDWindow):
             return
 
         ccfg = self.config.get_controller_config(self.controller.get_id())
-        self._confirm_with = (ccfg["menu_confirm"] if self.args.confirm_with
-                              == DEFAULT else self.args.confirm_with)
-        self._cancel_with = (ccfg["menu_cancel"] if self.args.cancel_with
-                             == DEFAULT else self.args.cancel_with)
+        self._confirm_with = (ccfg["menu_confirm"]
+                              if self.args.confirm_with == DEFAULT else
+                              self.args.confirm_with)
+        self._cancel_with = (ccfg["menu_cancel"]
+                             if self.args.cancel_with == DEFAULT else
+                             self.args.cancel_with)
 
         self._eh_ids += [
             (self.controller, self.controller.connect("event", self.on_event)),

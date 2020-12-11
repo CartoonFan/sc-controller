@@ -458,8 +458,8 @@ class SCCDaemon(Daemon):
             if not self.alone:
                 self.subprocs.append(Subprocess("scc-osd-daemon", True))
                 if Config()["autoswitch"]:
-                    # Start scc-autoswitch-daemon only if there are some switch
-                    # rules defined
+                    # Start scc-autoswitch-daemon only if there are some switch rules defined
+
                     self.subprocs.append(
                         Subprocess("scc-autoswitch-daemon", True))
         else:
@@ -515,7 +515,7 @@ class SCCDaemon(Daemon):
             try:
                 self.default_profile = find_profile(
                     Config()["recent_profiles"][0])
-            except BaseException:
+            except:
                 # Broken config is not reason to fail here
                 pass
         try:
@@ -1190,8 +1190,8 @@ class Client(object):
 
         Should be called while daemon.lock is acquired.
         """
-        daemon._apply(self.mapper, what,
-                      lambda a: ObservingAction(what, self, a))
+        daemon._apply(self.mapper,
+                      what, lambda a: ObservingAction(what, self, a))
 
     def replace_action(self, daemon, what, action):
         """
@@ -1200,8 +1200,8 @@ class Client(object):
 
         Should be called while daemon.lock is acquired.
         """
-        daemon._apply(self.mapper, what,
-                      lambda a: ReplacedAction(what, self, action, a))
+        daemon._apply(self.mapper,
+                      what, lambda a: ReplacedAction(what, self, action, a))
 
     def unlock_actions(self, daemon):
         """ Should be called while daemon.lock is acquired """

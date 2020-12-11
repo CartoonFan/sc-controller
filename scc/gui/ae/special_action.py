@@ -42,10 +42,10 @@ class SpecialActionComponent(AEComponent, MenuActionCofC):
         AEComponent.load(self)
         cbConfirmWith = self.builder.get_object("cbConfirmWith")
         cbCancelWith = self.builder.get_object("cbCancelWith")
-        cbConfirmWith.set_row_separator_func(
-            lambda model, iter: model.get_value(iter, 0) == "-")
-        cbCancelWith.set_row_separator_func(
-            lambda model, iter: model.get_value(iter, 0) == "-")
+        cbConfirmWith.set_row_separator_func(lambda model, iter: model.
+                                             get_value(iter, 0) == "-")
+        cbCancelWith.set_row_separator_func(lambda model, iter: model.
+                                            get_value(iter, 0) == "-")
 
     def shown(self):
         if not self._userdata_load_started:

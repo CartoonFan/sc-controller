@@ -385,13 +385,13 @@ class BallModifier(Modifier, WholeHapticAction):
         WholeHapticAction.__init__(self)
 
     def _mod_init(
-        self,
-        friction=DEFAULT_FRICTION,
-        mass=80.0,
-        mean_len=DEFAULT_MEAN_LEN,
-        r=0.02,
-        ampli=65536,
-        degree=40.0,
+            self,
+            friction=DEFAULT_FRICTION,
+            mass=80.0,
+            mean_len=DEFAULT_MEAN_LEN,
+            r=0.02,
+            ampli=65536,
+            degree=40.0,
     ):
         self.speed = (1.0, 1.0)
         self.friction = friction

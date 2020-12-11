@@ -6,7 +6,6 @@ from scc.uinput import Axes
 from scc.uinput import Keys
 from scc.uinput import Rels
 
-from . import parser
 
 
 class TestActions(object):

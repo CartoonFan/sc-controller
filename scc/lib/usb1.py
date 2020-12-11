@@ -369,15 +369,15 @@ class USBTransfer(object):
         return self.__callback
 
     def setControl(
-        self,
-        request_type,
-        request,
-        value,
-        index,
-        buffer_or_len,
-        callback=None,
-        user_data=None,
-        timeout=0,
+            self,
+            request_type,
+            request,
+            value,
+            index,
+            buffer_or_len,
+            callback=None,
+            user_data=None,
+            timeout=0,
     ):
         """
         Setup transfer for control use.
@@ -514,13 +514,13 @@ class USBTransfer(object):
         self.__initialized = True
 
     def setIsochronous(
-        self,
-        endpoint,
-        buffer_or_len,
-        callback=None,
-        user_data=None,
-        timeout=0,
-        iso_transfer_length_list=None,
+            self,
+            endpoint,
+            buffer_or_len,
+            callback=None,
+            user_data=None,
+            timeout=0,
+            iso_transfer_length_list=None,
     ):
         """
         Setup transfer for isochronous use.
@@ -2515,15 +2515,15 @@ class USBContext(object):
 
     @_validContext
     def hotplugRegisterCallback(
-        self,
-        callback,
-        # pylint: disable=undefined-variable
-        events=HOTPLUG_EVENT_DEVICE_ARRIVED | HOTPLUG_EVENT_DEVICE_LEFT,
-        flags=HOTPLUG_ENUMERATE,
-        vendor_id=HOTPLUG_MATCH_ANY,
-        product_id=HOTPLUG_MATCH_ANY,
-        dev_class=HOTPLUG_MATCH_ANY,
-        # pylint: enable=undefined-variable
+            self,
+            callback,
+            # pylint: disable=undefined-variable
+            events=HOTPLUG_EVENT_DEVICE_ARRIVED | HOTPLUG_EVENT_DEVICE_LEFT,
+            flags=HOTPLUG_ENUMERATE,
+            vendor_id=HOTPLUG_MATCH_ANY,
+            product_id=HOTPLUG_MATCH_ANY,
+            dev_class=HOTPLUG_MATCH_ANY,
+            # pylint: enable=undefined-variable
     ):
         """
         Registers an hotplug callback.

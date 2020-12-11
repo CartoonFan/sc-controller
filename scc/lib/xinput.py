@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
 XInput tools
@@ -38,7 +37,7 @@ def get_devices():
     try:
         lst = (subprocess.Popen(["xinput"], stdout=subprocess.PIPE,
                                 stdin=None).communicate()[0].decode("utf-8"))
-    except BaseException:
+    except:
         # calling xinput failed, return empty list
         return rv
 

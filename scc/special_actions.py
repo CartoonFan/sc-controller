@@ -302,13 +302,13 @@ class MenuAction(Action, SpecialAction, HapticEnabledAction):
     DEFAULT_POSITION = 10, -10
 
     def __init__(
-        self,
-        menu_id,
-        control_with=DEFAULT,
-        confirm_with=DEFAULT,
-        cancel_with=DEFAULT,
-        show_with_release=False,
-        size=0,
+            self,
+            menu_id,
+            control_with=DEFAULT,
+            confirm_with=DEFAULT,
+            cancel_with=DEFAULT,
+            show_with_release=False,
+            size=0,
     ):
         if control_with == SAME:
             # Little touch of backwards compatibility
@@ -499,13 +499,13 @@ class RadialMenuAction(MenuAction):
     MENU_TYPE = "radialmenu"
 
     def __init__(
-        self,
-        menu_id,
-        control_with=DEFAULT,
-        confirm_with=DEFAULT,
-        cancel_with=DEFAULT,
-        show_with_release=False,
-        size=0,
+            self,
+            menu_id,
+            control_with=DEFAULT,
+            confirm_with=DEFAULT,
+            cancel_with=DEFAULT,
+            show_with_release=False,
+            size=0,
     ):
         MenuAction.__init__(
             self,

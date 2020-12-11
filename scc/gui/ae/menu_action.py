@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Action Editor - common part of "DPAD or menu" and "Special Action",
 two components with MenuAction selectable.
@@ -211,8 +210,8 @@ class MenuActionCofC(UserDataManager):
 
     def on_menus_loaded(self, menus):
         cb = self.builder.get_object("cbMenus")
-        cb.set_row_separator_func(
-            lambda model, iter: model.get_value(iter, 1) is None)
+        cb.set_row_separator_func(lambda model, iter: model.get_value(iter, 1)
+                                  is None)
         model = cb.get_model()
         model.clear()
         i, current_index = 0, 0

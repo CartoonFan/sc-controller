@@ -1511,11 +1511,11 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 
     def setup_commandline(self):
         def aso(
-            long_name,
-            short_name,
-            description,
-            arg=GLib.OptionArg.NONE,
-            flags=GLib.OptionFlags.IN_MAIN,
+                long_name,
+                short_name,
+                description,
+                arg=GLib.OptionArg.NONE,
+                flags=GLib.OptionFlags.IN_MAIN,
         ):
             """ add_simple_option, adds program argument in simple way """
             o = GLib.OptionEntry()
