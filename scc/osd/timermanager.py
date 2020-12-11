@@ -29,8 +29,9 @@ class TimerManager(object):
                 # Cancel old timer
                 GLib.source_remove(self._timers[name])
             # Create new one
-            self._timers[name] = method(delay, self._callback, name, callback,
-                                        *data, **kwdata)
+            self._timers[name] = method(
+                delay, self._callback, name, callback, *data, **kwdata
+            )
 
     def timer_active(self, name):
         """ Returns True if named timer is active """

@@ -22,14 +22,15 @@ class TestDocs(object):
             if command in (None, "None", "exit"):
                 # Woo for special cases
                 continue
-            anchor = '<a name="%s">' % (command, )
+            anchor = '<a name="%s">' % (command,)
             if anchor not in actions_md:
                 raise AssertionError(
-                    "Action '%s' is not documented in actions.md" %
-                    (command, ))
+                    "Action '%s' is not documented in actions.md" % (command,)
+                )
 
         for key in Action.PKEYS:
-            anchor = "#### `%s`" % (key, )
+            anchor = "#### `%s`" % (key,)
             if key not in profile_md:
                 raise AssertionError(
-                    "Key '%s' is not documented in profile-file.md" % (key, ))
+                    "Key '%s' is not documented in profile-file.md" % (key,)
+                )

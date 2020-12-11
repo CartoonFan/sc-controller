@@ -83,9 +83,7 @@ class MenuData(object):
             raise ValueError("Not items")
 
         # Rearange data into list of pair tuples
-        data = [(data[i * 2], data[(i * 2) + 1])
-                for i in range(0,
-                               len(data) / 2)]
+        data = [(data[i * 2], data[(i * 2) + 1]) for i in range(0, len(data) / 2)]
 
         # Parse data
         m = MenuData()
@@ -214,7 +212,7 @@ class Separator(MenuItem):
 
     def describe(self):
         if self.label:
-            return _("----[ %s ]----") % (self.label, )
+            return _("----[ %s ]----") % (self.label,)
         return _("---- Separator ----")
 
     def encode(self):
@@ -260,7 +258,7 @@ class MenuGenerator(object):
         """
         Returns user-friendly description of MenuItem or MenuGenerator.
         """
-        return "[ %s ] " % (self.__class__.__name__, )
+        return "[ %s ] " % (self.__class__.__name__,)
 
     def encode(self):
         """ Returns generator data as dict storable in json (profile) file """

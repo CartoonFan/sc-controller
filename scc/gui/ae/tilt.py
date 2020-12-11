@@ -46,9 +46,9 @@ class TiltComponent(AEComponent, BindingEditor):
 
     def set_button_desc(self, i):
         desc = describe_action(Action.AC_BUTTON, None, self.actions[i])
-        l = self.builder.get_object("lblTilt%s" % (i, ))
+        l = self.builder.get_object("lblTilt%s" % (i,))
         if l is None:
-            l = self.builder.get_object("btTilt%s" % (i, )).get_children()[0]
+            l = self.builder.get_object("btTilt%s" % (i,)).get_children()[0]
         l.set_markup(desc)
 
     def get_button_title(self):

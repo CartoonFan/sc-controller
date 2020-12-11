@@ -50,7 +50,8 @@ EvdevControllerInput = namedtuple(
 )
 
 AxisCalibrationData = namedtuple(
-    "AxisCalibrationData", "scale offset center clamp_min clamp_max deadzone")
+    "AxisCalibrationData", "scale offset center clamp_min clamp_max deadzone"
+)
 
 
 class EvdevController(Controller):
@@ -62,10 +63,12 @@ class EvdevController(Controller):
 
     PADPRESS_EMULATION_TIMEOUT = 0.2
     ECODES = ecodes
-    flags = (ControllerFlags.HAS_RSTICK
-             | ControllerFlags.SEPARATE_STICK
-             | ControllerFlags.HAS_DPAD
-             | ControllerFlags.NO_GRIPS)
+    flags = (
+        ControllerFlags.HAS_RSTICK
+        | ControllerFlags.SEPARATE_STICK
+        | ControllerFlags.HAS_DPAD
+        | ControllerFlags.NO_GRIPS
+    )
 
     def __init__(self, daemon, device, config_file, config):
         try:
@@ -81,12 +84,10 @@ class EvdevController(Controller):
         self.poller = None
         if daemon:
             self.poller = daemon.get_poller()
-            self.poller.register(self.device.fd, self.poller.POLLIN,
-                                 self.input)
+            self.poller.register(self.device.fd, self.poller.POLLIN, self.input)
             self.device.grab()
             self._id = self._generate_id()
-        self._state = EvdevControllerInput(*[0] *
-                                           len(EvdevControllerInput._fields))
+        self._state = EvdevControllerInput(*[0] * len(EvdevControllerInput._fields))
         self._padpressemu_task = None
 
     def _parse_config(self, config):
@@ -147,7 +148,7 @@ class EvdevController(Controller):
         id = None
         while id is None or id in self.daemon.get_active_ids():
             crc32 = binascii.crc32("%s%s" % (self.device.name, magic_number))
-            id = "ev%s" % (hex(crc32).upper().strip("-0X"), )
+            id = "ev%s" % (hex(crc32).upper().strip("-0X"),)
             magic_number += 1
         return id
 
@@ -155,7 +156,7 @@ class EvdevController(Controller):
         return self.config_file
 
     def __repr__(self):
-        return "<Evdev %s>" % (self.device.name.decode("utf-8"), )
+        return "<Evdev %s>" % (self.device.name.decode("utf-8"),)
 
     def input(self, *a):
         new_state = self._state
@@ -176,21 +177,19 @@ class EvdevController(Controller):
                         value = 0
                     axis = self._axis_map[event.code]
                     if not new_state.buttons & SCButtons.LPADTOUCH and axis in (
-                            "lpad_x",
-                            "lpad_y",
+                        "lpad_x",
+                        "lpad_y",
                     ):
                         b = new_state.buttons | SCButtons.LPAD | SCButtons.LPADTOUCH
                         need_cancel_padpressemu = True
-                        new_state = new_state._replace(buttons=b,
-                                                       **{axis: value})
+                        new_state = new_state._replace(buttons=b, **{axis: value})
                     elif not new_state.buttons & SCButtons.RPADTOUCH and axis in (
-                            "rpad_x",
-                            "rpad_y",
+                        "rpad_x",
+                        "rpad_y",
                     ):
                         b = new_state.buttons | SCButtons.RPADTOUCH
                         need_cancel_padpressemu = True
-                        new_state = new_state._replace(buttons=b,
-                                                       **{axis: value})
+                        new_state = new_state._replace(buttons=b, **{axis: value})
                     else:
                         new_state = new_state._replace(**{axis: value})
                 elif event.type == ecodes.EV_KEY and event.code in self._button_map:
@@ -212,26 +211,24 @@ class EvdevController(Controller):
                     if value >= -cal.deadzone and value <= cal.deadzone:
                         value = 0
                     else:
-                        value = clamp(cal.clamp_min,
-                                      int(value * cal.clamp_max),
-                                      cal.clamp_max)
+                        value = clamp(
+                            cal.clamp_min, int(value * cal.clamp_max), cal.clamp_max
+                        )
                     axis = self._axis_map[event.code]
                     if not new_state.buttons & SCButtons.LPADTOUCH and axis in (
-                            "lpad_x",
-                            "lpad_y",
+                        "lpad_x",
+                        "lpad_y",
                     ):
                         b = new_state.buttons | SCButtons.LPAD | SCButtons.LPADTOUCH
                         need_cancel_padpressemu = True
-                        new_state = new_state._replace(buttons=b,
-                                                       **{axis: value})
+                        new_state = new_state._replace(buttons=b, **{axis: value})
                     elif not new_state.buttons & SCButtons.RPADTOUCH and axis in (
-                            "rpad_x",
-                            "rpad_y",
+                        "rpad_x",
+                        "rpad_y",
                     ):
                         b = new_state.buttons | SCButtons.RPADTOUCH
                         need_cancel_padpressemu = True
-                        new_state = new_state._replace(buttons=b,
-                                                       **{axis: value})
+                        new_state = new_state._replace(buttons=b, **{axis: value})
                     else:
                         new_state = new_state._replace(**{axis: value})
         except IOError as e:
@@ -248,8 +245,8 @@ class EvdevController(Controller):
                     if self._padpressemu_task:
                         self.mapper.cancel_task(self._padpressemu_task)
                     self._padpressemu_task = self.mapper.schedule(
-                        self.PADPRESS_EMULATION_TIMEOUT,
-                        self.cancel_padpress_emulation)
+                        self.PADPRESS_EMULATION_TIMEOUT, self.cancel_padpress_emulation
+                    )
                 self.mapper.input(self, old_state, new_state)
 
     def test_input(self, event):
@@ -299,8 +296,8 @@ class EvdevController(Controller):
 
         if need_reschedule:
             self._padpressemu_task = mapper.schedule(
-                self.PADPRESS_EMULATION_TIMEOUT,
-                self.cancel_padpress_emulation)
+                self.PADPRESS_EMULATION_TIMEOUT, self.cancel_padpress_emulation
+            )
         else:
             self._padpressemu_task = None
 
@@ -358,8 +355,7 @@ def parse_axis(axis):
         offset += 1.0
         scale *= 0.5
 
-    return AxisCalibrationData(scale, offset, center, clamp_min, clamp_max,
-                               deadzone)
+    return AxisCalibrationData(scale, offset, center, clamp_min, clamp_max, deadzone)
 
 
 class EvdevDriver(object):
@@ -373,8 +369,8 @@ class EvdevDriver(object):
 
     def start(self):
         self.daemon.get_device_monitor().add_callback(
-            "input", None, None, self.handle_new_device,
-            self.handle_removed_device)
+            "input", None, None, self.handle_new_device, self.handle_removed_device
+        )
 
     def set_daemon(self, daemon):
         self.daemon = daemon
@@ -384,7 +380,7 @@ class EvdevDriver(object):
         filename = syspath.split("/")[-1]
         if not filename.startswith("event"):
             return None
-        return "/dev/input/%s" % (filename, )
+        return "/dev/input/%s" % (filename,)
 
     def handle_new_device(self, syspath, *bunchofnones):
         # There is no way to get anything usefull from /sys/.../input node,
@@ -399,7 +395,7 @@ class EvdevDriver(object):
             dev = evdev.InputDevice(eventnode)
             if dev.fn != eventnode:
                 raise AssertionError
-            config_fn = "evdev-%s.json" % (dev.name.strip().replace("/", ""), )
+            config_fn = "evdev-%s.json" % (dev.name.strip().replace("/", ""),)
             config_file = os.path.join(get_config_path(), "devices", config_fn)
         except OSError as ose:
             if ose.errno == 13:
@@ -419,9 +415,9 @@ class EvdevDriver(object):
                 log.exception(e)
                 return False
             try:
-                controller = EvdevController(self.daemon, dev,
-                                             config_file.decode("utf-8"),
-                                             config)
+                controller = EvdevController(
+                    self.daemon, dev, config_file.decode("utf-8"), config
+                )
             except Exception as e:
                 log.debug("Failed to add evdev device: %s", e)
                 log.exception(e)
@@ -462,7 +458,7 @@ class EvdevDriver(object):
         try:
             controller = factory(self.daemon, evdevdevice, *userdata)
         except IOError as e:
-            print >> sys.stderr, "Failed to open device:", str(e)
+            print >>sys.stderr, "Failed to open device:", str(e)
             return None
         if controller:
             self._devices[evdevdevice.fn] = controller
@@ -481,9 +477,7 @@ if HAVE_EVDEV:
 
 def init(daemon, config):
     if not HAVE_EVDEV:
-        log.warning(
-            "Failed to enable Evdev driver: 'python-evdev' package is missing."
-        )
+        log.warning("Failed to enable Evdev driver: 'python-evdev' package is missing.")
         return False
 
     _evdevdrv.set_daemon(daemon)
@@ -550,15 +544,15 @@ def evdevdrv_test(args):
     except IndexError:
         raise InvalidArguments()
     except Exception as e:
-        print >> sys.stderr, "Failed to open device:", str(e)
+        print >>sys.stderr, "Failed to open device:", str(e)
         return 2
 
     c = EvdevController(None, dev, None, {})
     caps = dev.capabilities(verbose=False)
     print("Buttons:", " ".join([str(x) for x in caps.get(ecodes.EV_KEY, [])]))
     print(
-        "Axes:",
-        " ".join([str(axis) for (axis, trash) in caps.get(ecodes.EV_ABS, [])]))
+        "Axes:", " ".join([str(axis) for (axis, trash) in caps.get(ecodes.EV_ABS, [])])
+    )
     print("Ready")
     sys.stdout.flush()
     for event in dev.read_loop():

@@ -14,8 +14,8 @@ Assigning Mapper to Controller is handled by daemon.
 """
 
 MOD_INIT_ORDER = (
-	# Modules mentioned here are initialized before everything else, in this exact order.
-	"scc.drivers.usb",
-	"scc.drivers.evdevdrv",
-	"scc.drivers.hiddrv"
+    # Modules mentioned here are initialized before everything else, in this exact order.
+    "scc.drivers.usb",
+    "scc.drivers.evdevdrv",
+    "scc.drivers.hiddrv",
 )

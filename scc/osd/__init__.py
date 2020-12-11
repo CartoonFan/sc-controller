@@ -71,23 +71,22 @@ class OSDWindow(Gtk.Window):
     def _apply_css(config):
         if OSDWindow.css_provider:
             Gtk.StyleContext.remove_provider_for_screen(
-                Gdk.Screen.get_default(), OSDWindow.css_provider)
+                Gdk.Screen.get_default(), OSDWindow.css_provider
+            )
 
         colors = {}
         for x in config["osk_colors"]:
-            colors["osk_%s" % (x, )] = config["osk_colors"][x]
+            colors["osk_%s" % (x,)] = config["osk_colors"][x]
         for x in config["osd_colors"]:
             colors[x] = config["osd_colors"][x]
         colors = OSDCssMagic(colors)
         try:
-            css_file = os.path.join(get_share_path(), "osd-styles",
-                                    config["osd_style"])
+            css_file = os.path.join(get_share_path(), "osd-styles", config["osd_style"])
             css = file(css_file, "r").read()
             if (Gtk.get_major_version(), Gtk.get_minor_version()) > (3, 20):
                 css += OSDWindow.CSS_3_20
             OSDWindow.css_provider = Gtk.CssProvider()
-            OSDWindow.css_provider.load_from_data(
-                (css % colors).encode("utf-8"))
+            OSDWindow.css_provider.load_from_data((css % colors).encode("utf-8"))
             Gtk.StyleContext.add_provider_for_screen(
                 Gdk.Screen.get_default(),
                 OSDWindow.css_provider,
@@ -99,13 +98,13 @@ class OSDWindow(Gtk.Window):
             log.error("Retrying with default values")
 
             OSDWindow.css_provider = Gtk.CssProvider()
-            css_file = os.path.join(get_share_path(), "osd-styles",
-                                    "Classic.gtkstyle.css")
+            css_file = os.path.join(
+                get_share_path(), "osd-styles", "Classic.gtkstyle.css"
+            )
             css = file(css_file, "r").read()
             if (Gtk.get_major_version(), Gtk.get_minor_version()) > (3, 20):
                 css += OSDWindow.CSS_3_20
-            OSDWindow.css_provider.load_from_data(
-                (css % colors).encode("utf-8"))
+            OSDWindow.css_provider.load_from_data((css % colors).encode("utf-8"))
             Gtk.StyleContext.add_provider_for_screen(
                 Gdk.Screen.get_default(),
                 OSDWindow.css_provider,
@@ -130,12 +129,12 @@ class OSDWindow(Gtk.Window):
             help="""vertical position in pixels, from top side of screen.
             Use negative value to specify as distance from bottom side (default: -20)""",
         )
-        self.argparser.add_argument("--controller",
-                                    type=str,
-                                    help="""id of controller to use""")
-        self.argparser.add_argument("-d",
-                                    action="store_true",
-                                    help="""display debug messages""")
+        self.argparser.add_argument(
+            "--controller", type=str, help="""id of controller to use"""
+        )
+        self.argparser.add_argument(
+            "-d", action="store_true", help="""display debug messages"""
+        )
 
     def choose_controller(self, daemonmanager):
         """

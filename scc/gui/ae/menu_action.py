@@ -78,10 +78,8 @@ class MenuActionCofC(UserDataManager):
         if isinstance(action, PositionModifier):
             # Load menu position modifier, if used
             x, y = action.position
-            self.builder.get_object("cbMenuPosX").set_active(
-                0 if x >= 0 else 1)
-            self.builder.get_object("cbMenuPosY").set_active(
-                0 if y >= 0 else 1)
+            self.builder.get_object("cbMenuPosX").set_active(0 if x >= 0 else 1)
+            self.builder.get_object("cbMenuPosY").set_active(0 if y >= 0 else 1)
             self.builder.get_object("spMenuPosX").set_value(abs(x))
             self.builder.get_object("spMenuPosY").set_value(abs(y))
             action = action.action
@@ -99,8 +97,7 @@ class MenuActionCofC(UserDataManager):
         cbConfirmWith = self.builder.get_object("cbConfirmWith")
         cbCancelWith = self.builder.get_object("cbCancelWith")
         cbMenuAutoConfirm = self.builder.get_object("cbMenuAutoConfirm")
-        cbMenuConfirmWithClick = self.builder.get_object(
-            "cbMenuConfirmWithClick")
+        cbMenuConfirmWithClick = self.builder.get_object("cbMenuConfirmWithClick")
         cbMenuAutoCancel = self.builder.get_object("cbMenuAutoCancel")
         if cbControlWith:
             self.set_cb(cbControlWith, nameof(action.control_with), 1)
@@ -167,8 +164,7 @@ class MenuActionCofC(UserDataManager):
     def on_cbMenus_button_press_event(self, trash, event):
         if event.button == 3:
             mnuMenu = self.builder.get_object("mnuMenu")
-            mnuMenu.popup(None, None, None, None, 3,
-                          Gtk.get_current_event_time())
+            mnuMenu.popup(None, None, None, None, 3, Gtk.get_current_event_time())
 
     def on_mnuMenuNew_activate(self, *a):
         self.on_new_menu_selected()
@@ -212,8 +208,7 @@ class MenuActionCofC(UserDataManager):
 
     def on_menus_loaded(self, menus):
         cb = self.builder.get_object("cbMenus")
-        cb.set_row_separator_func(lambda model, iter: model.get_value(iter, 1)
-                                  is None)
+        cb.set_row_separator_func(lambda model, iter: model.get_value(iter, 1) is None)
         model = cb.get_model()
         model.clear()
         i, current_index = 0, 0
@@ -249,7 +244,8 @@ class MenuActionCofC(UserDataManager):
         name = self.get_selected_menu()
         if name:
             self.builder.get_object("btEditMenu").set_sensitive(
-                name not in MenuEditor.OPEN)
+                name not in MenuEditor.OPEN
+            )
 
     def handles(self, mode, action):
         if isinstance(action, PositionModifier):
@@ -271,8 +267,7 @@ class MenuActionCofC(UserDataManager):
         'cbMenuAutoCancel' are all present, this method prevents them from
         being checked in nonsensical way.
         """
-        cbMenuConfirmWithClick = self.builder.get_object(
-            "cbMenuConfirmWithClick")
+        cbMenuConfirmWithClick = self.builder.get_object("cbMenuConfirmWithClick")
         cbMenuAutoConfirm = self.builder.get_object("cbMenuAutoConfirm")
         cbMenuAutoCancel = self.builder.get_object("cbMenuAutoCancel")
         if widget.get_active():
@@ -292,8 +287,7 @@ class MenuActionCofC(UserDataManager):
         """ Called when user changes any menu settings """
         if self._recursing:
             return
-        cbMenuConfirmWithClick = self.builder.get_object(
-            "cbMenuConfirmWithClick")
+        cbMenuConfirmWithClick = self.builder.get_object("cbMenuConfirmWithClick")
         cbMenuAutoConfirm = self.builder.get_object("cbMenuAutoConfirm")
         cbMenuAutoCancel = self.builder.get_object("cbMenuAutoCancel")
         lblControlWith = self.builder.get_object("lblControlWith")
@@ -345,18 +339,19 @@ class MenuActionCofC(UserDataManager):
         if name:
             # There is some menu choosen
             self.builder.get_object("btEditMenu").set_sensitive(
-                name not in MenuEditor.OPEN)
+                name not in MenuEditor.OPEN
+            )
             params = [name]
 
             cow = SAME
             if cbMenuAutoConfirm and cbMenuAutoConfirm.get_active():
                 cow = SAME
-            elif cbMenuConfirmWithClick and cbMenuConfirmWithClick.get_active(
-            ):
+            elif cbMenuConfirmWithClick and cbMenuConfirmWithClick.get_active():
                 cow = DEFAULT
             elif cbConfirmWith:
                 cow = cbConfirmWith.get_model().get_value(
-                    cbConfirmWith.get_active_iter(), 1)
+                    cbConfirmWith.get_active_iter(), 1
+                )
                 if cow != DEFAULT:
                     cow = getattr(SCButtons, cow)
 
@@ -365,7 +360,8 @@ class MenuActionCofC(UserDataManager):
                 caw = DEFAULT
             elif cbCancelWith:
                 caw = cbCancelWith.get_model().get_value(
-                    cbCancelWith.get_active_iter(), 1)
+                    cbCancelWith.get_active_iter(), 1
+                )
                 if caw != DEFAULT:
                     caw = getattr(SCButtons, caw)
 
@@ -423,10 +419,8 @@ class MenuActionCofC(UserDataManager):
                 cbMenuPosY = self.builder.get_object("cbMenuPosY")
                 x = int(self.builder.get_object("spMenuPosX").get_value())
                 y = int(self.builder.get_object("spMenuPosY").get_value())
-                x *= cbMenuPosX.get_model().get_value(
-                    cbMenuPosX.get_active_iter(), 0)
-                y *= cbMenuPosY.get_model().get_value(
-                    cbMenuPosY.get_active_iter(), 0)
+                x *= cbMenuPosX.get_model().get_value(cbMenuPosX.get_active_iter(), 0)
+                y *= cbMenuPosY.get_model().get_value(cbMenuPosY.get_active_iter(), 0)
                 if (x, y) != MenuAction.DEFAULT_POSITION:
                     action = PositionModifier(x, y, action)
 
@@ -475,7 +469,8 @@ class MenuActionCofC(UserDataManager):
         cbControlWith = self.builder.get_object("cbControlWith")
         if cbControlWith:
             return cbControlWith.get_model().get_value(
-                cbControlWith.get_active_iter(), 1)
+                cbControlWith.get_active_iter(), 1
+            )
         return STICK
 
     def on_spMenuSize_format_value(self, spinner):
@@ -492,7 +487,7 @@ class MenuActionCofC(UserDataManager):
         if menu_type == "radialmenu":
             if val < 1:
                 return _("default")
-            return "%s%%" % (int(val), )
+            return "%s%%" % (int(val),)
         else:  # if menu_type == "hmenu"
             val = int(val)
             if val < 2:

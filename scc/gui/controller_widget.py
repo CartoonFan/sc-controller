@@ -33,9 +33,7 @@ TRIGGERS = ["LT", "RT"]
 PADS = [Profile.LPAD, Profile.RPAD, Profile.CPAD]
 STICKS = [STICK]
 GYROS = [GYRO]
-PRESSABLE = [
-    SCButtons.LPAD, SCButtons.RPAD, SCButtons.STICKPRESS, SCButtons.CPADPRESS
-]
+PRESSABLE = [SCButtons.LPAD, SCButtons.RPAD, SCButtons.STICKPRESS, SCButtons.CPADPRESS]
 _NOT_BUTTONS = PADS + STICKS + GYROS + TRIGGERS
 _NOT_BUTTONS += [x + "TOUCH" for x in PADS]
 BUTTONS = [b for b in SCButtons if b.name not in _NOT_BUTTONS]
@@ -53,8 +51,7 @@ class ControllerWidget:
 
         self.label = Gtk.Label()
         self.label.set_ellipsize(Pango.EllipsizeMode.END)
-        self.icon = Gtk.Image.new_from_file(
-            self.get_image()) if use_icon else None
+        self.icon = Gtk.Image.new_from_file(self.get_image()) if use_icon else None
         self.update()
 
         self.widget.connect("enter", self.on_cursor_enter)
@@ -106,12 +103,11 @@ class ControllerButton(ControllerWidget):
 
     def update(self):
         if self.id in SCButtons and self.id in self.app.current.buttons:
-            txt = self.app.current.buttons[self.id].describe(
-                self.ACTION_CONTEXT)
+            txt = self.app.current.buttons[self.id].describe(self.ACTION_CONTEXT)
             if len(txt) > LONG_TEXT or "\n" in txt:
                 txt = "\n".join(txt.split("\n")[0:2])
                 txt = txt.replace("<", "&lt;").replace(">", "&gt;")
-                self.label.set_markup("<small>%s</small>" % (txt, ))
+                self.label.set_markup("<small>%s</small>" % (txt,))
             else:
                 txt = txt.replace("<", "&lt;").replace(">", "&gt;")
                 self.label.set_markup(txt)
@@ -194,14 +190,14 @@ class ControllerStick(ControllerWidget):
             lines = []
             if action.normalaction:
                 txt = action.normalaction.describe(self.ACTION_CONTEXT)
-                lines.append("Pressed: %s" % (escape(txt), ))
+                lines.append("Pressed: %s" % (escape(txt),))
             if action.holdaction:
                 txt = action.holdaction.describe(self.ACTION_CONTEXT)
-                lines.append("Hold: %s" % (escape(txt), ))
-            self.pressed.set_markup("<small>%s</small>" % ("\n".join(lines), ))
+                lines.append("Hold: %s" % (escape(txt),))
+            self.pressed.set_markup("<small>%s</small>" % ("\n".join(lines),))
         else:
             txt = escape(action.describe(self.ACTION_CONTEXT))
-            self.pressed.set_markup("<small>Pressed: %s</small>" % (txt, ))
+            self.pressed.set_markup("<small>Pressed: %s</small>" % (txt,))
 
 
 class ControllerTrigger(ControllerButton):
@@ -211,8 +207,9 @@ class ControllerTrigger(ControllerButton):
         # TODO: Use LT and RT in profile as well
         side = LEFT if self.id == "LT" else RIGHT
         if self.id in TRIGGERS and side in self.app.current.triggers:
-            self.label.set_label(self.app.current.triggers[side].describe(
-                self.ACTION_CONTEXT))
+            self.label.set_label(
+                self.app.current.triggers[side].describe(self.ACTION_CONTEXT)
+            )
         else:
             self.label.set_label(_("(no action)"))
 
@@ -221,8 +218,7 @@ class ControllerPad(ControllerStick):
     ACTION_CONTEXT = Action.AC_PAD
 
     def __init__(self, app, name, use_icon, enable_press, widget):
-        ControllerStick.__init__(self, app, name, use_icon, enable_press,
-                                 widget)
+        ControllerStick.__init__(self, app, name, use_icon, enable_press, widget)
         if name in (Profile.LPAD, Profile.RPAD):
             self.click_button = getattr(SCButtons, name)
         elif name == Profile.CPAD:
