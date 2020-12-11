@@ -18,9 +18,12 @@ class TestVDF(object):
         }
         """)
         parsed = parse_vdf(sio)
-        assert isinstance(parsed["data"], dict)
-        assert parsed["data"]["version"] == "3"
-        assert parsed["data"]["more data"]["version"] == "7"
+        if not isinstance(parsed["data"], dict):
+            raise AssertionError
+        if parsed["data"]["version"] != "3":
+            raise AssertionError
+        if parsed["data"]["more data"]["version"] != "7":
+            raise AssertionError
     
     
     def test_dict_without_key(self):

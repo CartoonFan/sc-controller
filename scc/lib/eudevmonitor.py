@@ -134,7 +134,8 @@ class Eudev:
         if enumerator is None:
             raise OSError("Failed to initialize enumerator")
         if subclass is not None:
-            assert issubclass(subclass, Enumerator)
+            if not issubclass(subclass, Enumerator):
+                raise AssertionError
         subclass = subclass or Enumerator
         return subclass(self, enumerator)
 
@@ -146,7 +147,8 @@ class Eudev:
         if monitor is None:
             raise OSError("Failed to initialize monitor")
         if subclass is not None:
-            assert issubclass(subclass, Monitor)
+            if not issubclass(subclass, Monitor):
+                raise AssertionError
         subclass = subclass or Monitor
         return subclass(self, monitor)
 

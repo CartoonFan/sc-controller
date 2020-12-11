@@ -1596,7 +1596,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         def http_ready(f, task, buffer):
             try:
                 stream = f.read_finish(task)
-                assert stream
+                if not stream:
+                    raise AssertionError
                 stream.read_bytes_async(102400, 0, None, stream_ready, buffer)
             except Exception as e:
                 log.warning("Failed to read release notes")

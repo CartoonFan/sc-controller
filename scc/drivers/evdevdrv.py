@@ -397,7 +397,8 @@ class EvdevDriver(object):
 
         try:
             dev = evdev.InputDevice(eventnode)
-            assert dev.fn == eventnode
+            if dev.fn != eventnode:
+                raise AssertionError
             config_fn = "evdev-%s.json" % (dev.name.strip().replace("/", ""), )
             config_file = os.path.join(get_config_path(), "devices", config_fn)
         except OSError as ose:
@@ -497,7 +498,8 @@ def make_new_device(factory, evdevdevice, *userdata):
 
     Returns whatever Factory returned.
     """
-    assert HAVE_EVDEV, "evdev driver is not available"
+    if not HAVE_EVDEV:
+        raise AssertionError("evdev driver is not available")
     return _evdevdrv.make_new_device(factory, evdevdevice, *userdata)
 
 
@@ -505,7 +507,8 @@ def get_evdev_devices_from_syspath(syspath):
     """
     For given syspath, returns all assotiated event devices.
     """
-    assert HAVE_EVDEV, "evdev driver is not available"
+    if not HAVE_EVDEV:
+        raise AssertionError("evdev driver is not available")
     rv = []
     for name in os.listdir(syspath):
         path = os.path.join(syspath, name)
@@ -514,7 +517,8 @@ def get_evdev_devices_from_syspath(syspath):
             if eventnode is not None:
                 try:
                     dev = evdev.InputDevice(eventnode)
-                    assert dev.fn == eventnode
+                    if dev.fn != eventnode:
+                        raise AssertionError
                     rv.append(dev)
                 except Exception as e:
                     log.exception(e)
@@ -527,7 +531,8 @@ def get_evdev_devices_from_syspath(syspath):
 
 def get_axes(dev):
     """ Helper function to get list ofa available axes """
-    assert HAVE_EVDEV, "evdev driver is not available"
+    if not HAVE_EVDEV:
+        raise AssertionError("evdev driver is not available")
     caps = dev.capabilities(verbose=False)
     return [axis for (axis, trash) in caps.get(ecodes.EV_ABS, [])]
 

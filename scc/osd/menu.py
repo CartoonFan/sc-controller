@@ -364,7 +364,8 @@ class Menu(OSDWindow):
         try:
             m = self.get_window().get_display().get_monitor_at_window(
                 self.get_window())
-            assert m
+            if not m:
+                raise AssertionError
             y_offset = m.get_geometry().y
             screen_height = m.get_geometry().height
         except:
