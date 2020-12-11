@@ -48,9 +48,8 @@ class StatusIcon(GObject.GObject):
             "is the icon user-visible?",
             "does the icon back-end think that anything is might be shown to the user?",
             True,
-            GObject.PARAM_READWRITE
-            if hasattr(GObject, "PARAM_READWRITE")
-            else GObject.ParamFlags.READWRITE,
+            GObject.PARAM_READWRITE if hasattr(GObject, "PARAM_READWRITE") else
+            GObject.ParamFlags.READWRITE,
         )
     }
 
@@ -274,16 +273,16 @@ class StatusIconAppIndicator(StatusIconDBus):
 
         category = appindicator.IndicatorCategory.APPLICATION_STATUS
         # Whatever icon is set here will be used as a tooltip icon during the entire time to icon is shown
-        self._tray = appindicator.Indicator.new(
-            "sc-controller", self._get_icon(), category
-        )
+        self._tray = appindicator.Indicator.new("sc-controller",
+                                                self._get_icon(), category)
         self._tray.set_menu(self._get_popupmenu())
         self._tray.set_title(self.TRAY_TITLE)
 
     def _set_visible(self, active):
         StatusIcon._set_visible(self, active)
 
-        self._tray.set_status(self._status_active if active else self._status_passive)
+        self._tray.set_status(
+            self._status_active if active else self._status_passive)
 
     def is_clickable(self):
         return False
@@ -315,7 +314,8 @@ class StatusIconProxy(StatusIcon):
             # Try loading GTK native status icon
             self._status_gtk = StatusIconGTK3(*args, **kwargs)
             self._status_gtk.connect(b"clicked", self._on_click)
-            self._status_gtk.connect(b"notify::active", self._on_notify_active_gtk)
+            self._status_gtk.connect(b"notify::active",
+                                     self._on_notify_active_gtk)
             self._on_notify_active_gtk()
 
             log.info("Using backend StatusIconGTK3 (primary)")
@@ -352,18 +352,14 @@ class StatusIconProxy(StatusIcon):
             for StatusIconBackend in status_icon_backends:
                 try:
                     self._status_fb = StatusIconBackend(
-                        *self._arguments[0], **self._arguments[1]
-                    )
+                        *self._arguments[0], **self._arguments[1])
                     self._status_fb.connect(b"clicked", self._on_click)
-                    self._status_fb.connect(
-                        b"notify::active", self._on_notify_active_fb
-                    )
+                    self._status_fb.connect(b"notify::active",
+                                            self._on_notify_active_fb)
                     self._on_notify_active_fb()
 
-                    log.warning(
-                        "StatusIcon: Using backend %s (fallback)"
-                        % StatusIconBackend.__name__
-                    )
+                    log.warning("StatusIcon: Using backend %s (fallback)" %
+                                StatusIconBackend.__name__)
                     break
                 except NotImplementedError:
                     continue
@@ -415,25 +411,21 @@ def get_status_icon(*args, **kwargs):
     if "STATUS_BACKEND" in os.environ:
         kwargs["force"] = True
 
-        status_icon_backend_name = "StatusIcon%s" % (os.environ.get("STATUS_BACKEND"))
+        status_icon_backend_name = "StatusIcon%s" % (
+            os.environ.get("STATUS_BACKEND"))
         if status_icon_backend_name in globals():
             try:
-                status_icon = globals()[status_icon_backend_name](*args, **kwargs)
-                log.info(
-                    "StatusIcon: Using requested backend %s"
-                    % (status_icon_backend_name)
-                )
+                status_icon = globals()[status_icon_backend_name](*args,
+                                                                  **kwargs)
+                log.info("StatusIcon: Using requested backend %s" %
+                         (status_icon_backend_name))
                 return status_icon
             except NotImplementedError:
-                log.error(
-                    "StatusIcon: Requested backend %s is not supported"
-                    % (status_icon_backend_name)
-                )
+                log.error("StatusIcon: Requested backend %s is not supported" %
+                          (status_icon_backend_name))
         else:
-            log.error(
-                "StatusIcon: Requested backend %s does not exist"
-                % (status_icon_backend_name)
-            )
+            log.error("StatusIcon: Requested backend %s does not exist" %
+                      (status_icon_backend_name))
 
         return StatusIconDummy(*args, **kwargs)
 

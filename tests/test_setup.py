@@ -24,10 +24,9 @@ class TestSetup(object):
         from setup import packages
 
         for importer, modname, ispkg in pkgutil.walk_packages(
-            path=scc.__path__, prefix="scc.", onerror=lambda x: None
-        ):
+                path=scc.__path__, prefix="scc.", onerror=lambda x: None):
             if ispkg:
                 if modname not in packages:
                     raise AssertionError(
-                        "Package '%s' is not being installed by setup.py" % (modname,)
-                    )
+                        "Package '%s' is not being installed by setup.py" %
+                        (modname, ))

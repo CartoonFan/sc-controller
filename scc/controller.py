@@ -106,7 +106,12 @@ class Controller(object):
 class HapticData(object):
     """ Simple container to hold haptic feedback settings """
 
-    def __init__(self, position, amplitude=512, frequency=4, period=1024, count=1):
+    def __init__(self,
+                 position,
+                 amplitude=512,
+                 frequency=4,
+                 period=1024,
+                 count=1):
         """
         'frequency' is used only when emulating touchpad and describes how many
         pixels should mouse travell between two feedback ticks.

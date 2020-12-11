@@ -36,11 +36,8 @@ def get_devices():
     """
     rv = []
     try:
-        lst = (
-            subprocess.Popen(["xinput"], stdout=subprocess.PIPE, stdin=None)
-            .communicate()[0]
-            .decode("utf-8")
-        )
+        lst = (subprocess.Popen(["xinput"], stdout=subprocess.PIPE,
+                                stdin=None).communicate()[0].decode("utf-8"))
     except:
         # calling xinput failed, return empty list
         return rv
