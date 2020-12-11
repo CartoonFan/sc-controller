@@ -317,7 +317,7 @@ class HIDController(USBDevice, Controller):
         if axis_config:
             try:
                 target = ([x for (x, y) in HIDControllerInput._fields_
-                                ].index(axis_config.get("axis")) - 1)
+                           ].index(axis_config.get("axis")) - 1)
             except Exception:
                 # Maps to unknown axis
                 return None, None
