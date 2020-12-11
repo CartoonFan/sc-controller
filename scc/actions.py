@@ -8,25 +8,50 @@ trigger should be pressed.
 import inspect
 import logging
 import sys
-from math import atan2, cos
+from math import atan2
+from math import cos
 from math import pi as PI
-from math import sin, sqrt
+from math import sin
+from math import sqrt
 
 import scc.macros
 import scc.modifiers
 import scc.special_actions
 from scc.aliases import ALL_BUTTONS as GAMEPAD_BUTTONS
-from scc.constants import (CPAD, FE_PAD, FE_STICK, HIPFIRE_EXCLUSIVE,
-                           HIPFIRE_NORMAL, HIPFIRE_SENSIBLE, LEFT,
-                           PARSER_CONSTANTS, PITCH, RIGHT, ROLL, STICK,
-                           STICK_PAD_MAX, STICK_PAD_MAX_HALF, STICK_PAD_MIN,
-                           STICK_PAD_MIN_HALF, TRIGGER_CLICK, TRIGGER_HALF,
-                           TRIGGER_MAX, TRIGGER_MIN, YAW, ControllerFlags,
-                           SCButtons)
+from scc.constants import ControllerFlags
+from scc.constants import CPAD
+from scc.constants import FE_PAD
+from scc.constants import FE_STICK
+from scc.constants import HIPFIRE_EXCLUSIVE
+from scc.constants import HIPFIRE_NORMAL
+from scc.constants import HIPFIRE_SENSIBLE
+from scc.constants import LEFT
+from scc.constants import PARSER_CONSTANTS
+from scc.constants import PITCH
+from scc.constants import RIGHT
+from scc.constants import ROLL
+from scc.constants import SCButtons
+from scc.constants import STICK
+from scc.constants import STICK_PAD_MAX
+from scc.constants import STICK_PAD_MAX_HALF
+from scc.constants import STICK_PAD_MIN
+from scc.constants import STICK_PAD_MIN_HALF
+from scc.constants import TRIGGER_CLICK
+from scc.constants import TRIGGER_HALF
+from scc.constants import TRIGGER_MAX
+from scc.constants import TRIGGER_MIN
+from scc.constants import YAW
 from scc.lib import xwrappers as X
-from scc.tools import (_, anglediff, circle_to_square, clamp, ensure_size,
-                       nameof, quat2euler)
-from scc.uinput import Axes, Keys, Rels
+from scc.tools import _
+from scc.tools import anglediff
+from scc.tools import circle_to_square
+from scc.tools import clamp
+from scc.tools import ensure_size
+from scc.tools import nameof
+from scc.tools import quat2euler
+from scc.uinput import Axes
+from scc.uinput import Keys
+from scc.uinput import Rels
 
 log = logging.getLogger("Actions")
 

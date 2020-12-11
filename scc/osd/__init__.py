@@ -8,14 +8,20 @@ import logging
 import os
 import traceback
 
-from gi.repository import Gdk, GdkX11, GLib, GObject, Gtk
+from gi.repository import Gdk
+from gi.repository import GdkX11
+from gi.repository import GLib
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from scc.config import Config
-from scc.constants import STICK_PAD_MAX, STICK_PAD_MIN
+from scc.constants import STICK_PAD_MAX
+from scc.constants import STICK_PAD_MIN
 from scc.lib import xwrappers as X
 from scc.osd.timermanager import TimerManager
 from scc.paths import get_share_path
-from scc.tools import _, set_logging_level
+from scc.tools import _
+from scc.tools import set_logging_level
 
 log = logging.getLogger("osd")
 

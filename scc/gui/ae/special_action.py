@@ -5,12 +5,17 @@ Assigns emulated axis to trigger
 """
 import logging
 
-from scc.actions import Action, NoAction, ResetGyroAction
+from scc.actions import Action
+from scc.actions import NoAction
+from scc.actions import ResetGyroAction
 from scc.gui.ae import AEComponent
 from scc.gui.ae.menu_action import MenuActionCofC
-from scc.special_actions import (ChangeProfileAction, ClearOSDAction,
-                                 KeyboardAction, OSDAction, ShellCommandAction,
-                                 TurnOffAction)
+from scc.special_actions import ChangeProfileAction
+from scc.special_actions import ClearOSDAction
+from scc.special_actions import KeyboardAction
+from scc.special_actions import OSDAction
+from scc.special_actions import ShellCommandAction
+from scc.special_actions import TurnOffAction
 from scc.tools import _
 
 log = logging.getLogger("AE.SA")

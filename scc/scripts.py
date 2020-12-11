@@ -8,7 +8,9 @@ import os
 import subprocess
 import sys
 
-from scc.tools import find_binary, init_logging, set_logging_level
+from scc.tools import find_binary
+from scc.tools import init_logging
+from scc.tools import set_logging_level
 
 
 class InvalidArguments(Exception):

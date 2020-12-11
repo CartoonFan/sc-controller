@@ -6,7 +6,8 @@ Class that interacts with `scc hid_test` and `scc evdev_test` commands.
 """
 import logging
 
-from gi.repository import Gio, GObject
+from gi.repository import Gio
+from gi.repository import GObject
 
 from scc.tools import find_binary
 

@@ -8,7 +8,11 @@ Used by on-screen keyboard.
 """
 import logging
 
-from scc.constants import CPAD, LEFT, RIGHT, STICK, SCButtons
+from scc.constants import CPAD
+from scc.constants import LEFT
+from scc.constants import RIGHT
+from scc.constants import SCButtons
+from scc.constants import STICK
 from scc.mapper import Mapper
 
 log = logging.getLogger("SlaveMapper")

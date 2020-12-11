@@ -8,21 +8,45 @@ For example, click() modifier executes action only if pad is pressed.
 import inspect
 import logging
 import time
-from collections import OrderedDict, deque
-from math import atan2, copysign, cos
+from collections import deque
+from collections import OrderedDict
+from math import atan2
+from math import copysign
+from math import cos
 from math import pi as PI
-from math import sin, sqrt
+from math import sin
+from math import sqrt
 
-from scc.actions import (Action, AxisAction, GyroAbsAction,
-                         HapticEnabledAction, MouseAction, NoAction, RangeOP,
-                         WholeHapticAction, XYAction)
-from scc.constants import (CPAD, CUT, FE_PAD, FE_STICK, LEFT, MINIMUM, RIGHT,
-                           STICK, STICK_PAD_MAX, STICK_PAD_MAX_HALF,
-                           STICK_PAD_MIN, STICKTILT, TRIGGER_MAX,
-                           ControllerFlags, HapticPos, SCButtons)
+from scc.actions import Action
+from scc.actions import AxisAction
+from scc.actions import GyroAbsAction
+from scc.actions import HapticEnabledAction
+from scc.actions import MouseAction
+from scc.actions import NoAction
+from scc.actions import RangeOP
+from scc.actions import WholeHapticAction
+from scc.actions import XYAction
+from scc.constants import ControllerFlags
+from scc.constants import CPAD
+from scc.constants import CUT
+from scc.constants import FE_PAD
+from scc.constants import FE_STICK
+from scc.constants import HapticPos
+from scc.constants import LEFT
+from scc.constants import MINIMUM
+from scc.constants import RIGHT
+from scc.constants import SCButtons
+from scc.constants import STICK
+from scc.constants import STICK_PAD_MAX
+from scc.constants import STICK_PAD_MAX_HALF
+from scc.constants import STICK_PAD_MIN
+from scc.constants import STICKTILT
+from scc.constants import TRIGGER_MAX
 from scc.controller import HapticData
-from scc.tools import clamp, nameof
-from scc.uinput import Axes, Rels
+from scc.tools import clamp
+from scc.tools import nameof
+from scc.uinput import Axes
+from scc.uinput import Rels
 
 log = logging.getLogger("Modifiers")
 

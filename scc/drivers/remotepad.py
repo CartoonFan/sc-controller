@@ -8,7 +8,11 @@ Based on https://github.com/libretro/RetroArch/blob/master/cores/libretro-net-re
 import ctypes
 import logging
 import socket
-from ctypes import CFUNCTYPE, POINTER, byref, c_void_p, cast
+from ctypes import byref
+from ctypes import c_void_p
+from ctypes import cast
+from ctypes import CFUNCTYPE
+from ctypes import POINTER
 
 from scc.constants import ControllerFlags
 from scc.controller import Controller

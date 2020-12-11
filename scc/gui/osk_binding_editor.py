@@ -8,15 +8,18 @@ import logging
 import os
 
 from scc.actions import Action
-from scc.constants import STICK, SCButtons
+from scc.constants import SCButtons
+from scc.constants import STICK
 from scc.gui.binding_editor import BindingEditor
-from scc.gui.controller_widget import STICKS, TRIGGERS
+from scc.gui.controller_widget import STICKS
+from scc.gui.controller_widget import TRIGGERS
 from scc.gui.editor import Editor
 from scc.gui.parser import GuiActionParser
 from scc.osd.keyboard import Keyboard as OSDKeyboard
 from scc.paths import get_profiles_path
 from scc.profile import Profile
-from scc.tools import _, find_profile
+from scc.tools import _
+from scc.tools import find_profile
 
 log = logging.getLogger("OSKEdit")
 

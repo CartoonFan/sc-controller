@@ -8,7 +8,6 @@ classes by user and breaking everything in very creative ways.
 load_custom_module function needs to be called by daemon and GUI, so it exists
 in separate module.
 """
-
 import os
 
 from scc.paths import get_config_path

@@ -7,10 +7,14 @@ Helper classes for grabbing buttons and axes from physical gamepads.
 """
 import logging
 
-from scc.constants import STICK_PAD_MAX, STICK_PAD_MIN
-from scc.gui.creg.constants import X, Y
-from scc.gui.creg.data import AxisData, DPadEmuData
-from scc.tools import _, nameof
+from scc.constants import STICK_PAD_MAX
+from scc.constants import STICK_PAD_MIN
+from scc.gui.creg.constants import X
+from scc.gui.creg.constants import Y
+from scc.gui.creg.data import AxisData
+from scc.gui.creg.data import DPadEmuData
+from scc.tools import _
+from scc.tools import nameof
 
 log = logging.getLogger("CReg.grabs")
 
