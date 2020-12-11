@@ -12,12 +12,8 @@ import os
 import sys
 from collections import namedtuple
 
-from scc.constants import ControllerFlags
-from scc.constants import SCButtons
-from scc.constants import STICK_PAD_MAX
-from scc.constants import STICK_PAD_MIN
-from scc.constants import TRIGGER_MAX
-from scc.constants import TRIGGER_MIN
+from scc.constants import (STICK_PAD_MAX, STICK_PAD_MIN, TRIGGER_MAX,
+                           TRIGGER_MIN, ControllerFlags, SCButtons)
 from scc.controller import Controller
 from scc.paths import get_config_path
 from scc.tools import clamp

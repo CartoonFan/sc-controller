@@ -1,7 +1,8 @@
 #!/usr/bin/env python2
-from distutils.core import setup, Extension
-from scc.constants import DAEMON_VERSION
 import glob
+from distutils.core import Extension, setup
+
+from scc.constants import DAEMON_VERSION
 
 data_files = [
     ("share/scc/glade", glob.glob("glade/*.glade")),

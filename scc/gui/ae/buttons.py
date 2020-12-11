@@ -8,24 +8,16 @@ import logging
 
 from gi.repository import Gtk
 
-from scc.actions import Action
-from scc.actions import AxisAction
-from scc.actions import ButtonAction
-from scc.actions import MouseAction
-from scc.actions import MultiAction
-from scc.actions import NoAction
+from scc.actions import (Action, AxisAction, ButtonAction, MouseAction,
+                         MultiAction, NoAction)
 from scc.gui.ae import AEComponent
 from scc.gui.area_to_action import action_to_area
 from scc.gui.chooser import Chooser
 from scc.gui.key_grabber import KeyGrabber
 from scc.gui.parser import InvalidAction
-from scc.macros import Cycle
-from scc.macros import Macro
-from scc.macros import PressAction
-from scc.macros import ReleaseAction
+from scc.macros import Cycle, Macro, PressAction, ReleaseAction
 from scc.tools import _
-from scc.uinput import Keys
-from scc.uinput import Rels
+from scc.uinput import Keys, Rels
 
 log = logging.getLogger("AE.Buttons")
 

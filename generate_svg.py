@@ -1,17 +1,16 @@
 #!/usr/bin/env python2
-from scc.tools import _
+import os
 
-from scc.actions import Action, DPadAction, XYAction, MouseAction
-from scc.modifiers import ModeModifier, DoubleclickModifier
-from scc.special_actions import MenuAction
-from scc.parser import TalkingActionParser
+from scc.actions import Action, DPadAction, MouseAction, XYAction
 from scc.constants import SCButtons
-from scc.profile import Profile
-from scc.tools import nameof
-from scc.uinput import Rels
 from scc.gui.svg_widget import SVGEditor
 from scc.lib import IntEnum
-import os
+from scc.modifiers import DoubleclickModifier, ModeModifier
+from scc.parser import TalkingActionParser
+from scc.profile import Profile
+from scc.special_actions import MenuAction
+from scc.tools import _, nameof
+from scc.uinput import Rels
 
 
 class Align(IntEnum):

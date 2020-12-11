@@ -7,12 +7,8 @@ by 'cemuhook' actions to them.
 """
 import logging
 import socket
-from ctypes import c_bool
-from ctypes import c_char_p
-from ctypes import c_float
-from ctypes import c_int
-from ctypes import c_size_t
-from ctypes import create_string_buffer
+from ctypes import (c_bool, c_char_p, c_float, c_int, c_size_t,
+                    create_string_buffer)
 
 from scc.lib.enum import IntEnum
 from scc.tools import find_library

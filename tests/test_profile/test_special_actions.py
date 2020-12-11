@@ -1,8 +1,8 @@
-from . import parser
 from scc.actions import ButtonAction
-from scc.constants import HapticPos
-from scc.constants import SCButtons
+from scc.constants import HapticPos, SCButtons
 from scc.special_actions import *
+
+from . import parser
 
 MENU_CLASSES = (
     MenuAction,

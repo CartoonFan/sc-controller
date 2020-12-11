@@ -9,8 +9,9 @@ load_custom_module function needs to be called by daemon and GUI, so it exists
 in separate module.
 """
 
-from scc.paths import get_config_path
 import os
+
+from scc.paths import get_config_path
 
 
 def load_custom_module(log, who_calls="daemon"):

@@ -5,13 +5,14 @@ SC Controller - remotepad driver
 This is implementation or protocol used by Retroarch's Remote RetroPad core.
 Based on https://github.com/libretro/RetroArch/blob/master/cores/libretro-net-retropad.
 """
-from scc.tools import find_library
-from scc.constants import ControllerFlags
-from scc.controller import Controller
-from ctypes import CFUNCTYPE, POINTER, byref, cast, c_void_p
+import ctypes
 import logging
 import socket
-import ctypes
+from ctypes import CFUNCTYPE, POINTER, byref, c_void_p, cast
+
+from scc.constants import ControllerFlags
+from scc.controller import Controller
+from scc.tools import find_library
 
 log = logging.getLogger("remotepad")
 

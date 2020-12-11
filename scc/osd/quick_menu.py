@@ -8,19 +8,14 @@ import logging
 import os
 import sys
 
-from gi.repository import GLib
-from gi.repository import Gtk
+from gi.repository import GLib, Gtk
 
 from scc.config import Config
-from scc.menu_data import MenuItem
-from scc.menu_data import Submenu
+from scc.menu_data import MenuItem, Submenu
 from scc.osd import OSDWindow
-from scc.osd.menu import Menu
-from scc.osd.menu import MenuIcon
+from scc.osd.menu import Menu, MenuIcon
 from scc.paths import get_share_path
-from scc.tools import _
-from scc.tools import find_icon
-from scc.tools import find_menu
+from scc.tools import _, find_icon, find_menu
 
 log = logging.getLogger("osd.quickmenu")
 
