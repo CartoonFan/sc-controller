@@ -135,7 +135,8 @@ class Dialog(Editor, ComboSetter, Export, ImportVdf, ImportSccprofile):
 
         Returns 'Next' button widget.
         """
-        assert not enabled or callback
+        if not (not enabled or callback):
+            raise AssertionError
         btNext = self.builder.get_object("btNext")
         btNext.set_visible(enabled)
         btNext.set_use_stock(False)

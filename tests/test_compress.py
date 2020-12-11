@@ -206,21 +206,25 @@ class TestCompress(object):
                 # Tested along with hold
                 continue
             if hasattr(cls, "set_speed"):
-                assert cls.COMMAND in CASES, (
-                    "%s supports setting sensitivity, but "
-                    "there is no test case it" % (cls.COMMAND, ))
-                assert "sensitivity" in CASES[cls.COMMAND], (
-                    "%s supports setting sensitivity, but "
-                    "case for it has no 'sensitivity' key it" %
-                    (cls.COMMAND, ))
+                if cls.COMMAND not in CASES:
+                    raise AssertionError(
+                        "%s supports setting sensitivity, but "
+                        "there is no test case it" % (cls.COMMAND, ))
+                if "sensitivity" not in CASES[cls.COMMAND]:
+                    raise AssertionError(
+                        "%s supports setting sensitivity, but "
+                        "case for it has no 'sensitivity' key it" %
+                        (cls.COMMAND, ))
             if hasattr(cls, "set_haptic"):
-                assert (
-                    cls.COMMAND in CASES
-                ), "%s supports feedback, but there is " "no test case it" % (
-                    cls.COMMAND, )
-                assert "feedback" in CASES[cls.COMMAND], (
-                    "%s supports feedback, but case for it has "
-                    "no 'feedback' key it" % (cls.COMMAND, ))
+                if (
+                    cls.COMMAND not in CASES
+                ):
+                    raise AssertionError("%s supports feedback, but there is " "no test case it" % (
+                        cls.COMMAND, ))
+                if "feedback" not in CASES[cls.COMMAND]:
+                    raise AssertionError(
+                        "%s supports feedback, but case for it has "
+                        "no 'feedback' key it" % (cls.COMMAND, ))
 
     def test_hold_doubleclick(self):
         """
@@ -236,13 +240,20 @@ class TestCompress(object):
             },
         }).compress()
 
-        assert isinstance(a, DoubleclickModifier)
-        assert isinstance(a.normalaction, AxisAction)
-        assert isinstance(a.action, AxisAction)
-        assert isinstance(a.holdaction, AxisAction)
-        assert a.normalaction.id == Axes.ABS_RX
-        assert a.action.id == Axes.ABS_Z
-        assert a.holdaction.id == Axes.ABS_X
+        if not isinstance(a, DoubleclickModifier):
+            raise AssertionError
+        if not isinstance(a.normalaction, AxisAction):
+            raise AssertionError
+        if not isinstance(a.action, AxisAction):
+            raise AssertionError
+        if not isinstance(a.holdaction, AxisAction):
+            raise AssertionError
+        if a.normalaction.id != Axes.ABS_RX:
+            raise AssertionError
+        if a.action.id != Axes.ABS_Z:
+            raise AssertionError
+        if a.holdaction.id != Axes.ABS_X:
+            raise AssertionError
 
     def test_sensitivity(self):
         """
@@ -253,8 +264,9 @@ class TestCompress(object):
             if "sensitivity" in CASES[case]:
                 print("Testing 'sensitivity' on %s" % (case, ))
                 a = parser.from_json_data(CASES[case]).compress()
-                assert (a.get_speed() == CASES[case]["sensitivity"]
-                        or a.strip().get_speed() == CASES[case]["sensitivity"])
+                if not (a.get_speed() == CASES[case]["sensitivity"]
+                        or a.strip().get_speed() == CASES[case]["sensitivity"]):
+                    raise AssertionError
 
     def test_feedback(self):
         """
@@ -265,8 +277,9 @@ class TestCompress(object):
             if "feedback" in CASES[case]:
                 print("Testing 'feedback' on %s" % (case, ))
                 a = parser.from_json_data(CASES[case]).compress()
-                assert a.get_haptic().get_position(
-                ).name == CASES[case]["feedback"][0]
+                if a.get_haptic().get_position(
+                ).name != CASES[case]["feedback"][0]:
+                    raise AssertionError
 
     def test_multi(self):
         """
@@ -278,9 +291,11 @@ class TestCompress(object):
             "sensitivity": (2.0, 3.0, 4.0),
             "feedback": ("BOTH", ),
         }).compress()
-        assert a.actions[0].get_haptic().get_position().name == "BOTH"
+        if a.actions[0].get_haptic().get_position().name != "BOTH":
+            raise AssertionError
         for action in a.actions:
-            assert action.get_speed()[0] == 2.0
+            if action.get_speed()[0] != 2.0:
+                raise AssertionError
 
     def test_macro(self):
         """
@@ -293,5 +308,7 @@ class TestCompress(object):
             "feedback": ("BOTH", ),
         }).compress()
         for action in a.actions:
-            assert action.get_haptic().get_position().name == "BOTH"
-            assert action.get_speed()[0] == 2.0
+            if action.get_haptic().get_position().name != "BOTH":
+                raise AssertionError
+            if action.get_speed()[0] != 2.0:
+                raise AssertionError

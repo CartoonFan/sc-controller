@@ -16,132 +16,181 @@ class TestActions(object):
         """
         Tests if empty json dict or dict without action is parsed NoAction.
         """
-        assert isinstance(parser.from_json_data({}), NoAction)
-        assert isinstance(parser.from_json_data({ 'action' : 'None' }), NoAction)
-        assert isinstance(parser.from_json_data({ '___' : 'Invalid' }), NoAction)
+        if not isinstance(parser.from_json_data({}), NoAction):
+            raise AssertionError
+        if not isinstance(parser.from_json_data({ 'action' : 'None' }), NoAction):
+            raise AssertionError
+        if not isinstance(parser.from_json_data({ '___' : 'Invalid' }), NoAction):
+            raise AssertionError
     
     
     def test_axis(self):
         """
         Tests if AxisAction is parsed correctly from json.
         """
-        assert isinstance(parser.from_json_data({ 'action' : 'axis(ABS_X)' }), AxisAction)
-        assert parser.from_json_data({ 'action' : 'axis(ABS_X)' }).id == Axes.ABS_X
+        if not isinstance(parser.from_json_data({ 'action' : 'axis(ABS_X)' }), AxisAction):
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'axis(ABS_X)' }).id != Axes.ABS_X:
+            raise AssertionError
     
     
     def test_raxis(self):
         """
         Tests if RAxisAction is parsed correctly from json.
         """
-        assert isinstance(parser.from_json_data({ 'action' : 'raxis(ABS_X)' }), RAxisAction)
-        assert parser.from_json_data({ 'action' : 'raxis(ABS_X)' }).id == Axes.ABS_X
+        if not isinstance(parser.from_json_data({ 'action' : 'raxis(ABS_X)' }), RAxisAction):
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'raxis(ABS_X)' }).id != Axes.ABS_X:
+            raise AssertionError
     
     
     def test_hats(self):
         """
         Tests if every Hat* actions can be parsed correctly from json.
         """ 
-        assert isinstance(parser.from_json_data({ 'action' : 'hatup(ABS_X)' }), HatUpAction)
-        assert isinstance(parser.from_json_data({ 'action' : 'hatdown(ABS_X)' }), HatDownAction)
-        assert isinstance(parser.from_json_data({ 'action' : 'hatleft(ABS_X)' }), HatLeftAction)
-        assert isinstance(parser.from_json_data({ 'action' : 'hatright(ABS_X)' }), HatRightAction)
+        if not isinstance(parser.from_json_data({ 'action' : 'hatup(ABS_X)' }), HatUpAction):
+            raise AssertionError
+        if not isinstance(parser.from_json_data({ 'action' : 'hatdown(ABS_X)' }), HatDownAction):
+            raise AssertionError
+        if not isinstance(parser.from_json_data({ 'action' : 'hatleft(ABS_X)' }), HatLeftAction):
+            raise AssertionError
+        if not isinstance(parser.from_json_data({ 'action' : 'hatright(ABS_X)' }), HatRightAction):
+            raise AssertionError
         
-        assert parser.from_json_data({ 'action' : 'hatup(ABS_X)' }).id == Axes.ABS_X
-        assert parser.from_json_data({ 'action' : 'hatdown(ABS_X)' }).id == Axes.ABS_X
-        assert parser.from_json_data({ 'action' : 'hatleft(ABS_X)' }).id == Axes.ABS_X
-        assert parser.from_json_data({ 'action' : 'hatright(ABS_X)' }).id == Axes.ABS_X
+        if parser.from_json_data({ 'action' : 'hatup(ABS_X)' }).id != Axes.ABS_X:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'hatdown(ABS_X)' }).id != Axes.ABS_X:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'hatleft(ABS_X)' }).id != Axes.ABS_X:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'hatright(ABS_X)' }).id != Axes.ABS_X:
+            raise AssertionError
         
-        assert parser.from_json_data({ 'action' : 'hatup(ABS_X)' }).min == 0
-        assert parser.from_json_data({ 'action' : 'hatdown(ABS_X)' }).min == 0
-        assert parser.from_json_data({ 'action' : 'hatleft(ABS_X)' }).min == 0
-        assert parser.from_json_data({ 'action' : 'hatright(ABS_X)' }).min == 0
+        if parser.from_json_data({ 'action' : 'hatup(ABS_X)' }).min != 0:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'hatdown(ABS_X)' }).min != 0:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'hatleft(ABS_X)' }).min != 0:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'hatright(ABS_X)' }).min != 0:
+            raise AssertionError
         
-        assert parser.from_json_data({ 'action' : 'hatup(ABS_X)' }).max == STICK_PAD_MIN + 1
-        assert parser.from_json_data({ 'action' : 'hatdown(ABS_X)' }).max == STICK_PAD_MAX - 1
-        assert parser.from_json_data({ 'action' : 'hatleft(ABS_X)' }).max == STICK_PAD_MIN + 1
-        assert parser.from_json_data({ 'action' : 'hatright(ABS_X)' }).max == STICK_PAD_MAX - 1
+        if parser.from_json_data({ 'action' : 'hatup(ABS_X)' }).max != STICK_PAD_MIN + 1:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'hatdown(ABS_X)' }).max != STICK_PAD_MAX - 1:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'hatleft(ABS_X)' }).max != STICK_PAD_MIN + 1:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'hatright(ABS_X)' }).max != STICK_PAD_MAX - 1:
+            raise AssertionError
     
     
     def test_mouse(self):
         """
         Tests if MouseAction is parsed correctly from json.
         """
-        assert parser.from_json_data({ 'action' : 'mouse()' })._mouse_axis == None
-        assert parser.from_json_data({ 'action' : 'trackpad()' })._mouse_axis == None
-        assert parser.from_json_data({ 'action' : 'mouse(REL_WHEEL)' })._mouse_axis == Rels.REL_WHEEL
+        if parser.from_json_data({ 'action' : 'mouse()' })._mouse_axis != None:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'trackpad()' })._mouse_axis != None:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'mouse(REL_WHEEL)' })._mouse_axis != Rels.REL_WHEEL:
+            raise AssertionError
 
 
     def test_mouseabs(self):
         """
         Tests if MouseAction is parsed correctly from json.
         """
-        assert parser.from_json_data({ 'action' : 'mouseabs(REL_X)' })._mouse_axis == Rels.REL_X
-        assert parser.from_json_data({ 'action' : 'mouseabs()' })._mouse_axis is None
+        if parser.from_json_data({ 'action' : 'mouseabs(REL_X)' })._mouse_axis != Rels.REL_X:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'mouseabs()' })._mouse_axis is not None:
+            raise AssertionError
     
     
     def test_area(self):
         """
         Tests if AreaAction are parsed correctly from json.
         """
-        assert isinstance(parser.from_json_data({ 'action' : 'area(10, 10, 50, 50)' }), AreaAction)
-        assert parser.from_json_data({ 'action' : 'area(10, 10, 50, 50)' }).coords == (10, 10, 50, 50)
+        if not isinstance(parser.from_json_data({ 'action' : 'area(10, 10, 50, 50)' }), AreaAction):
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'area(10, 10, 50, 50)' }).coords != (10, 10, 50, 50):
+            raise AssertionError
     
     
     def test_relarea(self):
         """
         Tests if  RelAreaAction are parsed correctly from json.
         """
-        assert isinstance(parser.from_json_data({ 'action' : 'relarea(10, 10, 50, 50)' }), RelAreaAction)
-        assert parser.from_json_data({ 'action' : 'relarea(10, 10, 50, 50)' }).coords == (10, 10, 50, 50)
+        if not isinstance(parser.from_json_data({ 'action' : 'relarea(10, 10, 50, 50)' }), RelAreaAction):
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'relarea(10, 10, 50, 50)' }).coords != (10, 10, 50, 50):
+            raise AssertionError
     
     
     def test_winarea(self):
         """
         Tests if WinAreaAction are parsed correctly from json.
         """
-        assert isinstance(parser.from_json_data({ 'action' : 'winarea(10, 10, 50, 50)' }), WinAreaAction)
-        assert parser.from_json_data({ 'action' : 'winarea(10, 10, 50, 50)' }).coords == (10, 10, 50, 50)
+        if not isinstance(parser.from_json_data({ 'action' : 'winarea(10, 10, 50, 50)' }), WinAreaAction):
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'winarea(10, 10, 50, 50)' }).coords != (10, 10, 50, 50):
+            raise AssertionError
     
     
     def test_relwinarea(self):
         """
         Tests if RelWinAreaAction are parsed correctly from json.
         """
-        assert isinstance(parser.from_json_data({ 'action' : 'relwinarea(10, 10, 50, 50)' }), RelWinAreaAction)
-        assert parser.from_json_data({ 'action' : 'relwinarea(10, 10, 50, 50)' }).coords == (10, 10, 50, 50)
+        if not isinstance(parser.from_json_data({ 'action' : 'relwinarea(10, 10, 50, 50)' }), RelWinAreaAction):
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'relwinarea(10, 10, 50, 50)' }).coords != (10, 10, 50, 50):
+            raise AssertionError
     
     
     def test_gyro(self):
         """
         Tests if GyroAction is parsed correctly from json.
         """
-        assert isinstance(parser.from_json_data({ 'action' : 'gyro(ABS_X)' }), GyroAction)
+        if not isinstance(parser.from_json_data({ 'action' : 'gyro(ABS_X)' }), GyroAction):
+            raise AssertionError
         
-        assert parser.from_json_data({ 'action' : 'gyro(ABS_X)' }).axes[0] == Axes.ABS_X
-        assert parser.from_json_data({ 'action' : 'gyro(ABS_X)' }).axes[1] is None
-        assert parser.from_json_data({ 'action' : 'gyro(ABS_X, ABS_Y)' }).axes[1] == Axes.ABS_Y
-        assert parser.from_json_data({ 'action' : 'gyro(ABS_X, ABS_Y)' }).axes[2] is None
-        assert parser.from_json_data({ 'action' : 'gyro(ABS_X, ABS_Y, ABS_Z)' }).axes[2] == Axes.ABS_Z
+        if parser.from_json_data({ 'action' : 'gyro(ABS_X)' }).axes[0] != Axes.ABS_X:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'gyro(ABS_X)' }).axes[1] is not None:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'gyro(ABS_X, ABS_Y)' }).axes[1] != Axes.ABS_Y:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'gyro(ABS_X, ABS_Y)' }).axes[2] is not None:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'gyro(ABS_X, ABS_Y, ABS_Z)' }).axes[2] != Axes.ABS_Z:
+            raise AssertionError
     
     
     def test_gyroabs(self):
         """
         Tests if GyroAbsAction is parsed correctly from json.
         """
-        assert isinstance(parser.from_json_data({ 'action' : 'gyroabs(ABS_X)' }), GyroAbsAction)
+        if not isinstance(parser.from_json_data({ 'action' : 'gyroabs(ABS_X)' }), GyroAbsAction):
+            raise AssertionError
         
-        assert parser.from_json_data({ 'action' : 'gyroabs(ABS_X)' }).axes[0] == Axes.ABS_X
-        assert parser.from_json_data({ 'action' : 'gyroabs(ABS_X)' }).axes[1] is None
-        assert parser.from_json_data({ 'action' : 'gyroabs(ABS_X, ABS_Y)' }).axes[1] == Axes.ABS_Y
-        assert parser.from_json_data({ 'action' : 'gyroabs(ABS_X, ABS_Y)' }).axes[2] is None
-        assert parser.from_json_data({ 'action' : 'gyroabs(ABS_X, ABS_Y, ABS_Z)' }).axes[2] == Axes.ABS_Z
+        if parser.from_json_data({ 'action' : 'gyroabs(ABS_X)' }).axes[0] != Axes.ABS_X:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'gyroabs(ABS_X)' }).axes[1] is not None:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'gyroabs(ABS_X, ABS_Y)' }).axes[1] != Axes.ABS_Y:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'gyroabs(ABS_X, ABS_Y)' }).axes[2] is not None:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'gyroabs(ABS_X, ABS_Y, ABS_Z)' }).axes[2] != Axes.ABS_Z:
+            raise AssertionError
     
     
     def test_resetgyro(self):
         """
         Tests if ResetGyroAction is parsed correctly from json.
         """
-        assert isinstance(parser.from_json_data({ 'action' : 'resetgyro()' }), ResetGyroAction)
+        if not isinstance(parser.from_json_data({ 'action' : 'resetgyro()' }), ResetGyroAction):
+            raise AssertionError
     
     
     def test_tilt(self):
@@ -150,14 +199,16 @@ class TestActions(object):
         parsed back to same action.
         """
         # With only one button
-        assert parser.from_json_data({
+        if parser.from_json_data({
             'action' : 'tilt( button(KEY_D) )'
-        }).actions[0].button == Keys.KEY_D
+        }).actions[0].button != Keys.KEY_D:
+            raise AssertionError
         
         # With all buttons
-        assert parser.from_json_data({
+        if parser.from_json_data({
             'action' : 'tilt( button(KEY_D), button(KEY_U), button(KEY_L), button(KEY_R))'
-        }).actions[3].button == Keys.KEY_R
+        }).actions[3].button != Keys.KEY_R:
+            raise AssertionError
     
     
     def test_trackball(self):
@@ -166,20 +217,27 @@ class TestActions(object):
         """
         # assert isinstance(parser.from_json_data({ 'action' : 'trackball' }), TrackballAction)
         a = parser.from_json_data({ 'action' : 'trackball' })
-        assert isinstance(a, BallModifier)
-        assert isinstance(a.action, MouseAction)
+        if not isinstance(a, BallModifier):
+            raise AssertionError
+        if not isinstance(a.action, MouseAction):
+            raise AssertionError
     
     
     def test_button(self):
         """
         Tests if ButtonAction is parsed correctly from json.
         """
-        assert isinstance(parser.from_json_data({ 'action' : 'button(KEY_X)' }), ButtonAction)
+        if not isinstance(parser.from_json_data({ 'action' : 'button(KEY_X)' }), ButtonAction):
+            raise AssertionError
         
-        assert parser.from_json_data({ 'action' : 'button(KEY_X)' }).button == Keys.KEY_X
-        assert parser.from_json_data({ 'action' : 'button(KEY_X)' }).button2 is None
-        assert parser.from_json_data({ 'action' : 'button(KEY_X, KEY_Z)' }).button == Keys.KEY_X
-        assert parser.from_json_data({ 'action' : 'button(KEY_X, KEY_Z)' }).button2 == Keys.KEY_Z
+        if parser.from_json_data({ 'action' : 'button(KEY_X)' }).button != Keys.KEY_X:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'button(KEY_X)' }).button2 is not None:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'button(KEY_X, KEY_Z)' }).button != Keys.KEY_X:
+            raise AssertionError
+        if parser.from_json_data({ 'action' : 'button(KEY_X, KEY_Z)' }).button2 != Keys.KEY_Z:
+            raise AssertionError
     
     
     def test_multiaction(self):
@@ -187,11 +245,16 @@ class TestActions(object):
         Tests if MultiAction is parsed correctly from json.
         """
         a = parser.from_json_data({ 'action' : 'button(KEY_X) and button(KEY_Y)' })
-        assert isinstance(a, MultiAction)
-        assert isinstance(a.actions[0], ButtonAction)
-        assert a.actions[0].button == Keys.KEY_X
-        assert isinstance(a.actions[1], ButtonAction)
-        assert a.actions[1].button == Keys.KEY_Y
+        if not isinstance(a, MultiAction):
+            raise AssertionError
+        if not isinstance(a.actions[0], ButtonAction):
+            raise AssertionError
+        if a.actions[0].button != Keys.KEY_X:
+            raise AssertionError
+        if not isinstance(a.actions[1], ButtonAction):
+            raise AssertionError
+        if a.actions[1].button != Keys.KEY_Y:
+            raise AssertionError
     
     
     def test_dpad(self):
@@ -210,9 +273,11 @@ class TestActions(object):
             }]
         })
         
-        assert isinstance(a, DPadAction)
+        if not isinstance(a, DPadAction):
+            raise AssertionError
         for sub in a.actions:
-            assert isinstance(sub, ButtonAction)
+            if not isinstance(sub, ButtonAction):
+                raise AssertionError
     
     
     def test_ring(self):
@@ -240,12 +305,16 @@ class TestActions(object):
             }
         })
         
-        assert isinstance(a.outer, DPadAction)
+        if not isinstance(a.outer, DPadAction):
+            raise AssertionError
         for sub in a.outer.actions:
-            assert isinstance(sub, ButtonAction)
-        assert isinstance(a.inner, XYAction)
+            if not isinstance(sub, ButtonAction):
+                raise AssertionError
+        if not isinstance(a.inner, XYAction):
+            raise AssertionError
         for sub in a.inner.actions:
-            assert isinstance(sub, AxisAction)
+            if not isinstance(sub, AxisAction):
+                raise AssertionError
     
     
     def test_dpad8(self):
@@ -274,9 +343,11 @@ class TestActions(object):
         
         print(a)
         print(a.actions)
-        assert isinstance(a, DPadAction)
+        if not isinstance(a, DPadAction):
+            raise AssertionError
         for sub in a.actions:
-            assert isinstance(sub, ButtonAction)
+            if not isinstance(sub, ButtonAction):
+                raise AssertionError
     
     
     def test_XY(self):
@@ -288,9 +359,12 @@ class TestActions(object):
             'Y': { 'action' : 'axis(ABS_Y)' },
         })
         
-        assert isinstance(a, XYAction)
-        assert isinstance(a.x, AxisAction)
-        assert isinstance(a.y, AxisAction)
+        if not isinstance(a, XYAction):
+            raise AssertionError
+        if not isinstance(a.x, AxisAction):
+            raise AssertionError
+        if not isinstance(a.y, AxisAction):
+            raise AssertionError
     
     
     def test_trigger(self):
@@ -302,7 +376,11 @@ class TestActions(object):
             'levels' : [ 10, 80 ]
         })
         
-        assert isinstance(a, TriggerAction)
-        assert isinstance(a.action, ButtonAction)
-        assert a.press_level == 10
-        assert a.release_level == 80
+        if not isinstance(a, TriggerAction):
+            raise AssertionError
+        if not isinstance(a.action, ButtonAction):
+            raise AssertionError
+        if a.press_level != 10:
+            raise AssertionError
+        if a.release_level != 80:
+            raise AssertionError

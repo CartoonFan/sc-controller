@@ -23,7 +23,8 @@ HCIGETCONNLIST = IOR(ord("H"), 212, ctypes.c_int)
 HAVE_BLUETOOTH_LIB = False
 try:
     btlib_name = find_library("bluetooth")
-    assert btlib_name
+    if not btlib_name:
+        raise AssertionError
     btlib = ctypes.CDLL(btlib_name)
     HAVE_BLUETOOTH_LIB = True
 except:
@@ -48,7 +49,8 @@ class DeviceMonitor(Monitor):
         This has to be called from something called by init_drivers method.
         """
         key = (subsystem, vendor_id, product_id)
-        assert key not in self.dev_added_cbs
+        if key in self.dev_added_cbs:
+            raise AssertionError
         self.match_subsystem(subsystem)
 
         self.dev_added_cbs[key] = added_cb
