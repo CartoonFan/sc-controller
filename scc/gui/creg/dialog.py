@@ -1,8 +1,7 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Controller Registration
 
-Dialog that asks a lot of question to create configuration node in config file.
+Dialog that asks a lot of questions to create configuration node in config file.
 Most "interesting" thing here may be that this works 100% independently from
 daemon.
 """

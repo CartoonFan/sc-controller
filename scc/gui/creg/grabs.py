@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Controller Registration - Grabs
 
@@ -127,8 +126,8 @@ class StickGrabber(TriggerGrabber):
 
     def on_button(self, keycode, pressed):
         # if len(self.grabbed) == 2 and self.grabbed[X] != None:
-        # 	# Already grabbed one axis, don't grab buttons
-        # 	return
+        #   # Already grabbed one axis, don't grab buttons
+        #   return
         if keycode in self.grabbed:
             # Don't allow same button to be used twice
             return
