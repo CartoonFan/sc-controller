@@ -177,7 +177,7 @@ class DPADComponent(AEComponent, MenuActionCofC, BindingEditor):
             # one of actions, swap back to 'Simple DPAD' mode.
             self.set_cb(cb, "dpad", 1)
         # if action.name:
-        # 	action = NameModifier(action.name, action)
+        #   action = NameModifier(action.name, action)
         self.set_button_desc(i)
         self.update()
 

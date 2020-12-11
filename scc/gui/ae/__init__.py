@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """ ae - Action Editor components """
 import logging
 import os

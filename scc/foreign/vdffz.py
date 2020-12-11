@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 Imports VDFFZ profile and converts it to Profile object.
 VDFFZ is just VDF encapsulated in json, so this just gets one value and calls
