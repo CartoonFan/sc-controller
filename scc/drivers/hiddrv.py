@@ -9,16 +9,26 @@ import logging
 import os
 import sys
 
-from scc.constants import (STICK_PAD_MAX, STICK_PAD_MIN, ControllerFlags,
-                           SCButtons)
+from scc.constants import ControllerFlags
+from scc.constants import SCButtons
+from scc.constants import STICK_PAD_MAX
+from scc.constants import STICK_PAD_MIN
 from scc.controller import Controller
-from scc.drivers.evdevdrv import FIRST_BUTTON, TRIGGERS, parse_axis
-from scc.drivers.usb import (USBDevice, register_hotplug_device,
-                             unregister_hotplug_device)
+from scc.drivers.evdevdrv import FIRST_BUTTON
+from scc.drivers.evdevdrv import parse_axis
+from scc.drivers.evdevdrv import TRIGGERS
+from scc.drivers.usb import register_hotplug_device
+from scc.drivers.usb import unregister_hotplug_device
+from scc.drivers.usb import USBDevice
 from scc.lib import IntEnum
-from scc.lib.hidparse import (AXES, GenericDesktopPage, GlobalItem, ItemType,
-                              LocalItem, MainItem, UsagePage,
-                              parse_report_descriptor)
+from scc.lib.hidparse import AXES
+from scc.lib.hidparse import GenericDesktopPage
+from scc.lib.hidparse import GlobalItem
+from scc.lib.hidparse import ItemType
+from scc.lib.hidparse import LocalItem
+from scc.lib.hidparse import MainItem
+from scc.lib.hidparse import parse_report_descriptor
+from scc.lib.hidparse import UsagePage
 from scc.paths import get_config_path
 from scc.tools import find_library
 
