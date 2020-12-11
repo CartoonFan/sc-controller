@@ -359,7 +359,7 @@ class Generator(object):
         file("out.svg", "w").write(svg.to_string())
 
     def equal_width(self, *boxes):
-        """ Sets width of all passed boxes to width of widest box """
+        """Set width of all passed boxes to width of widest box."""
         width = 0
         for b in boxes:
             width = max(width, b.width)
@@ -369,7 +369,7 @@ class Generator(object):
                 b.x = self.full_width - b.width - self.PADDING
 
     def equal_height(self, *boxes):
-        """ Sets height of all passed boxes to height of tallest box """
+        """Set height of all passed boxes to height of tallest box."""
         height = 0
         for b in boxes:
             height = max(height, b.height)
