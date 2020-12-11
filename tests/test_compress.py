@@ -151,8 +151,8 @@ class TestCompress(object):
                 if "sensitivity" not in CASES[cls.COMMAND]:
                     raise AssertionError(
                         "%s supports setting sensitivity, but "
-                        "case for it has no 'sensitivity' key it" % (cls.COMMAND,)
-                    )
+                        "case for it has no 'sensitivity' key it" %
+                        (cls.COMMAND,))
             if hasattr(cls, "set_haptic"):
                 if cls.COMMAND not in CASES:
                     raise AssertionError(
@@ -216,7 +216,8 @@ class TestCompress(object):
             if "feedback" in CASES[case]:
                 print("Testing 'feedback' on %s" % (case,))
                 a = parser.from_json_data(CASES[case]).compress()
-                if a.get_haptic().get_position().name != CASES[case]["feedback"][0]:
+                if a.get_haptic().get_position(
+                ).name != CASES[case]["feedback"][0]:
                     raise AssertionError
 
     def test_multi(self):
@@ -225,12 +226,9 @@ class TestCompress(object):
         to actions in multiaciton.
         """
         a = parser.from_json_data(
-            {
-                "action": "circular(REL_HWHEEL) and gyroabs(None, ABS_Y, ABS_Z)",
-                "sensitivity": (2.0, 3.0, 4.0),
-                "feedback": ("BOTH",),
-            }
-        ).compress()
+            {"action": "circular(REL_HWHEEL) and gyroabs(None, ABS_Y, ABS_Z)",
+             "sensitivity": (2.0, 3.0, 4.0),
+             "feedback": ("BOTH",), }).compress()
         if a.actions[0].get_haptic().get_position().name != "BOTH":
             raise AssertionError
         for action in a.actions:

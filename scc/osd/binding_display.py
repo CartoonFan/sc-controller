@@ -121,12 +121,10 @@ class BindingDisplay(OSDWindow):
         self._eh_ids += [
             (self.daemon, self.daemon.connect("dead", self.on_daemon_died)),
             (self.daemon, self.daemon.connect("error", self.on_daemon_died)),
-            (
-                self.daemon,
-                self.daemon.connect("profile-changed", self.on_profile_changed),
-            ),
-            (self.daemon, self.daemon.connect("alive", self.on_daemon_connected)),
-        ]
+            (self.daemon, self.daemon.connect(
+                "profile-changed", self.on_profile_changed),),
+            (self.daemon, self.daemon.connect(
+                "alive", self.on_daemon_connected)), ]
 
     def run(self):
         self.daemon = DaemonManager()
@@ -210,7 +208,9 @@ class Line(object):
         return self
 
     def to_string(self):
-        return "%-10s: %s" % (",".join([x for x in self.icons if x]), self.text)
+        return "%-10s: %s" % (
+            ",".join([x for x in self.icons if x]),
+            self.text)
 
 
 class LineCollection(object):
@@ -262,9 +262,8 @@ class Box(object):
             return LineCollection()
         if isinstance(action, MultiAction):
             if not action.is_key_combination():
-                return LineCollection(
-                    [self.add(icon, context, child) for child in action.actions]
-                )
+                return LineCollection([self.add(icon, context, child)
+                                       for child in action.actions])
         elif isinstance(action, ModeModifier):
             lines = [self.add(icon, context, action.default)]
             for x in action.mods:
@@ -278,8 +277,10 @@ class Box(object):
                 lines.append(self.add(icon, context, action.normalaction))
             if action.action:
                 lines.append(
-                    self.add("DOUBLECLICK", context, action.action).add_icon(icon)
-                )
+                    self.add(
+                        "DOUBLECLICK",
+                        context,
+                        action.action).add_icon(icon))
             if action.holdaction:
                 lines.append(
                     self.add("HOLD", context, action.holdaction).add_icon(icon)
@@ -300,13 +301,21 @@ class Box(object):
                 self.add("DPAD_RIGHT", Action.AC_BUTTON, action.actions[3]),
             )
         elif isinstance(action, XYAction):
-            if isinstance(action.x, MouseAction) and isinstance(action.y, MouseAction):
+            if isinstance(
+                    action.x,
+                    MouseAction) and isinstance(
+                    action.y,
+                    MouseAction):
                 if action.x.get_axis() in (Rels.REL_HWHEEL, Rels.REL_WHEEL):
                     # Special case, pad bound to wheel
                     line = Line(icon, _("Mouse Wheel"))
                     self.lines.append(line)
                     return line
-            if isinstance(action.x, AxisAction) and isinstance(action.y, AxisAction):
+            if isinstance(
+                    action.x,
+                    AxisAction) and isinstance(
+                    action.y,
+                    AxisAction):
                 if action.x.axis and action.y.axis:
                     line = Line(icon, action.x.describe(Action.AC_BUTTON))
                     self.lines.append(line)
@@ -329,7 +338,8 @@ class Box(object):
                 self.height + lh + self.SPACING,
             )
             self.icount = max(self.icount, len(line.icons))
-        self.width += 2 * self.PADDING + self.icount * (gen.line_height + self.SPACING)
+        self.width += 2 * self.PADDING + self.icount * \
+            (gen.line_height + self.SPACING)
         self.width = min(self.width, self.max_width)
         self.height = max(self.height, self.min_height)
 
@@ -392,8 +402,7 @@ class Box(object):
             x = self.x + self.PADDING + self.icount * (h + self.SPACING)
             y += h
             txt = SVGEditor.add_element(
-                root, "text", x=x, y=y, style=gen.label_template.attrib["style"]
-            )
+                root, "text", x=x, y=y, style=gen.label_template.attrib["style"])
             max_line_width = self.max_width - gen.line_height - self.PADDING
             while line.text and line.get_size(gen)[0] > max_line_width:
                 line.text = line.text[:-1]
@@ -453,16 +462,26 @@ class Generator(object):
     def __init__(self, editor, profile):
         background = SVGEditor.get_element(editor, "background")
         self.label_template = SVGEditor.get_element(editor, "label_template")
-        self.line_height = int(float(self.label_template.attrib.get("height") or 8))
-        self.char_width = int(float(self.label_template.attrib.get("width") or 8))
+        self.line_height = int(
+            float(self.label_template.attrib.get("height") or 8))
+        self.char_width = int(
+            float(self.label_template.attrib.get("width") or 8))
         self.full_width = int(float(background.attrib.get("width") or 800))
         self.full_height = int(float(background.attrib.get("height") or 800))
 
         boxes = []
         box_bcs = Box(0, self.PADDING, Align.TOP, "bcs")
-        box_bcs.add("BACK", Action.AC_BUTTON, profile.buttons.get(SCButtons.BACK))
+        box_bcs.add(
+            "BACK",
+            Action.AC_BUTTON,
+            profile.buttons.get(
+                SCButtons.BACK))
         box_bcs.add("C", Action.AC_BUTTON, profile.buttons.get(SCButtons.C))
-        box_bcs.add("START", Action.AC_BUTTON, profile.buttons.get(SCButtons.START))
+        box_bcs.add(
+            "START",
+            Action.AC_BUTTON,
+            profile.buttons.get(
+                SCButtons.START))
         boxes.append(box_bcs)
 
         box_left = Box(
@@ -474,9 +493,17 @@ class Generator(object):
             min_width=self.full_width * 0.2,
             max_width=self.full_width * 0.275,
         )
-        box_left.add("LEFT", Action.AC_TRIGGER, profile.triggers.get(profile.LEFT))
+        box_left.add(
+            "LEFT",
+            Action.AC_TRIGGER,
+            profile.triggers.get(
+                profile.LEFT))
         box_left.add("LB", Action.AC_BUTTON, profile.buttons.get(SCButtons.LB))
-        box_left.add("LGRIP", Action.AC_BUTTON, profile.buttons.get(SCButtons.LGRIP))
+        box_left.add(
+            "LGRIP",
+            Action.AC_BUTTON,
+            profile.buttons.get(
+                SCButtons.LGRIP))
         box_left.add("LPAD", Action.AC_PAD, profile.pads.get(profile.LEFT))
         boxes.append(box_left)
 
@@ -489,9 +516,21 @@ class Generator(object):
             min_width=self.full_width * 0.2,
             max_width=self.full_width * 0.275,
         )
-        box_right.add("RIGHT", Action.AC_TRIGGER, profile.triggers.get(profile.RIGHT))
-        box_right.add("RB", Action.AC_BUTTON, profile.buttons.get(SCButtons.RB))
-        box_right.add("RGRIP", Action.AC_BUTTON, profile.buttons.get(SCButtons.RGRIP))
+        box_right.add(
+            "RIGHT",
+            Action.AC_TRIGGER,
+            profile.triggers.get(
+                profile.RIGHT))
+        box_right.add(
+            "RB",
+            Action.AC_BUTTON,
+            profile.buttons.get(
+                SCButtons.RB))
+        box_right.add(
+            "RGRIP",
+            Action.AC_BUTTON,
+            profile.buttons.get(
+                SCButtons.RGRIP))
         box_right.add("RPAD", Action.AC_PAD, profile.pads.get(profile.RIGHT))
         boxes.append(box_right)
 

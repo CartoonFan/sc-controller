@@ -36,7 +36,9 @@ class ControllerSettings(Editor, UserDataManager, ComboSetter):
         self._eh_ids = ()
 
     def load_icons(self):
-        paths = [get_default_controller_icons_path(), get_controller_icons_path()]
+        paths = [
+            get_default_controller_icons_path(),
+            get_controller_icons_path()]
         self.load_user_data(paths, "*.svg", None, self.on_icons_loaded)
 
     def on_icons_loaded(self, icons):
@@ -51,7 +53,7 @@ class ControllerSettings(Editor, UserDataManager, ComboSetter):
                 continue
             try:
                 pb = GdkPixbuf.Pixbuf.new_from_file(path)
-            except:
+            except BaseException:
                 # Failed to load image
                 continue
             lstIcons.append((path, filename, name, pb))
@@ -163,10 +165,11 @@ class ControllerSettings(Editor, UserDataManager, ComboSetter):
         )
 
         try:
-            cfg["icon"] = cbIcon.get_model().get_value(cbIcon.get_active_iter(), 1)
+            cfg["icon"] = cbIcon.get_model().get_value(
+                cbIcon.get_active_iter(), 1)
             if self.profile_switcher:
                 self.profile_switcher.update_icon()
-        except:
+        except BaseException:
             # Just in case there are no icons at all
             pass
 

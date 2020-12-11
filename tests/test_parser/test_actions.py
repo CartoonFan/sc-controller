@@ -21,7 +21,9 @@ class TestActions(object):
                     continue
                 method_name = "test_%s" % (cls.COMMAND,)
                 if not hasattr(self, method_name):
-                    raise AssertionError("There is no test for %s" % (cls.COMMAND))
+                    raise AssertionError(
+                        "There is no test for %s" %
+                        (cls.COMMAND))
 
     def test_none(self):
         """
@@ -136,7 +138,11 @@ class TestActions(object):
             raise AssertionError
         if not _parses_as_itself(GyroAction(Axes.ABS_X, Axes.ABS_Y)):
             raise AssertionError
-        if not _parses_as_itself(GyroAction(Axes.ABS_X, Axes.ABS_Y, Axes.ABS_Z)):
+        if not _parses_as_itself(
+            GyroAction(
+                Axes.ABS_X,
+                Axes.ABS_Y,
+                Axes.ABS_Z)):
             raise AssertionError
 
     def test_gyroabs(self):
@@ -148,7 +154,11 @@ class TestActions(object):
             raise AssertionError
         if not _parses_as_itself(GyroAbsAction(Axes.ABS_X, Axes.ABS_Y)):
             raise AssertionError
-        if not _parses_as_itself(GyroAbsAction(Axes.ABS_X, Axes.ABS_Y, Axes.ABS_Z)):
+        if not _parses_as_itself(
+            GyroAbsAction(
+                Axes.ABS_X,
+                Axes.ABS_Y,
+                Axes.ABS_Z)):
             raise AssertionError
 
     def test_resetgyro(self):
@@ -198,10 +208,19 @@ class TestActions(object):
         if not _parses_as_itself(ButtonAction(Keys.BTN_LEFT, Keys.BTN_RIGHT)):
             raise AssertionError
         # With one trigger setting
-        if not _parses_as_itself(ButtonAction(Keys.BTN_LEFT, Keys.BTN_RIGHT, 10)):
+        if not _parses_as_itself(
+            ButtonAction(
+                Keys.BTN_LEFT,
+                Keys.BTN_RIGHT,
+                10)):
             raise AssertionError
         # With two trigger settings
-        if not _parses_as_itself(ButtonAction(Keys.BTN_LEFT, Keys.BTN_RIGHT, 10, 90)):
+        if not _parses_as_itself(
+            ButtonAction(
+                Keys.BTN_LEFT,
+                Keys.BTN_RIGHT,
+                10,
+                90)):
             raise AssertionError
 
     def test_multiaction(self):
@@ -324,5 +343,8 @@ class TestActions(object):
         Tests if TriggerAction can be converted to string and parsed back to
         same action.
         """
-        if not _parses_as_itself(TriggerAction(15, 234, ButtonAction(Keys.KEY_A))):
+        if not _parses_as_itself(
+            TriggerAction(
+                15, 234, ButtonAction(
+                Keys.KEY_A))):
             raise AssertionError

@@ -80,10 +80,10 @@ class InputDisplay(OSDWindow):
 
     def _connect_handlers(self):
         self._eh_ids += [
-            (self.daemon, self.daemon.connect("dead", self.on_daemon_died)),
-            (self.daemon, self.daemon.connect("error", self.on_daemon_died)),
-            (self.daemon, self.daemon.connect("alive", self.on_daemon_connected)),
-        ]
+            (self.daemon, self.daemon.connect(
+                "dead", self.on_daemon_died)), (self.daemon, self.daemon.connect(
+                    "error", self.on_daemon_died)), (self.daemon, self.daemon.connect(
+                        "alive", self.on_daemon_connected)), ]
 
     def on_daemon_connected(self, *a):
         c = self.daemon.get_controllers()[0]

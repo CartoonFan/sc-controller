@@ -84,10 +84,14 @@ class EvdevController(Controller):
         self.poller = None
         if daemon:
             self.poller = daemon.get_poller()
-            self.poller.register(self.device.fd, self.poller.POLLIN, self.input)
+            self.poller.register(
+                self.device.fd,
+                self.poller.POLLIN,
+                self.input)
             self.device.grab()
             self._id = self._generate_id()
-        self._state = EvdevControllerInput(*[0] * len(EvdevControllerInput._fields))
+        self._state = EvdevControllerInput(
+            *[0] * len(EvdevControllerInput._fields))
         self._padpressemu_task = None
 
     def _parse_config(self, config):
@@ -104,7 +108,7 @@ class EvdevController(Controller):
                 else:
                     sc = getattr(SCButtons, value)
                     self._button_map[keycode] = sc
-            except:
+            except BaseException:
                 pass
         for x, value in list(config.get("axes", {}).items()):
             code, axis = int(x), value.get("axis")
@@ -122,7 +126,7 @@ class EvdevController(Controller):
         self.poller.unregister(self.device.fd)
         try:
             self.device.ungrab()
-        except:
+        except BaseException:
             pass
         self.device.close()
 
@@ -177,19 +181,19 @@ class EvdevController(Controller):
                         value = 0
                     axis = self._axis_map[event.code]
                     if not new_state.buttons & SCButtons.LPADTOUCH and axis in (
-                        "lpad_x",
-                        "lpad_y",
-                    ):
+                            "lpad_x", "lpad_y", ):
                         b = new_state.buttons | SCButtons.LPAD | SCButtons.LPADTOUCH
                         need_cancel_padpressemu = True
-                        new_state = new_state._replace(buttons=b, **{axis: value})
+                        new_state = new_state._replace(
+                            buttons=b, **{axis: value})
                     elif not new_state.buttons & SCButtons.RPADTOUCH and axis in (
                         "rpad_x",
                         "rpad_y",
                     ):
                         b = new_state.buttons | SCButtons.RPADTOUCH
                         need_cancel_padpressemu = True
-                        new_state = new_state._replace(buttons=b, **{axis: value})
+                        new_state = new_state._replace(
+                            buttons=b, **{axis: value})
                     else:
                         new_state = new_state._replace(**{axis: value})
                 elif event.type == ecodes.EV_KEY and event.code in self._button_map:
@@ -212,23 +216,23 @@ class EvdevController(Controller):
                         value = 0
                     else:
                         value = clamp(
-                            cal.clamp_min, int(value * cal.clamp_max), cal.clamp_max
-                        )
+                            cal.clamp_min, int(
+                                value * cal.clamp_max), cal.clamp_max)
                     axis = self._axis_map[event.code]
                     if not new_state.buttons & SCButtons.LPADTOUCH and axis in (
-                        "lpad_x",
-                        "lpad_y",
-                    ):
+                            "lpad_x", "lpad_y", ):
                         b = new_state.buttons | SCButtons.LPAD | SCButtons.LPADTOUCH
                         need_cancel_padpressemu = True
-                        new_state = new_state._replace(buttons=b, **{axis: value})
+                        new_state = new_state._replace(
+                            buttons=b, **{axis: value})
                     elif not new_state.buttons & SCButtons.RPADTOUCH and axis in (
                         "rpad_x",
                         "rpad_y",
                     ):
                         b = new_state.buttons | SCButtons.RPADTOUCH
                         need_cancel_padpressemu = True
-                        new_state = new_state._replace(buttons=b, **{axis: value})
+                        new_state = new_state._replace(
+                            buttons=b, **{axis: value})
                     else:
                         new_state = new_state._replace(**{axis: value})
         except IOError as e:
@@ -245,8 +249,7 @@ class EvdevController(Controller):
                     if self._padpressemu_task:
                         self.mapper.cancel_task(self._padpressemu_task)
                     self._padpressemu_task = self.mapper.schedule(
-                        self.PADPRESS_EMULATION_TIMEOUT, self.cancel_padpress_emulation
-                    )
+                        self.PADPRESS_EMULATION_TIMEOUT, self.cancel_padpress_emulation)
                 self.mapper.input(self, old_state, new_state)
 
     def test_input(self, event):
@@ -309,7 +312,8 @@ class EvdevController(Controller):
         # TODO: This!
         pass
 
-    # def configure(self, idle_timeout=None, enable_gyros=None, led_level=None):
+    # def configure(self, idle_timeout=None, enable_gyros=None,
+    # led_level=None):
 
     def set_led_level(self, level):
         # TODO: This?
@@ -355,7 +359,13 @@ def parse_axis(axis):
         offset += 1.0
         scale *= 0.5
 
-    return AxisCalibrationData(scale, offset, center, clamp_min, clamp_max, deadzone)
+    return AxisCalibrationData(
+        scale,
+        offset,
+        center,
+        clamp_min,
+        clamp_max,
+        deadzone)
 
 
 class EvdevDriver(object):
@@ -369,8 +379,7 @@ class EvdevDriver(object):
 
     def start(self):
         self.daemon.get_device_monitor().add_callback(
-            "input", None, None, self.handle_new_device, self.handle_removed_device
-        )
+            "input", None, None, self.handle_new_device, self.handle_removed_device)
 
     def set_daemon(self, daemon):
         self.daemon = daemon
@@ -477,7 +486,8 @@ if HAVE_EVDEV:
 
 def init(daemon, config):
     if not HAVE_EVDEV:
-        log.warning("Failed to enable Evdev driver: 'python-evdev' package is missing.")
+        log.warning(
+            "Failed to enable Evdev driver: 'python-evdev' package is missing.")
         return False
 
     _evdevdrv.set_daemon(daemon)
@@ -550,9 +560,8 @@ def evdevdrv_test(args):
     c = EvdevController(None, dev, None, {})
     caps = dev.capabilities(verbose=False)
     print("Buttons:", " ".join([str(x) for x in caps.get(ecodes.EV_KEY, [])]))
-    print(
-        "Axes:", " ".join([str(axis) for (axis, trash) in caps.get(ecodes.EV_ABS, [])])
-    )
+    print("Axes:", " ".join([str(axis)
+                             for (axis, trash) in caps.get(ecodes.EV_ABS, [])]))
     print("Ready")
     sys.stdout.flush()
     for event in dev.read_loop():

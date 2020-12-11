@@ -154,7 +154,8 @@ class USBError(Exception):
             self.value = value
 
     def __str__(self):
-        return "%s [%s]" % (libusb_error.get(self.value, "Unknown error"), self.value)
+        return "%s [%s]" % (libusb_error.get(
+            self.value, "Unknown error"), self.value)
 
 
 if sys.version_info[0] == 3:
@@ -820,7 +821,8 @@ libusb_capability = Enum(
         "LIBUSB_CAP_HAS_CAPABILITY": 0x0000,
         # Hotplug support is available.
         "LIBUSB_CAP_HAS_HOTPLUG": 0x0001,
-        # The library can access HID devices without requiring user intervention.
+        # The library can access HID devices without requiring user
+        # intervention.
         "LIBUSB_CAP_HAS_HID_ACCESS": 0x0100,
         # The library supports detaching of the default USB driver.
         "LIBUSB_CAP_SUPPORTS_DETACH_KERNEL_DRIVER": 0x0101,
@@ -929,7 +931,8 @@ libusb_get_configuration.argtypes = [libusb_device_handle_p, c_int_p]
 # int libusb_get_device_descriptor(libusb_device *dev,
 #        struct libusb_device_descriptor *desc);
 libusb_get_device_descriptor = libusb.libusb_get_device_descriptor
-libusb_get_device_descriptor.argtypes = [libusb_device_p, libusb_device_descriptor_p]
+libusb_get_device_descriptor.argtypes = [
+    libusb_device_p, libusb_device_descriptor_p]
 # int libusb_get_active_config_descriptor(libusb_device *dev,
 #        struct libusb_config_descriptor **config);
 libusb_get_active_config_descriptor = libusb.libusb_get_active_config_descriptor
@@ -946,7 +949,7 @@ libusb_get_config_descriptor.argtypes = [
     libusb_config_descriptor_p_p,
 ]
 # int libusb_get_config_descriptor_by_value(libusb_device *dev,
-#        uint8_t bConfigurationValue, struct libusb_config_descriptor **config);
+# uint8_t bConfigurationValue, struct libusb_config_descriptor **config);
 libusb_get_config_descriptor_by_value = libusb.libusb_get_config_descriptor_by_value
 libusb_get_config_descriptor_by_value.argtypes = [
     libusb_device_p,
@@ -976,7 +979,8 @@ try:
 except AttributeError:
     pass
 else:
-    libusb_get_port_numbers.argtypes = [libusb_device_p, POINTER(c_uint8), c_int]
+    libusb_get_port_numbers.argtypes = [
+        libusb_device_p, POINTER(c_uint8), c_int]
     libusb_get_port_numbers.restype = c_int
 # Missing: libusb_get_port_path (deprecated since 1.0.16)
 try:
@@ -1007,7 +1011,8 @@ else:
 # int libusb_get_max_packet_size(libusb_device *dev, unsigned char endpoint);
 libusb_get_max_packet_size = libusb.libusb_get_max_packet_size
 libusb_get_max_packet_size.argtypes = [libusb_device_p, c_uchar]
-# int libusb_get_max_iso_packet_size(libusb_device *dev, unsigned char endpoint);
+# int libusb_get_max_iso_packet_size(libusb_device *dev, unsigned char
+# endpoint);
 try:
     libusb_get_max_iso_packet_size = libusb.libusb_get_max_iso_packet_size
 except AttributeError:
@@ -1047,13 +1052,15 @@ libusb_release_interface.argtypes = [libusb_device_handle_p, c_int]
 # libusb_device_handle *libusb_open_device_with_vid_pid(libusb_context *ctx,
 #        uint16_t vendor_id, uint16_t product_id);
 libusb_open_device_with_vid_pid = libusb.libusb_open_device_with_vid_pid
-libusb_open_device_with_vid_pid.argtypes = [libusb_context_p, c_uint16, c_uint16]
+libusb_open_device_with_vid_pid.argtypes = [
+    libusb_context_p, c_uint16, c_uint16]
 libusb_open_device_with_vid_pid.restype = libusb_device_handle_p
 
 # int libusb_set_interface_alt_setting(libusb_device_handle *dev,
 #        int interface_number, int alternate_setting);
 libusb_set_interface_alt_setting = libusb.libusb_set_interface_alt_setting
-libusb_set_interface_alt_setting.argtypes = [libusb_device_handle_p, c_int, c_int]
+libusb_set_interface_alt_setting.argtypes = [
+    libusb_device_handle_p, c_int, c_int]
 # int libusb_clear_halt(libusb_device_handle *dev, unsigned char endpoint);
 libusb_clear_halt = libusb.libusb_clear_halt
 libusb_clear_halt.argtypes = [libusb_device_handle_p, c_uchar]
@@ -1077,7 +1084,8 @@ try:
 except AttributeError:
     pass
 else:
-    libusb_set_auto_detach_kernel_driver.argtypes = [libusb_device_handle_p, c_int]
+    libusb_set_auto_detach_kernel_driver.argtypes = [
+        libusb_device_handle_p, c_int]
     libusb_set_auto_detach_kernel_driver.restype = c_int
 
 # Get the data section of a control transfer. This convenience function is here
@@ -1094,7 +1102,8 @@ else:
 
 def libusb_control_transfer_get_data(transfer_p):
     transfer = transfer_p.contents
-    return string_at(transfer.buffer, transfer.length)[LIBUSB_CONTROL_SETUP_SIZE:]
+    return string_at(transfer.buffer, transfer.length)[
+        LIBUSB_CONTROL_SETUP_SIZE:]
 
 
 def libusb_control_transfer_get_setup(transfer_p):
@@ -1144,7 +1153,8 @@ def libusb_fill_control_transfer(
     if buffer is not None:
         setup = cast(buffer, libusb_control_setup_p).contents
         # pylint: disable=undefined-variable
-        transfer.length = LIBUSB_CONTROL_SETUP_SIZE + libusb_le16_to_cpu(setup.wLength)
+        transfer.length = LIBUSB_CONTROL_SETUP_SIZE + \
+            libusb_le16_to_cpu(setup.wLength)
         # pylint: enable=undefined-variable
     transfer.user_data = user_data
     transfer.callback = callback
@@ -1156,8 +1166,14 @@ def libusb_fill_control_transfer(
 
 
 def libusb_fill_bulk_transfer(
-    transfer_p, dev_handle, endpoint, buffer, length, callback, user_data, timeout
-):
+        transfer_p,
+        dev_handle,
+        endpoint,
+        buffer,
+        length,
+        callback,
+        user_data,
+        timeout):
     transfer = transfer_p.contents
     transfer.dev_handle = dev_handle
     transfer.endpoint = endpoint
@@ -1177,8 +1193,14 @@ def libusb_fill_bulk_transfer(
 
 
 def libusb_fill_interrupt_transfer(
-    transfer_p, dev_handle, endpoint, buffer, length, callback, user_data, timeout
-):
+        transfer_p,
+        dev_handle,
+        endpoint,
+        buffer,
+        length,
+        callback,
+        user_data,
+        timeout):
     transfer = transfer_p.contents
     transfer.dev_handle = dev_handle
     transfer.endpoint = endpoint
@@ -1272,8 +1294,8 @@ def get_extra(descriptor):
             length = _string_item_to_int(extra[0])
             if not 0 < length <= len(extra):
                 raise ValueError(
-                    "Extra descriptor %i is incomplete/invalid" % (len(result),),
-                )
+                    "Extra descriptor %i is incomplete/invalid" %
+                    (len(result),), )
             append(extra[:length])
             extra = extra[length:]
     return result
@@ -1293,7 +1315,8 @@ def libusb_get_iso_packet_buffer(transfer_p, packet):
     iso_packet_desc_list = _get_iso_packet_list(transfer)
     for i in range(packet):
         offset += iso_packet_desc_list[i].length
-    return _get_iso_packet_buffer(transfer, offset, iso_packet_desc_list[packet].length)
+    return _get_iso_packet_buffer(
+        transfer, offset, iso_packet_desc_list[packet].length)
 
 
 def libusb_get_iso_packet_buffer_simple(transfer_p, packet):

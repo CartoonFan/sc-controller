@@ -105,7 +105,11 @@ _HIDIOCGRAWINFO = ioctl_opt.IOR(ord("H"), 0x03, _hidraw_devinfo)
 
 
 def _HIDIOCGFEATURE(len):
-    return ioctl_opt.IOC(ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ, ord("H"), 0x07, len)
+    return ioctl_opt.IOC(
+        ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ,
+        ord("H"),
+        0x07,
+        len)
 
 
 def _ioctl(devfile, func, arg, mutate_flag=False):
@@ -143,7 +147,9 @@ def _it2u(it):
     if len(it) == 3:  # unsigned short
         return int("{:02x}{:02x}".format(it[2], it[1]), 16)
     if len(it) == 5:  # unsigned int
-        return int("{:02x}{:02x}{:02x}{:02x}".format(it[4], it[3], it[2], it[1]), 16)
+        return int(
+            "{:02x}{:02x}{:02x}{:02x}".format(
+                it[4], it[3], it[2], it[1]), 16)
     return 0
 
 
@@ -158,7 +164,13 @@ def _it2s(it):
         if n & 0x8000:
             n -= 0x10000
     elif len(it) == 5:  # signed int
-        n = int("{:02x}{:02x}{:02x}{:02x}".format(it[4], it[3], it[2], it[1]), 16)
+        n = int(
+            "{:02x}{:02x}{:02x}{:02x}".format(
+                it[4],
+                it[3],
+                it[2],
+                it[1]),
+            16)
         if n & 0x80000000:
             n -= 0x100000000
     else:
@@ -321,7 +333,7 @@ def _split_hid_items(data):
             size = 4
         if i == 0xFE:  # long item
             size = data[i + 1]
-        yield data[i : i + size + 1]
+        yield data[i: i + size + 1]
 
 
 def parse_report_descriptor(data, flat_list=False):
@@ -345,9 +357,8 @@ def parse_report_descriptor(data, flat_list=False):
             col, stack = stack[0], stack[:-1]
         elif item[0] is GlobalItem.UsagePage:
             page = item[1]
-            page = (
-                page_to_enum[item[1]] if item[1] in page_to_enum else GenericDesktopPage
-            )
+            page = (page_to_enum[item[1]] if item[1]
+                    in page_to_enum else GenericDesktopPage)
             col.append(item)
         else:
             col.append(item)
@@ -393,7 +404,7 @@ class Parser(object):
 
     def decode(self, data):
         (self.value,) = struct.unpack(
-            self.fmt, data[self.byte_offset : self.byte_offset + self.byte_len]
+            self.fmt, data[self.byte_offset: self.byte_offset + self.byte_len]
         )
         self.value >>= self.additional_bits
 
@@ -406,14 +417,16 @@ class HIDButtonParser(Parser):
     TYPE = HIDPARSE_TYPE_BUTTONS
 
     def __repr__(self):
-        return "<HID Buttons @%s len %s value %s>" % (self.offset, self.len, self.value)
+        return "<HID Buttons @%s len %s value %s>" % (
+            self.offset, self.len, self.value)
 
 
 class HIDAxisParser(Parser):
     TYPE = HIDPARSE_TYPE_AXIS
 
     def __repr__(self):
-        return "<HID Axis @%s len %s value %s>" % (self.offset, self.len, self.value)
+        return "<HID Axis @%s len %s value %s>" % (
+            self.offset, self.len, self.value)
 
 
 def make_parsers(data):
@@ -441,7 +454,12 @@ def make_parsers(data):
                         )
                         axis_id += 1
                 else:
-                    parsers.append(HIDButtonParser(buttons_id, offset, count, size))
+                    parsers.append(
+                        HIDButtonParser(
+                            buttons_id,
+                            offset,
+                            count,
+                            size))
                     buttons_id += count
             offset += size * count
     size = offset / 8

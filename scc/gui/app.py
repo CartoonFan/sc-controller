@@ -73,7 +73,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
     RELEASE_URL = "https://github.com/kozec/sc-controller/releases/tag/v%s"
     OSD_MODE_PROF_NAME = ".scc-osd.profile_editor"
 
-    def __init__(self, gladepath="/usr/share/scc", imagepath="/usr/share/scc/images"):
+    def __init__(self, gladepath="/usr/share/scc",
+                 imagepath="/usr/share/scc/images"):
         Gtk.Application.__init__(
             self,
             application_id="me.kozec.scc",
@@ -89,7 +90,9 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         self.dm = DaemonManager()
         self.dm.connect("alive", self.on_daemon_alive)
         self.dm.connect("event", self.on_daemon_event_observer)
-        self.dm.connect("controller-count-changed", self.on_daemon_ccunt_changed)
+        self.dm.connect(
+            "controller-count-changed",
+            self.on_daemon_ccunt_changed)
         self.dm.connect("dead", self.on_daemon_dead)
         self.dm.connect("error", self.on_daemon_error)
         self.dm.connect("reconfigured", self.on_daemon_reconfigured),
@@ -142,12 +145,11 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         # Drag&drop target
         self.builder.get_object("content").drag_dest_set(
             Gtk.DestDefaults.ALL,
-            [
-                Gtk.TargetEntry.new("text/uri-list", Gtk.TargetFlags.OTHER_APP, 0),
-                Gtk.TargetEntry.new("text/plain", Gtk.TargetFlags.OTHER_APP, 0),
-            ],
-            Gdk.DragAction.COPY,
-        )
+            [Gtk.TargetEntry.new(
+                "text/uri-list", Gtk.TargetFlags.OTHER_APP, 0),
+             Gtk.TargetEntry.new(
+                 "text/plain", Gtk.TargetFlags.OTHER_APP, 0), ],
+            Gdk.DragAction.COPY,)
 
         # 'C' and 'CPAD' buttons
         vbc = self.builder.get_object("vbC")
@@ -159,7 +161,9 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         self.background.connect("hover", self.on_background_area_hover)
         self.background.connect("leave", self.on_background_area_hover, None)
         self.background.connect("click", self.on_background_area_click)
-        self.background.connect("button-press-event", self.on_background_button_press)
+        self.background.connect(
+            "button-press-event",
+            self.on_background_button_press)
         self.main_area.put(self.background, 0, 0)
         # (self.IMAGE_SIZE[0] / 2) - 90, self.IMAGE_SIZE[1] - 100)
         self.main_area.put(vbc, 0, 0)
@@ -241,7 +245,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         for b in self.button_widgets:
             try:
                 w = self.button_widgets[b]
-                icon, trash = ControllerManager.get_button_icon(config, b, True)
+                icon, trash = ControllerManager.get_button_icon(
+                    config, b, True)
                 w.icon.set_from_file(icon)
             except Exception:
                 pass
@@ -300,7 +305,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
                 .read()
                 .split("\n")
             )
-            kernel_mods += [os.path.split(x)[-1].split(".")[0] for x in rawlist]
+            kernel_mods += [os.path.split(x)[-1].split(".")[0]
+                            for x in rawlist]
         except Exception:
             # Maybe running on BSD or Windows...
             kernel_mods = []
@@ -607,7 +613,9 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
                 txNewProfile.set_text(self.generate_new_name())
             else:
                 # Copy current profile
-                txNewProfile.set_text(self.generate_copy_name(txNewProfile._name))
+                txNewProfile.set_text(
+                    self.generate_copy_name(
+                        txNewProfile._name))
             self.recursing = False
 
     def on_profile_modified(self, update_ui=True):
@@ -629,7 +637,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         self.current = profile
         self.current_file = giofile
         self.recursing = True
-        self.profile_switchers[0].set_profile_modified(False, self.current.is_template)
+        self.profile_switchers[0].set_profile_modified(
+            False, self.current.is_template)
         self.builder.get_object("txProfileFilename").set_text(
             giofile.get_path().decode("utf-8")
         )
@@ -730,7 +739,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
                     self.dm.set_profile(giofile.get_path().decode("utf-8"))
             return
 
-        self.profile_switchers[0].set_profile_modified(False, self.current.is_template)
+        self.profile_switchers[0].set_profile_modified(
+            False, self.current.is_template)
         if send and self.dm.is_alive() and not self.daemon_changed_profile:
             for ps in self.profile_switchers:
                 controller = ps.get_controller()
@@ -739,7 +749,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
                     if active.endswith(".mod"):
                         active = active[0:-4]
                     if active == giofile.get_path().decode("utf-8"):
-                        controller.set_profile(giofile.get_path().decode("utf-8"))
+                        controller.set_profile(
+                            giofile.get_path().decode("utf-8"))
 
         self.current_file = giofile
 
@@ -754,7 +765,9 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         while os.path.exists(filename):
             i += 1
             new_name = _("New Profile %s") % (i,)
-            filename = os.path.join(get_profiles_path(), new_name + ".sccprofile")
+            filename = os.path.join(
+                get_profiles_path(),
+                new_name + ".sccprofile")
         return new_name
 
     def generate_copy_name(self, name):
@@ -767,7 +780,9 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         i = 2
         while os.path.exists(filename):
             new_name = _("%s (copy %s)") % (name,)
-            filename = os.path.join(get_profiles_path(), new_name + ".sccprofile")
+            filename = os.path.join(
+                get_profiles_path(),
+                new_name + ".sccprofile")
             i += 1
         return new_name
 
@@ -807,7 +822,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
     def on_background_button_press(self, trash, event):
         if event.button == 3:
             mnuImage = self.builder.get_object("mnuImage")
-            mnuImage.popup(None, None, None, None, 3, Gtk.get_current_event_time())
+            mnuImage.popup(None, None, None, None, 3,
+                           Gtk.get_current_event_time())
 
     def on_mnu_change_background_image(self, mnu, *a):
         command, filename = mnu.get_name().split(",")
@@ -860,7 +876,10 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
     def on_mnuExit_activate(self, *a):
         if not self.osd_mode and self.app.config["gui"]["autokill_daemon"]:
             log.debug("Terminating scc-daemon")
-            for x in ("content", "mnuEmulationEnabled", "mnuEmulationEnabledTray"):
+            for x in (
+                "content",
+                "mnuEmulationEnabled",
+                    "mnuEmulationEnabledTray"):
                 w = self.builder.get_object(x)
                 w.set_sensitive(False)
             self.set_daemon_status("unknown", False)
@@ -1053,8 +1072,9 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
             self.builder.get_object("btRedo").set_visible(False)
 
             m = OSDModeMappings(
-                self, self.osd_mode_mapper, self.builder.get_object("OsdmodeMappings")
-            )
+                self,
+                self.osd_mode_mapper,
+                self.builder.get_object("OsdmodeMappings"))
             m.set_controller(self.profile_switchers[0].get_controller())
             m.show()
 
@@ -1083,8 +1103,10 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 
         # Ask daemon to temporaly reconfigure pads for mouse emulation
         c.replace(
-            DaemonManager.nocallback, on_lock_failed, LEFT, osd_mode_profile.pads[LEFT]
-        )
+            DaemonManager.nocallback,
+            on_lock_failed,
+            LEFT,
+            osd_mode_profile.pads[LEFT])
         c.replace(
             DaemonManager.nocallback,
             on_lock_failed,
@@ -1112,7 +1134,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         else:
             # At this point, correct daemon version of daemon is running
             # and we can check if there is anything new to inform user about
-            if self.app.config["gui"]["news"]["last_version"] != App.get_release():
+            if self.app.config["gui"]["news"]["last_version"] != App.get_release(
+            ):
                 if self.app.config["gui"]["news"]["enabled"]:
                     if not self.osd_mode:
                         self.check_release_notes()
@@ -1128,11 +1151,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         elif "LIBUSB_ERROR_ACCESS" in error:
             msg += "\n" + _("You don't have access to controller device.")
             msg += "\n\n" + (
-                _(
-                    "Consult your distribution manual, try installing Steam package or <a href='%s'>install required udev rules manually</a>."
-                )
-                % "https://wiki.archlinux.org/index.php/Gamepad#Steam_Controller_not_pairing"
-            )
+                _("Consult your distribution manual, try installing Steam package or <a href='%s'>install required udev rules manually</a>.") %
+                "https://wiki.archlinux.org/index.php/Gamepad#Steam_Controller_not_pairing")
             # TODO: Write howto somewhere instead of linking to ArchWiki
         elif "LIBUSB_ERROR_BUSY" in error:
             msg += "\n" + _(
@@ -1141,8 +1161,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         elif "CANT_SUMMON_THE_DAEMON" in error:
             msg += "\n" + _(
                 'Background process responsible for emulation is not starting.\n\nTry executing "scc-daemon debug" in terminal window to check for any errors'
-                "\nor <a href='https://github.com/kozec/sc-controller/issues'>open issue on GitHub</a> and copy output there."
-            )
+                "\nor <a href='https://github.com/kozec/sc-controller/issues'>open issue on GitHub</a> and copy output there.")
         elif "LIBUSB_ERROR_PIPE" in error:
             msg += "\n" + _("USB dongle was removed.")
         elif "Failed to create uinput device." in error:
@@ -1150,7 +1169,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
             if self.check():
                 # Check() returns True if error was "handled".
                 return
-            # If check() fails to find error reason, error message is displayed as it is
+            # If check() fails to find error reason, error message is displayed
+            # as it is
 
         if self.osd_mode:
             self.quit()
@@ -1204,7 +1224,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 
     def on_profile_right_clicked(self, ps):
         for name in ("mnuConfigureController", "mnuTurnoffController"):
-            # Disable controller-related menu items if controller is not connected
+            # Disable controller-related menu items if controller is not
+            # connected
             obj = self.builder.get_object(name)
             obj.set_sensitive(ps.get_controller() is not None)
 
@@ -1224,9 +1245,12 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
             name = ps.get_profile_name()
             is_override = profile_is_override(name)
             is_default = profile_is_default(name)
-            self.builder.get_object("mnuProfileDelete").set_visible(not is_default)
-            self.builder.get_object("mnuProfileRevert").set_visible(is_override)
-            self.builder.get_object("mnuProfileRename").set_visible(not is_default)
+            self.builder.get_object(
+                "mnuProfileDelete").set_visible(not is_default)
+            self.builder.get_object(
+                "mnuProfileRevert").set_visible(is_override)
+            self.builder.get_object(
+                "mnuProfileRename").set_visible(not is_default)
         else:
             self.builder.get_object("mnuProfileDelete").set_visible(False)
             self.builder.get_object("mnuProfileRevert").set_visible(False)
@@ -1282,7 +1306,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
             for n in (old_fname, new_fname):
                 try:
                     os.unlink(n + ".mod")
-                except:
+                except BaseException:
                     # non-existing .mod file is expected
                     pass
         except Exception as e:
@@ -1322,7 +1346,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
                 os.unlink(fname)
                 try:
                     os.unlink(fname + ".mod")
-                except:
+                except BaseException:
                     # non-existing .mod file is expected
                     pass
                 for ps in self.profile_switchers:
@@ -1476,7 +1500,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         imgDaemonStatus = self.builder.get_object("imgDaemonStatus")
         btDaemon = self.builder.get_object("btDaemon")
         mnuEmulationEnabled = self.builder.get_object("mnuEmulationEnabled")
-        mnuEmulationEnabledTray = self.builder.get_object("mnuEmulationEnabledTray")
+        mnuEmulationEnabledTray = self.builder.get_object(
+            "mnuEmulationEnabledTray")
         imgDaemonStatus.set_from_file(icon)
         mnuEmulationEnabled.set_sensitive(True)
         mnuEmulationEnabledTray.set_sensitive(True)
@@ -1484,8 +1509,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         self.status = status
         if self.statusicon:
             GLib.idle_add(
-                self.statusicon.set, "scc-%s" % (self.status,), _("SC Controller")
-            )
+                self.statusicon.set, "scc-%s" %
+                (self.status,), _("SC Controller"))
         self.recursing = True
         if status == "alive":
             btDaemon.set_tooltip_text(_("Emulation is active"))
@@ -1555,7 +1580,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         """ Returns name profile from config file or None if there is none saved """
         try:
             return self.config["recent_profiles"][0]
-        except:
+        except BaseException:
             return None
 
     @staticmethod
@@ -1566,7 +1591,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         """
         split = DAEMON_VERSION.split(".")[0:n]
         while split[-1] == "0":
-            split = split[0 : len(split) - 1]
+            split = split[0: len(split) - 1]
         return ".".join(split)
 
     def release_notes_visible(self):
@@ -1591,7 +1616,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
                 bytes = stream.read_bytes_finish(task)
                 if bytes.get_size() > 0:
                     buffer += bytes.get_data()
-                    stream.read_bytes_async(102400, 0, None, stream_ready, buffer)
+                    stream.read_bytes_async(
+                        102400, 0, None, stream_ready, buffer)
                 else:
                     self.on_got_release_notes(buffer.decode("utf-8"))
             except Exception as e:
@@ -1719,14 +1745,16 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
         from scc.parser import ActionParser
 
         to_convert = {}
-        for name in [x.decode("utf-8") for x in os.listdir(get_profiles_path())]:
+        for name in [x.decode("utf-8")
+                     for x in os.listdir(get_profiles_path())]:
             if name.endswith("~"):
-                # Ignore backups - https://github.com/kozec/sc-controller/issues/440
+                # Ignore backups -
+                # https://github.com/kozec/sc-controller/issues/440
                 continue
             try:
                 p = Profile(ActionParser())
                 p.load(os.path.join(get_profiles_path(), name))
-            except:
+            except BaseException:
                 # Just ignore invalid profiles here
                 continue
             if p.original_version < 1.4:
@@ -1741,7 +1769,9 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
             )
             for name in to_convert:
                 try:
-                    to_convert[name].save("%s/%s.convert" % (get_profiles_path(), name))
+                    to_convert[name].save(
+                        "%s/%s.convert" %
+                        (get_profiles_path(), name))
                     os.rename(
                         "%s/%s" % (get_profiles_path(), name),
                         "%s/%s~" % (get_profiles_path(), name),

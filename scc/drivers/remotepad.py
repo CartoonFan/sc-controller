@@ -9,7 +9,9 @@ from scc.tools import find_library
 from scc.constants import ControllerFlags
 from scc.controller import Controller
 from ctypes import CFUNCTYPE, POINTER, byref, cast, c_void_p
-import logging, socket, ctypes
+import logging
+import socket
+import ctypes
 
 log = logging.getLogger("remotepad")
 
@@ -143,8 +145,10 @@ class Driver:
             controller = self._controllers[address]
 
         self._lib.remotepad_input(
-            controller._pad, cast(ctypes.c_char_p(data), POINTER(RemoteJoypadMessage))
-        )
+            controller._pad,
+            cast(
+                ctypes.c_char_p(data),
+                POINTER(RemoteJoypadMessage)))
 
 
 def init(daemon, config):

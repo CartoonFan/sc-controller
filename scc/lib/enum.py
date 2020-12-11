@@ -34,9 +34,9 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
+import sys as _sys
 __all__ = ["Enum", "IntEnum", "unique"]
 
-import sys as _sys
 
 version = 1, 1, 3
 
@@ -100,8 +100,13 @@ class _RouteClassAttributeToGetattr(object):
 def _is_descriptor(obj):
     """Returns True if obj is a descriptor, False otherwise."""
     return (
-        hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
-    )
+        hasattr(
+            obj,
+            "__get__") or hasattr(
+            obj,
+            "__set__") or hasattr(
+                obj,
+            "__delete__"))
 
 
 def _is_dunder(name):
@@ -246,7 +251,9 @@ class EnumMeta(type):
         # the shortcut of storing members in the class dict
         base_attributes = {a for b in bases for a in b.__dict__}
         # create our new Enum type
-        enum_class = super(EnumMeta, metacls).__new__(metacls, cls, bases, classdict)
+        enum_class = super(
+            EnumMeta, metacls).__new__(
+            metacls, cls, bases, classdict)
         enum_class._member_names_ = []  # names in random order
         if OrderedDict is not None:
             enum_class._member_map_ = OrderedDict()
@@ -285,7 +292,8 @@ class EnumMeta(type):
             enum_member.__init__(*args)
             # If another member with the same value was already defined, the
             # new member becomes an alias to the existing one.
-            for name, canonical_member in list(enum_class._member_map_.items()):
+            for name, canonical_member in list(
+                    enum_class._member_map_.items()):
                 if canonical_member.value == enum_member._value_:
                     enum_member = canonical_member
                     break
@@ -368,7 +376,10 @@ class EnumMeta(type):
             # if the user defined their own __new__, save it before it gets
             # clobbered in case they subclass later
             if save_new:
-                setattr(enum_class, "__member_new__", enum_class.__dict__["__new__"])
+                setattr(
+                    enum_class,
+                    "__member_new__",
+                    enum_class.__dict__["__new__"])
             setattr(enum_class, "__new__", Enum.__dict__["__new__"])
         return enum_class
 
@@ -397,7 +408,12 @@ class EnumMeta(type):
         if names is None:  # simple value lookup
             return cls.__new__(cls, value)
         # otherwise, functional API: we're creating a new Enum type
-        return cls._create_(value, names, module=module, type=type, start=start)
+        return cls._create_(
+            value,
+            names,
+            module=module,
+            type=type,
+            start=start)
 
     def __contains__(cls, member):
         return isinstance(member, cls) and member.name in cls._member_map_
@@ -406,7 +422,9 @@ class EnumMeta(type):
         # nicer error message when someone tries to delete an attribute
         # (see issue19025).
         if attr in cls._member_map_:
-            raise AttributeError("%s: cannot delete Enum member." % cls.__name__)
+            raise AttributeError(
+                "%s: cannot delete Enum member." %
+                cls.__name__)
         super(EnumMeta, cls).__delattr__(attr)
 
     def __dir__(self):
@@ -450,7 +468,8 @@ class EnumMeta(type):
         return (cls._member_map_[name] for name in cls._member_names_)
 
     def __reversed__(cls):
-        return (cls._member_map_[name] for name in reversed(cls._member_names_))
+        return (cls._member_map_[name]
+                for name in reversed(cls._member_names_))
 
     def __len__(cls):
         return len(cls._member_names_)
@@ -491,7 +510,9 @@ class EnumMeta(type):
                 try:
                     class_name = class_name.encode("ascii")
                 except UnicodeEncodeError:
-                    raise TypeError("%r is not representable in ASCII" % class_name)
+                    raise TypeError(
+                        "%r is not representable in ASCII" %
+                        class_name)
         metacls = cls.__class__
         if type is None:
             bases = (cls,)
@@ -550,7 +571,8 @@ class EnumMeta(type):
         # type has been mixed in so we can use the correct __new__
         member_type = first_enum = None
         for base in bases:
-            if base is not Enum and issubclass(base, Enum) and base._member_names_:
+            if base is not Enum and issubclass(
+                    base, Enum) and base._member_names_:
                 raise TypeError("Cannot extend enumerations")
         # base is now the last base in bases
         if not issubclass(base, Enum):
@@ -913,8 +935,10 @@ def _convert(cls, name, module, filter, source=None):
     else:
         source = module_globals
     members = {
-        name: value for name, value in list(source.items()) if list(filter(name))
-    }
+        name: value for name,
+        value in list(
+            source.items()) if list(
+            filter(name))}
     cls = cls(name, members, module=module)
     cls.__reduce_ex__ = _reduce_ex_by_name
     module_globals.update(cls.__members__)

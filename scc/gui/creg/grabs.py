@@ -46,7 +46,9 @@ class InputGrabber(object):
     def set_mapping(self, keycode, what):
         parent = self.parent
 
-        if isinstance(what, AxisData) and what in list(parent._mappings.values()):
+        if isinstance(
+                what, AxisData) and what in list(
+                parent._mappings.values()):
             for c in list(parent._mappings.keys()):
                 if parent._mappings[c] == what:
                     del parent._mappings[c]
@@ -92,9 +94,8 @@ class TriggerGrabber(InputGrabber):
             self.orig_pos[number] = 0
 
         # Get avgerage absolute change for all axes
-        avg = float(
-            sum([abs(self.orig_pos[k] - self.new_pos[k]) for k in self.new_pos])
-        ) / float(len(self.new_pos))
+        avg = float(sum([abs(self.orig_pos[k] - self.new_pos[k])
+                         for k in self.new_pos])) / float(len(self.new_pos))
 
         # Get absolute change for _this_ axis
         change = abs(self.orig_pos[number] - self.new_pos[number])

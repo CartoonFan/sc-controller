@@ -98,9 +98,13 @@ class GestureDisplay(OSDWindow):
             type=str,
             metavar="option",
             default=LEFT,
-            choices=(LEFT, RIGHT, CPAD),
-            help="which pad should be used to generate gesture menu (default: %s)"
-            % (LEFT,),
+            choices=(
+                LEFT,
+                RIGHT,
+                CPAD),
+            help="which pad should be used to generate gesture menu (default: %s)" %
+            (LEFT,
+             ),
         )
 
     def parse_argumets(self, argv):
@@ -116,10 +120,10 @@ class GestureDisplay(OSDWindow):
 
     def _connect_handlers(self):
         self._eh_ids += [
-            (self.daemon, self.daemon.connect("dead", self.on_daemon_died)),
-            (self.daemon, self.daemon.connect("error", self.on_daemon_died)),
-            (self.daemon, self.daemon.connect("alive", self.on_daemon_connected)),
-        ]
+            (self.daemon, self.daemon.connect(
+                "dead", self.on_daemon_died)), (self.daemon, self.daemon.connect(
+                    "error", self.on_daemon_died)), (self.daemon, self.daemon.connect(
+                        "alive", self.on_daemon_connected)), ]
 
     def run(self):
         self.daemon = DaemonManager()

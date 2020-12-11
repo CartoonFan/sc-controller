@@ -50,7 +50,8 @@ class ControllerRegistration(Editor):
     UNASSIGNED_COLOR = "#FFFF0000"  # ARGB
     OBSERVE_COLORS = (
         App.OBSERVE_COLOR,
-        # Following just replaces 'full alpha' in ARGB with various alpha values
+        # Following just replaces 'full alpha' in ARGB with various alpha
+        # values
         App.OBSERVE_COLOR.replace("#FF", "#DF"),
         App.OBSERVE_COLOR.replace("#FF", "#BF"),
         App.OBSERVE_COLOR.replace("#FF", "#9F"),
@@ -150,7 +151,11 @@ class ControllerRegistration(Editor):
 
         # Search in database
         try:
-            db = open(os.path.join(get_share_path(), "gamecontrollerdb.txt"), "r")
+            db = open(
+                os.path.join(
+                    get_share_path(),
+                    "gamecontrollerdb.txt"),
+                "r")
         except Exception as e:
             log.error("Failed to load gamecontrollerdb")
             log.exception(e)
@@ -158,7 +163,9 @@ class ControllerRegistration(Editor):
 
         for line in db.readlines():
             if line.startswith(weird_id):
-                log.info("Loading mappings for '%s' from gamecontrollerdb", weird_id)
+                log.info(
+                    "Loading mappings for '%s' from gamecontrollerdb",
+                    weird_id)
                 log.debug("Buttons: %s", buttons)
                 log.debug("Axes: %s", axes)
                 for token in line.strip().split(","):
@@ -170,9 +177,7 @@ class ControllerRegistration(Editor):
                                 keycode = buttons[int(v.strip("b"))]
                             except IndexError:
                                 log.warning(
-                                    "Skipping unknown gamecontrollerdb button->button mapping: '%s'",
-                                    v,
-                                )
+                                    "Skipping unknown gamecontrollerdb button->button mapping: '%s'", v, )
                                 continue
                             button = getattr(SCButtons, k.upper())
                             self._mappings[keycode] = button
@@ -181,12 +186,11 @@ class ControllerRegistration(Editor):
                                 keycode = buttons[int(v.strip("b"))]
                             except IndexError:
                                 log.warning(
-                                    "Skipping unknown gamecontrollerdb button->axis mapping: '%s'",
-                                    v,
-                                )
+                                    "Skipping unknown gamecontrollerdb button->axis mapping: '%s'", v, )
                                 continue
                             log.info("Adding button -> axis mapping for %s", k)
-                            self._mappings[keycode] = self._axis_data[SDL_AXES.index(k)]
+                            self._mappings[keycode] = self._axis_data[SDL_AXES.index(
+                                k)]
                             self._mappings[keycode].min = STICK_PAD_MIN
                             self._mappings[keycode].max = STICK_PAD_MAX
                         elif v.startswith("h") and 16 in axes and 17 in axes:
@@ -203,29 +207,27 @@ class ControllerRegistration(Editor):
                                 code = axes[int(v.strip("a"))]
                             except IndexError:
                                 log.warning(
-                                    "Skipping unknown gamecontrollerdb axis: '%s'", v
-                                )
+                                    "Skipping unknown gamecontrollerdb axis: '%s'", v)
                                 continue
-                            self._mappings[code] = self._axis_data[SDL_AXES.index(k)]
+                            self._mappings[code] = self._axis_data[SDL_AXES.index(
+                                k)]
                         elif k in SDL_DPAD and v.startswith("b"):
                             try:
                                 keycode = buttons[int(v.strip("b"))]
                             except IndexError:
                                 log.warning(
-                                    "Skipping unknown gamecontrollerdb button->dpad mapping: %s",
-                                    v,
-                                )
+                                    "Skipping unknown gamecontrollerdb button->dpad mapping: %s", v, )
                                 continue
                             index, positive = SDL_DPAD[k]
-                            data = DPadEmuData(self._axis_data[index], positive)
+                            data = DPadEmuData(
+                                self._axis_data[index], positive)
                             self._mappings[keycode] = data
                         elif k == "platform":
                             # Not interesting
                             pass
                         else:
                             log.warning(
-                                "Skipping unknown gamecontrollerdb mapping %s:%s", k, v
-                            )
+                                "Skipping unknown gamecontrollerdb mapping %s:%s", k, v)
                 return True
 
         log.debug("Mappings for '%s' not found in gamecontrollerdb", weird_id)
@@ -343,13 +345,22 @@ class ControllerRegistration(Editor):
             elif isinstance(target, AxisData):
                 config["axes"][code] = axis_to_json(target)
 
-        group = cbControllerButtons.get_model()[cbControllerButtons.get_active()][0]
-        controller = cbControllerType.get_model()[cbControllerType.get_active()][0]
-        config["gui"] = {"background": controller, "buttons": self._groups[group]}
+        group = cbControllerButtons.get_model()[
+            cbControllerButtons.get_active()][0]
+        controller = cbControllerType.get_model()[
+            cbControllerType.get_active()][0]
+        config["gui"] = {
+            "background": controller,
+            "buttons": self._groups[group]}
 
         buffRawData.set_text(
-            json.dumps(config, sort_keys=True, indent=4, separators=(",", ": "))
-        )
+            json.dumps(
+                config,
+                sort_keys=True,
+                indent=4,
+                separators=(
+                    ",",
+                    ": ")))
 
     def load_buttons(self):
         cbControllerButtons = self.builder.get_object("cbControllerButtons")
@@ -357,9 +368,11 @@ class ControllerRegistration(Editor):
         model = cbControllerButtons.get_model()
         groups = json.loads(
             open(
-                os.path.join(self.app.imagepath, "button-images", "groups.json"), "r"
-            ).read()
-        )
+                os.path.join(
+                    self.app.imagepath,
+                    "button-images",
+                    "groups.json"),
+                "r").read())
         for group in groups:
             images = [
                 GdkPixbuf.Pixbuf.new_from_file(
@@ -379,7 +392,7 @@ class ControllerRegistration(Editor):
         )
         try:
             os.makedirs(os.path.join(get_config_path(), "devices"))
-        except:
+        except BaseException:
             pass
 
         filename = self._evdevice.name.decode("utf-8").strip().replace("/", "")
@@ -439,7 +452,10 @@ class ControllerRegistration(Editor):
                 # Special case for PS4 controller
                 cbDS4 = self.builder.get_object("cbDS4")
                 imgDS4 = self.builder.get_object("imgDS4")
-                imgDS4.set_from_file(os.path.join(self.app.imagepath, "ds4-small.svg"))
+                imgDS4.set_from_file(
+                    os.path.join(
+                        self.app.imagepath,
+                        "ds4-small.svg"))
                 cbDS4.set_active(Config()["drivers"]["ds4drv"])
                 stDialog.set_visible_child(pages[3])
                 btBack.set_sensitive(True)
@@ -617,10 +633,8 @@ class ControllerRegistration(Editor):
                 btNext.set_sensitive(False)
                 if target == "hid":
                     self._tester = Tester(
-                        "hid",
-                        "%.4x:%.4x"
-                        % (self._evdevice.info.vendor, self._evdevice.info.product),
-                    )
+                        "hid", "%.4x:%.4x" %
+                        (self._evdevice.info.vendor, self._evdevice.info.product), )
                 else:
                     self._tester = Tester("evdev", self._evdevice.fn)
                 self._tester.__signals = [
@@ -697,16 +711,15 @@ class ControllerRegistration(Editor):
                 cursor.show()
             # Make position
             changed, value = axis.set_position(value)
-            cursor.position[axis.xy] = clamp(STICK_PAD_MIN, value, STICK_PAD_MAX)
+            cursor.position[axis.xy] = clamp(
+                STICK_PAD_MIN, value, STICK_PAD_MAX)
             px, py = cursor.position
             # Grab values
             try:
                 trash, ay, trash, ah = self._controller_image.get_area_position(
-                    axis.area
-                )
+                    axis.area)
                 ax, trash, aw, trash = self._controller_image.get_area_position(
-                    axis.area + "TEST"
-                )
+                    axis.area + "TEST")
             except ValueError:
                 # Area not found
                 cursor.set_visible(False)
@@ -766,7 +779,8 @@ class ControllerRegistration(Editor):
                 mnuStick = self.builder.get_object("mnuStick")
                 mnuStick._what = "STICKPRESS" if what == "STICK" else what
                 mnuStick._axes = [self._axis_data[index] for index in axes]
-                mnuStick.popup(None, None, None, None, 1, Gtk.get_current_event_time())
+                mnuStick.popup(None, None, None, None, 1,
+                               Gtk.get_current_event_time())
             elif what in TRIGGER_AREAS:
                 self._grabber = TriggerGrabber(
                     self, self._axis_data[TRIGGER_AREAS[what]]
@@ -777,8 +791,8 @@ class ControllerRegistration(Editor):
     def on_mnuStickPress_activate(self, *a):
         mnuStick = self.builder.get_object("mnuStick")
         self._grabber = InputGrabber(
-            self, getattr(SCButtons, mnuStick._what), text=_("Press stick or button...")
-        )
+            self, getattr(SCButtons, mnuStick._what),
+            text=_("Press stick or button..."))
 
     def on_mnuStickmove_activate(self, *a):
         mnuStick = self.builder.get_object("mnuStick")
@@ -795,7 +809,8 @@ class ControllerRegistration(Editor):
         lstDevices.clear()
         for fname in evdev.list_devices():
             dev = evdev.InputDevice(fname)
-            is_gamepad = ControllerRegistration.does_he_looks_like_a_gamepad(dev)
+            is_gamepad = ControllerRegistration.does_he_looks_like_a_gamepad(
+                dev)
             if not dev.phys:
                 # Skipping over virtual devices so list doesn't show
                 # gamepads emulated by SCC
@@ -813,9 +828,14 @@ class ControllerRegistration(Editor):
         cbControllerButtons = self.builder.get_object("cbControllerButtons")
         cbControllerType = self.builder.get_object("cbControllerType")
         rvController = self.builder.get_object("rvController")
-        group = cbControllerButtons.get_model()[cbControllerButtons.get_active()][0]
-        controller = cbControllerType.get_model()[cbControllerType.get_active()][0]
-        config = {"gui": {"background": controller, "buttons": self._groups[group]}}
+        group = cbControllerButtons.get_model()[
+            cbControllerButtons.get_active()][0]
+        controller = cbControllerType.get_model()[
+            cbControllerType.get_active()][0]
+        config = {
+            "gui": {
+                "background": controller,
+                "buttons": self._groups[group]}}
 
         if self._controller_image:
             self._controller_image.use_config(config)

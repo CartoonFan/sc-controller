@@ -27,7 +27,7 @@ try:
         raise AssertionError
     btlib = ctypes.CDLL(btlib_name)
     HAVE_BLUETOOTH_LIB = True
-except:
+except BaseException:
     pass
 
 
@@ -40,7 +40,13 @@ class DeviceMonitor(Monitor):
         self.bt_addresses = {}
         self.known_devs = {}
 
-    def add_callback(self, subsystem, vendor_id, product_id, added_cb, removed_cb):
+    def add_callback(
+            self,
+            subsystem,
+            vendor_id,
+            product_id,
+            added_cb,
+            removed_cb):
         """
         Adds function that is called when eudev monitor detects new, ready
         to use device.
@@ -113,8 +119,8 @@ class DeviceMonitor(Monitor):
             ci = cl.conn_info[i]
             id = "hci%s:%s" % (cl.dev_id, ci.handle)
             address = ":".join(
-                [hex(x).lstrip("0x").zfill(2).upper() for x in reversed(ci.bdaddr)]
-            )
+                [hex(x).lstrip("0x").zfill(2).upper()
+                 for x in reversed(ci.bdaddr)])
             self.bt_addresses[id] = address
 
     def _dev_for_hci(self, syspath):
@@ -188,8 +194,18 @@ class DeviceMonitor(Monitor):
         May throw all kinds of OSErrors or IOErrors
         """
         if os.path.exists(os.path.join(syspath, "idVendor")):
-            vendor = int(open(os.path.join(syspath, "idVendor")).read().strip(), 16)
-            product = int(open(os.path.join(syspath, "idProduct")).read().strip(), 16)
+            vendor = int(
+                open(
+                    os.path.join(
+                        syspath,
+                        "idVendor")).read().strip(),
+                16)
+            product = int(
+                open(
+                    os.path.join(
+                        syspath,
+                        "idProduct")).read().strip(),
+                16)
             return vendor, product
         if subsystem is None:
             subsystem = DeviceMonitor.get_subsystem(syspath)

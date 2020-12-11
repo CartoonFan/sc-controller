@@ -82,7 +82,9 @@ class KeyboardImage(Gtk.DrawingArea):
         self._hilight = ()
         self._pressed = ()
         self._button_images = {}
-        self._help_areas = [self.get_limit("HELP_LEFT"), self.get_limit("HELP_RIGHT")]
+        self._help_areas = [
+            self.get_limit("HELP_LEFT"),
+            self.get_limit("HELP_RIGHT")]
         self._help_lines = ([], [])
 
         # TODO: It would be cool to use user-set font here, but cairo doesn't
@@ -220,8 +222,8 @@ class KeyboardImage(Gtk.DrawingArea):
                 extents = ctx.text_extents(button.label)
                 x_bearing, y_bearing, width, trash, x_advance, y_advance = extents
                 ctx.move_to(
-                    x + w * 0.5 - width * 0.5 - x_bearing, y + h * 0.5 + height * 0.3
-                )
+                    x + w * 0.5 - width * 0.5 - x_bearing,
+                    y + h * 0.5 + height * 0.3)
                 ctx.show_text(button.label)
                 ctx.stroke()
 
@@ -251,18 +253,16 @@ class KeyboardImage(Gtk.DrawingArea):
                     extents = ctx.text_extents(line)
                     x_bearing, y_bearing, width, trash, x_advance, y_advance = extents
                     ctx.save()
-                    ctx.translate(
-                        xx - height + (height - iw) * 0.5, 1 + yy - (ascent + ih) * 0.5
-                    )
+                    ctx.translate(xx - height + (height - iw)
+                                  * 0.5, 1 + yy - (ascent + ih) * 0.5)
                     Gdk.cairo_set_source_pixbuf(ctx, image, 0, 0)
                     ctx.paint()
                     ctx.restore()
                     ctx.move_to(xx - x_bearing - width - 5 - height, yy)
                 else:
                     ctx.save()
-                    ctx.translate(
-                        1 + xx + (height - iw) * 0.5, 1 + yy - (ascent + ih) * 0.5
-                    )
+                    ctx.translate(1 + xx + (height - iw) * 0.5,
+                                  1 + yy - (ascent + ih) * 0.5)
                     Gdk.cairo_set_source_pixbuf(ctx, image, 0, 0)
                     ctx.paint()
                     ctx.restore()
@@ -310,7 +310,8 @@ class Keyboard(OSDWindow, TimerManager):
         self.kbimage = os.path.join(get_config_path(), "keyboard.svg")
         if not os.path.exists(self.kbimage):
             # Prefer image in ~/.config/scc, but load default one as fallback
-            self.kbimage = os.path.join(get_share_path(), "images", "keyboard.svg")
+            self.kbimage = os.path.join(
+                get_share_path(), "images", "keyboard.svg")
 
         TimerManager.__init__(self)
         OSDWindow.__init__(self, "osd-keyboard")
@@ -366,7 +367,8 @@ class Keyboard(OSDWindow, TimerManager):
     def recolor(self):
         # TODO: keyboard description is probably not needed anymore
         def _get(a):
-            return SVGWidget.color_to_float(self.config["osk_colors"].get(a, ""))
+            return SVGWidget.color_to_float(
+                self.config["osk_colors"].get(a, ""))
 
         self.background.color_button1 = _get("button1")
         self.background.color_button1_border = _get("button1_border")
@@ -524,7 +526,8 @@ class Keyboard(OSDWindow, TimerManager):
         locks = [LEFT, RIGHT, STICK, "STICKPRESS"] + [b.name for b in SCButtons]
         if (c.get_flags() & ControllerFlags.HAS_CPAD) == 0:
             # Two pads, two hands
-            locks = [LEFT, RIGHT, STICK, "STICKPRESS"] + [b.name for b in SCButtons]
+            locks = [LEFT, RIGHT, STICK, "STICKPRESS"] + [b.name
+                                                          for b in SCButtons]
             self.cursors[CPAD].hide()
         else:
             # Single-handed mode
@@ -547,9 +550,10 @@ class Keyboard(OSDWindow, TimerManager):
 
             for i in (LEFT, RIGHT):
                 if isinstance(
-                    self.profile.triggers[i], scc.osd.osk_actions.OSKPressAction
-                ):
-                    self.profile.triggers[i] = scc.osd.osk_actions.OSKPressAction(CPAD)
+                        self.profile.triggers[i],
+                        scc.osd.osk_actions.OSKPressAction):
+                    self.profile.triggers[i] = scc.osd.osk_actions.OSKPressAction(
+                        CPAD)
 
         self._controller = c
         c.lock(success, self.on_failed_to_lock, *locks)
@@ -570,8 +574,10 @@ class Keyboard(OSDWindow, TimerManager):
         OSDWindow.show(self, *a)
         self.load_profile()
         self.mapper = SlaveMapper(
-            self.profile, None, keyboard=b"SCC OSD Keyboard", mouse=b"SCC OSD Mouse"
-        )
+            self.profile,
+            None,
+            keyboard=b"SCC OSD Keyboard",
+            mouse=b"SCC OSD Mouse")
         self.mapper.set_special_actions_handler(self)
         self.set_cursor_position(0, 0, self.cursors[LEFT], self.limits[LEFT])
         self.set_cursor_position(0, 0, self.cursors[RIGHT], self.limits[RIGHT])
@@ -681,10 +687,12 @@ class Keyboard(OSDWindow, TimerManager):
         if pressed:
             for button in self.background.buttons:
                 if button.contains(x, y):
-                    if button.name.startswith("KEY_") and hasattr(Keys, button.name):
+                    if button.name.startswith(
+                            "KEY_") and hasattr(Keys, button.name):
                         key = getattr(Keys, button.name)
                         if self._pressed[cursor] is not None:
-                            self.mapper.keyboard.releaseEvent([self._pressed[cursor]])
+                            self.mapper.keyboard.releaseEvent(
+                                [self._pressed[cursor]])
                         self.mapper.keyboard.pressEvent([key])
                         self._pressed[cursor] = key
                         self._pressed_areas[cursor] = button

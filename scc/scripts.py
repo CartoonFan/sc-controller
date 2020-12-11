@@ -108,7 +108,7 @@ def cmd_list_profiles(argv0, argv):
                 if x.endswith(".sccprofile"):
                     if not include_hidden and x.startswith("."):
                         continue
-                    lst.add(x[0 : -len(".sccprofile")])
+                    lst.add(x[0: -len(".sccprofile")])
         except OSError:
             pass
     for x in sorted(lst):
@@ -366,7 +366,9 @@ def show_help(command=None, out=sys.stdout):
             lines = hlp.split("\n")
             if len(lines) > 0:
                 for line in lines:
-                    line = line.replace("Usage: scc", "Usage: %s" % (sys.argv[0],))
+                    line = line.replace(
+                        "Usage: scc", "Usage: %s" %
+                        (sys.argv[0],))
                     if line.startswith("\t"):
                         line = line[1:]
                     print >> out, line
@@ -376,8 +378,12 @@ def show_help(command=None, out=sys.stdout):
     print >> out, ""
     print >> out, "List of commands:"
     for name in sorted(names):
-        hlp = (globals()["cmd_" + name].__doc__ or "").strip("\t \r\n").split("\n")[0]
-        print >> out, (" - %%-%ss %%s" % (max_len,)) % (name.replace("_", "-"), hlp)
+        hlp = (
+            globals()[
+                "cmd_" +
+                name].__doc__ or "").strip("\t \r\n").split("\n")[0]
+        print >> out, (" - %%-%ss %%s" % (max_len,)
+                       ) % (name.replace("_", "-"), hlp)
     return 0
 
 
@@ -391,8 +397,11 @@ def main():
         while "--help" in sys.argv:
             sys.argv.remove("--help")
         sys.exit(
-            show_help(sys.argv[1].replace("-", "_") if len(sys.argv) > 1 else None)
-        )
+            show_help(
+                sys.argv[1].replace(
+                    "-",
+                    "_") if len(
+                    sys.argv) > 1 else None))
     if "-v" in sys.argv:
         while "-v" in sys.argv:
             sys.argv.remove("-v")
@@ -401,7 +410,7 @@ def main():
         set_logging_level(False, False)
     try:
         command = globals()["cmd_" + sys.argv[1].replace("-", "_")]
-    except:
+    except BaseException:
         print >>sys.stderr, "Unknown command: %s" % (sys.argv[1],)
         sys.exit(show_help(out=sys.stderr))
 

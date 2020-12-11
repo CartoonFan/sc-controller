@@ -41,7 +41,7 @@ def get_devices():
             .communicate()[0]
             .decode("utf-8")
         )
-    except:
+    except BaseException:
         # calling xinput failed, return empty list
         return rv
 

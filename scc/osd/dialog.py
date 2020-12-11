@@ -39,7 +39,8 @@ class Dialog(OSDWindow):
         self.config = None
         self.feedback = None
         self.controller = None
-        self.xdisplay = X.Display(hash(GdkX11.x11_get_default_xdisplay()))  # Magic
+        self.xdisplay = X.Display(
+            hash(GdkX11.x11_get_default_xdisplay()))  # Magic
 
         self.parent = self.create_parent()
         self.f = Gtk.Fixed()
@@ -122,8 +123,11 @@ class Dialog(OSDWindow):
             "--text", type=str, metavar="text", help="Dialog text"
         )
         self.argparser.add_argument(
-            "items", type=str, nargs="*", metavar="id text", help="Dialog buttons"
-        )
+            "items",
+            type=str,
+            nargs="*",
+            metavar="id text",
+            help="Dialog buttons")
 
     def parse_argumets(self, argv):
         if not OSDWindow.parse_argumets(self, argv):
@@ -135,7 +139,8 @@ class Dialog(OSDWindow):
             self.items = MenuData.from_args(self.args.items)
             self._menuid = None
         except ValueError:
-            print >>sys.stderr, "%s: error: invalid number of arguments" % (sys.argv[0])
+            print >>sys.stderr, "%s: error: invalid number of arguments" % (
+                sys.argv[0])
             return False
 
         self._text.set_label(self.args.text)
@@ -191,10 +196,10 @@ class Dialog(OSDWindow):
 
     def _connect_handlers(self):
         self._eh_ids += [
-            (self.daemon, self.daemon.connect("dead", self.on_daemon_died)),
-            (self.daemon, self.daemon.connect("error", self.on_daemon_died)),
-            (self.daemon, self.daemon.connect("alive", self.on_daemon_connected)),
-        ]
+            (self.daemon, self.daemon.connect(
+                "dead", self.on_daemon_died)), (self.daemon, self.daemon.connect(
+                    "error", self.on_daemon_died)), (self.daemon, self.daemon.connect(
+                        "alive", self.on_daemon_connected)), ]
 
     def run(self):
         self.daemon = DaemonManager()
@@ -259,7 +264,7 @@ class Dialog(OSDWindow):
         try:
             start = self.items.index(self._selected)
             i = start + direction
-        except:
+        except BaseException:
             pass
         while True:
             if i == start:

@@ -61,7 +61,10 @@ class KeyGrabber(object):
 
     def setup_widgets(self):
         self.builder = Gtk.Builder()
-        self.builder.add_from_file(os.path.join(self.app.gladepath, self.GLADE))
+        self.builder.add_from_file(
+            os.path.join(
+                self.app.gladepath,
+                self.GLADE))
         self.window = self.builder.get_object("KeyGrab")
         self.builder.connect_signals(self)
 
@@ -79,8 +82,8 @@ class KeyGrabber(object):
         key = keyevent_to_key(event)
         if key is None:
             log.warning(
-                "Unknown keycode %s/%s" % (event.keyval, event.hardware_keycode)
-            )
+                "Unknown keycode %s/%s" %
+                (event.keyval, event.hardware_keycode))
             return
 
         if key in MODIFIERS:
@@ -133,7 +136,7 @@ class KeyGrabber(object):
         """
         for key in MODIFIERS:
             if self.builder.get_object("tg" + key.name) == obj:
-                if obj.get_active() and not key in self.active_mods:
+                if obj.get_active() and key not in self.active_mods:
                     self.active_mods.append(key)
                     self.builder.get_object("lblKey").set_label(
                         merge_modifiers(self.active_mods)

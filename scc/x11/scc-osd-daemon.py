@@ -88,7 +88,7 @@ class OSDDaemon(object):
                 recents.remove(name)
             recents.insert(0, name)
             if len(recents) > self.config["recent_max"]:
-                recents = recents[0 : self.config["recent_max"]]
+                recents = recents[0: self.config["recent_max"]]
             self.config["recent_profiles"] = recents
             self.config.save()
             log.debug("Updated recent profile list")
@@ -135,10 +135,13 @@ class OSDDaemon(object):
         self._window = None
         if gd.get_exit_code() == 0:
             self.daemon.request(
-                "Gestured: %s" % (gd.get_gesture(),), lambda *a: False, lambda *a: False
-            )
+                "Gestured: %s" %
+                (gd.get_gesture(),), lambda *a: False, lambda *a: False)
         else:
-            self.daemon.request("Gestured: x", lambda *a: False, lambda *a: False)
+            self.daemon.request(
+                "Gestured: x",
+                lambda *a: False,
+                lambda *a: False)
 
     @staticmethod
     def _is_menu_message(m):
@@ -170,11 +173,12 @@ class OSDDaemon(object):
                 # TODO: Do this only for default position once changing
                 # TODO: is allowed
                 if self._visible_messages:
-                    height = list(self._visible_messages.values())[0].get_size().height
+                    height = list(self._visible_messages.values())[
+                        0].get_size().height
                     x, y = m.position
                     while y in [
-                        i.position[1] for i in list(self._visible_messages.values())
-                    ]:
+                            i.position[1]
+                            for i in list(self._visible_messages.values())]:
                         y -= height + 5
                     m.position = x, y
                 m.show()
@@ -207,7 +211,8 @@ class OSDDaemon(object):
         elif self._is_menu_message(message):
             args = shsplit(message)[1:]
             if self._window:
-                log.warning("Another OSD is already visible - refusing to show menu")
+                log.warning(
+                    "Another OSD is already visible - refusing to show menu")
             else:
                 if message.startswith("OSD: hmenu"):
                     self._window = HorizontalMenu()
@@ -230,14 +235,15 @@ class OSDDaemon(object):
                     else:
                         log.error("Failed to show menu")
                         self._window = None
-                except:
+                except BaseException:
                     log.error(traceback.format_exc())
                     log.error("Failed to show menu")
                     self._window = None
         elif message.startswith("OSD: area"):
             args = shsplit(message)[1:]
             if self._window:
-                log.warning("Another OSD is already visible - refusing to show area")
+                log.warning(
+                    "Another OSD is already visible - refusing to show area")
             else:
                 args = shsplit(message)[1:]
                 self._window = Area()
@@ -279,10 +285,10 @@ class OSDDaemon(object):
         Checks if OSD color configuration is changed and re-applies CSS
         if needed.
         """
-        h = sum([hash(self.config["osd_colors"][x]) for x in self.config["osd_colors"]])
-        h += sum(
-            [hash(self.config["osk_colors"][x]) for x in self.config["osk_colors"]]
-        )
+        h = sum([hash(self.config["osd_colors"][x])
+                 for x in self.config["osd_colors"]])
+        h += sum([hash(self.config["osk_colors"][x])
+                  for x in self.config["osk_colors"]])
         h += hash(self.config["osd_style"])
         if self._hash_of_colors != h:
             self._hash_of_colors = h

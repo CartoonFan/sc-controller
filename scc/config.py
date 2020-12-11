@@ -76,7 +76,8 @@ class Config(object):
         # enable_sniffing - If enabled, another program with write access to
         # ~/.config/scc can ask daemon to send notifications about all
         # (or only some) inputs.
-        # This enables GUI to display which physical button was pressed to user.
+        # This enables GUI to display which physical button was pressed to
+        # user.
         "enable_sniffing": False,
         # Style and colors used by OSD
         "osd_style": "Classic.gtkstyle.css",
@@ -169,7 +170,8 @@ class Config(object):
         if "autoswitch" in self.values:
             for a in self.values["autoswitch"]:
                 if "profile" in a:
-                    a["action"] = ChangeProfileAction(str(a["profile"])).to_string()
+                    a["action"] = ChangeProfileAction(
+                        str(a["profile"])).to_string()
                     del a["profile"]
                     rv = True
         return rv
@@ -185,15 +187,16 @@ class Config(object):
             for key in self.CONTROLLER_DEFAULTS:
                 if key not in rv:
                     if key in ("input_rotation_l", "input_rotation_r"):
-                        # Special case, just to not change behavior for existing users
+                        # Special case, just to not change behavior for
+                        # existing users
                         rv[key] = 0
                     else:
                         rv[key] = self.CONTROLLER_DEFAULTS[key]
             return rv
         # Create new config
         rv = self.values["controllers"][controller_id] = {
-            key: self.CONTROLLER_DEFAULTS[key] for key in self.CONTROLLER_DEFAULTS
-        }
+            key: self.CONTROLLER_DEFAULTS[key]
+            for key in self.CONTROLLER_DEFAULTS}
         rv["name"] = controller_id
         return rv
 

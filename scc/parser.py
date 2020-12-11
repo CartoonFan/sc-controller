@@ -159,8 +159,8 @@ class ActionParser(object):
                 # Constant
                 if t.value not in ActionParser.CONSTS:
                     raise ParseError(
-                        "Expected parameter, got '%s' which is not defined" % (t.value,)
-                    )
+                        "Expected parameter, got '%s' which is not defined" %
+                        (t.value,))
                 parameter = ActionParser.CONSTS[t.value]
 
             # Check for dots
@@ -245,7 +245,9 @@ class ActionParser(object):
         # Check and skip over '('
         t = self._next_token()
         if t.type != TokenType.OP or t.value != "(":
-            raise ParseError("Expected '(' of parameter list, got '%s'" % (t.value,))
+            raise ParseError(
+                "Expected '(' of parameter list, got '%s'" %
+                (t.value,))
 
         parameters = []
         while self._tokens_left():
@@ -277,7 +279,8 @@ class ActionParser(object):
                     % (parameters[-1],)
                 )
 
-        # Code shouldn't reach here, unless there is not closing ')' in parameter list
+        # Code shouldn't reach here, unless there is not closing ')' in
+        # parameter list
         raise ParseError("Unmatched parenthesis")
 
     def _create_action(self, cls, *pars):
@@ -287,7 +290,9 @@ class ActionParser(object):
             raise ParseError(str(e))
         except TypeError as e:
             print >>sys.stderr, e
-            raise ParseError("Invalid number of parameters for '%s'" % (cls.COMMAND))
+            raise ParseError(
+                "Invalid number of parameters for '%s'" %
+                (cls.COMMAND))
 
     def _parse_action(self, frm=Action.ALL):
         """
@@ -395,4 +400,5 @@ class TalkingActionParser(ActionParser):
         try:
             return ActionParser.parse(self)
         except ParseError as e:
-            print >>sys.stderr, "Warning: Failed to parse '%s':" % (self.string,), e
+            print >>sys.stderr, "Warning: Failed to parse '%s':" % (
+                self.string,), e

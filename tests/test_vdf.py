@@ -1,7 +1,8 @@
 from scc.lib.vdf import parse_vdf
 from scc.foreign.vdf import VDFProfile
 from io import StringIO
-import os, pytest
+import os
+import pytest
 
 
 class TestVDF(object):

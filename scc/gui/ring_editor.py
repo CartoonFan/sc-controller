@@ -158,12 +158,18 @@ class RingEditor(Editor, ComboSetter):
         key = cbMode.get_model().get_value(cbMode.get_active_iter(), 0)
         if key == "inner":
             return MultiAction(
-                self.actions[1], RingAction(self.radius, self.actions[0], NoAction())
-            )
+                self.actions[1],
+                RingAction(
+                    self.radius,
+                    self.actions[0],
+                    NoAction()))
         if key == "outer":
             return MultiAction(
-                self.actions[0], RingAction(self.radius, NoAction(), self.actions[1])
-            )
+                self.actions[0],
+                RingAction(
+                    self.radius,
+                    NoAction(),
+                    self.actions[1]))
         return RingAction(self.radius, *self.actions)
 
     def _update(self):
@@ -187,7 +193,8 @@ class RingEditor(Editor, ComboSetter):
             self.actions = [action.inner, action.outer]
             self.set_cb(cbMode, "two")
         elif RingEditor.is_ring_action(action):
-            # Goes here only if action is MultiAciton with RingAction as 2nd item
+            # Goes here only if action is MultiAciton with RingAction as 2nd
+            # item
             ring = action.actions[1]
             self.radius = ring.radius
             if ring.inner:

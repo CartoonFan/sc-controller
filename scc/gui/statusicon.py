@@ -48,11 +48,10 @@ class StatusIcon(GObject.GObject):
             "is the icon user-visible?",
             "does the icon back-end think that anything is might be shown to the user?",
             True,
-            GObject.PARAM_READWRITE
-            if hasattr(GObject, "PARAM_READWRITE")
-            else GObject.ParamFlags.READWRITE,
-        )
-    }
+            GObject.PARAM_READWRITE if hasattr(
+                GObject,
+                "PARAM_READWRITE") else GObject.ParamFlags.READWRITE,
+        )}
 
     def __init__(self, icon_path, popupmenu, force=False):
         GObject.GObject.__init__(self)
@@ -273,7 +272,8 @@ class StatusIconAppIndicator(StatusIconDBus):
             raise NotImplementedError
 
         category = appindicator.IndicatorCategory.APPLICATION_STATUS
-        # Whatever icon is set here will be used as a tooltip icon during the entire time to icon is shown
+        # Whatever icon is set here will be used as a tooltip icon during the
+        # entire time to icon is shown
         self._tray = appindicator.Indicator.new(
             "sc-controller", self._get_icon(), category
         )
@@ -283,7 +283,8 @@ class StatusIconAppIndicator(StatusIconDBus):
     def _set_visible(self, active):
         StatusIcon._set_visible(self, active)
 
-        self._tray.set_status(self._status_active if active else self._status_passive)
+        self._tray.set_status(
+            self._status_active if active else self._status_passive)
 
     def is_clickable(self):
         return False
@@ -315,7 +316,8 @@ class StatusIconProxy(StatusIcon):
             # Try loading GTK native status icon
             self._status_gtk = StatusIconGTK3(*args, **kwargs)
             self._status_gtk.connect(b"clicked", self._on_click)
-            self._status_gtk.connect(b"notify::active", self._on_notify_active_gtk)
+            self._status_gtk.connect(
+                b"notify::active", self._on_notify_active_gtk)
             self._on_notify_active_gtk()
 
             log.info("Using backend StatusIconGTK3 (primary)")
@@ -368,7 +370,8 @@ class StatusIconProxy(StatusIcon):
                 except NotImplementedError:
                     continue
 
-            # At least the dummy backend should have been loaded at this point...
+            # At least the dummy backend should have been loaded at this
+            # point...
             if not self._status_fb:
                 raise AssertionError
 
@@ -415,10 +418,12 @@ def get_status_icon(*args, **kwargs):
     if "STATUS_BACKEND" in os.environ:
         kwargs["force"] = True
 
-        status_icon_backend_name = "StatusIcon%s" % (os.environ.get("STATUS_BACKEND"))
+        status_icon_backend_name = "StatusIcon%s" % (
+            os.environ.get("STATUS_BACKEND"))
         if status_icon_backend_name in globals():
             try:
-                status_icon = globals()[status_icon_backend_name](*args, **kwargs)
+                status_icon = globals()[status_icon_backend_name](
+                    *args, **kwargs)
                 log.info(
                     "StatusIcon: Using requested backend %s"
                     % (status_icon_backend_name)
@@ -437,5 +442,6 @@ def get_status_icon(*args, **kwargs):
 
         return StatusIconDummy(*args, **kwargs)
 
-    # Use proxy backend to determine the correct backend while the application is running
+    # Use proxy backend to determine the correct backend while the application
+    # is running
     return StatusIconProxy(*args, **kwargs)

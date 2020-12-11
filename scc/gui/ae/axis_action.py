@@ -76,10 +76,7 @@ class AxisActionComponent(AEComponent, TimerManager):
         )
         if self.on_wayland:
             self.builder.get_object("lblArea").set_text(
-                _(
-                    "Note: Mouse Region option is not available with Wayland-based display server"
-                )
-            )
+                _("Note: Mouse Region option is not available with Wayland-based display server"))
             self.builder.get_object("grArea").set_sensitive(False)
 
         # Remove options that are not applicable to currently editted input
@@ -150,7 +147,9 @@ class AxisActionComponent(AEComponent, TimerManager):
                     return
                 self.osd_area_instance = Area()
                 self.osd_area_instance.show()
-            action.update_osd_area(self.osd_area_instance, FakeMapper(self.editor))
+            action.update_osd_area(
+                self.osd_area_instance, FakeMapper(
+                    self.editor))
             self.timer("area", 0.5, self.update_osd_area, action)
         elif self.osd_area_instance:
             self.osd_area_instance.quit()
@@ -270,11 +269,13 @@ class AxisActionComponent(AEComponent, TimerManager):
         b.show(self.editor.window)
 
     def on_btCircularButton_clicked(self, button, *a):
-        index = 0 if button == self.builder.get_object("btCircularButton0") else 1
+        index = 0 if button == self.builder.get_object(
+            "btCircularButton0") else 1
 
         def cb(action):
             self.circular_buttons[index] = action.button
-            btCircularButton = self.builder.get_object("btCircularButton%s" % (index,))
+            btCircularButton = self.builder.get_object(
+                "btCircularButton%s" % (index,))
             btCircularButton.set_label(action.describe(Action.AC_PAD))
             self.editor.set_action(self.make_circular_action())
 
@@ -365,8 +366,10 @@ class AxisActionComponent(AEComponent, TimerManager):
         """
         if self.circular_axis and any(self.circular_buttons):
             return CircularModifier(
-                MultiAction(self.circular_axis, ButtonAction(*self.circular_buttons))
-            )
+                MultiAction(
+                    self.circular_axis,
+                    ButtonAction(
+                        *self.circular_buttons)))
         if any(self.circular_buttons):
             return CircularModifier(ButtonAction(*self.circular_buttons))
         return CircularModifier(self.circular_axis)
@@ -497,7 +500,8 @@ class AxisActionComponent(AEComponent, TimerManager):
             self.button = self.button or ButtonAction(Keys.BTN_GAMEPAD)
             action = self.button
         elif key == "circular":
-            stActionData.set_visible_child(self.builder.get_object("grCircular"))
+            stActionData.set_visible_child(
+                self.builder.get_object("grCircular"))
             action = self.make_circular_action()
         elif key == "mouse":
             stActionData.set_visible_child(self.builder.get_object("vbMose"))
@@ -542,9 +546,8 @@ class FakeMapper(object):
         NET_WM_WINDOW_TYPE_NORMAL = X.intern_atom(
             self._xdisplay, "_NET_WM_WINDOW_TYPE_NORMAL", False
         )
-        my_windows = [
-            x.get_xid() for x in Gdk.Screen.get_default().get_toplevel_windows()
-        ]
+        my_windows = [x.get_xid()
+                      for x in Gdk.Screen.get_default().get_toplevel_windows()]
         nitems, prop = X.get_window_prop(
             self._xdisplay, root, "_NET_CLIENT_LIST_STACKING", max_size=0x8000
         )
@@ -558,9 +561,8 @@ class FakeMapper(object):
                 if not X.is_window_visible(self._xdisplay, window):
                     # skip minimized and invisible windows
                     continue
-                tp = X.get_window_prop(self._xdisplay, window, "_NET_WM_WINDOW_TYPE")[
-                    -1
-                ]
+                tp = X.get_window_prop(
+                    self._xdisplay, window, "_NET_WM_WINDOW_TYPE")[-1]
                 if tp is not None:
                     tpval = cast(tp, POINTER(X.Atom)).contents.value
                     X.free(tp)

@@ -231,9 +231,12 @@ class OSDAction(Action, SpecialAction):
         if self.size != self.DEFAULT_SIZE:
             parameters.append(str(self.size))
         if self.action:
-            parameters.append(self.action.to_string(multiline=multiline, pad=pad))
+            parameters.append(
+                self.action.to_string(
+                    multiline=multiline, pad=pad))
         else:
-            parameters.append("'%s'" % (str(self.text).encode("string_escape"),))
+            parameters.append("'%s'" %
+                              (str(self.text).encode("string_escape"),))
         return (" " * pad) + "%s(%s)" % (self.COMMAND, ",".join(parameters))
 
     def strip(self):
@@ -345,11 +348,15 @@ class MenuAction(Action, SpecialAction, HapticEnabledAction):
     def to_string(self, multiline=False, pad=0):
         if self.control_with == DEFAULT:
             dflt = (DEFAULT, DEFAULT, False)
-            vals = (self.confirm_with, self.cancel_with, self.show_with_release)
+            vals = (
+                self.confirm_with,
+                self.cancel_with,
+                self.show_with_release)
             if dflt == vals:
                 # Special case when menu is assigned to pad
                 if self.size == 0:
-                    return "%s%s('%s')" % (" " * pad, self.COMMAND, self.menu_id)
+                    return "%s%s('%s')" % (
+                        " " * pad, self.COMMAND, self.menu_id)
                 return "%s%s('%s', %s)" % (
                     " " * pad,
                     self.COMMAND,
@@ -542,7 +549,14 @@ class RadialMenuAction(MenuAction):
 
     def whole(self, mapper, x, y, what):
         if self.rotation:
-            MenuAction.whole(self, mapper, x, y, what, "--rotation", self.rotation)
+            MenuAction.whole(
+                self,
+                mapper,
+                x,
+                y,
+                what,
+                "--rotation",
+                self.rotation)
         else:
             MenuAction.whole(self, mapper, x, y, what)
 
@@ -731,7 +745,8 @@ class GesturesAction(Action, OSDEnabledAction, SpecialAction):
             for gstr in self.gestures:
                 a_str = self.gestures[gstr].to_string(True).split("\n")
                 # Key has to be one of SCButtons
-                a_str[0] = (" " * pad) + "  '" + (gstr + "',").ljust(11) + a_str[0]
+                a_str[0] = (
+                    " " * pad) + "  '" + (gstr + "',").ljust(11) + a_str[0]
                 for i in range(1, len(a_str)):
                     a_str[i] = (" " * pad) + "  " + a_str[i]
                 a_str[-1] = a_str[-1] + ","
@@ -762,9 +777,9 @@ class GesturesAction(Action, OSDEnabledAction, SpecialAction):
         args = []
         ga = GesturesAction()
         ga.gestures = {
-            gstr: parser.from_json_data(data[GesturesAction.PROFILE_KEYS[0]][gstr])
-            for gstr in data[GesturesAction.PROFILE_KEYS[0]]
-        }
+            gstr: parser.from_json_data(
+                data[GesturesAction.PROFILE_KEYS[0]][gstr])
+            for gstr in data[GesturesAction.PROFILE_KEYS[0]]}
         if "name" in data:
             ga.name = data["name"]
         if "osd" in data:
@@ -796,7 +811,8 @@ class GesturesAction(Action, OSDEnabledAction, SpecialAction):
     def find_gesture_action(self, gesture_string):
         action = None
         action = action or self._find_exact_gesture(gesture_string)
-        action = action or self._find_ignore_stroke_count_gesture(gesture_string)
+        action = action or self._find_ignore_stroke_count_gesture(
+            gesture_string)
         action = action or self._find_best_match_gesture(gesture_string)
         return action
 

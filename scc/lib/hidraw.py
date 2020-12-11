@@ -45,11 +45,19 @@ def _HIDIOCGRAWPHYS(len):
 
 
 def _HIDIOCSFEATURE(len):
-    return ioctl_opt.IOC(ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ, ord("H"), 0x06, len)
+    return ioctl_opt.IOC(
+        ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ,
+        ord("H"),
+        0x06,
+        len)
 
 
 def _HIDIOCGFEATURE(len):
-    return ioctl_opt.IOC(ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ, ord("H"), 0x07, len)
+    return ioctl_opt.IOC(
+        ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ,
+        ord("H"),
+        0x07,
+        len)
 
 
 HIDRAW_FIRST_MINOR = 0

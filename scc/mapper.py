@@ -57,7 +57,8 @@ class Mapper(object):
         log.debug("Keyboard: %s" % (self.keyboard,))
         self.mouse = self.create_mouse(mouse) if mouse else Dummy()
         log.debug("Mouse:    %s" % (self.mouse,))
-        self.gamepad = self.create_gamepad(gamepad, poller) if gamepad else Dummy()
+        self.gamepad = self.create_gamepad(
+            gamepad, poller) if gamepad else Dummy()
         log.debug("Gamepad:  %s" % (self.gamepad,))
 
         # Set by SCCDaemon instance; Used to handle actions
@@ -70,7 +71,8 @@ class Mapper(object):
         # mouse x, y, wheel vertical, horisontal
         self.mouse_movements = [0, 0, 0, 0]
         self.feedbacks = [None, None]  # left, right
-        # for ButtonAction, holds number of times virtual button was pressed without releasing it first
+        # for ButtonAction, holds number of times virtual button was pressed
+        # without releasing it first
         self.pressed = {}
         self.syn_list = set()
         self.buttons, self.old_buttons = 0, 0
@@ -86,12 +88,12 @@ class Mapper(object):
             self.gamepad = Dummy()
             return
         cfg = Config()
-        keys = ALL_BUTTONS[0 : cfg["output"]["buttons"]]
+        keys = ALL_BUTTONS[0: cfg["output"]["buttons"]]
         vendor = int(cfg["output"]["vendor"], 16)
         product = int(cfg["output"]["product"], 16)
         version = int(cfg["output"]["version"], 16)
         name = cfg["output"]["name"]
-        rumble = cfg["output"]["rumble"] and poller != None
+        rumble = cfg["output"]["rumble"] and poller is not None
         axes = []
         i = 0
         for min, max in cfg["output"]["axes"]:
@@ -116,7 +118,10 @@ class Mapper(object):
             rumble=rumble,
         )
         if poller and rumble:
-            poller.register(ui.getDescriptor(), poller.POLLIN, self._rumble_ready)
+            poller.register(
+                ui.getDescriptor(),
+                poller.POLLIN,
+                self._rumble_ready)
         return ui
 
     def create_keyboard(self, name):
@@ -359,7 +364,8 @@ class Mapper(object):
         if self.buttons & SCButtons.LPAD and not self.buttons & (
             SCButtons.LPADTOUCH | STICKTILT
         ):
-            self.buttons = (self.buttons & ~SCButtons.LPAD) | SCButtons.STICKPRESS
+            self.buttons = (
+                self.buttons & ~SCButtons.LPAD) | SCButtons.STICKPRESS
 
         fe = self.force_event
         self.force_event = set()
@@ -385,14 +391,16 @@ class Mapper(object):
                     or self.old_state.stick_x != state.stick_x
                     or self.old_state.stick_y != state.stick_y
                 ):
-                    self.profile.stick.whole(self, state.stick_x, state.stick_y, STICK)
+                    self.profile.stick.whole(
+                        self, state.stick_x, state.stick_y, STICK)
             elif not self.buttons & SCButtons.LPADTOUCH:
                 if (
                     FE_STICK in fe
                     or self.old_state.lpad_x != state.lpad_x
                     or self.old_state.lpad_y != state.lpad_y
                 ):
-                    self.profile.stick.whole(self, state.lpad_x, state.lpad_y, STICK)
+                    self.profile.stick.whole(
+                        self, state.lpad_x, state.lpad_y, STICK)
 
             # Check gyro
             if controller.get_gyro_enabled():
@@ -437,7 +445,8 @@ class Mapper(object):
                 or self.buttons & SCButtons.RPADTOUCH
                 or SCButtons.RPADTOUCH & btn_rem
             ):
-                self.profile.pads[RIGHT].whole(self, state.rpad_x, state.rpad_y, RIGHT)
+                self.profile.pads[RIGHT].whole(
+                    self, state.rpad_x, state.rpad_y, RIGHT)
 
             # LPAD
             if self.controller.flags & ControllerFlags.SEPARATE_STICK:

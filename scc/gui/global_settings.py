@@ -95,9 +95,10 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         self._recursing = False
         self._gamepad_icons = {
             "unknown": GdkPixbuf.Pixbuf.new_from_file(
-                os.path.join(self.app.imagepath, "controller-icons", "unknown.svg")
-            )
-        }
+                os.path.join(
+                    self.app.imagepath,
+                    "controller-icons",
+                    "unknown.svg"))}
         self.app.config.reload()
         Action.register_all(sys.modules["scc.osd.osk_actions"], prefix="OSK")
         self.load_settings()
@@ -112,9 +113,11 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
             return self._gamepad_icons[drv]
         try:
             p = GdkPixbuf.Pixbuf.new_from_file(
-                os.path.join(self.app.imagepath, "controller-icons", drv + "-4.svg")
-            )
-        except:
+                os.path.join(
+                    self.app.imagepath,
+                    "controller-icons",
+                    drv + "-4.svg"))
+        except BaseException:
             log.warning("Failed to load gamepad icon for driver '%s'", drv)
             p = self._gamepad_icons["unknown"]
         self._gamepad_icons[drv] = p
@@ -161,21 +164,15 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
                 bool(self.app.config["gui"]["enable_status_icon"])
             )
         )
-        (
-            self.builder.get_object("cbMinimizeToStatusIcon").set_active(
-                not IS_UNITY and bool(self.app.config["gui"]["minimize_to_status_icon"])
-            )
-        )
+        (self.builder.get_object("cbMinimizeToStatusIcon").set_active(
+            not IS_UNITY and bool(self.app.config["gui"]["minimize_to_status_icon"])))
         (
             self.builder.get_object("cbMinimizeToStatusIcon").set_sensitive(
                 not IS_UNITY and self.app.config["gui"]["enable_status_icon"]
             )
         )
-        (
-            self.builder.get_object("cbMinimizeOnStart").set_active(
-                not IS_UNITY and bool(self.app.config["gui"]["minimize_on_start"])
-            )
-        )
+        (self.builder.get_object("cbMinimizeOnStart").set_active(
+            not IS_UNITY and bool(self.app.config["gui"]["minimize_on_start"])))
         (
             self.builder.get_object("cbMinimizeOnStart").set_sensitive(
                 not IS_UNITY and self.app.config["gui"]["enable_status_icon"]
@@ -210,9 +207,11 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
     def _load_color(self, w, dct, key):
         """ Common part of load_colors """
         if w:
-            success, color = Gdk.Color.parse("#%s" % (self.app.config[dct][key],))
+            success, color = Gdk.Color.parse(
+                "#%s" % (self.app.config[dct][key],))
             if not success:
-                success, color = Gdk.Color.parse("#%s" % (self.app.config[dct][key],))
+                success, color = Gdk.Color.parse(
+                    "#%s" % (self.app.config[dct][key],))
             w.set_color(color)
 
     def load_colors(self):
@@ -262,7 +261,10 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
             self.add_custom(cbTriggersAction, triggers)
 
         # Load stick
-        if not self.set_cb(cbStickAction, profile.stick.to_string(), keyindex=1):
+        if not self.set_cb(
+                cbStickAction,
+                profile.stick.to_string(),
+                keyindex=1):
             self.add_custom(cbStickAction, profile.stick.to_string())
 
         # Load sensitivity
@@ -296,8 +298,10 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         Used by methods that are changing it.
         """
         profile.save(
-            os.path.join(get_profiles_path(), OSDKeyboard.OSK_PROF_NAME + ".sccprofile")
-        )
+            os.path.join(
+                get_profiles_path(),
+                OSDKeyboard.OSK_PROF_NAME +
+                ".sccprofile"))
         self.app.dm.reconfigure()
 
     def on_cbStickAction_changed(self, cb):
@@ -365,7 +369,8 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         tvItems = self.builder.get_object("tvItems")
         cbShowOSD = self.builder.get_object("cbShowOSD")
         cbEnableStatusIcon = self.builder.get_object("cbEnableStatusIcon")
-        cbMinimizeToStatusIcon = self.builder.get_object("cbMinimizeToStatusIcon")
+        cbMinimizeToStatusIcon = self.builder.get_object(
+            "cbMinimizeToStatusIcon")
         conds = [
             {
                 "condition": row[0].condition.encode(),
@@ -404,8 +409,7 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
             "cbEnableStatusIcon"
         ).get_active()
         self.app.config["gui"]["minimize_to_status_icon"] = self.builder.get_object(
-            "cbMinimizeToStatusIcon"
-        ).get_active()
+            "cbMinimizeToStatusIcon").get_active()
         self.app.config["gui"]["minimize_on_start"] = self.builder.get_object(
             "cbMinimizeOnStart"
         ).get_active()
@@ -450,9 +454,8 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         self.app.config["drivers"][drv] = cb.get_active()
         if cb.get_active() and drv in self.DRIVER_DEPS:
             # Driver has dependencies, make sure at least one of them is active
-            one_active = any(
-                self.app.config["drivers"].get(x) for x in self.DRIVER_DEPS[drv]
-            )
+            one_active = any(self.app.config["drivers"].get(
+                x) for x in self.DRIVER_DEPS[drv])
 
             if not one_active:
                 # Nothing is, make everything active just to be sure
@@ -473,8 +476,8 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
             for x, deps in list(self.DRIVER_DEPS.items()):
                 w = self.builder.get_object("cbEnableDriver_%s" % (x,))
                 one_active = any(
-                    self.app.config["drivers"].get(y) for y in self.DRIVER_DEPS[x]
-                )
+                    self.app.config["drivers"].get(y)
+                    for y in self.DRIVER_DEPS[x])
 
                 if not one_active and w:
                     w.set_active(False)
@@ -539,7 +542,7 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         elif condition.regexp:
             try:
                 entTitle.set_text(condition.regexp.pattern)
-            except:
+            except BaseException:
                 entTitle.set_text("")
             cbRegExp.set_active(True)
             cbMatchTitle.set_active(True)
@@ -687,7 +690,8 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
             profile.pads[LEFT] = OSKCursorAction(LEFT)
             profile.pads[RIGHT] = OSKCursorAction(RIGHT)
         else:
-            profile.pads[LEFT] = SensitivityModifier(s[0], s[1], OSKCursorAction(LEFT))
+            profile.pads[LEFT] = SensitivityModifier(
+                s[0], s[1], OSKCursorAction(LEFT))
             profile.pads[RIGHT] = SensitivityModifier(
                 s[0], s[1], OSKCursorAction(RIGHT)
             )
@@ -738,7 +742,9 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         first_line = file(css_file, "r").read().split("\n")[0]
         used_colors = None  # None means "all"
         if "Used colors:" in first_line:
-            used_colors = set(first_line.split(":", 1)[1].strip(" */").split(" "))
+            used_colors = set(
+                first_line.split(
+                    ":", 1)[1].strip(" */").split(" "))
             if "all" in used_colors:
                 used_colors = None  # None means "all"
 
@@ -748,7 +754,9 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
             if cb:
                 cb.set_sensitive((used_colors is None) or (key in used_colors))
             if lbl:
-                lbl.set_sensitive((used_colors is None) or (key in used_colors))
+                lbl.set_sensitive(
+                    (used_colors is None) or (
+                        key in used_colors))
         self.app.config["osd_style"] = osd_style
         self.app.save_config()
 
@@ -758,7 +766,8 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
         # label,                class, icon, *init_parameters
         label, order, cls, icon, parameter = GlobalSettings.DEFAULT_MENU_OPTIONS[index]
         if cls == MenuItem:
-            instance = MenuItem("item_i%s" % (index,), label, parameter, icon=icon)
+            instance = MenuItem("item_i%s" %
+                                (index,), label, parameter, icon=icon)
         elif cls == Submenu:
             instance = Submenu(parameter, label, icon=icon)
         else:
@@ -916,4 +925,5 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
                     drv, name = filename.split("-", 1)
                     name = name[0:-5]
                 path = os.path.join(get_config_path(), "devices", filename)
-                lstControllers.append((path, name, self._get_gamepad_icon(drv)))
+                lstControllers.append(
+                    (path, name, self._get_gamepad_icon(drv)))

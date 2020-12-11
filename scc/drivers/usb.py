@@ -98,7 +98,8 @@ class USBDevice(object):
         """
         self._rmsg.append(
             (
-                (0x21, 0x09, 0x0300, index, data),  # request_type  # request  # value
+                # request_type  # request  # value
+                (0x21, 0x09, 0x0300, index, data),
                 index,
                 size,
                 callback,
@@ -169,12 +170,12 @@ class USBDevice(object):
         """ Called after device is disconnected """
         try:
             self.unclaim()
-        except:
+        except BaseException:
             pass
         try:
             self.handle.resetDevice()
             self.handle.close()
-        except:
+        except BaseException:
             pass
 
 
@@ -230,14 +231,17 @@ class USBDriver(object):
             return
         bus, dev = self.daemon.get_device_monitor().get_usb_address(syspath)
         for device in self._ctx.getDeviceIterator():
-            if (bus, dev) == (device.getBusNumber(), device.getDeviceAddress()):
+            if (bus, dev) == (device.getBusNumber(),
+                              device.getDeviceAddress()):
                 try:
                     handle = device.open()
                     break
                 except usb1.USBError as e:
                     log.error(
-                        "Failed to open USB device %.4x:%.4x : %s", tp[0], tp[1], e
-                    )
+                        "Failed to open USB device %.4x:%.4x : %s",
+                        tp[0],
+                        tp[1],
+                        e)
                     if tp in self._fail_cbs:
                         self._fail_cbs[tp](syspath, *tp)
                         return
@@ -255,7 +259,11 @@ class USBDriver(object):
         try:
             handled_device = callback(device, handle)
         except usb1.USBErrorBusy as e:
-            log.error("Failed to claim USB device %.4x:%.4x : %s", tp[0], tp[1], e)
+            log.error(
+                "Failed to claim USB device %.4x:%.4x : %s",
+                tp[0],
+                tp[1],
+                e)
             if tp in self._fail_cbs:
                 device.close()
                 self._fail_cbs[tp](*tp)
@@ -292,7 +300,12 @@ class USBDriver(object):
                 # Safe to ignore, happens when device is physiucally removed
                 pass
 
-    def register_hotplug_device(self, callback, vendor_id, product_id, on_failure):
+    def register_hotplug_device(
+            self,
+            callback,
+            vendor_id,
+            product_id,
+            on_failure):
         self._known_ids[vendor_id, product_id] = callback
         if on_failure:
             self._fail_cbs[vendor_id, product_id] = on_failure
@@ -311,14 +324,18 @@ class USBDriver(object):
             del self._known_ids[vendor_id, product_id]
             if (vendor_id, product_id) in self._fail_cbs:
                 del self._fail_cbs[vendor_id, product_id]
-            log.debug("Unregistred USB driver for %.4x:%.4x", vendor_id, product_id)
+            log.debug(
+                "Unregistred USB driver for %.4x:%.4x",
+                vendor_id,
+                product_id)
 
     def mainloop(self):
         if self._changed > 0:
             self._ctx.handleEventsTimeout()
             self._changed = 0
 
-        for d in list(self._devices.values()):  # TODO: don't use .values() here
+        for d in list(
+                self._devices.values()):  # TODO: don't use .values() here
             try:
                 d.flush()
             except usb1.USBErrorPipe:

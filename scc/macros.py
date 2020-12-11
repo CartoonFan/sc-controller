@@ -110,7 +110,8 @@ class Macro(Action):
         if self.name:
             return self.name
         if self.repeat:
-            return "repeat " + "; ".join([x.describe(context) for x in self.actions])
+            return "repeat " + "; ".join([x.describe(context)
+                                          for x in self.actions])
         return "; ".join([x.describe(context) for x in self.actions])
 
     def to_string(self, multiline=False, pad=0):
@@ -121,7 +122,8 @@ class Macro(Action):
 
     def __str__(self):
         if self.repeat:
-            return "<[repeat %s ]>" % ("; ".join([str(x) for x in self.actions]),)
+            return "<[repeat %s ]>" % (
+                "; ".join([str(x) for x in self.actions]),)
         return "<[ %s ]>" % ("; ".join([str(x) for x in self.actions]),)
 
     __repr__ = __str__
@@ -150,12 +152,17 @@ class Type(Macro):
                 if shift:
                     params.append(ReleaseAction(Keys.KEY_LEFTSHIFT))
                     shift = False
-                params.append(ButtonAction(getattr(Keys, ("KEY_" + letter).upper())))
+                params.append(
+                    ButtonAction(
+                        getattr(
+                            Keys,
+                            ("KEY_" + letter).upper())))
                 continue
             if letter == " ":
                 params.append(ButtonAction(Keys.KEY_SPACE))
                 continue
-            if letter >= "A" and letter <= "Z" and hasattr(Keys, "KEY_" + letter):
+            if letter >= "A" and letter <= "Z" and hasattr(
+                    Keys, "KEY_" + letter):
                 if not shift:
                     params.append(PressAction(Keys.KEY_LEFTSHIFT))
                     shift = True
@@ -338,7 +345,8 @@ class TapAction(PressAction):
         # action touched same button.
         # ---
         if self.button in mapper.pressed and mapper.pressed[self.button] > 1:
-            log.warning("Failed to tap, two or more actions are holding button")
+            log.warning(
+                "Failed to tap, two or more actions are holding button")
             return
 
         # Generate as many clicks as requested
@@ -397,9 +405,11 @@ class TapAction(PressAction):
     def describe_short(self):
         """ Used in macro editor """
         if self.count <= 1:
-            return "%s %s" % (_("Tap"), ButtonAction.describe_button(self.button))
+            return "%s %s" % (_("Tap"),
+                              ButtonAction.describe_button(self.button))
         if self.count == 2:
-            return "%s %s" % (_("DblTap"), ButtonAction.describe_button(self.button))
+            return "%s %s" % (_("DblTap"),
+                              ButtonAction.describe_button(self.button))
         return "%s%s %s" % (
             self.count,
             _("-tap"),

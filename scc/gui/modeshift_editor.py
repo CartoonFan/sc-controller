@@ -139,7 +139,7 @@ class ModeshiftEditor(Editor):
             while model.get_value(model[0].iter, 0) is None:
                 model.remove(model[0].iter)
             cbButtonChooser.set_active(0)
-        except:
+        except BaseException:
             pass
 
         i = len(self.actions[index]) + 1
@@ -205,7 +205,7 @@ class ModeshiftEditor(Editor):
         active, i, index = None, 0, -1
         try:
             active = model.get_value(cbButtonChooser.get_active_iter(), 0)
-        except:
+        except BaseException:
             pass
         # Clear entire combobox
         model.clear()
@@ -255,8 +255,10 @@ class ModeshiftEditor(Editor):
     def on_ntbMore_switch_page(self, ntb, box, index):
         self.current_page = index
         self._fill_button_chooser()
-        self.builder.get_object("cbButtonChooser").set_sensitive(box.get_sensitive())
-        self.builder.get_object("btAddAction").set_sensitive(box.get_sensitive())
+        self.builder.get_object(
+            "cbButtonChooser").set_sensitive(box.get_sensitive())
+        self.builder.get_object(
+            "btAddAction").set_sensitive(box.get_sensitive())
 
     def on_nomodbt_clicked(self, button, *a):
         actionButton = self.action_widgets[self.current_page][1]
@@ -272,7 +274,8 @@ class ModeshiftEditor(Editor):
     def on_nomodclear_clicked(self, button, *a):
         self.nomods[self.current_page] = NoAction()
         actionButton = self.action_widgets[self.current_page][1]
-        actionButton.set_label(self.nomods[self.current_page].describe(self.mode))
+        actionButton.set_label(
+            self.nomods[self.current_page].describe(self.mode))
 
     def on_btAddAction_clicked(self, *a):
         cbButtonChooser = self.builder.get_object("cbButtonChooser")
@@ -312,7 +315,8 @@ class ModeshiftEditor(Editor):
         e.show(self.get_transient_for())
 
     def on_cbHoldFeedback_toggled(self, cb, *a):
-        rvHoldFeedbackAmplitude = self.builder.get_object("rvHoldFeedbackAmplitude")
+        rvHoldFeedbackAmplitude = self.builder.get_object(
+            "rvHoldFeedbackAmplitude")
         rvHoldFeedbackAmplitude.set_reveal_child(cb.get_active())
 
     def on_btOK_clicked(self, *a):

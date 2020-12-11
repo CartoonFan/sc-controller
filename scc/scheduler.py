@@ -14,7 +14,8 @@ import time
 
 log = logging.getLogger("Scheduler")
 
-# TODO: Maybe create actual thread for this? Use poler? Scrap everything and rewrite it in GO?
+# TODO: Maybe create actual thread for this? Use poler? Scrap everything
+# and rewrite it in GO?
 
 
 class Scheduler(object):

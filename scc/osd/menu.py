@@ -64,7 +64,8 @@ class Menu(OSDWindow):
         self.config = None
         self.feedback = None
         self.controller = None
-        self.xdisplay = X.Display(hash(GdkX11.x11_get_default_xdisplay()))  # Magic
+        self.xdisplay = X.Display(
+            hash(GdkX11.x11_get_default_xdisplay()))  # Magic
 
         cursor = os.path.join(get_share_path(), "images", "menu-cursor.svg")
         self.cursor = Gtk.Image.new_from_file(cursor)
@@ -171,8 +172,8 @@ class Menu(OSDWindow):
             help="cancel menu with button release instead of button press",
         )
         self.argparser.add_argument(
-            "--use-cursor", "-u", action="store_true", help="display and use cursor"
-        )
+            "--use-cursor", "-u", action="store_true",
+            help="display and use cursor")
         self.argparser.add_argument(
             "--size", type=int, help="sets prefered width or height"
         )
@@ -196,8 +197,8 @@ class Menu(OSDWindow):
             help="load menu items from json file",
         )
         self.argparser.add_argument(
-            "--print-items", action="store_true", help="prints menu items to stdout"
-        )
+            "--print-items", action="store_true",
+            help="prints menu items to stdout")
         self.argparser.add_argument(
             "items", type=str, nargs="*", metavar="id title", help="Menu items"
         )
@@ -219,9 +220,11 @@ class Menu(OSDWindow):
         if self.args.from_profile:
             try:
                 self._menuid = self.args.items[0]
-                self.items = MenuData.from_profile(self.args.from_profile, self._menuid)
+                self.items = MenuData.from_profile(
+                    self.args.from_profile, self._menuid)
             except IOError:
-                print >>sys.stderr, "%s: error: profile file not found" % (sys.argv[0])
+                print >>sys.stderr, "%s: error: profile file not found" % (
+                    sys.argv[0])
                 return False
             except ValueError:
                 print >>sys.stderr, "%s: error: menu not found" % (sys.argv[0])
@@ -230,7 +233,7 @@ class Menu(OSDWindow):
             try:
                 self._menuid = self.args.from_file
                 self.items = MenuData.from_file(self.args.from_file)
-            except:
+            except BaseException:
                 print >>sys.stderr, "%s: error: failed to load menu file" % (
                     sys.argv[0]
                 )
@@ -241,8 +244,7 @@ class Menu(OSDWindow):
                 self._menuid = None
             except ValueError:
                 print >>sys.stderr, "%s: error: invalid number of arguments" % (
-                    sys.argv[0]
-                )
+                    sys.argv[0])
                 return False
         return True
 
@@ -324,7 +326,8 @@ class Menu(OSDWindow):
                 icon_file = icon.get_filename() if icon else None
                 has_colors = True
             else:
-                icon_file, has_colors = find_icon(item.icon, self.PREFER_BW_ICONS)
+                icon_file, has_colors = find_icon(
+                    item.icon, self.PREFER_BW_ICONS)
 
             if icon_file:
                 icon = MenuIcon(icon_file, has_colors)
@@ -366,7 +369,7 @@ class Menu(OSDWindow):
                 raise AssertionError
             y_offset = m.get_geometry().y
             screen_height = m.get_geometry().height
-        except:
+        except BaseException:
             y_offset = 0
             screen_height = self.get_window().get_screen().get_height()
         y -= y_offset
@@ -389,10 +392,10 @@ class Menu(OSDWindow):
 
     def _connect_handlers(self):
         self._eh_ids += [
-            (self.daemon, self.daemon.connect("dead", self.on_daemon_died)),
-            (self.daemon, self.daemon.connect("error", self.on_daemon_died)),
-            (self.daemon, self.daemon.connect("alive", self.on_daemon_connected)),
-        ]
+            (self.daemon, self.daemon.connect(
+                "dead", self.on_daemon_died)), (self.daemon, self.daemon.connect(
+                    "error", self.on_daemon_died)), (self.daemon, self.daemon.connect(
+                        "alive", self.on_daemon_connected)), ]
 
     def run(self):
         self.daemon = DaemonManager()
@@ -415,10 +418,13 @@ class Menu(OSDWindow):
             return
         self.use_controller(self.controller)
 
-        self._eh_ids += [
-            (self.controller, self.controller.connect("event", self.on_event)),
-            (self.controller, self.controller.connect("lost", self.on_controller_lost)),
-        ]
+        self._eh_ids += [(self.controller,
+                          self.controller.connect("event",
+                                                  self.on_event)),
+                         (self.controller,
+                          self.controller.connect("lost",
+                                                  self.on_controller_lost)),
+                         ]
         self.lock_inputs()
 
     def use_controller(self, controller):
@@ -482,7 +488,7 @@ class Menu(OSDWindow):
         try:
             start = self.items.index(self._selected)
             i = start + direction
-        except:
+        except BaseException:
             pass
         while True:
             if i == start:
@@ -593,8 +599,14 @@ class Menu(OSDWindow):
                 x, y = circle_to_square(
                     x / (STICK_PAD_MAX * 2.0), y / (STICK_PAD_MAX * 2.0)
                 )
-                x = clamp(pad_w, (pad_w + max_w) * 0.5 + x * max_w, max_w - pad_w)
-                y = clamp(pad_h, (pad_h + max_h) * 0.5 + y * max_h * -1, max_h - pad_h)
+                x = clamp(
+                    pad_w,
+                    (pad_w + max_w) * 0.5 + x * max_w,
+                    max_w - pad_w)
+                y = clamp(
+                    pad_h,
+                    (pad_h + max_h) * 0.5 + y * max_h * -1,
+                    max_h - pad_h)
                 self.f.move(self.cursor, int(x), int(y))
 
                 for i in self.items:
@@ -647,14 +659,17 @@ class MenuIcon(Gtk.DrawingArea):
                 # No icon set
                 return
             scaled = self.pb.scale_simple(
-                allocation.height, allocation.height, GdkPixbuf.InterpType.BILINEAR
-            )
+                allocation.height,
+                allocation.height,
+                GdkPixbuf.InterpType.BILINEAR)
             surf = Gdk.cairo_surface_create_from_pixbuf(scaled, 1)
             if self.has_colors:
                 cr.set_source_surface(surf, 1.0, 1.0)
                 # allocation.height, allocation.height)
                 cr.rectangle(0, 0, allocation.height, allocation.height)
             else:
-                Gdk.cairo_set_source_rgba(cr, context.get_color(Gtk.StateFlags.NORMAL))
+                Gdk.cairo_set_source_rgba(
+                    cr, context.get_color(
+                        Gtk.StateFlags.NORMAL))
                 cr.mask_surface(surf, 0, 0)
             cr.fill()

@@ -55,7 +55,7 @@ class IconChooser(Editor, UserDataManager):
         for c in DEFAULT_ICON_CATEGORIES:
             try:
                 os.makedirs(os.path.join(get_menuicons_path(), c))
-            except:
+            except BaseException:
                 # Dir. exists
                 pass
 
@@ -79,7 +79,8 @@ class IconChooser(Editor, UserDataManager):
             icon_name = model.get_value(iter, 0)
             return "%s/%s" % (category, icon_name)
         except TypeError:
-            # This part may throw TypeError if either list has nothing selected.
+            # This part may throw TypeError if either list has nothing
+            # selected.
             return None
 
     def on_entName_changed(self, *a):
@@ -110,7 +111,8 @@ class IconChooser(Editor, UserDataManager):
                         m.group(2),
                         m.group(3),
                     )
-                lblLicense.set_markup(_("Free-use icon created by %s" % (license,)))
+                lblLicense.set_markup(
+                    _("Free-use icon created by %s" % (license,)))
             rvLicense.set_reveal_child(bool(license))
 
     def on_tvCategories_cursor_changed(self, view):
@@ -132,12 +134,9 @@ class IconChooser(Editor, UserDataManager):
         model.clear()
         for f in icons:
             name = f.get_basename()
-            if (
-                f.query_info(
-                    Gio.FILE_ATTRIBUTE_STANDARD_TYPE, Gio.FileQueryInfoFlags.NONE, None
-                ).get_file_type()
-                == Gio.FileType.DIRECTORY
-            ):
+            if (f.query_info(Gio.FILE_ATTRIBUTE_STANDARD_TYPE,
+                             Gio.FileQueryInfoFlags.NONE,
+                             None).get_file_type() == Gio.FileType.DIRECTORY):
                 # ^^ woo, Gio is fun...
                 tvCategories.get_model().append((name, name.title()))
             else:
@@ -174,7 +173,7 @@ class IconChooser(Editor, UserDataManager):
                 # Try to select 1st category, but ignore if that fails
                 tvCategories.get_selection().select_path((0,))
                 self.on_tvCategories_cursor_changed(tvCategories)
-            except:
+            except BaseException:
                 pass
 
     @staticmethod

@@ -69,7 +69,11 @@ class UserDataManager(object):
 
     def load_profile_list(self, category=None):
         paths = [get_default_profiles_path(), get_profiles_path()]
-        self.load_user_data(paths, "*.sccprofile", category, self.on_profiles_loaded)
+        self.load_user_data(
+            paths,
+            "*.sccprofile",
+            category,
+            self.on_profiles_loaded)
 
     def load_menu_list(self, category=None):
         paths = [get_default_menus_path(), get_menus_path()]
@@ -113,10 +117,11 @@ class UserDataManager(object):
         except Exception as e:
             # Usually when directory doesn't exists
             log.warning(
-                "enumerate_children_finish for %s failed: %s", pdir.get_path(), e
-            )
+                "enumerate_children_finish for %s failed: %s",
+                pdir.get_path(),
+                e)
             data[i] = None, []
-        if not None in data:
+        if None not in data:
             files = {}
             try:
                 for pdir, enumerator in data:

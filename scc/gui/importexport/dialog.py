@@ -54,7 +54,7 @@ class Dialog(Editor, ComboSetter, Export, ImportVdf, ImportSccprofile):
                     return "sccprofile"
                 if "GameName" in data and "FileName" in data:
                     return "vdffz"
-        except:
+        except BaseException:
             # Definitelly not json
             pass
 
@@ -66,7 +66,7 @@ class Dialog(Editor, ComboSetter, Export, ImportVdf, ImportSccprofile):
                 any_profile = any([x.endswith(".sccprofile") for x in names])
                 if any_profile and "profile-name" in names:
                     return "sccprofile.tar.gz"
-            except:
+            except BaseException:
                 # Not a tarball
                 pass
 

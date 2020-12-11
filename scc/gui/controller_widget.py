@@ -33,7 +33,11 @@ TRIGGERS = ["LT", "RT"]
 PADS = [Profile.LPAD, Profile.RPAD, Profile.CPAD]
 STICKS = [STICK]
 GYROS = [GYRO]
-PRESSABLE = [SCButtons.LPAD, SCButtons.RPAD, SCButtons.STICKPRESS, SCButtons.CPADPRESS]
+PRESSABLE = [
+    SCButtons.LPAD,
+    SCButtons.RPAD,
+    SCButtons.STICKPRESS,
+    SCButtons.CPADPRESS]
 _NOT_BUTTONS = PADS + STICKS + GYROS + TRIGGERS
 _NOT_BUTTONS += [x + "TOUCH" for x in PADS]
 BUTTONS = [b for b in SCButtons if b.name not in _NOT_BUTTONS]
@@ -51,7 +55,8 @@ class ControllerWidget:
 
         self.label = Gtk.Label()
         self.label.set_ellipsize(Pango.EllipsizeMode.END)
-        self.icon = Gtk.Image.new_from_file(self.get_image()) if use_icon else None
+        self.icon = Gtk.Image.new_from_file(
+            self.get_image()) if use_icon else None
         self.update()
 
         self.widget.connect("enter", self.on_cursor_enter)
@@ -103,7 +108,8 @@ class ControllerButton(ControllerWidget):
 
     def update(self):
         if self.id in SCButtons and self.id in self.app.current.buttons:
-            txt = self.app.current.buttons[self.id].describe(self.ACTION_CONTEXT)
+            txt = self.app.current.buttons[self.id].describe(
+                self.ACTION_CONTEXT)
             if len(txt) > LONG_TEXT or "\n" in txt:
                 txt = "\n".join(txt.split("\n")[0:2])
                 txt = txt.replace("<", "&lt;").replace(">", "&gt;")
@@ -157,7 +163,8 @@ class ControllerStick(ControllerWidget):
             self.app.show_editor(self.id)
 
     def on_cursor_motion(self, trash, event):
-        # self.icon.get_allocation().x + self.icon.get_allocation().width	# yields nonsense
+        # self.icon.get_allocation().x + self.icon.get_allocation().width #
+        # yields nonsense
         ix2 = 74
         # Check if cursor is placed on icon
         if event.x < ix2:
@@ -218,7 +225,8 @@ class ControllerPad(ControllerStick):
     ACTION_CONTEXT = Action.AC_PAD
 
     def __init__(self, app, name, use_icon, enable_press, widget):
-        ControllerStick.__init__(self, app, name, use_icon, enable_press, widget)
+        ControllerStick.__init__(
+            self, app, name, use_icon, enable_press, widget)
         if name in (Profile.LPAD, Profile.RPAD):
             self.click_button = getattr(SCButtons, name)
         elif name == Profile.CPAD:
@@ -271,7 +279,7 @@ class ControllerGyro(ControllerWidget):
             rv = []
             for a in action.actions:
                 d = a.describe(self.ACTION_CONTEXT)
-                if not d in rv:
+                if d not in rv:
                     rv.append(d)
             self.label.set_label("\n".join(rv))
             return

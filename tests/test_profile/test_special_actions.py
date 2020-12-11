@@ -88,7 +88,8 @@ class TestSpecialActions(object):
         Tests if all Menu*Actions are parsed correctly from json.
         """
         # Simple
-        a = parser.from_json_data({"action": "dialog('title', osd('something'))"})
+        a = parser.from_json_data(
+            {"action": "dialog('title', osd('something'))"})
         if not isinstance(a, DialogAction):
             raise AssertionError
         if a.text != "title":
@@ -104,9 +105,7 @@ class TestSpecialActions(object):
         a = parser.from_json_data(
             {
                 "action": "dialog(X, Y, 'title', "
-                "name('button', osd('something')), name('item', osd('something else')))"
-            }
-        )
+                "name('button', osd('something')), name('item', osd('something else')))"})
         if a.confirm_with != SCButtons.X:
             raise AssertionError
         if a.cancel_with != SCButtons.Y:
@@ -145,8 +144,8 @@ class TestSpecialActions(object):
         Tests if PositionModifier is parsed correctly from json.
         """
         a = parser.from_json_data(
-            {"action": "menu('some.menu', LEFT, X, Y, True)", "position": [-10, 10]}
-        ).compress()
+            {"action": "menu('some.menu', LEFT, X, Y, True)",
+             "position": [-10, 10]}).compress()
 
         if not isinstance(a, MenuAction):
             raise AssertionError

@@ -84,7 +84,8 @@ class ButtonsComponent(AEComponent, Chooser):
                 self.keys.add(action.actions[0].button)
                 is_repeat = True
             elif isinstance(action, Cycle):
-                # There is only one case when self.handles returns True for Cycle
+                # There is only one case when self.handles returns True for
+                # Cycle
                 self.keys.add(action.actions[0].action.button)
                 is_togle = True
             cbToggle.set_active(is_togle)
@@ -99,7 +100,8 @@ class ButtonsComponent(AEComponent, Chooser):
         return _("Key or Button")
 
     def handles(self, mode, action):
-        # Handles ButtonAction and MultiAction if all subactions are ButtonAction
+        # Handles ButtonAction and MultiAction if all subactions are
+        # ButtonAction
         if isinstance(action, (ButtonAction, NoAction, InvalidAction)):
             return True
         if isinstance(action, AxisAction):
@@ -163,7 +165,10 @@ class ButtonsComponent(AEComponent, Chooser):
         Same as above, but adds another key to action
         """
         kg = KeyGrabber(self.app)
-        kg.grab(self.editor.window, self.editor._action, self.on_additional_key_grabbed)
+        kg.grab(
+            self.editor.window,
+            self.editor._action,
+            self.on_additional_key_grabbed)
 
     def on_cbToggle_toggled(self, cbToggle):
         cbRepeat = self.builder.get_object("cbRepeat")

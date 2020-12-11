@@ -106,10 +106,10 @@ class FirstPage(AEComponent):
 
             markup = markup % {
                 "what": long_names.get(
-                    nameof(self.editor.get_id()), nameof(self.editor.get_id()).title()
-                )
-            }
-            self.builder.get_object("lblMarkup").set_markup(markup.strip(" \r\n\t"))
+                    nameof(self.editor.get_id()),
+                    nameof(self.editor.get_id()).title())}
+            self.builder.get_object("lblMarkup").set_markup(
+                markup.strip(" \r\n\t"))
             return True
 
     def on_lblMarkup_activate_link(self, trash, link):

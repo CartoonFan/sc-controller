@@ -124,11 +124,14 @@ class ActionEditor(Editor):
         self.loaded_components = {}  # by class name
         self.c_buttons = {}  # Component-to-button dict
         self.sens_widgets = []  # Sensitivity sliders, labels and 'clear' buttons
-        # Feedback settings sliders, labels and 'clear' buttons, plus default value as last item
+        # Feedback settings sliders, labels and 'clear' buttons, plus default
+        # value as last item
         self.feedback_widgets = []
-        # Smoothing settings sliders, labels and 'clear' buttons, plus default value as last item
+        # Smoothing settings sliders, labels and 'clear' buttons, plus default
+        # value as last item
         self.smoothing_widgets = []
-        # Deadzone settings sliders, labels and 'clear' buttons, plus default value as last item
+        # Deadzone settings sliders, labels and 'clear' buttons, plus default
+        # value as last item
         self.deadzone_widgets = []
         self.sens = [1.0] * 3  # Sensitivity slider values
         self.sens_defaults = [1.0] * 3  # Clear button clears to this
@@ -170,7 +173,8 @@ class ActionEditor(Editor):
             )
         for key in AFP:
             i = AFP.index(key)
-            self.feedback[i] = self.builder.get_object("sclF%s" % (key,)).get_value()
+            self.feedback[i] = self.builder.get_object(
+                "sclF%s" % (key,)).get_value()
             self.feedback_widgets.append(
                 (
                     self.builder.get_object("sclF%s" % (key,)),
@@ -182,16 +186,19 @@ class ActionEditor(Editor):
         for key in SMT:
             i = SMT.index(key)
             self.smoothing_widgets.append(
-                (
-                    self.builder.get_object("lblSmooth%s" % (key,)),
-                    self.builder.get_object("sclSmooth%s" % (key,)),
-                    self.builder.get_object("btClearSmooth%s" % (key,)),
-                    self.builder.get_object("sclSmooth%s" % (key,)).get_value(),
-                )
-            )
+                (self.builder.get_object(
+                    "lblSmooth%s" %
+                    (key,)), self.builder.get_object(
+                    "sclSmooth%s" %
+                    (key,)), self.builder.get_object(
+                    "btClearSmooth%s" %
+                    (key,)), self.builder.get_object(
+                    "sclSmooth%s" %
+                    (key,)).get_value(), ))
         for key in DZN:
             i = DZN.index(key)
-            self.deadzone[i] = self.builder.get_object("sclDZ%s" % (key,)).get_value()
+            self.deadzone[i] = self.builder.get_object(
+                "sclDZ%s" % (key,)).get_value()
             self.deadzone_widgets.append(
                 (
                     self.builder.get_object("lblDZ%s" % (key,)),
@@ -716,7 +723,7 @@ class ActionEditor(Editor):
                 action = SensitivityModifier(*sens)
 
         if (cm & Action.MOD_FEEDBACK) != 0:
-            if self.feedback_position != None:
+            if self.feedback_position is not None:
                 # Strip defaults from feedback values
                 feedback = [] + self.feedback
                 while (
@@ -732,20 +739,23 @@ class ActionEditor(Editor):
                     cbFeedback.get_active() and grFeedback.get_sensitive()
                 ):
                     # Build FeedbackModifier arguments
-                    feedback = [FEEDBACK_SIDES[cbFeedbackSide.get_active()]] + feedback
+                    feedback = [
+                        FEEDBACK_SIDES[cbFeedbackSide.get_active()]] + feedback
                     feedback += [action]
                     # Create modifier
                     action = FeedbackModifier(*feedback)
 
         if (cm & Action.MOD_SMOOTH) != 0:
-            if self.smoothing != None:
+            if self.smoothing is not None:
                 action = SmoothModifier(*(list(self.smoothing) + [action]))
 
         if (cm & Action.MOD_DEADZONE) != 0:
             if self.deadzone_mode is not None:
                 action = DeadzoneModifier(
-                    self.deadzone_mode, self.deadzone[0], self.deadzone[1], action
-                )
+                    self.deadzone_mode,
+                    self.deadzone[0],
+                    self.deadzone[1],
+                    action)
 
         if (cm & Action.MOD_ROTATE) != 0:
             if self.rotation_angle != 0.0:
@@ -825,7 +835,10 @@ class ActionEditor(Editor):
                 self.feedback[2] = action.haptic.get_period()
                 action = action.action
             if isinstance(action, SmoothModifier):
-                self.smoothing = (action.level, action.multiplier, action.filter)
+                self.smoothing = (
+                    action.level,
+                    action.multiplier,
+                    action.filter)
                 action = action.action
             if isinstance(action, DeadzoneModifier):
                 self.deadzone_mode = action.mode
@@ -853,9 +866,11 @@ class ActionEditor(Editor):
         # Feedback
         cbFeedbackSide = self.builder.get_object("cbFeedbackSide")
         lblFeedbackSide = self.builder.get_object("lblFeedbackSide")
-        if self.feedback_position != None:
+        if self.feedback_position is not None:
             cbFeedback = self.builder.get_object("cbFeedback")
-            cbFeedbackSide.set_active(FEEDBACK_SIDES.index(self.feedback_position))
+            cbFeedbackSide.set_active(
+                FEEDBACK_SIDES.index(
+                    self.feedback_position))
             cbFeedback.set_active(True)
             for i in range(0, len(self.feedback)):
                 self.feedback_widgets[i][0].set_value(self.feedback[i])
@@ -973,7 +988,8 @@ class ActionEditor(Editor):
                 self._selected_component.load()
                 self._selected_component.shown()
                 stActionModes.add(self._selected_component.get_widget())
-                stActionModes.set_visible_child(self._selected_component.get_widget())
+                stActionModes.set_visible_child(
+                    self._selected_component.get_widget())
             if self._selected_component:
                 if self._selected_component in self.c_buttons:
                     self.c_buttons[self._selected_component].set_active(True)
@@ -1007,7 +1023,10 @@ class ActionEditor(Editor):
         elif self._replaced_action is not None:
             if self.ac_callback:
                 # Is None if OK button handler was executed
-                self.ac_callback(self.id, self._replaced_action, mark_changed=False)
+                self.ac_callback(
+                    self.id,
+                    self._replaced_action,
+                    mark_changed=False)
             self._replaced_action = None
 
     def enable_preview(self, action):
@@ -1028,7 +1047,8 @@ class ActionEditor(Editor):
 
         Uses value returned by action.get_compatible_modifiers.
         """
-        cm = action.get_compatible_modifiers() & ActionEditor.MODE_TO_MODS[self._mode]
+        cm = action.get_compatible_modifiers(
+        ) & ActionEditor.MODE_TO_MODS[self._mode]
 
         # Feedback
         grFeedback = self.builder.get_object("grFeedback")
@@ -1049,8 +1069,13 @@ class ActionEditor(Editor):
             w.set_visible((cm & Action.MOD_SENS_Z) != 0)
 
         # Rotation
-        for w in ("lblRotationHeader", "lblRotation", "sclRotation", "btClearRotation"):
-            self.builder.get_object(w).set_sensitive((cm & Action.MOD_ROTATE) != 0)
+        for w in (
+            "lblRotationHeader",
+            "lblRotation",
+            "sclRotation",
+                "btClearRotation"):
+            self.builder.get_object(w).set_sensitive(
+                (cm & Action.MOD_ROTATE) != 0)
 
         # Click
         cbRequireClick = self.builder.get_object("cbRequireClick")
@@ -1118,9 +1143,13 @@ class ActionEditor(Editor):
         # Go throgh list of components and display buttons that are usable
         # with this mode
         self.c_buttons = {}
-        for component in reversed(sorted(self.components, key=lambda a: a.PRIORITY)):
+        for component in reversed(
+            sorted(
+                self.components,
+                key=lambda a: a.PRIORITY)):
             if (mode & component.CTXS) != 0:
-                b = Gtk.ToggleButton.new_with_label(component.get_button_title())
+                b = Gtk.ToggleButton.new_with_label(
+                    component.get_button_title())
                 vbActionButtons.pack_start(b, True, True, 2)
                 b.connect("toggled", self.on_action_type_changed)
                 self.c_buttons[component] = b
