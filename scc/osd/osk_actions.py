@@ -10,11 +10,8 @@ syntax.
 """
 import logging
 
-from scc.actions import Action
-from scc.actions import SpecialAction
-from scc.constants import LEFT
-from scc.constants import RIGHT
-from scc.constants import TRIGGER_HALF
+from scc.actions import Action, SpecialAction
+from scc.constants import LEFT, RIGHT, TRIGGER_HALF
 
 log = logging.getLogger("OSDKeyActs")
 

@@ -8,16 +8,11 @@ import logging
 from collections import namedtuple
 
 from gi.repository import Gtk
-from scc.actions import Action
-from scc.actions import ButtonAction
-from scc.actions import NoAction
+
+from scc.actions import Action, ButtonAction, NoAction
 from scc.constants import SCButtons
 from scc.gui.editor import Editor
-from scc.macros import Cycle
-from scc.macros import Macro
-from scc.macros import PressAction
-from scc.macros import ReleaseAction
-from scc.macros import SleepAction
+from scc.macros import Cycle, Macro, PressAction, ReleaseAction, SleepAction
 from scc.tools import _
 
 log = logging.getLogger("MacroEditor")
@@ -287,7 +282,8 @@ class MacroEditor(Editor):
             self._refill_grid(readd)
             self.update_action_field()
 
-        from scc.gui.action_editor import ActionEditor  # Cannot be imported @ top
+        from scc.gui.action_editor import \
+            ActionEditor  # Cannot be imported @ top
 
         ae = ActionEditor(self.app, on_chosen)
         ae.set_title(_("Edit Action"))
@@ -314,7 +310,8 @@ class MacroEditor(Editor):
 
     def on_btCustomActionEditor_clicked(self, *a):
         """ Handler for 'Custom Editor' button """
-        from scc.gui.action_editor import ActionEditor  # Can't be imported on top
+        from scc.gui.action_editor import \
+            ActionEditor  # Can't be imported on top
 
         e = ActionEditor(self.app, self.ac_callback)
         e.set_input(self.id, self._make_action(), mode=self.mode)

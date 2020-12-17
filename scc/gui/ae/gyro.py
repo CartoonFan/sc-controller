@@ -3,25 +3,14 @@ SC-Controller - Action Editor - Gyro -> Per Axis component
 """
 import logging
 
-from scc.actions import Action
-from scc.actions import AxisAction
-from scc.actions import GyroAbsAction
-from scc.actions import GyroAction
-from scc.actions import MultiAction
-from scc.actions import NoAction
-from scc.actions import RangeOP
-from scc.constants import SCButtons
-from scc.constants import STICK
-from scc.gui.ae import AEComponent
-from scc.gui.ae import describe_action
-from scc.gui.ae.gyro_action import fill_buttons
-from scc.gui.ae.gyro_action import is_gyro_enable
-from scc.gui.ae.gyro_action import TRIGGERS
+from scc.actions import (Action, AxisAction, GyroAbsAction, GyroAction,
+                         MultiAction, NoAction, RangeOP)
+from scc.constants import STICK, SCButtons
+from scc.gui.ae import AEComponent, describe_action
+from scc.gui.ae.gyro_action import TRIGGERS, fill_buttons, is_gyro_enable
 from scc.gui.simple_chooser import SimpleChooser
 from scc.modifiers import ModeModifier
-from scc.tools import _
-from scc.tools import ensure_size
-from scc.tools import nameof
+from scc.tools import _, ensure_size, nameof
 
 log = logging.getLogger("AE.Gyro")
 

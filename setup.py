@@ -1,7 +1,6 @@
 #!/usr/bin/env python2
 import glob
-from distutils.core import Extension
-from distutils.core import setup
+from distutils.core import Extension, setup
 
 from scc.constants import DAEMON_VERSION
 

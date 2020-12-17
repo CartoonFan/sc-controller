@@ -5,39 +5,25 @@ Assigns emulated axis to trigger
 """
 import logging
 import os
-from ctypes import cast
-from ctypes import POINTER
+from ctypes import POINTER, cast
 
-from gi.repository import Gdk
-from gi.repository import GdkX11
-from gi.repository import GLib
-from scc.actions import Action
-from scc.actions import AreaAction
-from scc.actions import AxisAction
-from scc.actions import ButtonAction
-from scc.actions import MouseAction
-from scc.actions import MultiAction
-from scc.actions import NoAction
-from scc.actions import RelAreaAction
-from scc.actions import RelWinAreaAction
-from scc.actions import RelXYAction
-from scc.actions import WinAreaAction
-from scc.actions import XYAction
+from gi.repository import Gdk, GdkX11, GLib
+
+from scc.actions import (Action, AreaAction, AxisAction, ButtonAction,
+                         MouseAction, MultiAction, NoAction, RelAreaAction,
+                         RelWinAreaAction, RelXYAction, WinAreaAction,
+                         XYAction)
 from scc.constants import SCButtons
 from scc.gui.ae import AEComponent
 from scc.gui.controller_widget import STICKS
-from scc.gui.parser import GuiActionParser
-from scc.gui.parser import InvalidAction
+from scc.gui.parser import GuiActionParser, InvalidAction
 from scc.gui.simple_chooser import SimpleChooser
 from scc.lib import xwrappers as X
-from scc.modifiers import BallModifier
-from scc.modifiers import CircularModifier
+from scc.modifiers import BallModifier, CircularModifier
 from scc.osd.area import Area
 from scc.osd.timermanager import TimerManager
 from scc.tools import _
-from scc.uinput import Axes
-from scc.uinput import Keys
-from scc.uinput import Rels
+from scc.uinput import Axes, Keys, Rels
 
 log = logging.getLogger("AE.AxisAction")
 

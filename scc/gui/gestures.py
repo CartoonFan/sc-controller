@@ -4,10 +4,9 @@ SC-Controller - Gesture-related GUI stuff.
 import logging
 from collections import deque
 
-from gi.repository import Gdk
-from gi.repository import Gtk
-from scc.constants import STICK_PAD_MAX
-from scc.constants import STICK_PAD_MIN
+from gi.repository import Gdk, Gtk
+
+from scc.constants import STICK_PAD_MAX, STICK_PAD_MIN
 from scc.osd import parse_rgba
 
 log = logging.getLogger("Gestures")

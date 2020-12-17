@@ -8,6 +8,7 @@ import logging
 import os
 
 from gi.repository import Gtk
+
 from scc.gui.gdk_to_key import keyevent_to_key
 from scc.uinput import Keys
 

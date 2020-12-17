@@ -7,12 +7,8 @@ import logging
 import tarfile
 import traceback
 
-from scc.gui.editor import ComboSetter
-from scc.gui.editor import Editor
-from scc.tools import _
-from scc.tools import find_profile
-from scc.tools import profile_is_default
-from scc.tools import profile_is_override
+from scc.gui.editor import ComboSetter, Editor
+from scc.tools import _, find_profile, profile_is_default, profile_is_override
 
 from .export import Export
 from .import_sccprofile import ImportSccprofile

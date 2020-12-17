@@ -1,5 +1,4 @@
-from scc.actions import Action
-from scc.actions import AxisAction
+from scc.actions import Action, AxisAction
 from scc.macros import Macro
 from scc.modifiers import DoubleclickModifier
 from scc.parser import ActionParser

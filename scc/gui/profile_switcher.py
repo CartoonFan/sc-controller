@@ -11,16 +11,12 @@ import logging
 import os
 import random
 
-from gi.repository import Gio
-from gi.repository import GLib
-from gi.repository import GObject
-from gi.repository import Gtk
+from gi.repository import Gio, GLib, GObject, Gtk
+
 from scc.gui.userdata_manager import UserDataManager
-from scc.paths import get_controller_icons_path
-from scc.paths import get_default_controller_icons_path
-from scc.tools import _
-from scc.tools import find_controller_icon
-from scc.tools import find_profile
+from scc.paths import (get_controller_icons_path,
+                       get_default_controller_icons_path)
+from scc.tools import _, find_controller_icon, find_profile
 
 log = logging.getLogger("PS")
 

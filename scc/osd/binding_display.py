@@ -12,28 +12,21 @@ import os
 import sys
 
 from gi.repository import Gtk
-from scc.actions import Action
-from scc.actions import AxisAction
-from scc.actions import DPadAction
-from scc.actions import MouseAction
-from scc.actions import MultiAction
-from scc.actions import XYAction
+
+from scc.actions import (Action, AxisAction, DPadAction, MouseAction,
+                         MultiAction, XYAction)
 from scc.config import Config
 from scc.constants import SCButtons
 from scc.gui.daemon_manager import DaemonManager
-from scc.gui.svg_widget import SVGEditor
-from scc.gui.svg_widget import SVGWidget
+from scc.gui.svg_widget import SVGEditor, SVGWidget
 from scc.lib import IntEnum
-from scc.modifiers import DoubleclickModifier
-from scc.modifiers import ModeModifier
+from scc.modifiers import DoubleclickModifier, ModeModifier
 from scc.osd import OSDWindow
 from scc.parser import TalkingActionParser
-from scc.paths import get_config_path
-from scc.paths import get_share_path
+from scc.paths import get_config_path, get_share_path
 from scc.profile import Profile
 from scc.special_actions import MenuAction
-from scc.tools import _
-from scc.tools import nameof
+from scc.tools import _, nameof
 from scc.uinput import Rels
 
 log = logging.getLogger("osd.binds")

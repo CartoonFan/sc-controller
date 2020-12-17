@@ -6,8 +6,8 @@ Display message that just sits there
 """
 import logging
 
-from gi.repository import GLib
-from gi.repository import Gtk
+from gi.repository import GLib, Gtk
+
 from scc.osd import OSDWindow
 from scc.special_actions import OSDAction
 

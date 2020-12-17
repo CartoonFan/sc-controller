@@ -7,15 +7,14 @@ prints chosen item id to stdout
 import logging
 import sys
 
-from gi.repository import GdkX11
-from gi.repository import Gtk
+from gi.repository import GdkX11, Gtk
+
 from scc.config import Config
 from scc.constants import DEFAULT
 from scc.gui.daemon_manager import DaemonManager
 from scc.lib import xwrappers as X
 from scc.menu_data import MenuData
-from scc.osd import OSDWindow
-from scc.osd import StickController
+from scc.osd import OSDWindow, StickController
 
 log = logging.getLogger("osd.dialog")
 

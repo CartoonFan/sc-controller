@@ -6,26 +6,15 @@ Setups DPAD emulation or menu display
 """
 import logging
 
-from scc.actions import Action
-from scc.actions import ButtonAction
-from scc.actions import DPad8Action
-from scc.actions import DPadAction
-from scc.actions import HatDownAction
-from scc.actions import HatLeftAction
-from scc.actions import HatRightAction
-from scc.actions import HatUpAction
-from scc.actions import NoAction
-from scc.constants import DEFAULT
-from scc.constants import SAME
-from scc.constants import SCButtons
-from scc.constants import STICK
-from scc.gui.ae import AEComponent
-from scc.gui.ae import describe_action
+from scc.actions import (Action, ButtonAction, DPad8Action, DPadAction,
+                         HatDownAction, HatLeftAction, HatRightAction,
+                         HatUpAction, NoAction)
+from scc.constants import DEFAULT, SAME, STICK, SCButtons
+from scc.gui.ae import AEComponent, describe_action
 from scc.gui.ae.menu_action import MenuActionCofC
 from scc.gui.binding_editor import BindingEditor
 from scc.tools import _
-from scc.uinput import Axes
-from scc.uinput import Keys
+from scc.uinput import Axes, Keys
 
 log = logging.getLogger("AE.DPAD")
 

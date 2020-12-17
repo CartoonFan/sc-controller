@@ -2,9 +2,7 @@ import inspect
 
 from scc.actions import *
 from scc.modifiers import BallModifier
-from scc.uinput import Axes
-from scc.uinput import Keys
-from scc.uinput import Rels
+from scc.uinput import Axes, Keys, Rels
 
 
 class TestActions(object):

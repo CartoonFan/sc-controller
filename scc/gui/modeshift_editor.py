@@ -6,22 +6,16 @@ Allows to edit button or trigger action.
 import logging
 
 from gi.repository import Gtk
-from scc.actions import Action
-from scc.actions import NoAction
-from scc.actions import RangeOP
-from scc.constants import HapticPos
-from scc.constants import SCButtons
-from scc.gui.controller_widget import PADS
-from scc.gui.controller_widget import STICKS
+
+from scc.actions import Action, NoAction, RangeOP
+from scc.constants import HapticPos, SCButtons
+from scc.gui.controller_widget import PADS, STICKS
 from scc.gui.dwsnc import headerbar
 from scc.gui.editor import Editor
 from scc.macros import Macro
-from scc.modifiers import DoubleclickModifier
-from scc.modifiers import FeedbackModifier
-from scc.modifiers import HoldModifier
-from scc.modifiers import ModeModifier
-from scc.tools import _
-from scc.tools import nameof
+from scc.modifiers import (DoubleclickModifier, FeedbackModifier, HoldModifier,
+                           ModeModifier)
+from scc.tools import _, nameof
 
 log = logging.getLogger("ModeshiftEditor")
 
@@ -222,14 +216,16 @@ class ModeshiftEditor(Editor):
         from scc.gui.ring_editor import RingEditor  # Cannot be imported @ top
 
         if isinstance(action, Macro):
-            from scc.gui.macro_editor import MacroEditor  # Cannot be imported @ top
+            from scc.gui.macro_editor import \
+                MacroEditor  # Cannot be imported @ top
 
             e = MacroEditor(self.app, cb)
             e.set_title(_("Edit Macro"))
         elif RingEditor.is_ring_action(action):
             e = RingEditor(self.app, cb)
         else:
-            from scc.gui.action_editor import ActionEditor  # Cannot be imported @ top
+            from scc.gui.action_editor import \
+                ActionEditor  # Cannot be imported @ top
 
             e = ActionEditor(self.app, cb)
             e.set_title(_("Edit Action"))
@@ -297,7 +293,8 @@ class ModeshiftEditor(Editor):
 
     def on_btCustomActionEditor_clicked(self, *a):
         """ Handler for 'Custom Editor' button """
-        from scc.gui.action_editor import ActionEditor  # Can't be imported on top
+        from scc.gui.action_editor import \
+            ActionEditor  # Can't be imported on top
 
         e = ActionEditor(self.app, self.ac_callback)
         e.set_input(self.id, self._make_action(), mode=self.mode)

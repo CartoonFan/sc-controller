@@ -13,21 +13,12 @@ import sys
 from difflib import get_close_matches
 from math import sqrt
 
-from scc.actions import Action
-from scc.actions import HapticEnabledAction
-from scc.actions import OSDEnabledAction
-from scc.actions import SpecialAction
-from scc.constants import DEFAULT
-from scc.constants import LEFT
-from scc.constants import RIGHT
-from scc.constants import SAME
-from scc.constants import SCButtons
-from scc.constants import STICK
-from scc.constants import STICK_PAD_MAX
+from scc.actions import (Action, HapticEnabledAction, OSDEnabledAction,
+                         SpecialAction)
+from scc.constants import (DEFAULT, LEFT, RIGHT, SAME, STICK, STICK_PAD_MAX,
+                           SCButtons)
 from scc.modifiers import Modifier
-from scc.tools import clamp
-from scc.tools import nameof
-from scc.tools import strip_gesture
+from scc.tools import clamp, nameof, strip_gesture
 
 log = logging.getLogger("SActions")
 

@@ -10,17 +10,13 @@ import logging
 import os
 import struct
 import sys
-from math import cos
-from math import sin
+from math import cos, sin
 
 from scc.constants import ControllerFlags
 from scc.lib.hidraw import HIDRaw
 from scc.tools import find_library
 
-from .sc_dongle import SCConfigType
-from .sc_dongle import SCController
-from .sc_dongle import SCPacketLength
-from .sc_dongle import SCPacketType
+from .sc_dongle import SCConfigType, SCController, SCPacketLength, SCPacketType
 
 VENDOR_ID = 0x28DE
 PRODUCT_ID = 0x1106

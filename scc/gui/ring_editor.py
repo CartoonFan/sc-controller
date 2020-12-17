@@ -5,13 +5,9 @@ Allows to edit button or trigger action.
 """
 import logging
 
-from scc.actions import Action
-from scc.actions import MultiAction
-from scc.actions import NoAction
-from scc.actions import RingAction
+from scc.actions import Action, MultiAction, NoAction, RingAction
 from scc.gui.dwsnc import headerbar
-from scc.gui.editor import ComboSetter
-from scc.gui.editor import Editor
+from scc.gui.editor import ComboSetter, Editor
 from scc.modifiers import ModeModifier
 from scc.tools import _
 
@@ -88,14 +84,14 @@ class RingEditor(Editor, ComboSetter):
 
     def _choose_editor(self, action, cb):
         if isinstance(action, ModeModifier):
-            from scc.gui.modeshift_editor import (
-                ModeshiftEditor,
-            )  # Cannot be imported @ top
+            from scc.gui.modeshift_editor import \
+                ModeshiftEditor  # Cannot be imported @ top
 
             e = ModeshiftEditor(self.app, cb)
             e.set_title(_("Edit Action"))
         else:
-            from scc.gui.action_editor import ActionEditor  # Cannot be imported @ top
+            from scc.gui.action_editor import \
+                ActionEditor  # Cannot be imported @ top
 
             e = ActionEditor(self.app, cb)
             e.set_title(_("Edit Action"))
@@ -134,7 +130,8 @@ class RingEditor(Editor, ComboSetter):
 
     def on_btCustomActionEditor_clicked(self, *a):
         """ Handler for 'Custom Editor' button """
-        from scc.gui.action_editor import ActionEditor  # Can't be imported on top
+        from scc.gui.action_editor import \
+            ActionEditor  # Can't be imported on top
 
         e = ActionEditor(self.app, self.ac_callback)
         e.set_input(self.id, self._make_action(), mode=self.mode)

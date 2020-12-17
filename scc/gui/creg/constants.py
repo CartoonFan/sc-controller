@@ -4,10 +4,7 @@ SC-Controller - Controller Registration Constants
 
 Just huge chunk of constants put aside to make impotant code more readable
 """
-from scc.constants import LEFT
-from scc.constants import RIGHT
-from scc.constants import SCButtons
-from scc.constants import STICK
+from scc.constants import LEFT, RIGHT, STICK, SCButtons
 
 X = 0
 Y = 1
