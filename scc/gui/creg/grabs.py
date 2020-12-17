@@ -92,8 +92,7 @@ class TriggerGrabber(InputGrabber):
 
         # Get avgerage absolute change for all axes
         avg = float(
-            sum([abs(self.orig_pos[k] - self.new_pos[k])
-                 for k in self.new_pos])
+            sum([abs(self.orig_pos[k] - self.new_pos[k]) for k in self.new_pos])
         ) / float(len(self.new_pos))
 
         # Get absolute change for _this_ axis

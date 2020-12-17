@@ -155,8 +155,7 @@ create_region.restype = XserverRegion
 
 set_window_shape_region = libXFixes.XFixesSetWindowShapeRegion
 set_window_shape_region.__doc__ = "Sets region in which window accepts inputs"
-set_window_shape_region.argtypes = [
-    c_void_p, XID, c_int, c_int, c_int, XserverRegion]
+set_window_shape_region.argtypes = [c_void_p, XID, c_int, c_int, c_int, XserverRegion]
 
 destroy_region = libXFixes.XFixesDestroyRegion
 destroy_region.__doc__ = "Frees region created by create_region"
@@ -171,8 +170,7 @@ flush.argtypes = [c_void_p]
 
 warp_pointer = libX11.XWarpPointer
 warp_pointer.__doc__ = "Very, very, V*E*R*Y complicated shit used to move cursor"
-warp_pointer.argtypes = [c_void_p, XID, XID,
-                         c_int, c_int, c_int, c_int, c_int, c_int]
+warp_pointer.argtypes = [c_void_p, XID, XID, c_int, c_int, c_int, c_int, c_int, c_int]
 
 query_pointer = libX11.XQueryPointer
 query_pointer.__doc__ = "Returns a lot of nonsense along with mouse cursor position"
@@ -265,8 +263,7 @@ create_pixmap_from_bitmap.argtypes = [
 create_pixmap_from_bitmap.restype = Pixmap
 
 write_bitmap = libX11.XWriteBitmapFile
-write_bitmap.argtypes = [c_void_p, c_char_p,
-                         Pixmap, c_uint, c_uint, c_int, c_int]
+write_bitmap.argtypes = [c_void_p, c_char_p, Pixmap, c_uint, c_uint, c_int, c_int]
 write_bitmap.restype = c_int
 
 free_pixmap = libX11.XFreePixmap
@@ -291,12 +288,10 @@ fill_rectangle.__doc__ = "Draws and fills rectangle on graphics context"
 fill_rectangle.argtypes = [c_void_p, XID, GC, c_int, c_int, c_uint, c_uint]
 
 draw_arc = libX11.XDrawArc
-draw_arc.argtypes = [c_void_p, Pixmap, GC,
-                     c_int, c_int, c_uint, c_uint, c_int, c_int]
+draw_arc.argtypes = [c_void_p, Pixmap, GC, c_int, c_int, c_uint, c_uint, c_int, c_int]
 
 fill_arc = libX11.XFillArc
-fill_arc.argtypes = [c_void_p, Pixmap, GC,
-                     c_int, c_int, c_uint, c_uint, c_int, c_int]
+fill_arc.argtypes = [c_void_p, Pixmap, GC, c_int, c_int, c_uint, c_uint, c_int, c_int]
 
 set_foreground = libX11.XSetForeground
 set_foreground.__doc__ = "Sets foreground color for drawing on graphics context"
@@ -308,8 +303,7 @@ set_background.argtypes = set_foreground.argtypes
 
 shape_combine_mask = libXext.XShapeCombineMask
 shape_combine_mask.__doc__ = "Sets 1-bit transparency mask for window"
-shape_combine_mask.argtypes = [
-    c_void_p, XID, c_int, c_int, c_int, Pixmap, c_int]
+shape_combine_mask.argtypes = [c_void_p, XID, c_int, c_int, c_int, Pixmap, c_int]
 
 # Wrapped functions
 _xkb_get_state = libX11.XkbGetState
@@ -344,8 +338,7 @@ def get_window_geometry(dpy, win):
     x, y = c_int(), c_int()
     trash = XID()
     if translate_coordinates(
-        dpy, win, get_default_root_window(
-            dpy), 0, 0, byref(x), byref(y), byref(trash)
+        dpy, win, get_default_root_window(dpy), 0, 0, byref(x), byref(y), byref(trash)
     ):
         return x.value, y.value, attrs.width, attrs.height
     # translate_coordinates failed

@@ -99,8 +99,7 @@ class Daemon(object):
                 # No such process
                 pass
             except BaseException:
-                message = "pidfile {0} already exist. " + \
-                    "Daemon already running?\n"
+                message = "pidfile {0} already exist. " + "Daemon already running?\n"
                 sys.stderr.write(message.format(self.pidfile))
                 sys.exit(1)
 
@@ -109,8 +108,7 @@ class Daemon(object):
         # Start the daemon
         self.daemonize()
         syslog.syslog(
-            syslog.LOG_INFO, "{}: started".format(
-                os.path.basename(sys.argv[0]))
+            syslog.LOG_INFO, "{}: started".format(os.path.basename(sys.argv[0]))
         )
         self.on_start()
         while True:
@@ -118,8 +116,7 @@ class Daemon(object):
                 self.run()
             except Exception as e:  # pylint: disable=W0703
                 syslog.syslog(
-                    syslog.LOG_ERR, "{}: {!s}".format(
-                        os.path.basename(sys.argv[0]), e)
+                    syslog.LOG_ERR, "{}: {!s}".format(os.path.basename(sys.argv[0]), e)
                 )
             time.sleep(2)
 
@@ -161,8 +158,7 @@ class Daemon(object):
                 print(str(err.args))
                 sys.exit(1)
         syslog.syslog(
-            syslog.LOG_INFO, "{}: stopped".format(
-                os.path.basename(sys.argv[0]))
+            syslog.LOG_INFO, "{}: stopped".format(os.path.basename(sys.argv[0]))
         )
 
     def restart(self):

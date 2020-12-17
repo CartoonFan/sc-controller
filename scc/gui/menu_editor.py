@@ -53,8 +53,7 @@ class MenuEditor(Editor):
 
     def setup_widgets(self):
         self.builder = Gtk.Builder()
-        self.builder.add_from_file(
-            os.path.join(self.app.gladepath, self.GLADE))
+        self.builder.add_from_file(os.path.join(self.app.gladepath, self.GLADE))
         lblItemIconName = self.builder.get_object("lblItemIconName")
         vbChangeItemIcon = self.builder.get_object("vbChangeItemIcon")
         self.window = self.builder.get_object("Dialog")
@@ -369,8 +368,7 @@ class MenuEditor(Editor):
                 pass
         elif self.original_type == MenuEditor.TYPE_GLOBAL:
             try:
-                path = os.path.join(get_menus_path(), "%s.menu" %
-                                    (self.original_id,))
+                path = os.path.join(get_menus_path(), "%s.menu" % (self.original_id,))
                 log.debug("Removing %s", path)
                 os.unlink(path)
             except BaseException:

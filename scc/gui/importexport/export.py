@@ -303,8 +303,7 @@ class Export(UserDataManager):
                 out = tempfile.NamedTemporaryFile()
                 profile.load(filename)
                 profile.save(out.name)
-                tar.add(out.name, arcname=os.path.split(
-                    filename)[-1], recursive=False)
+                tar.add(out.name, arcname=os.path.split(filename)[-1], recursive=False)
             except Exception as e:
                 # Profile that cannot be parsed shouldn't be exported
                 log.error(e)
@@ -316,8 +315,7 @@ class Export(UserDataManager):
                 menu = MenuData.from_json_data(
                     json.loads(open(filename, "r").read()), ActionParser()
                 )
-                tar.add(filename, arcname=os.path.split(
-                    filename)[-1], recursive=False)
+                tar.add(filename, arcname=os.path.split(filename)[-1], recursive=False)
             except Exception as e:
                 # Menu that cannot be parsed shouldn't be exported
                 log.error(e)

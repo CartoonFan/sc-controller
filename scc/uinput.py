@@ -57,8 +57,7 @@ Keys = IntEnum(
 )
 # Keys enum contains all keys and button from linux/uinput.h (KEY_* BTN_*)
 KeysOnly = IntEnum(
-    "KeysOnly", {i: CHEAD[i]
-                 for i in list(CHEAD.keys()) if i.startswith("KEY_")}
+    "KeysOnly", {i: CHEAD[i] for i in list(CHEAD.keys()) if i.startswith("KEY_")}
 )
 
 # Axes enum contains all axes from linux/uinput.h (ABS_*)
@@ -238,11 +237,9 @@ class UInput(object):
         self._k = keys
         self.name = name
         if not axes or len(axes) == 0:
-            self._a, self._amin, self._amax, self._afuzz, self._aflat = [
-                []] * 5
+            self._a, self._amin, self._amax, self._afuzz, self._aflat = [[]] * 5
         else:
-            self._a, self._amin, self._amax, self._afuzz, self._aflat = list(
-                zip(*axes))
+            self._a, self._amin, self._amax, self._afuzz, self._aflat = list(zip(*axes))
 
         self._r = rels
 
@@ -311,8 +308,7 @@ class UInput(object):
         @param int axis      key or btn event (KEY_* or BTN_*)
         @param int val        event value
         """
-        self._lib.uinput_key(
-            self._fd, ctypes.c_uint16(key), ctypes.c_int32(val))
+        self._lib.uinput_key(self._fd, ctypes.c_uint16(key), ctypes.c_int32(val))
 
     def axisEvent(self, axis, val):
         """
@@ -321,8 +317,7 @@ class UInput(object):
         @param int axis      abs event (ABS_*)
         @param int val        event value
         """
-        self._lib.uinput_abs(
-            self._fd, ctypes.c_uint16(axis), ctypes.c_int32(val))
+        self._lib.uinput_abs(self._fd, ctypes.c_uint16(axis), ctypes.c_int32(val))
 
     def relEvent(self, rel, val):
         """
@@ -331,8 +326,7 @@ class UInput(object):
         @param int rel        rel event (REL_*)
         @param int val        event value
         """
-        self._lib.uinput_rel(
-            self._fd, ctypes.c_uint16(rel), ctypes.c_int32(val))
+        self._lib.uinput_rel(self._fd, ctypes.c_uint16(rel), ctypes.c_int32(val))
 
     def scanEvent(self, val):
         """
@@ -535,13 +529,11 @@ class Mouse(UInput):
         self._scr_dy += dy * self._scr_yscale
         _syn = False
         if int(self._scr_dx):
-            self.relEvent(rel=Rels.REL_HWHEEL, val=int(
-                copysign(1, self._scr_dx)))
+            self.relEvent(rel=Rels.REL_HWHEEL, val=int(copysign(1, self._scr_dx)))
             self._scr_dx -= int(self._scr_dx)
             _syn = True
         if int(self._scr_dy):
-            self.relEvent(rel=Rels.REL_WHEEL, val=int(
-                copysign(1, self._scr_dy)))
+            self.relEvent(rel=Rels.REL_WHEEL, val=int(copysign(1, self._scr_dy)))
             self._scr_dy -= int(self._scr_dy)
             _syn = True
         if _syn:
@@ -599,8 +591,7 @@ class Keyboard(UInput):
         @param list of Keys keys        keys to release, give None or empty list
                                         to release all
         """
-        rem = [k for k in keys if k in self._pressed] if keys else list(
-            self._pressed)
+        rem = [k for k in keys if k in self._pressed] if keys else list(self._pressed)
         for i in rem:
             self.scanEvent(Scans[i])
             self.keyEvent(i, 0)

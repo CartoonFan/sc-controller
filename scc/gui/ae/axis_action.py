@@ -149,8 +149,7 @@ class AxisActionComponent(AEComponent, TimerManager):
                     return
                 self.osd_area_instance = Area()
                 self.osd_area_instance.show()
-            action.update_osd_area(
-                self.osd_area_instance, FakeMapper(self.editor))
+            action.update_osd_area(self.osd_area_instance, FakeMapper(self.editor))
             self.timer("area", 0.5, self.update_osd_area, action)
         elif self.osd_area_instance:
             self.osd_area_instance.quit()
@@ -270,13 +269,11 @@ class AxisActionComponent(AEComponent, TimerManager):
         b.show(self.editor.window)
 
     def on_btCircularButton_clicked(self, button, *a):
-        index = 0 if button == self.builder.get_object(
-            "btCircularButton0") else 1
+        index = 0 if button == self.builder.get_object("btCircularButton0") else 1
 
         def cb(action):
             self.circular_buttons[index] = action.button
-            btCircularButton = self.builder.get_object(
-                "btCircularButton%s" % (index,))
+            btCircularButton = self.builder.get_object("btCircularButton%s" % (index,))
             btCircularButton.set_label(action.describe(Action.AC_PAD))
             self.editor.set_action(self.make_circular_action())
 
@@ -367,8 +364,7 @@ class AxisActionComponent(AEComponent, TimerManager):
         """
         if self.circular_axis and any(self.circular_buttons):
             return CircularModifier(
-                MultiAction(self.circular_axis, ButtonAction(
-                    *self.circular_buttons))
+                MultiAction(self.circular_axis, ButtonAction(*self.circular_buttons))
             )
         if any(self.circular_buttons):
             return CircularModifier(ButtonAction(*self.circular_buttons))
@@ -500,8 +496,7 @@ class AxisActionComponent(AEComponent, TimerManager):
             self.button = self.button or ButtonAction(Keys.BTN_GAMEPAD)
             action = self.button
         elif key == "circular":
-            stActionData.set_visible_child(
-                self.builder.get_object("grCircular"))
+            stActionData.set_visible_child(self.builder.get_object("grCircular"))
             action = self.make_circular_action()
         elif key == "mouse":
             stActionData.set_visible_child(self.builder.get_object("vbMose"))

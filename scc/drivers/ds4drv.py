@@ -86,8 +86,7 @@ class DS4Controller(HIDController):
             byte_offset=1,
             size=8,
             data=AxisDataUnion(
-                axis=AxisModeData(scale=1.0, offset=-127.5,
-                                  clamp_max=257, deadzone=10)
+                axis=AxisModeData(scale=1.0, offset=-127.5, clamp_max=257, deadzone=10)
             ),
         )
         self._decoder.axes[AxisType.AXIS_STICK_Y] = AxisData(
@@ -95,8 +94,7 @@ class DS4Controller(HIDController):
             byte_offset=2,
             size=8,
             data=AxisDataUnion(
-                axis=AxisModeData(scale=-1.0, offset=127.5,
-                                  clamp_max=257, deadzone=10)
+                axis=AxisModeData(scale=-1.0, offset=127.5, clamp_max=257, deadzone=10)
             ),
         )
         self._decoder.axes[AxisType.AXIS_RPAD_X] = AxisData(
@@ -131,15 +129,13 @@ class DS4Controller(HIDController):
             mode=AxisMode.AXIS,
             byte_offset=8,
             size=8,
-            data=AxisDataUnion(axis=AxisModeData(
-                scale=1.0, clamp_max=1, deadzone=10)),
+            data=AxisDataUnion(axis=AxisModeData(scale=1.0, clamp_max=1, deadzone=10)),
         )
         self._decoder.axes[AxisType.AXIS_RTRIG] = AxisData(
             mode=AxisMode.AXIS,
             byte_offset=9,
             size=8,
-            data=AxisDataUnion(axis=AxisModeData(
-                scale=1.0, clamp_max=1, deadzone=10)),
+            data=AxisDataUnion(axis=AxisModeData(scale=1.0, clamp_max=1, deadzone=10)),
         )
         self._decoder.axes[AxisType.AXIS_GPITCH] = AxisData(
             mode=AxisMode.DS4ACCEL, byte_offset=13
@@ -190,8 +186,7 @@ class DS4Controller(HIDController):
                     self._decoder.state.buttons &= ~SCButtons.CPADTOUCH
                 else:
                     self._decoder.state.buttons |= SCButtons.CPADTOUCH
-                self.mapper.input(
-                    self, self._decoder.old_state, self._decoder.state)
+                self.mapper.input(self, self._decoder.old_state, self._decoder.state)
 
     def get_gyro_enabled(self):
         # Cannot be actually turned off, so it's always active
@@ -306,8 +301,7 @@ class DS4EvdevController(EvdevController):
                 device.grab()
         EvdevController.__init__(self, daemon, controllerdevice, None, config)
         if self.poller:
-            self.poller.register(
-                touchpad.fd, self.poller.POLLIN, self._touchpad_input)
+            self.poller.register(touchpad.fd, self.poller.POLLIN, self._touchpad_input)
             self.poller.register(gyro.fd, self.poller.POLLIN, self._gyro_input)
 
     def _gyro_input(self, *a):
@@ -358,8 +352,7 @@ class DS4EvdevController(EvdevController):
                         new_state = new_state._replace(buttons=b)
                     else:
                         b = new_state.buttons & ~SCButtons.CPADTOUCH
-                        new_state = new_state._replace(
-                            buttons=b, cpad_x=0, cpad_y=0)
+                        new_state = new_state._replace(buttons=b, cpad_x=0, cpad_y=0)
         except IOError:
             # Errors here are not even reported, evdev class handles important
             # ones
@@ -465,8 +458,7 @@ def init(daemon, config):
     if config["drivers"].get("hiddrv") or (
         HAVE_EVDEV and config["drivers"].get("evdevdrv")
     ):
-        register_hotplug_device(hid_callback, VENDOR_ID,
-                                PRODUCT_ID, on_failure=fail_cb)
+        register_hotplug_device(hid_callback, VENDOR_ID, PRODUCT_ID, on_failure=fail_cb)
         if HAVE_EVDEV and config["drivers"].get("evdevdrv"):
             daemon.get_device_monitor().add_callback(
                 "bluetooth", VENDOR_ID, PRODUCT_ID, make_evdev_device, None

@@ -52,8 +52,7 @@ class Tester(GObject.GObject):
     def start(self):
         """ Starts driver test subprocess """
         cmd = [find_binary("scc")] + ["test_" + self.driver, self.device_id]
-        self.subprocess = Gio.Subprocess.new(
-            cmd, Gio.SubprocessFlags.STDOUT_PIPE)
+        self.subprocess = Gio.Subprocess.new(cmd, Gio.SubprocessFlags.STDOUT_PIPE)
         self.subprocess.wait_async(None, self._on_finished)
         self.subprocess.get_stdout_pipe().read_bytes_async(32, 0, None, self._on_read)
 
@@ -109,5 +108,4 @@ class Tester(GObject.GObject):
         elif line.startswith("Axes:"):
             self.axes = [int(x) for x in line.split(" ")[1:] if len(x.strip())]
         elif line.startswith("Buttons:"):
-            self.buttons = [int(x)
-                            for x in line.split(" ")[1:] if len(x.strip())]
+            self.buttons = [int(x) for x in line.split(" ")[1:] if len(x.strip())]

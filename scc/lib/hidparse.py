@@ -158,8 +158,7 @@ def _it2s(it):
         if n & 0x8000:
             n -= 0x10000
     elif len(it) == 5:  # signed int
-        n = int("{:02x}{:02x}{:02x}{:02x}".format(
-            it[4], it[3], it[2], it[1]), 16)
+        n = int("{:02x}{:02x}{:02x}{:02x}".format(it[4], it[3], it[2], it[1]), 16)
         if n & 0x80000000:
             n -= 0x100000000
     else:
@@ -322,7 +321,7 @@ def _split_hid_items(data):
             size = 4
         if i == 0xFE:  # long item
             size = data[i + 1]
-        yield data[i: i + size + 1]
+        yield data[i : i + size + 1]
 
 
 def parse_report_descriptor(data, flat_list=False):
@@ -347,8 +346,7 @@ def parse_report_descriptor(data, flat_list=False):
         elif item[0] is GlobalItem.UsagePage:
             page = item[1]
             page = (
-                page_to_enum[item[1]
-                             ] if item[1] in page_to_enum else GenericDesktopPage
+                page_to_enum[item[1]] if item[1] in page_to_enum else GenericDesktopPage
             )
             col.append(item)
         else:
@@ -395,7 +393,7 @@ class Parser(object):
 
     def decode(self, data):
         (self.value,) = struct.unpack(
-            self.fmt, data[self.byte_offset: self.byte_offset + self.byte_len]
+            self.fmt, data[self.byte_offset : self.byte_offset + self.byte_len]
         )
         self.value >>= self.additional_bits
 
@@ -443,8 +441,7 @@ def make_parsers(data):
                         )
                         axis_id += 1
                 else:
-                    parsers.append(HIDButtonParser(
-                        buttons_id, offset, count, size))
+                    parsers.append(HIDButtonParser(buttons_id, offset, count, size))
                     buttons_id += count
             offset += size * count
     size = offset / 8

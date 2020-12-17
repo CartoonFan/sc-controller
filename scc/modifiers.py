@@ -116,7 +116,7 @@ class Modifier(Action):
         argspec = inspect.getargspec(self.__class__._mod_init)
         required_count = len(argspec.args) - len(argspec.defaults) - 1
         l = list(self.parameters[0:-1])
-        d = list(argspec.defaults)[0: len(l)]
+        d = list(argspec.defaults)[0 : len(l)]
         while d and len(l) > required_count and d[-1] == l[-1]:
             d, l = d[:-1], l[:-1]
         return l
@@ -289,8 +289,7 @@ class TouchedModifier(Modifier):
     def describe(self, context):
         if context in (Action.AC_STICK, Action.AC_PAD):
             return (
-                _("(when %s)" % (self.COMMAND,)) +
-                "\n" + self.action.describe(context)
+                _("(when %s)" % (self.COMMAND,)) + "\n" + self.action.describe(context)
             )
         return _("(when %s)" % (self.COMMAND,)) + " " + self.action.describe(context)
 
@@ -660,8 +659,7 @@ class DeadzoneModifier(Modifier):
             return (
                 copysign(
                     clamp(
-                        0, ((x - self.lower) /
-                            (self.upper - self.lower)) * range, range
+                        0, ((x - self.lower) / (self.upper - self.lower)) * range, range
                     ),
                     x,
                 ),
@@ -814,8 +812,7 @@ class ModeModifier(Modifier):
         self.make_checks()
         if self.default is None:
             self.default = (
-                button if isinstance(
-                    button, ShellCommandAction) else NoAction()
+                button if isinstance(button, ShellCommandAction) else NoAction()
             )
 
     def make_checks(self):
@@ -844,8 +841,7 @@ class ModeModifier(Modifier):
             if hasattr(SCButtons, button):
                 args += [
                     getattr(SCButtons, button),
-                    parser.from_json_data(
-                        data[ModeModifier.PROFILE_KEYS[0]][button]),
+                    parser.from_json_data(data[ModeModifier.PROFILE_KEYS[0]][button]),
                 ]
         if a:
             args += [a]
@@ -904,13 +900,11 @@ class ModeModifier(Modifier):
             rv = [(" " * pad) + "mode("]
             for check in self.mods:
                 a_str = (
-                    NameModifier.unstrip(
-                        self.mods[check]).to_string(True).split("\n")
+                    NameModifier.unstrip(self.mods[check]).to_string(True).split("\n")
                 )
                 # Key has to be one of SCButtons
                 a_str[0] = (
-                    (" " * pad) + "  " +
-                    (nameof(check) + ",").ljust(11) + a_str[0]
+                    (" " * pad) + "  " + (nameof(check) + ",").ljust(11) + a_str[0]
                 )
                 for i in range(1, len(a_str)):
                     a_str[i] = (" " * pad) + "  " + a_str[i]
@@ -1165,31 +1159,25 @@ class DoubleclickModifier(Modifier, HapticEnabledAction):
         if self.action and self.normalaction and self.holdaction:
             return "doubleclick(%s, hold(%s, %s)%s)" % (
                 NameModifier.unstrip(self.action).to_string(multiline, pad),
-                NameModifier.unstrip(
-                    self.holdaction).to_string(multiline, pad),
-                NameModifier.unstrip(
-                    self.normalaction).to_string(multiline, pad),
+                NameModifier.unstrip(self.holdaction).to_string(multiline, pad),
+                NameModifier.unstrip(self.normalaction).to_string(multiline, pad),
                 timeout,
             )
         elif self.action and self.normalaction:
             return "doubleclick(%s, %s%s)" % (
                 NameModifier.unstrip(self.action).to_string(multiline, pad),
-                NameModifier.unstrip(
-                    self.normalaction).to_string(multiline, pad),
+                NameModifier.unstrip(self.normalaction).to_string(multiline, pad),
                 timeout,
             )
         elif self.normalaction and self.holdaction:
             return "hold(%s, %s%s)" % (
-                NameModifier.unstrip(
-                    self.holdaction).to_string(multiline, pad),
-                NameModifier.unstrip(
-                    self.normalaction).to_string(multiline, pad),
+                NameModifier.unstrip(self.holdaction).to_string(multiline, pad),
+                NameModifier.unstrip(self.normalaction).to_string(multiline, pad),
                 timeout,
             )
         elif not self.action and self.holdaction:
             return "hold(None, %s%s)" % (
-                NameModifier.unstrip(
-                    self.holdaction).to_string(multiline, pad),
+                NameModifier.unstrip(self.holdaction).to_string(multiline, pad),
                 timeout,
             )
         elif self.action and not self.holdaction:
@@ -1666,8 +1654,7 @@ class CircularAbsModifier(Modifier, WholeHapticAction):
                     if (
                         abs(diff) < 6
                     ):  # Prevents crazy feedback burst when finger cross 360' angle
-                        WholeHapticAction.change(
-                            self, mapper, diff * 10000, 0, what)
+                        WholeHapticAction.change(self, mapper, diff * 10000, 0, what)
                 self.angle = angle
             # Apply actual constant
             angle *= STICK_PAD_MAX / PI

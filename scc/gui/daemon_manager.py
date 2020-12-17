@@ -200,8 +200,7 @@ class DaemonManager(GObject.GObject):
                 c._connected = True
                 c._type = type
                 c._flags = int(flags)
-                c._config_file = None if config_file in (
-                    "", "None") else config_file
+                c._config_file = None if config_file in ("", "None") else config_file
                 while c in self._controllers:
                     self._controllers.remove(c)
                 self._controllers.append(c)
@@ -232,8 +231,7 @@ class DaemonManager(GObject.GObject):
                 data = line[6:].strip().split(" ")
                 c = self.get_controller(data[0])
                 c.emit("event", data[1], [int(float(x)) for x in data[2:]])
-                self.emit("event", c, data[1], [
-                          int(float(x)) for x in data[2:]])
+                self.emit("event", c, data[1], [int(float(x)) for x in data[2:]])
             elif line.startswith("Error:"):
                 error = line.split(":", 1)[-1].strip()
                 self.alive = True
@@ -289,19 +287,16 @@ class DaemonManager(GObject.GObject):
 
     def reconfigure(self):
         """ Asks daemon reload configuration file """
-        self.request("Reconfigure.", DaemonManager.nocallback,
-                     DaemonManager.nocallback)
+        self.request("Reconfigure.", DaemonManager.nocallback, DaemonManager.nocallback)
 
     def rescan(self):
         """ Asks daemon to rescan for new devices """
-        self.request("Rescan.", DaemonManager.nocallback,
-                     DaemonManager.nocallback)
+        self.request("Rescan.", DaemonManager.nocallback, DaemonManager.nocallback)
 
     def stop(self):
         """ Stops the daemon """
         Gio.Subprocess.new(
-            [find_binary("scc-daemon"), "/dev/null",
-             "stop"], Gio.SubprocessFlags.NONE
+            [find_binary("scc-daemon"), "/dev/null", "stop"], Gio.SubprocessFlags.NONE
         )
         self.connecting = False
 
@@ -314,8 +309,7 @@ class DaemonManager(GObject.GObject):
             self.alive = None
             self._on_daemon_died()
         Gio.Subprocess.new(
-            [find_binary("scc-daemon"), "/dev/null",
-             mode], Gio.SubprocessFlags.NONE
+            [find_binary("scc-daemon"), "/dev/null", mode], Gio.SubprocessFlags.NONE
         )
         self._connect()
         GLib.timeout_add_seconds(10, self._check_connected)
@@ -518,8 +512,7 @@ class ControllerManager(GObject.GObject):
     def turnoff(self):
         """ Asks daemon to turn off this controller """
         self._send_id()
-        self._dm.request("Turnoff.", DaemonManager.nocallback,
-                         DaemonManager.nocallback)
+        self._dm.request("Turnoff.", DaemonManager.nocallback, DaemonManager.nocallback)
 
     def feedback(self, position, amplitude):
         """ Generates feedback effect on controller """
@@ -550,8 +543,7 @@ class ControllerManager(GObject.GObject):
         Calls success_cb() on success or error_cb(error) on failure.
         """
         actionstr = action.to_string().replace("\n", " ")
-        self._dm.request("Replace: %s %s" %
-                         (what, actionstr), success_cb, error_cb)
+        self._dm.request("Replace: %s %s" % (what, actionstr), success_cb, error_cb)
 
     def unlock_all(self):
         if self._dm.alive:

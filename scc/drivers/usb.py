@@ -256,8 +256,7 @@ class USBDriver(object):
         try:
             handled_device = callback(device, handle)
         except usb1.USBErrorBusy as e:
-            log.error("Failed to claim USB device %.4x:%.4x : %s",
-                      tp[0], tp[1], e)
+            log.error("Failed to claim USB device %.4x:%.4x : %s", tp[0], tp[1], e)
             if tp in self._fail_cbs:
                 device.close()
                 self._fail_cbs[tp](*tp)
@@ -313,8 +312,7 @@ class USBDriver(object):
             del self._known_ids[vendor_id, product_id]
             if (vendor_id, product_id) in self._fail_cbs:
                 del self._fail_cbs[vendor_id, product_id]
-            log.debug("Unregistred USB driver for %.4x:%.4x",
-                      vendor_id, product_id)
+            log.debug("Unregistred USB driver for %.4x:%.4x", vendor_id, product_id)
 
     def mainloop(self):
         if self._changed > 0:

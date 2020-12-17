@@ -137,8 +137,7 @@ class SCByBt(SCController):
         self._state = self._c_data.state
         self._poller = self.daemon.get_poller()
         if self._poller:
-            self._poller.register(
-                self._fileno, self._poller.POLLIN, self._input)
+            self._poller.register(self._fileno, self._poller.POLLIN, self._input)
         self.daemon.get_device_monitor().add_remove_callback(syspath, self.close)
         self.read_serial()
         self.configure()
@@ -271,14 +270,12 @@ class SCByBt(SCController):
             if self.mapper is not None:
                 if self._input_rotation_l and (self._state.type & 0x0100) != 0:
                     lx, ly = self._state.lpad_x, self._state.lpad_y
-                    s, c = sin(self._input_rotation_l), cos(
-                        self._input_rotation_l)
+                    s, c = sin(self._input_rotation_l), cos(self._input_rotation_l)
                     self._state.lpad_x = int(lx * c - ly * s)
                     self._state.lpad_y = int(lx * s + ly * c)
                 if self._input_rotation_r and (self._state.type & 0x0200) != 0:
                     rx, ry = self._state.rpad_x, self._state.rpad_y
-                    s, c = sin(self._input_rotation_r), cos(
-                        self._input_rotation_r)
+                    s, c = sin(self._input_rotation_r), cos(self._input_rotation_r)
                     self._state.rpad_x = int(rx * c - ry * s)
                     self._state.rpad_y = int(rx * s + ry * c)
 

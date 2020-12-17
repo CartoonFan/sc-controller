@@ -141,8 +141,7 @@ class GestureComponent(AEComponent):
 
         def grabbed(gesture):
             self._edited_gesture = gesture
-            txGesture.set_text(
-                GestureComponent.nice_gstr(self._edited_gesture))
+            txGesture.set_text(GestureComponent.nice_gstr(self._edited_gesture))
 
         self._grabber.grab(grabbed)
 
@@ -150,12 +149,10 @@ class GestureComponent(AEComponent):
         txGesture = self.builder.get_object("txGesture")
         if cb.get_active() and "i" not in self._edited_gesture:
             self._edited_gesture = "i" + self._edited_gesture
-            txGesture.set_text(
-                GestureComponent.nice_gstr(self._edited_gesture))
+            txGesture.set_text(GestureComponent.nice_gstr(self._edited_gesture))
         elif not cb.get_active() and "i" in self._edited_gesture:
             self._edited_gesture = self._edited_gesture.strip("i")
-            txGesture.set_text(
-                GestureComponent.nice_gstr(self._edited_gesture))
+            txGesture.set_text(GestureComponent.nice_gstr(self._edited_gesture))
 
     def on_btRemove_clicked(self, *a):
         tvGestures = self.builder.get_object("tvGestures")
@@ -203,8 +200,7 @@ class GestureComponent(AEComponent):
             item = row[2]
             a.gestures[item.gstr] = item.action
             if item.action.name:
-                a.gestures[item.gstr] = NameModifier(
-                    item.action.name, item.action)
+                a.gestures[item.gstr] = NameModifier(item.action.name, item.action)
         a.precision = self.builder.get_object("sclPrecision").get_value()
         a = OSDAction(a)
         self.editor.set_action(a)
@@ -221,8 +217,7 @@ class GestureGrabber(object):
         self._repeats = 0
         self.gesture_grabber = self.builder.get_object("gesture_grabber")
         self.txGestureGrab = self.builder.get_object("txGestureGrab")
-        self.lblGestureGrabberTitle = self.builder.get_object(
-            "lblGestureGrabberTitle")
+        self.lblGestureGrabberTitle = self.builder.get_object("lblGestureGrabberTitle")
         self.lblGestureStatus = self.builder.get_object("lblGestureStatus")
         self.rvGestureGrab = self.builder.get_object("rvGestureGrab")
         # Can't use autoconnect for this :(
@@ -231,8 +226,7 @@ class GestureGrabber(object):
         self.builder.get_object("btnStartGestureOver").connect(
             "clicked", self.start_over
         )
-        self.builder.get_object(
-            "btnConfirmGesutre").connect("clicked", self.use)
+        self.builder.get_object("btnConfirmGesutre").connect("clicked", self.use)
 
     def fail(self, *a):
         """
@@ -289,14 +283,11 @@ class GestureGrabber(object):
 
     def start_over(self, *a):
         if self.editor.get_id() == "RPAD":
-            self.lblGestureGrabberTitle.set_text(
-                _("Draw gesture on RIGHT pad..."))
+            self.lblGestureGrabberTitle.set_text(_("Draw gesture on RIGHT pad..."))
         elif self.editor.get_id() == "CPAD":
-            self.lblGestureGrabberTitle.set_text(
-                _("Draw gesture on Touchpad..."))
+            self.lblGestureGrabberTitle.set_text(_("Draw gesture on Touchpad..."))
         else:
-            self.lblGestureGrabberTitle.set_text(
-                _("Draw gesture on LEFT pad..."))
+            self.lblGestureGrabberTitle.set_text(_("Draw gesture on LEFT pad..."))
         self.lblGestureStatus.set_label("")
         self.txGestureGrab.set_text("")
         self.rvGestureGrab.set_reveal_child(False)
@@ -309,14 +300,11 @@ class GestureGrabber(object):
             self._gd.quit()
         self._gd = GestureDisplay(self.editor.app.config)
         if self.editor.get_id() == "RPAD":
-            self._gd.parse_argumets(
-                ["GestureDisplay", "--control-with", "RIGHT"])
+            self._gd.parse_argumets(["GestureDisplay", "--control-with", "RIGHT"])
         elif self.editor.get_id() == "CPAD":
-            self._gd.parse_argumets(
-                ["GestureDisplay", "--control-with", "CPAD"])
+            self._gd.parse_argumets(["GestureDisplay", "--control-with", "CPAD"])
         else:
-            self._gd.parse_argumets(
-                ["GestureDisplay", "--control-with", "LEFT"])
+            self._gd.parse_argumets(["GestureDisplay", "--control-with", "LEFT"])
         self._gd.use_daemon(self.editor.app.dm)
         self._gd.show()
         self._gd.connect("gesture-updated", self.on_gesture_updated)

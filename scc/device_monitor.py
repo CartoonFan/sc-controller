@@ -112,8 +112,7 @@ class DeviceMonitor(Monitor):
             ci = cl.conn_info[i]
             id = "hci%s:%s" % (cl.dev_id, ci.handle)
             address = ":".join(
-                [hex(x).lstrip("0x").zfill(2).upper()
-                 for x in reversed(ci.bdaddr)]
+                [hex(x).lstrip("0x").zfill(2).upper() for x in reversed(ci.bdaddr)]
             )
             self.bt_addresses[id] = address
 
@@ -188,10 +187,8 @@ class DeviceMonitor(Monitor):
         May throw all kinds of OSErrors or IOErrors
         """
         if os.path.exists(os.path.join(syspath, "idVendor")):
-            vendor = int(
-                open(os.path.join(syspath, "idVendor")).read().strip(), 16)
-            product = int(
-                open(os.path.join(syspath, "idProduct")).read().strip(), 16)
+            vendor = int(open(os.path.join(syspath, "idVendor")).read().strip(), 16)
+            product = int(open(os.path.join(syspath, "idProduct")).read().strip(), 16)
             return vendor, product
         if subsystem is None:
             subsystem = DeviceMonitor.get_subsystem(syspath)
