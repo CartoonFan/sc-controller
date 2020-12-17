@@ -69,3 +69,4 @@ class OSKBindingEditor(Editor, BindingEditor):
         )
         # OSK reloads profile when daemon reports configuration change
         self.app.dm.reconfigure()
+ 

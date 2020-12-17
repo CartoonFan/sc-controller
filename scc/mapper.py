@@ -526,3 +526,4 @@ class Mapper(object):
                 if self.feedbacks[x]:
                     self.controller.feedback(self.feedbacks[x])
                     self.feedbacks[x] = None
+ 

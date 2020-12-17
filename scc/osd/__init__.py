@@ -355,3 +355,4 @@ def parse_rgba(col):
         log.warning("Failed to parse RGBA color: %s", col)
     rgba.alpha = float(int(alpha, 16)) / 255.0
     return rgba
+ 

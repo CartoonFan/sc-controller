@@ -30,3 +30,4 @@ class OSKButtonsComponent(ButtonsComponent):
         if not self.loaded:
             AEComponent.load(self)
             self.builder.get_object("lblClickAnyButton").set_visible(False)
+ 

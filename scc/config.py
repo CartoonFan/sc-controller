@@ -75,7 +75,8 @@ class Config(object):
         # enable_sniffing - If enabled, another program with write access to
         # ~/.config/scc can ask daemon to send notifications about all
         # (or only some) inputs.
-        # This enables GUI to display which physical button was pressed to user.
+        # This enables GUI to display which physical button was pressed to
+        # user.
         "enable_sniffing": False,
         # Style and colors used by OSD
         "osd_style": "Classic.gtkstyle.css",
@@ -233,3 +234,4 @@ class Config(object):
     def __contains__(self, key):
         """ Returns true if there is such value """
         return key in self.values
+ 

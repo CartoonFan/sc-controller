@@ -114,3 +114,4 @@ class FirstPage(AEComponent):
 
     def on_lblMarkup_activate_link(self, trash, link):
         self.editor.on_link(link)
+ 

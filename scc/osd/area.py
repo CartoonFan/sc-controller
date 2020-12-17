@@ -108,3 +108,4 @@ class Area(OSDWindow, TimerManager):
 
         X.free_gc(dpy, gc)
         X.free_pixmap(dpy, mask)
+ 

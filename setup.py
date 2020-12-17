@@ -86,3 +86,4 @@ if __name__ == "__main__":
             Extension("libremotepad", sources=["scc/drivers/remotepad_controller.c"]),
         ],
     )
+ 

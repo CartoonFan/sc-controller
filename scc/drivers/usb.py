@@ -355,3 +355,4 @@ def register_hotplug_device(callback, vendor_id, product_id, on_failure=None):
 
 def unregister_hotplug_device(callback, vendor_id, product_id):
     _usb.unregister_hotplug_device(callback, vendor_id, product_id)
+ 

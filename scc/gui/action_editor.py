@@ -122,7 +122,8 @@ class ActionEditor(Editor):
         self.loaded_components = {}  # by class name
         self.c_buttons = {}  # Component-to-button dict
         self.sens_widgets = []  # Sensitivity sliders, labels and 'clear' buttons
-        # Feedback settings sliders, labels and 'clear' buttons, plus default value as last item
+        # Feedback settings sliders, labels and 'clear' buttons, plus default
+        # value as last item
         self.feedback_widgets = []
         # Smoothing settings sliders, labels and 'clear' buttons, plus default
         # value as last item
@@ -1240,3 +1241,4 @@ class ActionEditor(Editor):
             rvMore.set_reveal_child(False)
         exMore.set_sensitive(enabled)
         self._modifiers_enabled = enabled
+ 

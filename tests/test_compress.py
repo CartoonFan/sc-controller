@@ -254,3 +254,4 @@ class TestCompress(object):
                 raise AssertionError
             if action.get_speed()[0] != 2.0:
                 raise AssertionError
+ 

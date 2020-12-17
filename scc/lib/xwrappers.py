@@ -491,3 +491,4 @@ def get_wm_state(dpy, window):
     if count <= 0:
         return []
     return cast(state, POINTER(Atom))[0:count]
+ 

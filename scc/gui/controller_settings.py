@@ -210,3 +210,4 @@ class ControllerSettings(Editor, UserDataManager, ComboSetter):
         cfg = self.app.config.get_controller_config(self.controller.get_id())
         cfg["idle_timeout"] = scale.get_value()
         self.schedule_save_config()
+ 

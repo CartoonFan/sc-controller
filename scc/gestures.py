@@ -113,3 +113,4 @@ class GestureDetector(Action):
                                 y -= 1
                 else:
                     self._positions.append((x, y))
+ 

@@ -417,3 +417,4 @@ class ButtonInRevealer(Gtk.Revealer):
         self.set_reveal_child(False)
         self.set_transition_type(Gtk.RevealerTransitionType.SLIDE_LEFT)
         self.add(self.button)
+ 

@@ -159,7 +159,7 @@ class AutoSwitcher(object):
                             msg = _("Switched to profile") + " " + profile_name
                             self.socket.send(b"OSD: " + msg.encode("utf-8") + b"\n")
                         self.socket.send(b"Profile: " + path.encode("utf-8") + b"\n")
-                    except:
+                    except BaseException:
                         log.error("Socket write failed")
                         os._exit(2)
                         return
@@ -386,3 +386,4 @@ class AutoswitchOptsMenuGenerator(MenuGenerator):
 MENU_GENERATORS[
     AutoswitchOptsMenuGenerator.GENERATOR_NAME
 ] = AutoswitchOptsMenuGenerator
+ 

@@ -226,3 +226,4 @@ class CellRendererMenuIcon(Gtk.CellRenderer):
             Gdk.cairo_set_source_rgba(cr, context.get_color(color_flags))
             cr.mask_surface(surf, cell_area.x, cell_area.y)
         cr.fill()
+ 

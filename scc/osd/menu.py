@@ -231,7 +231,7 @@ class Menu(OSDWindow):
             try:
                 self._menuid = self.args.from_file
                 self.items = MenuData.from_file(self.args.from_file)
-            except:
+            except BaseException:
                 print(
                     "%s: error: failed to load menu file" % (sys.argv[0]),
                     file=sys.stderr,
@@ -661,3 +661,4 @@ class MenuIcon(Gtk.DrawingArea):
                 Gdk.cairo_set_source_rgba(cr, context.get_color(Gtk.StateFlags.NORMAL))
                 cr.mask_surface(surf, 0, 0)
             cr.fill()
+ 

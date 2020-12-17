@@ -1661,3 +1661,4 @@ class CircularAbsModifier(Modifier, WholeHapticAction):
             # Set axis on child action
             self.action.axis(mapper, angle * self.speed, 0)
             mapper.force_event.add(FE_PAD)
+ 

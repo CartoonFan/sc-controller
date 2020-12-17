@@ -333,3 +333,4 @@ def fill_buttons(cb):
     for button, text in GyroActionComponent.BUTTONS:
         model.append((None if button is None else nameof(button), text))
     cb.set_active(0)
+ 

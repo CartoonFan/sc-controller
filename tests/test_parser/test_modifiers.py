@@ -388,3 +388,4 @@ class TestModifiers(object):
         a = _parse_compressed("rotate(61, mouse())")
         if not isinstance(a, RotateInputModifier):
             raise AssertionError
+ 

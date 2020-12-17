@@ -130,3 +130,4 @@ class Editor(ComboSetter):
             w = self.added_widget
             self.remove_added_widget()
             target.add_widget(label, w)
+ 

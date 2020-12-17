@@ -323,3 +323,4 @@ class TriggerComponent(AEComponent, BindingEditor):
 
     def on_btTimeOutClear_clicked(self, *a):
         self.builder.get_object("sclTimeOut").set_value(HipfireAction.DEFAULT_TIMEOUT)
+ 

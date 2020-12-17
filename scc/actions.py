@@ -1629,7 +1629,8 @@ class ButtonAction(HapticEnabledAction, Action):
 
     def whole(self, mapper, x, y, what):
         if what == STICK:
-            # Stick used used as one big button (probably as part of ring bindings)
+            # Stick used used as one big button (probably as part of ring
+            # bindings)
             if (
                 abs(x) < ButtonAction.STICK_DEADZONE
                 and abs(y) < ButtonAction.STICK_DEADZONE
@@ -2638,7 +2639,8 @@ class HipfireAction(Action, HapticEnabledAction):
                 if self.waiting_task:
                     mapper.cancel_task(self.waiting_task)
                     self.waiting_task = None
-                # Start the timer to execute the action if the full press range is not reached before timeout
+                # Start the timer to execute the action if the full press range
+                # is not reached before timeout
                 self.waiting_task = mapper.schedule(self.timeout, self.on_timeout)
 
             # Spliting conditional for treating the sensible mode
@@ -2658,7 +2660,9 @@ class HipfireAction(Action, HapticEnabledAction):
                     and position < self.new_partialpress_level
                     and old_position >= self.new_partialpress_level
                 ):
-                    # Leaving the sensible range deactivating the action if it's already activated otherwise just schedule a short press
+                    # Leaving the sensible range deactivating the action if
+                    # it's already activated otherwise just schedule a short
+                    # press
                     self.sensible_state = "RELEASED"
                     if self.waiting_task:
                         mapper.cancel_task(self.waiting_task)
@@ -2673,15 +2677,19 @@ class HipfireAction(Action, HapticEnabledAction):
                     and position >= self.new_partialpress_level
                     and old_position < self.new_partialpress_level
                 ):
-                    # Activate the action (schedule) again without needed to release the action until the partial press level
+                    # Activate the action (schedule) again without needed to
+                    # release the action until the partial press level
                     self.sensible_state = "PRESSED"
                     if self.waiting_task:
                         mapper.cancel_task(self.waiting_task)
                         self.waiting_task = None
-                    # start the timer to execute the action if the full press is not reached before timeout
+                    # start the timer to execute the action if the full press
+                    # is not reached before timeout
                     self.waiting_task = mapper.schedule(self.timeout, self.on_timeout)
 
-        # Normal release of the partial press, deactivates the partially pressed action if it was active or if the time was still going schedule a short press
+        # Normal release of the partial press, deactivates the partially
+        # pressed action if it was active or if the time was still going
+        # schedule a short press
         elif (
             position < self.partialpress_level
             and old_position >= self.partialpress_level
@@ -2782,3 +2790,4 @@ Action.register_all(sys.modules[__name__])
 Action.register_all(sys.modules["scc.macros"])
 Action.register_all(sys.modules["scc.modifiers"])
 Action.register_all(sys.modules["scc.special_actions"])
+ 

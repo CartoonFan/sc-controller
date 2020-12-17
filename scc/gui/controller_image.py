@@ -198,3 +198,4 @@ class ControllerImage(SVGWidget):
                 log.warning("Failed to add image for button %s", b)
                 log.exception(err)
         e.commit()
+ 

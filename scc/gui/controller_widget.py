@@ -278,3 +278,4 @@ class ControllerGyro(ControllerWidget):
 
     def update(self):
         self._set_label(self.app.current.gyro)
+ 

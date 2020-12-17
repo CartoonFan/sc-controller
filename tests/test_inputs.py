@@ -279,3 +279,4 @@ class TestInputs(object):
         mapper.input(mapper.controller, _state, state)
         if Keys.KEY_Y not in mapper.keyboard.pressed:
             raise AssertionError
+ 

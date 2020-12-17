@@ -33,6 +33,7 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
+
 import sys as _sys
 
 __all__ = ["Enum", "IntEnum", "unique"]
@@ -953,3 +954,4 @@ def unique(enumeration):
             "duplicate names found in %r: %s" % (enumeration, duplicate_names)
         )
     return enumeration
+ 

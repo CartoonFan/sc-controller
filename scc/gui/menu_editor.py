@@ -441,3 +441,4 @@ class MenuEditor(Editor):
     def on_btClearItemIcon_clicked(self, *a):
         self.selected_icon = None
         self.update_menu_icon()
+ 

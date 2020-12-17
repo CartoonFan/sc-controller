@@ -175,7 +175,8 @@ class RadialMenu(Menu):
                 self.b.get_parent().put(i.icon_widget, 200, 200)
                 self.items_with_icon.append(i)
             else:
-                # No icon - rotate text in arc to other direction to keep it horizontal
+                # No icon - rotate text in arc to other direction to keep it
+                # horizontal
                 if SVGEditor.get_element(i.widget, "menuitem_text") is not None:
                     l = SVGEditor.get_element(i.widget, "menuitem_text")
                     l.attrib["id"] = "text_" + i.id
@@ -319,3 +320,4 @@ if __name__ == "__main__":
     if m.get_exit_code() == 0:
         print((m.get_selected_item_id()))
     sys.exit(m.get_exit_code())
+ 

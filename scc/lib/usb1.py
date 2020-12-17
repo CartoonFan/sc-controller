@@ -2669,3 +2669,4 @@ class LibUSBContext(USBContext):
             DeprecationWarning,
         )
         super(LibUSBContext, self).__init__()
+ 

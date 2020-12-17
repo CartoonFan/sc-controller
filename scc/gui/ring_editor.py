@@ -198,3 +198,4 @@ class RingEditor(Editor, ComboSetter):
                 self.actions = [action.actions[0], ring.outer]
                 self.set_cb(cbMode, "outer")
         self._update()
+ 

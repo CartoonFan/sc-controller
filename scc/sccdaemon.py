@@ -452,7 +452,8 @@ class SCCDaemon(Daemon):
             if not self.alone:
                 self.subprocs.append(Subprocess("scc-osd-daemon", True))
                 if Config()["autoswitch"]:
-                    # Start scc-autoswitch-daemon only if there are some switch rules defined
+                    # Start scc-autoswitch-daemon only if there are some switch
+                    # rules defined
 
                     self.subprocs.append(Subprocess("scc-autoswitch-daemon", True))
         else:
@@ -507,7 +508,7 @@ class SCCDaemon(Daemon):
         if self.default_profile is None:
             try:
                 self.default_profile = find_profile(Config()["recent_profiles"][0])
-            except:
+            except BaseException:
                 # Broken config is not reason to fail here
                 pass
         try:
@@ -1467,3 +1468,4 @@ class Subprocess(object):
         if self.p:
             self.p.kill()
         self.p = None
+ 

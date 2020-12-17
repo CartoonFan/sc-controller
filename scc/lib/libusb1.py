@@ -820,7 +820,8 @@ libusb_capability = Enum(
         "LIBUSB_CAP_HAS_CAPABILITY": 0x0000,
         # Hotplug support is available.
         "LIBUSB_CAP_HAS_HOTPLUG": 0x0001,
-        # The library can access HID devices without requiring user intervention.
+        # The library can access HID devices without requiring user
+        # intervention.
         "LIBUSB_CAP_HAS_HID_ACCESS": 0x0100,
         # The library supports detaching of the default USB driver.
         "LIBUSB_CAP_SUPPORTS_DETACH_KERNEL_DRIVER": 0x0101,
@@ -1551,3 +1552,4 @@ else:
     libusb_hotplug_deregister_callback.restype = None
 
 # /libusb.h
+ 

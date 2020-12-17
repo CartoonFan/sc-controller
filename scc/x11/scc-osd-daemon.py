@@ -319,3 +319,4 @@ if __name__ == "__main__":
     d = OSDDaemon()
     d.run()
     sys.exit(d.get_exit_code())
+ 

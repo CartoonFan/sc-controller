@@ -99,3 +99,4 @@ for tp in ("sc", "scbt", "fake", "ds4", "hid", "rpad"):
         out = "%s/%s-%s.svg" % (CICONS, tp, key)
         file(out, "w").write(ET.tostring(tree))
         print(out)
+ 

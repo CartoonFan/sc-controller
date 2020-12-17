@@ -436,7 +436,8 @@ class HIDController(USBDevice, Controller):
                                 self._decoder.axes[
                                     next_axis
                                 ].data.hatswitch.max = STICK_PAD_MAX
-                            # Hatswitch is little special as it covers 2 axes at once
+                            # Hatswitch is little special as it covers 2 axes
+                            # at once
                             next_axis = next_axis + 2
                             if next_axis < AXIS_COUNT:
                                 next_axis = AxisType(next_axis)
@@ -754,3 +755,4 @@ if __name__ == "__main__":
     init_logging()
     set_logging_level(True, True)
     sys.exit(hiddrv_test(HIDController, sys.argv[1:]))
+ 

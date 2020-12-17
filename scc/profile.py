@@ -354,3 +354,4 @@ class Encoder(JSONEncoder):
         if hasattr(obj, "encode"):
             return obj.encode()
         return JSONEncoder.default(self, obj)
+ 

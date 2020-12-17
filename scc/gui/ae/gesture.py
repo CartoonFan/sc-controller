@@ -338,3 +338,4 @@ class GestureGrabber(object):
                 self.lblGestureStatus.set_label(_("Gesture differs"))
 
         self._create_gd()
+ 

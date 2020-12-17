@@ -27,7 +27,7 @@ class AboutDialog(Editor):
                 pkg_resources.require("sccontroller")[0].location
             ):
                 app_ver = "v" + pkg_resources.require("sccontroller")[0].version
-        except:
+        except BaseException:
             # pkg_resources is not available or __version__ file missing
             # There is no reason to crash on this.
             pass
@@ -42,3 +42,4 @@ class AboutDialog(Editor):
 
     def on_dialog_response(self, *a):
         self.close()
+ 

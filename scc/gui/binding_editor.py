@@ -187,3 +187,4 @@ class BindingEditor(object):
 
     def show_editor(self, id):
         raise TypeError("show_editor not overriden")
+ 

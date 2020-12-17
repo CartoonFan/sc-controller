@@ -416,7 +416,7 @@ def main():
         set_logging_level(False, False)
     try:
         command = globals()["cmd_" + sys.argv[1].replace("-", "_")]
-    except:
+    except BaseException:
         print("Unknown command: %s" % (sys.argv[1],), file=sys.stderr)
         sys.exit(show_help(out=sys.stderr))
 
@@ -429,3 +429,4 @@ def main():
         print("", file=sys.stderr)
         show_help(sys.argv[1], out=sys.stderr)
         sys.exit(1)
+ 

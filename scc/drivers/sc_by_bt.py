@@ -338,3 +338,4 @@ if __name__ == "__main__":
     init_logging()
     set_logging_level(True, True)
     sys.exit(hidraw_test(sys.argv[1]))
+ 

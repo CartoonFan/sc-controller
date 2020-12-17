@@ -143,3 +143,4 @@ class KeyGrabber(object):
                         merge_modifiers(self.active_mods)
                     )
                 return
+ 
