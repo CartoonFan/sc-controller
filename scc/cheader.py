@@ -59,8 +59,7 @@ def eval_expr(expr):
         if isinstance(node, ast.Num):
             return node.n
         elif isinstance(node, ast.BinOp):
-            return OPERATORS[type(node.op)](_eval(node.left),
-                                            _eval(node.right))
+            return OPERATORS[type(node.op)](_eval(node.left), _eval(node.right))
         elif isinstance(node, ast.UnaryOp):
             return OPERATORS[type(node.op)](_eval(node.operand))
         elif isinstance(node, ast.BoolOp):
@@ -173,7 +172,7 @@ def defines(base, include):
             else:
                 name = tok
             fname = os.path.normpath(os.path.abspath(os.path.join(base, name)))
-            if os.path.isfile(fname) and not fname in parsed:
+            if os.path.isfile(fname) and fname not in parsed:
                 parsed.add(fname)
                 lexer.push_source(open(fname))
         else:

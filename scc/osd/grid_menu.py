@@ -9,7 +9,6 @@ import logging
 import math
 
 from gi.repository import Gtk
-
 from scc.menu_data import Separator
 from scc.menu_data import Submenu
 from scc.osd.menu import Menu

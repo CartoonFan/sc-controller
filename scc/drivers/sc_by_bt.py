@@ -13,13 +13,14 @@ import sys
 from math import cos
 from math import sin
 
+from scc.constants import ControllerFlags
+from scc.lib.hidraw import HIDRaw
+from scc.tools import find_library
+
 from .sc_dongle import SCConfigType
 from .sc_dongle import SCController
 from .sc_dongle import SCPacketLength
 from .sc_dongle import SCPacketType
-from scc.constants import ControllerFlags
-from scc.lib.hidraw import HIDRaw
-from scc.tools import find_library
 
 VENDOR_ID = 0x28DE
 PRODUCT_ID = 0x1106
@@ -76,10 +77,9 @@ class Driver:
         read_input = self._lib.read_input
         read_input.restype = ctypes.c_int
         read_input.argtypes = [SCByBtCPtr]
-        daemon.get_device_monitor().add_callback("bluetooth", VENDOR_ID,
-                                                 PRODUCT_ID,
-                                                 self.new_device_callback,
-                                                 None)
+        daemon.get_device_monitor().add_callback(
+            "bluetooth", VENDOR_ID, PRODUCT_ID, self.new_device_callback, None
+        )
 
     def retry(self, syspath):
         """
@@ -94,7 +94,8 @@ class Driver:
 
         self.reconnecting.add(syspath)
         self.daemon.get_device_monitor().add_remove_callback(
-            syspath, self._retry_cancel)
+            syspath, self._retry_cancel
+        )
         self.daemon.get_scheduler().schedule(1.0, reconnect)
 
     def _retry_cancel(self, syspath):
@@ -136,10 +137,8 @@ class SCByBt(SCController):
         self._state = self._c_data.state
         self._poller = self.daemon.get_poller()
         if self._poller:
-            self._poller.register(self._fileno, self._poller.POLLIN,
-                                  self._input)
-        self.daemon.get_device_monitor().add_remove_callback(
-            syspath, self.close)
+            self._poller.register(self._fileno, self._poller.POLLIN, self._input)
+        self.daemon.get_device_monitor().add_remove_callback(syspath, self.close)
         self.read_serial()
         self.configure()
         self.flush()
@@ -154,7 +153,7 @@ class SCByBt(SCController):
         return "scbt"
 
     def __repr__(self):
-        return "<SCByBt %s>" % (self.get_id(), )
+        return "<SCByBt %s>" % (self.get_id(),)
 
     def configure(self, idle_timeout=None, enable_gyros=None, led_level=None):
         """
@@ -232,7 +231,8 @@ class SCByBt(SCController):
         """
         # For BT controller, index is ignored
         for x in self._cmsg:
-            # First byte is reserved, following 3 are for PacketType, size and ConfigType
+            # First byte is reserved, following 3 are for PacketType, size and
+            # ConfigType
             if x[0:4] == data[0:4]:
                 self._cmsg.remove(x)
                 break
@@ -270,14 +270,12 @@ class SCByBt(SCController):
             if self.mapper is not None:
                 if self._input_rotation_l and (self._state.type & 0x0100) != 0:
                     lx, ly = self._state.lpad_x, self._state.lpad_y
-                    s, c = sin(self._input_rotation_l), cos(
-                        self._input_rotation_l)
+                    s, c = sin(self._input_rotation_l), cos(self._input_rotation_l)
                     self._state.lpad_x = int(lx * c - ly * s)
                     self._state.lpad_y = int(lx * s + ly * c)
                 if self._input_rotation_r and (self._state.type & 0x0200) != 0:
                     rx, ry = self._state.rpad_x, self._state.rpad_y
-                    s, c = sin(self._input_rotation_r), cos(
-                        self._input_rotation_r)
+                    s, c = sin(self._input_rotation_r), cos(self._input_rotation_r)
                     self._state.rpad_x = int(rx * c - ry * s)
                     self._state.rpad_y = int(rx * s + ry * c)
 

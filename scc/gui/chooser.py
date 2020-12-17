@@ -46,8 +46,7 @@ class Chooser(Editor):
         for id in self.IMAGES:
             parent = self.builder.get_object(id)
             if parent is not None:
-                image = SVGWidget(
-                    os.path.join(self.app.imagepath, self.IMAGES[id]))
+                image = SVGWidget(os.path.join(self.app.imagepath, self.IMAGES[id]))
                 image.connect("hover", self.on_background_area_hover)
                 image.connect("leave", self.on_background_area_hover, None)
                 image.connect("click", self.on_background_area_click)
@@ -75,10 +74,9 @@ class Chooser(Editor):
                     return
             if not self.mouse_allowed and "MOUSE" in area:
                 return
-        background.hilight({
-            self.active_area: Chooser.ACTIVE_COLOR,
-            area: Chooser.HILIGHT_COLOR
-        })
+        background.hilight(
+            {self.active_area: Chooser.ACTIVE_COLOR, area: Chooser.HILIGHT_COLOR}
+        )
 
     def on_background_area_click(self, trash, area):
         """
@@ -92,7 +90,7 @@ class Chooser(Editor):
                 return
             self.area_action_selected(area, cls(*params))
         else:
-            log.warning("Click on unknown area: %s" % (area, ))
+            log.warning("Click on unknown area: %s" % (area,))
 
     def area_action_selected(self, area, action):
         raise Exception("Override me!")

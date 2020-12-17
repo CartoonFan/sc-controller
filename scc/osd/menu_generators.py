@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - OSD Menu Generators
 
@@ -13,7 +12,6 @@ from ctypes import POINTER
 from gi.repository import Gdk
 from gi.repository import GdkX11
 from gi.repository import Gio
-
 from scc.lib import xwrappers as X
 from scc.menu_data import MENU_GENERATORS
 from scc.menu_data import MenuGenerator
@@ -39,8 +37,9 @@ class ProfileListMenuGenerator(MenuGenerator):
         def on_response(*a):
             menu.quit(-2)
 
-        daemon.request(b"OSD: " + menuitem.label.encode("utf-8") + b"\n",
-                       on_response, on_response)
+        daemon.request(
+            b"OSD: " + menuitem.label.encode("utf-8") + b"\n", on_response, on_response
+        )
 
     def describe(self):
         return _("[ All Profiles ]")
@@ -71,7 +70,7 @@ class RecentListMenuGenerator(MenuGenerator):
         self.rows = rows
 
     def generate(self, menuhandler):
-        return _("[ %s Recent Profiles ]") % (self.rows, )
+        return _("[ %s Recent Profiles ]") % (self.rows,)
 
     def encode(self):
         return {"generator": self.GENERATOR_NAME, "rows": self.rows}
@@ -83,8 +82,9 @@ class RecentListMenuGenerator(MenuGenerator):
         def on_response(*a):
             menu.quit(-2)
 
-        daemon.request(b"OSD: " + menuitem.label.encode("utf-8") + b"\n",
-                       on_response, on_response)
+        daemon.request(
+            b"OSD: " + menuitem.label.encode("utf-8") + b"\n", on_response, on_response
+        )
 
     def generate(self, menuhandler):
         rv = []
@@ -134,7 +134,7 @@ class WindowListMenuGenerator(MenuGenerator):
         wlist = cast(wlist, POINTER(X.XID))[0:count]
         for win in wlist:
             if not skip_taskbar in X.get_wm_state(dpy, win):
-                title = X.get_window_title(dpy, win)[0:self.MAX_LENGHT]
+                title = X.get_window_title(dpy, win)[0 : self.MAX_LENGHT]
                 menuitem = MenuItem(str(win), title)
                 menuitem.callback = WindowListMenuGenerator.callback
                 rv.append(menuitem)
@@ -170,9 +170,9 @@ class GameListMenuGenerator(MenuGenerator):
             for x in Gio.AppInfo.get_all():
                 if x.get_categories():
                     if "Game" in x.get_categories().split(";"):
-                        menuitem = MenuItem(str(id),
-                                            x.get_display_name(),
-                                            icon=x.get_icon())
+                        menuitem = MenuItem(
+                            str(id), x.get_display_name(), icon=x.get_icon()
+                        )
                         menuitem.callback = GameListMenuGenerator.callback
                         menuitem._desktop_file = x
                         GameListMenuGenerator._games.append(menuitem)
@@ -180,8 +180,6 @@ class GameListMenuGenerator(MenuGenerator):
 
 
 # Add classes to MENU_GENERATORS dict
-for i in [
-        globals()[x] for x in dir() if hasattr(globals()[x], "GENERATOR_NAME")
-]:
+for i in [globals()[x] for x in dir() if hasattr(globals()[x], "GENERATOR_NAME")]:
     if i.GENERATOR_NAME is not None:
         MENU_GENERATORS[i.GENERATOR_NAME] = i

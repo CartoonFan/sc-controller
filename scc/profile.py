@@ -59,29 +59,22 @@ class Profile(object):
     def save_fileobj(self, fileobj):
         """ Saves profile into file-like object. Returns self """
         data = {
-            "_": (self.description if "\n" not in self.description else
-                  self.description.strip("\n").split("\n")),
+            "_": (
+                self.description
+                if "\n" not in self.description
+                else self.description.strip("\n").split("\n")
+            ),
             "buttons": {},
-            "stick":
-            self.stick,
-            "gyro":
-            self.gyro,
-            "trigger_left":
-            self.triggers[Profile.LEFT],
-            "trigger_right":
-            self.triggers[Profile.RIGHT],
-            "pad_left":
-            self.pads[Profile.LEFT],
-            "pad_right":
-            self.pads[Profile.RIGHT],
-            "cpad":
-            self.pads[Profile.CPAD],
-            "menus": {id: self.menus[id].encode()
-                      for id in self.menus},
-            "is_template":
-            self.is_template,
-            "version":
-            Profile.VERSION,
+            "stick": self.stick,
+            "gyro": self.gyro,
+            "trigger_left": self.triggers[Profile.LEFT],
+            "trigger_right": self.triggers[Profile.RIGHT],
+            "pad_left": self.pads[Profile.LEFT],
+            "pad_right": self.pads[Profile.RIGHT],
+            "cpad": self.pads[Profile.CPAD],
+            "menus": {id: self.menus[id].encode() for id in self.menus},
+            "is_template": self.is_template,
+            "version": Profile.VERSION,
         }
 
         for i in self.buttons:
@@ -111,7 +104,7 @@ class Profile(object):
         # Version
         try:
             version = float(data["version"])
-        except:
+        except BaseException:
             version = 0
 
         # Settings - Description
@@ -123,19 +116,18 @@ class Profile(object):
         else:
             self.description = data["_"]
         # Settings - Template
-        self.is_template = bool(
-            data["is_template"]) if "is_template" in data else False
+        self.is_template = bool(data["is_template"]) if "is_template" in data else False
 
         # Buttons
         self.buttons = {}
         for x in SCButtons:
-            self.buttons[x] = self.parser.from_json_data(
-                data["buttons"], x.name)
+            self.buttons[x] = self.parser.from_json_data(data["buttons"], x.name)
         # Pressing stick is interpreted as STICKPRESS button,
         # formely called just STICK
         if "STICK" in data["buttons"] and "STICKPRESS" not in data["buttons"]:
             self.buttons[SCButtons.STICKPRESS] = self.parser.from_json_data(
-                data["buttons"], "STICK")
+                data["buttons"], "STICK"
+            )
 
         # Stick & gyro
         self.stick = self.parser.from_json_data(data, "stick")
@@ -160,8 +152,7 @@ class Profile(object):
             # Triggers
             self.triggers = {
                 Profile.LEFT: self.parser.from_json_data(data, "trigger_left"),
-                Profile.RIGHT:
-                self.parser.from_json_data(data, "trigger_right"),
+                Profile.RIGHT: self.parser.from_json_data(data, "trigger_right"),
             }
 
             # Pads
@@ -178,10 +169,10 @@ class Profile(object):
                 for invalid_char in ".:/":
                     if invalid_char in id:
                         raise ValueError(
-                            "Invalid character '%s' in menu id '%s'" %
-                            (invalid_char, id))
-                self.menus[id] = MenuData.from_json_data(
-                    data["menus"][id], self.parser)
+                            "Invalid character '%s' in menu id '%s'"
+                            % (invalid_char, id)
+                        )
+                self.menus[id] = MenuData.from_json_data(data["menus"][id], self.parser)
 
         # Conversion
         self.original_version = version  # TODO: This is temporary
@@ -194,8 +185,8 @@ class Profile(object):
         """ Clears all actions and adds default menu action on center button """
         self.buttons = {x: NoAction() for x in SCButtons}
         self.buttons[SCButtons.C] = HoldModifier(
-            MenuAction("Default.menu"),
-            normalaction=MenuAction("Default.menu"))
+            MenuAction("Default.menu"), normalaction=MenuAction("Default.menu")
+        )
         self.menus = {}
         self.stick = NoAction()
         self.is_template = False
@@ -260,13 +251,14 @@ class Profile(object):
         if from_version < 1:
             from scc.modifiers import ModeModifier
 
-            # Add 'display Default.menu if center button is held' for old profiles
+            # Add 'display Default.menu if center button is held' for old
+            # profiles
             c = self.buttons[SCButtons.C]
             if not c:
                 # Nothing set to C button
                 self.buttons[SCButtons.C] = HoldModifier(
-                    MenuAction("Default.menu"),
-                    normalaction=MenuAction("Default.menu"))
+                    MenuAction("Default.menu"), normalaction=MenuAction("Default.menu")
+                )
             elif hasattr(c, "holdaction") and c.holdaction:
                 # Already set to something, don't overwrite it
                 pass
@@ -275,8 +267,8 @@ class Profile(object):
                 pass
             else:
                 self.buttons[SCButtons.C] = HoldModifier(
-                    MenuAction("Default.menu"),
-                    normalaction=self.buttons[SCButtons.C])
+                    MenuAction("Default.menu"), normalaction=self.buttons[SCButtons.C]
+                )
         if from_version < 1.1:
             # Convert old scrolling wheel to new representation
             from scc.actions import MouseAction, XYAction
@@ -300,8 +292,7 @@ class Profile(object):
                         if feedback is not None:
                             n = FeedbackModifier(feedback, 4096, 16, n)
                         self.pads[p] = n
-                        log.info("Converted %s to %s", a.to_string(),
-                                 n.to_string())
+                        log.info("Converted %s to %s", a.to_string(), n.to_string())
         if from_version < 1.2:
             # Convert old trigger settings that were done with ButtonAction
             # to new TriggerAction
@@ -324,7 +315,8 @@ class Profile(object):
                         # Trigger range was not specified, assume defaults
                         numbers = (TRIGGER_HALF, TRIGGER_CLICK)
                     elif len(numbers) == 1:
-                        # Only lower range was specified, add default upper range
+                        # Only lower range was specified, add default upper
+                        # range
                         numbers.append(TRIGGER_CLICK)
                     if len(buttons) == 1:
                         # If only one button was set, trigger should work like
@@ -333,10 +325,12 @@ class Profile(object):
                     elif len(buttons) == 2:
                         # Both buttons were set
                         n = MultiAction(
-                            TriggerAction(numbers[0], numbers[1],
-                                          ButtonAction(buttons[0])),
-                            TriggerAction(numbers[1], TRIGGER_MAX,
-                                          ButtonAction(buttons[1])),
+                            TriggerAction(
+                                numbers[0], numbers[1], ButtonAction(buttons[0])
+                            ),
+                            TriggerAction(
+                                numbers[1], TRIGGER_MAX, ButtonAction(buttons[1])
+                            ),
                         )
 
                     if n:
@@ -347,14 +341,16 @@ class Profile(object):
                         )
                         self.triggers[p] = n
         if from_version < 1.3:
-            # Action format completly changed in v0.4, but profile foramat is same.
+            # Action format completly changed in v0.4, but profile foramat is
+            # same.
             pass
 
 
 class Encoder(JSONEncoder):
     def default(self, obj):
         # if type(obj) in (list, tuple):
-        # 	return basestring("[" + ", ".join(self.encode(x) for x in obj) + " ]")
+        # return basestring("[" + ", ".join(self.encode(x) for x in obj) + "
+        # ]")
         if hasattr(obj, "encode"):
             return obj.encode()
         return JSONEncoder.default(self, obj)

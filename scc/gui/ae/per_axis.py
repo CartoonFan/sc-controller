@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Action Editor - Per-Axis Component
 
@@ -44,9 +43,11 @@ class PerAxisComponent(AEComponent):
 
     def update(self):
         self.builder.get_object("lblAxisX").set_label(
-            describe_action(Action.AC_STICK, None, self.x))
+            describe_action(Action.AC_STICK, None, self.x)
+        )
         self.builder.get_object("lblAxisY").set_label(
-            describe_action(Action.AC_STICK, None, self.y))
+            describe_action(Action.AC_STICK, None, self.y)
+        )
 
     def send(self):
         self.editor.set_action(XYAction(self.x, self.y))

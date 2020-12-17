@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Gesture-related GUI stuff.
 """
@@ -7,7 +6,6 @@ from collections import deque
 
 from gi.repository import Gdk
 from gi.repository import Gtk
-
 from scc.constants import STICK_PAD_MAX
 from scc.constants import STICK_PAD_MIN
 from scc.osd import parse_rgba
@@ -29,12 +27,14 @@ class GestureDraw(Gtk.DrawingArea):
         self.set_size_request(size, size)
         self.set_colors()
 
-    def set_colors(self,
-                   background="000000FF",
-                   line="FF00FFFF",
-                   grid="7A7A7AFF",
-                   hilight="0030AAFF",
-                   **a):
+    def set_colors(
+        self,
+        background="000000FF",
+        line="FF00FFFF",
+        grid="7A7A7AFF",
+        hilight="0030AAFF",
+        **a
+    ):
         """ Expects colors in RRGGBB, as stored in config file """
         self.colors = {
             "background": parse_rgba(background),

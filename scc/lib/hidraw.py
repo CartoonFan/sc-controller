@@ -45,13 +45,11 @@ def _HIDIOCGRAWPHYS(len):
 
 
 def _HIDIOCSFEATURE(len):
-    return ioctl_opt.IOC(ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ, ord("H"),
-                         0x06, len)
+    return ioctl_opt.IOC(ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ, ord("H"), 0x06, len)
 
 
 def _HIDIOCGFEATURE(len):
-    return ioctl_opt.IOC(ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ, ord("H"),
-                         0x07, len)
+    return ioctl_opt.IOC(ioctl_opt.IOC_WRITE | ioctl_opt.IOC_READ, ord("H"), 0x07, len)
 
 
 HIDRAW_FIRST_MINOR = 0
@@ -90,7 +88,7 @@ class HIDRaw(object):
         self._ioctl(_HIDIOCGRDESCSIZE, size, True)
         descriptor.size = size
         self._ioctl(_HIDIOCGRDESC, descriptor, True)
-        return "".join(chr(x) for x in descriptor.value[:size.value])
+        return "".join(chr(x) for x in descriptor.value[: size.value])
 
     # TODO: decode descriptor into a python object
     # def getReportDescriptor(self):

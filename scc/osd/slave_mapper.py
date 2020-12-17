@@ -19,11 +19,9 @@ log = logging.getLogger("SlaveMapper")
 
 
 class SlaveMapper(Mapper):
-    def __init__(self,
-                 profile,
-                 scheduler,
-                 keyboard=b"SCController Keyboard",
-                 mouse=None):
+    def __init__(
+        self, profile, scheduler, keyboard=b"SCController Keyboard", mouse=None
+    ):
         Mapper.__init__(self, profile, scheduler, keyboard, mouse, None)
         self._feedback_cb = None
 

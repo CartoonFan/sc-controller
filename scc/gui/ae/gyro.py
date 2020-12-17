@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Action Editor - Gyro -> Per Axis component
 """
@@ -53,20 +52,17 @@ class GyroComponent(AEComponent):
             self.builder.get_object(x) for x in ("btPitch", "btYaw", "btRoll")
         ]
         self.cbs = [
-            self.builder.get_object(x)
-            for x in ("cbPitchAbs", "cbYawAbs", "cbRollAbs")
+            self.builder.get_object(x) for x in ("cbPitchAbs", "cbYawAbs", "cbRollAbs")
         ]
         self.labels = [
-            self.builder.get_object(x)
-            for x in ("lblPitch", "lblYaw", "lblRoll")
+            self.builder.get_object(x) for x in ("lblPitch", "lblYaw", "lblRoll")
         ]
 
     def set_action(self, mode, action):
         if self.handles(mode, action):
             if isinstance(action, ModeModifier):
                 self._recursing = True
-                self.builder.get_object("cbInvertGyro").set_active(
-                    bool(action.default))
+                self.builder.get_object("cbInvertGyro").set_active(bool(action.default))
                 self._recursing = False
                 b = list(action.mods.keys())[0]
                 action = action.mods[b] or action.default
@@ -85,8 +81,7 @@ class GyroComponent(AEComponent):
                     for i in range(0, 3):
                         if pars[i] is not None:
                             self.axes[i] = pars[i]
-                            self.cbs[i].set_active(isinstance(
-                                a, GyroAbsAction))
+                            self.cbs[i].set_active(isinstance(a, GyroAbsAction))
             self.update()
             self._recursing = False
 
@@ -144,7 +139,7 @@ class GyroComponent(AEComponent):
         elif item is not None:
             button = nameof(item.name)
         for row in model:
-            if button == row[0] and row[1] != None:
+            if button == row[0] and row[1] is not None:
                 cb.set_active_iter(row.iter)
                 self._recursing = False
                 return
@@ -160,12 +155,13 @@ class GyroComponent(AEComponent):
             self.send()
 
     def on_sclSoftLevel_format_value(self, scale, value):
-        return "%s%%" % (int(value * 100.0), )
+        return "%s%%" % (int(value * 100.0),)
 
     def update(self, *a):
         for i in range(0, 3):
             self.labels[i].set_label(
-                describe_action(Action.AC_STICK, AxisAction, self.axes[i]))
+                describe_action(Action.AC_STICK, AxisAction, self.axes[i])
+            )
 
     def send(self, *a):
         if self._recursing:
@@ -175,8 +171,7 @@ class GyroComponent(AEComponent):
         sclSoftLevel = self.builder.get_object("sclSoftLevel")
         cbGyroButton = self.builder.get_object("cbGyroButton")
         cbInvertGyro = self.builder.get_object("cbInvertGyro")
-        item = cbGyroButton.get_model().get_value(
-            cbGyroButton.get_active_iter(), 0)
+        item = cbGyroButton.get_model().get_value(cbGyroButton.get_active_iter(), 0)
         rvSoftLevel.set_reveal_child(item in TRIGGERS)
 
         normal, n_set = [None, None, None], False

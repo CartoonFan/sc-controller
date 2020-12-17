@@ -14,7 +14,8 @@ import time
 
 log = logging.getLogger("Scheduler")
 
-# TODO: Maybe create actual thread for this? Use poler? Scrap everything and rewrite it in GO?
+# TODO: Maybe create actual thread for this? Use poler? Scrap everything
+# and rewrite it in GO?
 
 
 class Scheduler(object):
@@ -49,8 +50,7 @@ class Scheduler(object):
         so it _has_ to be called on main thread.
         """
         if task == self._next:
-            self._next = None if self._scheduled.empty(
-            ) else self._scheduled.get()
+            self._next = None if self._scheduled.empty() else self._scheduled.get()
             return True
         # Fun part: All tasks are removed from PriorityQueue
         # until correct is found. Then everything is put back
@@ -69,8 +69,7 @@ class Scheduler(object):
         self._now = time.time()
         while self._next and self._now >= self._next.time:
             callback, data = self._next.callback, self._next.data
-            self._next = None if self._scheduled.empty(
-            ) else self._scheduled.get()
+            self._next = None if self._scheduled.empty() else self._scheduled.get()
             callback(*data)
 
 

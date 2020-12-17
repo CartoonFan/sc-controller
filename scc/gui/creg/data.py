@@ -39,7 +39,7 @@ class AxisData(object):
         self.max = STICK_PAD_MIN
 
     def __repr__(self):
-        return "<Axis data '%s'>" % (self.name, )
+        return "<Axis data '%s'>" % (self.name,)
 
     def set_position(self, value):
         """

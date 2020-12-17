@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 Imports VDFFZ profile and converts it to Profile object.
 VDFFZ is just VDF encapsulated in json, so this just gets one value and calls
@@ -7,8 +6,9 @@ VDFProfile to decode rest.
 import json
 import logging
 
-from .vdf import VDFProfile
 from scc.lib.vdf import parse_vdf
+
+from .vdf import VDFProfile
 
 log = logging.getLogger("import.vdffz")
 

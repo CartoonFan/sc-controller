@@ -40,7 +40,7 @@ class CustomActionComponent(AEComponent):
         try:
             txCustomAction = self.builder.get_object("txCustomAction")
             txCustomAction.set_monospace(True)
-        except:
+        except BaseException:
             pass
 
     def set_action(self, mode, action):
@@ -54,8 +54,9 @@ class CustomActionComponent(AEComponent):
         sends that instance back to editor.
         """
         txCustomAction = self.builder.get_object("txCustomAction")
-        txt = tbCustomAction.get_text(tbCustomAction.get_start_iter(),
-                                      tbCustomAction.get_end_iter(), True)
+        txt = tbCustomAction.get_text(
+            tbCustomAction.get_start_iter(), tbCustomAction.get_end_iter(), True
+        )
         if len(txt.strip(" \t\r\n")) > 0:
             action = self.parser.restart(txt).parse()
             self.editor.set_action(action, from_custom=True)

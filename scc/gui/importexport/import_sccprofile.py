@@ -6,8 +6,6 @@ import tarfile
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
-
-from .export import Export
 from scc.gui.parser import GuiActionParser
 from scc.menu_data import MenuData
 from scc.profile import Encoder
@@ -18,6 +16,8 @@ from scc.special_actions import ShellCommandAction
 from scc.tools import _
 from scc.tools import get_menus_path
 from scc.tools import get_profiles_path
+
+from .export import Export
 
 log = logging.getLogger("IE.ImportSSCC")
 
@@ -31,8 +31,9 @@ class ImportSccprofile(object):
         f1.add_pattern("*.sccprofile.tar.gz")
 
         # Create dialog
-        d = Gtk.FileChooserNative.new(_("Import Profile..."), self.window,
-                                      Gtk.FileChooserAction.OPEN)
+        d = Gtk.FileChooserNative.new(
+            _("Import Profile..."), self.window, Gtk.FileChooserAction.OPEN
+        )
         d.add_filter(f1)
         if d.run() == Gtk.ResponseType.ACCEPT:
             if d.get_filename().endswith(".tar.gz"):
@@ -186,11 +187,11 @@ class ImportSccprofile(object):
             btNext.set_sensitive(False)
 
         cbImportHidden.set_label(
-            _('Import as hidden menus and profiles named ".%s:name"') %
-            (main_name, ))
+            _('Import as hidden menus and profiles named ".%s:name"') % (main_name,)
+        )
         cbImportVisible.set_label(
-            _('Import normaly, with names formated as "%s:name"') %
-            (main_name, ))
+            _('Import normaly, with names formated as "%s:name"') % (main_name,)
+        )
 
         for i in range(0, len(files)):
             enabled, name, importas, type, obj = files[i]
@@ -207,12 +208,9 @@ class ImportSccprofile(object):
             files[i] = enabled, name, importas, type, obj
 
     def on_cbImportPackageAdvanced_toggled(self, *a):
-        rvImportPackageAdvanced = self.builder.get_object(
-            "rvImportPackageAdvanced")
-        cbImportPackageAdvanced = self.builder.get_object(
-            "cbImportPackageAdvanced")
-        rvImportPackageAdvanced.set_reveal_child(
-            cbImportPackageAdvanced.get_active())
+        rvImportPackageAdvanced = self.builder.get_object("rvImportPackageAdvanced")
+        cbImportPackageAdvanced = self.builder.get_object("cbImportPackageAdvanced")
+        rvImportPackageAdvanced.set_reveal_child(cbImportPackageAdvanced.get_active())
 
     def on_crIPKGEnabled_toggled(self, renderer, path):
         files = self.builder.get_object("lstImportPackage")
@@ -242,21 +240,18 @@ class ImportSccprofile(object):
                 if isinstance(obj.obj, Profile):
                     new_profile_names[name] = importas
                 elif isinstance(obj.obj, MenuData):
-                    new_menu_names["%s.menu" %
-                                   (name, )] = "%s.menu" % (importas, )
+                    new_menu_names["%s.menu" % (name,)] = "%s.menu" % (importas,)
 
         def apply_replacements(obj):
             for a in obj.get_all_actions():
                 if isinstance(a, ChangeProfileAction):
                     if a.profile in new_profile_names:
                         a.profile = new_profile_names[a.profile]
-                        a.parameters = tuple([a.profile] +
-                                             list(a.parameters[1:]))
+                        a.parameters = tuple([a.profile] + list(a.parameters[1:]))
                 elif isinstance(a, MenuAction):
                     if a.menu_id in new_menu_names:
                         a.menu_id = new_menu_names[a.menu_id]
-                        a.parameters = tuple([a.menu_id] +
-                                             list(a.parameters[1:]))
+                        a.parameters = tuple([a.menu_id] + list(a.parameters[1:]))
 
         for enabled, trash, importas, trash, obj in files:
             if enabled != 0:
@@ -264,13 +259,12 @@ class ImportSccprofile(object):
                 if isinstance(obj.obj, Profile):
                     apply_replacements(obj.obj)
                     obj.obj.save(
-                        os.path.join(get_profiles_path(),
-                                     "%s.sccprofile" % (importas, )))
+                        os.path.join(get_profiles_path(), "%s.sccprofile" % (importas,))
+                    )
                 elif isinstance(obj.obj, MenuData):
                     apply_replacements(obj.obj)
                     jstr = Encoder(sort_keys=True, indent=4).encode(obj.obj)
-                    filename = os.path.join(get_menus_path(),
-                                            "%s.menu" % (importas, ))
+                    filename = os.path.join(get_menus_path(), "%s.menu" % (importas,))
                     open(filename, "w").write(jstr)
 
         # 1st is always profile that's being imported

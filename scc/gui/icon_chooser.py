@@ -12,7 +12,6 @@ from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GObject
 from gi.repository import Gtk
-
 from scc.gui.dwsnc import headerbar
 from scc.gui.editor import Editor
 from scc.gui.userdata_manager import UserDataManager
@@ -46,7 +45,7 @@ class IconChooser(Editor, UserDataManager):
         clIcon.set_attributes(cr, icon=1, has_colors=2)
         clIcon.set_attributes(crIconName, text=0)
         btUserFolder.set_label("Add icons...")
-        btUserFolder.set_uri("file://%s" % (get_menuicons_path(), ))
+        btUserFolder.set_uri("file://%s" % (get_menuicons_path(),))
 
         headerbar(self.builder.get_object("header"))
         self.load_menu_icons()
@@ -55,7 +54,7 @@ class IconChooser(Editor, UserDataManager):
         for c in DEFAULT_ICON_CATEGORIES:
             try:
                 os.makedirs(os.path.join(get_menuicons_path(), c))
-            except:
+            except BaseException:
                 # Dir. exists
                 pass
 
@@ -79,7 +78,8 @@ class IconChooser(Editor, UserDataManager):
             icon_name = model.get_value(iter, 0)
             return "%s/%s" % (category, icon_name)
         except TypeError:
-            # This part may throw TypeError if either list has nothing selected.
+            # This part may throw TypeError if either list has nothing
+            # selected.
             return None
 
     def on_entName_changed(self, *a):
@@ -110,8 +110,7 @@ class IconChooser(Editor, UserDataManager):
                         m.group(2),
                         m.group(3),
                     )
-                lblLicense.set_markup(
-                    _("Free-use icon created by %s" % (license, )))
+                lblLicense.set_markup(_("Free-use icon created by %s" % (license,)))
             rvLicense.set_reveal_child(bool(license))
 
     def on_tvCategories_cursor_changed(self, view):
@@ -133,9 +132,12 @@ class IconChooser(Editor, UserDataManager):
         model.clear()
         for f in icons:
             name = f.get_basename()
-            if (f.query_info(Gio.FILE_ATTRIBUTE_STANDARD_TYPE,
-                             Gio.FileQueryInfoFlags.NONE,
-                             None).get_file_type() == Gio.FileType.DIRECTORY):
+            if (
+                f.query_info(
+                    Gio.FILE_ATTRIBUTE_STANDARD_TYPE, Gio.FileQueryInfoFlags.NONE, None
+                ).get_file_type()
+                == Gio.FileType.DIRECTORY
+            ):
                 # ^^ woo, Gio is fun...
                 tvCategories.get_model().append((name, name.title()))
             else:
@@ -170,9 +172,9 @@ class IconChooser(Editor, UserDataManager):
         if not selected:
             try:
                 # Try to select 1st category, but ignore if that fails
-                tvCategories.get_selection().select_path((0, ))
+                tvCategories.get_selection().select_path((0,))
                 self.on_tvCategories_cursor_changed(tvCategories)
-            except:
+            except BaseException:
                 pass
 
     @staticmethod
@@ -210,8 +212,9 @@ class CellRendererMenuIcon(Gtk.CellRenderer):
             cell_area.y + cell_area.height,
         )
 
-        scaled = self.icon.scale_simple(self.size, self.size,
-                                        GdkPixbuf.InterpType.BILINEAR)
+        scaled = self.icon.scale_simple(
+            self.size, self.size, GdkPixbuf.InterpType.BILINEAR
+        )
         surf = Gdk.cairo_surface_create_from_pixbuf(scaled, 1)
         if self.has_colors:
             cr.set_source_surface(surf, cell_area.x, cell_area.y)

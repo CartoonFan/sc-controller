@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Controller Registration - Grabs
 
@@ -46,8 +45,7 @@ class InputGrabber(object):
     def set_mapping(self, keycode, what):
         parent = self.parent
 
-        if isinstance(what, AxisData) and what in list(
-                parent._mappings.values()):
+        if isinstance(what, AxisData) and what in list(parent._mappings.values()):
             for c in list(parent._mappings.keys()):
                 if parent._mappings[c] == what:
                     del parent._mappings[c]
@@ -94,9 +92,8 @@ class TriggerGrabber(InputGrabber):
 
         # Get avgerage absolute change for all axes
         avg = float(
-            sum([
-                abs(self.orig_pos[k] - self.new_pos[k]) for k in self.new_pos
-            ])) / float(len(self.new_pos))
+            sum([abs(self.orig_pos[k] - self.new_pos[k]) for k in self.new_pos])
+        ) / float(len(self.new_pos))
 
         # Get absolute change for _this_ axis
         change = abs(self.orig_pos[number] - self.new_pos[number])
@@ -121,17 +118,16 @@ class StickGrabber(TriggerGrabber):
     """
 
     def __init__(self, parent, what):
-        TriggerGrabber.__init__(self,
-                                parent,
-                                what,
-                                text=_("Move stick left and right..."))
+        TriggerGrabber.__init__(
+            self, parent, what, text=_("Move stick left and right...")
+        )
         self.xy = X
         self.grabbed = [None, None]
 
     def on_button(self, keycode, pressed):
         # if len(self.grabbed) == 2 and self.grabbed[X] != None:
-        # 	# Already grabbed one axis, don't grab buttons
-        # 	return
+        #   # Already grabbed one axis, don't grab buttons
+        #   return
         if keycode in self.grabbed:
             # Don't allow same button to be used twice
             return

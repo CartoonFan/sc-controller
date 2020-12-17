@@ -48,7 +48,7 @@ class CloseOSKAction(OSKAction):
         return _("Hide Keyboard")
 
     def to_string(self, multiline=False, pad=0):
-        return (" " * pad) + "OSK.%s()" % (self.COMMAND, )
+        return (" " * pad) + "OSK.%s()" % (self.COMMAND,)
 
     def button_press(self, mapper):
         self.execute(mapper)
@@ -95,7 +95,7 @@ class MoveOSKAction(OSKAction):
         return _("Move Keyboard")
 
     def to_string(self, multiline=False, pad=0):
-        return (" " * pad) + "OSK.%s()" % (self.COMMAND, )
+        return (" " * pad) + "OSK.%s()" % (self.COMMAND,)
 
 
 class OSKPressAction(OSKAction):

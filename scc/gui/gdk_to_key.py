@@ -6,7 +6,6 @@ Maps Gdk.KEY_* constants into Keys.KEY_* constants.
 Used by ActionEditor (when grabbing the key)
 """
 from gi.repository import Gdk
-
 from scc.uinput import Keys
 
 GDK_TO_KEY = {

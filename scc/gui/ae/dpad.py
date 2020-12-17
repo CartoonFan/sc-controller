@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
 SC-Controller - Action Editor - "DPAD or Menu"
@@ -55,10 +54,12 @@ class DPADComponent(AEComponent, MenuActionCofC, BindingEditor):
         AEComponent.load(self)
         cbConfirmWith = self.builder.get_object("cbConfirmWith")
         cbCancelWith = self.builder.get_object("cbCancelWith")
-        cbConfirmWith.set_row_separator_func(lambda model, iter: model.
-                                             get_value(iter, 0) == "-")
-        cbCancelWith.set_row_separator_func(lambda model, iter: model.
-                                            get_value(iter, 0) == "-")
+        cbConfirmWith.set_row_separator_func(
+            lambda model, iter: model.get_value(iter, 0) == "-"
+        )
+        cbCancelWith.set_row_separator_func(
+            lambda model, iter: model.get_value(iter, 0) == "-"
+        )
 
     def shown(self):
         if not self._userdata_load_started:
@@ -90,9 +91,9 @@ class DPADComponent(AEComponent, MenuActionCofC, BindingEditor):
 
     def set_button_desc(self, i):
         desc = describe_action(Action.AC_BUTTON, None, self.actions[i])
-        l = self.builder.get_object("lblDPAD%s" % (i, ))
+        l = self.builder.get_object("lblDPAD%s" % (i,))
         if l is None:
-            l = self.builder.get_object("btDPAD%s" % (i, )).get_children()[0]
+            l = self.builder.get_object("btDPAD%s" % (i,)).get_children()[0]
         l.set_markup(desc)
 
     def get_button_title(self):
@@ -113,8 +114,7 @@ class DPADComponent(AEComponent, MenuActionCofC, BindingEditor):
             self.editor.set_action(DPad8Action(scl.get_value(), *self.actions))
         elif key == "dpad":
             # 4-way dpad
-            self.editor.set_action(
-                DPadAction(scl.get_value(), *self.actions[0:4]))
+            self.editor.set_action(DPadAction(scl.get_value(), *self.actions[0:4]))
         elif key == "wsad":
             # special case of 4-way dpad
             a = DPadAction(
@@ -178,12 +178,12 @@ class DPADComponent(AEComponent, MenuActionCofC, BindingEditor):
             # one of actions, swap back to 'Simple DPAD' mode.
             self.set_cb(cb, "dpad", 1)
         # if action.name:
-        # 	action = NameModifier(action.name, action)
+        #   action = NameModifier(action.name, action)
         self.set_button_desc(i)
         self.update()
 
     def on_sclDiagonalRange_format_value(self, scale, value):
-        return _("%s°") % (value, )
+        return _("%s°") % (value,)
 
     def on_btClearDiagonalRange_clicked(self, *a):
         scl = self.builder.get_object("sclDiagonalRange")

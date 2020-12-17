@@ -10,7 +10,6 @@ import sys
 
 from gi.repository import GLib
 from gi.repository import Gtk
-
 from scc.config import Config
 from scc.menu_data import MenuItem
 from scc.menu_data import Submenu
@@ -72,8 +71,7 @@ class QuickMenu(Menu):
             item.button = self.BUTTONS[self._button_index]
             self._button_index += 1
 
-            icon_file, has_colors = find_icon("buttons/%s" % item.button,
-                                              False)
+            icon_file, has_colors = find_icon("buttons/%s" % item.button, False)
             icon = MenuIcon(icon_file, has_colors)
             label = widget.get_children()[0]
             for c in [] + widget.get_children():
@@ -120,14 +118,12 @@ class QuickMenu(Menu):
             metavar="filename",
             help="load menu items from json file",
         )
-        self.argparser.add_argument("--print-items",
-                                    action="store_true",
-                                    help="prints menu items to stdout")
-        self.argparser.add_argument("items",
-                                    type=str,
-                                    nargs="*",
-                                    metavar="id title",
-                                    help="Menu items")
+        self.argparser.add_argument(
+            "--print-items", action="store_true", help="prints menu items to stdout"
+        )
+        self.argparser.add_argument(
+            "items", type=str, nargs="*", metavar="id title", help="Menu items"
+        )
 
     def _check_on_screen_position(self, quick=False):
         pass
@@ -136,7 +132,8 @@ class QuickMenu(Menu):
         def success(*a):
             log.error("Sucessfully locked input")
             config = self.controller.load_gui_config(
-                os.path.join(get_share_path(), "images"))
+                os.path.join(get_share_path(), "images")
+            )
             if config and config["gui"] and config["gui"]["buttons"]:
                 buttons = config["gui"]["buttons"]
                 try:
@@ -175,7 +172,7 @@ class QuickMenu(Menu):
                 self.items.append(item)
         self.pack_items(self.parent, self.items)
         if len(self.items) == 0:
-            print >> sys.stderr, "%s: error: no items in menu" % (sys.argv[0])
+            print >>sys.stderr, "%s: error: no items in menu" % (sys.argv[0])
             return False
 
         return True
@@ -193,22 +190,26 @@ class QuickMenu(Menu):
             self._submenu = QuickMenu()
             sub_pos = list(self.position)
             for i in (0, 1):
-                sub_pos[i] = (sub_pos[i] - self.SUBMENU_OFFSET
-                              if sub_pos[i] < 0 else sub_pos[i] +
-                              self.SUBMENU_OFFSET)
+                sub_pos[i] = (
+                    sub_pos[i] - self.SUBMENU_OFFSET
+                    if sub_pos[i] < 0
+                    else sub_pos[i] + self.SUBMENU_OFFSET
+                )
 
             self._submenu.use_config(self.config)
-            self._submenu.parse_argumets([
-                "menu.py",
-                "-x",
-                str(sub_pos[0]),
-                "-y",
-                str(sub_pos[1]),
-                "--timeout",
-                str(self._timeout),
-                "--from-file",
-                filename,
-            ])
+            self._submenu.parse_argumets(
+                [
+                    "menu.py",
+                    "-x",
+                    str(sub_pos[0]),
+                    "-y",
+                    str(sub_pos[1]),
+                    "--timeout",
+                    str(self._timeout),
+                    "--from-file",
+                    filename,
+                ]
+            )
             self._submenu.set_is_submenu()
             self._submenu.use_daemon(self.daemon)
             self._submenu.connect("destroy", self.on_submenu_closed)
