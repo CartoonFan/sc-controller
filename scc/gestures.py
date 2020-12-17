@@ -79,12 +79,10 @@ class GestureDetector(Action):
                 else:
                     x -= STICK_PAD_MIN
                     y = STICK_PAD_MAX - y
-                    x = float(x) / (
-                        float(STICK_PAD_MAX - STICK_PAD_MIN) / self._resolution
-                    )
-                    y = float(y) / (
-                        float(STICK_PAD_MAX - STICK_PAD_MIN) / self._resolution
-                    )
+                    x = float(x) / (float(STICK_PAD_MAX - STICK_PAD_MIN) /
+                                    self._resolution)
+                    y = float(y) / (float(STICK_PAD_MAX - STICK_PAD_MIN) /
+                                    self._resolution)
                 # Check for deadzones around grid lines
                 for i in range(1, self._resolution):
                     if x > i - self._deadzone and x < i + self._deadzone:

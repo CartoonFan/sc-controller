@@ -87,7 +87,7 @@ class OSDDaemon(object):
                 recents.remove(name)
             recents.insert(0, name)
             if len(recents) > self.config["recent_max"]:
-                recents = recents[0 : self.config["recent_max"]]
+                recents = recents[0:self.config["recent_max"]]
             self.config["recent_profiles"] = recents
             self.config.save()
             log.debug("Updated recent profile list")
@@ -115,7 +115,8 @@ class OSDDaemon(object):
         if m.get_exit_code() == 0:
             # 0 means that user selected item and confirmed selection
             self.daemon.request(
-                "Selected: %s" % (shjoin([m.get_menuid(), m.get_selected_item_id()])),
+                "Selected: %s" % (shjoin(
+                    [m.get_menuid(), m.get_selected_item_id()])),
                 lambda *a: False,
                 lambda *a: False,
             )
@@ -134,10 +135,11 @@ class OSDDaemon(object):
         self._window = None
         if gd.get_exit_code() == 0:
             self.daemon.request(
-                "Gestured: %s" % (gd.get_gesture(),), lambda *a: False, lambda *a: False
-            )
+                "Gestured: %s" %
+                (gd.get_gesture(), ), lambda *a: False, lambda *a: False)
         else:
-            self.daemon.request("Gestured: x", lambda *a: False, lambda *a: False)
+            self.daemon.request(
+                "Gestured: x", lambda *a: False, lambda *a: False)
 
     @staticmethod
     def _is_menu_message(m):
@@ -145,14 +147,10 @@ class OSDDaemon(object):
         Returns True if m starts with 'OSD: [grid|radial]menu'
         or "OSD: dialog"
         """
-        return (
-            m.startswith("OSD: menu")
-            or m.startswith("OSD: radialmenu")
-            or m.startswith("OSD: quickmenu")
-            or m.startswith("OSD: gridmenu")
-            or m.startswith("OSD: dialog")
-            or m.startswith("OSD: hmenu")
-        )
+        return (m.startswith("OSD: menu") or m.startswith("OSD: radialmenu")
+                or m.startswith("OSD: quickmenu")
+                or m.startswith("OSD: gridmenu") or m.startswith("OSD: dialog")
+                or m.startswith("OSD: hmenu"))
 
     def on_unknown_message(self, daemon, message):
         if not message.startswith("OSD:"):
@@ -169,10 +167,12 @@ class OSDDaemon(object):
                 # TODO: Do this only for default position once changing
                 # TODO: is allowed
                 if self._visible_messages:
-                    height = list(self._visible_messages.values())[0].get_size().height
+                    height = list(
+                        self._visible_messages.values())[0].get_size().height
                     x, y = m.position
                     while y in [
-                        i.position[1] for i in list(self._visible_messages.values())
+                            i.position[1]
+                            for i in list(self._visible_messages.values())
                     ]:
                         y -= height + 5
                     m.position = x, y
@@ -206,7 +206,8 @@ class OSDDaemon(object):
         elif self._is_menu_message(message):
             args = shsplit(message)[1:]
             if self._window:
-                log.warning("Another OSD is already visible - refusing to show menu")
+                log.warning(
+                    "Another OSD is already visible - refusing to show menu")
             else:
                 if message.startswith("OSD: hmenu"):
                     self._window = HorizontalMenu()
@@ -236,7 +237,8 @@ class OSDDaemon(object):
         elif message.startswith("OSD: area"):
             args = shsplit(message)[1:]
             if self._window:
-                log.warning("Another OSD is already visible - refusing to show area")
+                log.warning(
+                    "Another OSD is already visible - refusing to show area")
             else:
                 args = shsplit(message)[1:]
                 self._window = Area()
@@ -266,11 +268,8 @@ class OSDDaemon(object):
         """
         to_destroy = [] + list(self._visible_messages.values())
         for m in to_destroy:
-            if (
-                not only_long_lasting
-                or m.timeout <= 0
-                or m.timeout > OSDAction.DEFAULT_TIMEOUT * 2
-            ):
+            if (not only_long_lasting or m.timeout <= 0
+                    or m.timeout > OSDAction.DEFAULT_TIMEOUT * 2):
                 m.destroy()
 
     def _check_colorconfig_change(self):
@@ -278,10 +277,14 @@ class OSDDaemon(object):
         Checks if OSD color configuration is changed and re-applies CSS
         if needed.
         """
-        h = sum([hash(self.config["osd_colors"][x]) for x in self.config["osd_colors"]])
-        h += sum(
-            [hash(self.config["osk_colors"][x]) for x in self.config["osk_colors"]]
-        )
+        h = sum([
+            hash(self.config["osd_colors"][x])
+            for x in self.config["osd_colors"]
+        ])
+        h += sum([
+            hash(self.config["osk_colors"][x])
+            for x in self.config["osk_colors"]
+        ])
         h += hash(self.config["osd_style"])
         if self._hash_of_colors != h:
             self._hash_of_colors = h
@@ -293,8 +296,7 @@ class OSDDaemon(object):
 
     def run(self):
         on_wayland = "WAYLAND_DISPLAY" in os.environ or not isinstance(
-            Gdk.Display.get_default(), GdkX11.X11Display
-        )
+            Gdk.Display.get_default(), GdkX11.X11Display)
         if on_wayland:
             log.error("Cannot run on Wayland")
             self.exit_code = 8

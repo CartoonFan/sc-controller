@@ -49,28 +49,27 @@ class BindingEditor(object):
         for b in BUTTONS:
             w = self.builder.get_object("bt" + b.name)
             if w:
-                self.button_widgets[b] = ControllerButton(self, b, use_icons, w)
+                self.button_widgets[b] = ControllerButton(
+                    self, b, use_icons, w)
         for b in TRIGGERS:
             w = self.builder.get_object("bt" + b)
             if w:
-                self.button_widgets[b] = ControllerTrigger(self, b, use_icons, w)
+                self.button_widgets[b] = ControllerTrigger(
+                    self, b, use_icons, w)
         for b in PADS:
             w = self.builder.get_object("bt" + b)
             if w:
-                self.button_widgets[b] = ControllerPad(
-                    self, b, use_icons, enable_press, w
-                )
+                self.button_widgets[b] = ControllerPad(self, b, use_icons,
+                                                       enable_press, w)
         for b in STICKS:
             w = self.builder.get_object("bt" + b)
             if w:
                 self.button_widgets[b] = ControllerStick(
-                    self, b, use_icons, enable_press, w
-                )
+                    self, b, use_icons, enable_press, w)
         w = self.builder.get_object("btSTICKPRESS")
         if w:
             self.button_widgets[SCButtons.STICKPRESS] = ControllerButton(
-                self, SCButtons.STICKPRESS, use_icons, w
-            )
+                self, SCButtons.STICKPRESS, use_icons, w)
         for b in GYROS:
             w = self.builder.get_object("bt" + b)
             if w:
@@ -113,14 +112,16 @@ class BindingEditor(object):
             if id in STICKS:
                 before, profile.stick = profile.stick, action
             elif id == Profile.LPAD:
-                before, profile.pads[Profile.LEFT] = profile.pads[Profile.LEFT], action
+                before, profile.pads[Profile.LEFT] = profile.pads[
+                    Profile.LEFT], action
             elif id == Profile.RPAD:
                 before, profile.pads[Profile.RIGHT] = (
                     profile.pads[Profile.RIGHT],
                     action,
                 )
             else:
-                before, profile.pads[Profile.CPAD] = profile.pads[Profile.CPAD], action
+                before, profile.pads[Profile.CPAD] = profile.pads[
+                    Profile.CPAD], action
             self.button_widgets[id].update()
         return before
 
@@ -157,11 +158,10 @@ class BindingEditor(object):
         if id in GYROS:
             e = ActionEditor(self.app, self.on_action_chosen)
             e.set_title(title)
-        elif isinstance(
-            action, (ModeModifier, DoubleclickModifier, HoldModifier)
-        ) and not is_gyro_enable(action):
+        elif isinstance(action, (ModeModifier, DoubleclickModifier,
+                                 HoldModifier)) and not is_gyro_enable(action):
             e = ModeshiftEditor(self.app, self.on_action_chosen)
-            e.set_title(_("Mode Shift for %s") % (title,))
+            e.set_title(_("Mode Shift for %s") % (title, ))
         elif RingEditor.is_ring_action(action):
             e = RingEditor(self.app, self.on_action_chosen)
             e.set_title(title)
@@ -169,13 +169,10 @@ class BindingEditor(object):
             # Type is subclass of Macro
             e = ActionEditor(self.app, self.on_action_chosen)
             e.set_title(title)
-        elif (
-            isinstance(action, Macro)
-            and not is_button_togle(action)
-            and not is_button_repeat(action)
-        ):
+        elif (isinstance(action, Macro) and not is_button_togle(action)
+              and not is_button_repeat(action)):
             e = MacroEditor(self.app, self.on_action_chosen)
-            e.set_title(_("Macro for %s") % (title,))
+            e.set_title(_("Macro for %s") % (title, ))
         else:
             e = ActionEditor(self.app, self.on_action_chosen)
             e.set_title(title)

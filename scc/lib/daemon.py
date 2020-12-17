@@ -87,12 +87,8 @@ class Daemon(object):
             try:
                 if not os.path.exists("/proc"):
                     raise AssertionError
-                cmdline = (
-                    file("/proc/%s/cmdline" % (pid,), "r")
-                    .read()
-                    .replace("\x00", " ")
-                    .strip()
-                )
+                cmdline = (file("/proc/%s/cmdline" % (pid, ),
+                                "r").read().replace("\x00", " ").strip())
                 if sys.argv[0] in cmdline:
                     raise Exception("already running")
             except IOError:
@@ -107,17 +103,16 @@ class Daemon(object):
 
         # Start the daemon
         self.daemonize()
-        syslog.syslog(
-            syslog.LOG_INFO, "{}: started".format(os.path.basename(sys.argv[0]))
-        )
+        syslog.syslog(syslog.LOG_INFO,
+                      "{}: started".format(os.path.basename(sys.argv[0])))
         self.on_start()
         while True:
             try:
                 self.run()
             except Exception as e:  # pylint: disable=W0703
                 syslog.syslog(
-                    syslog.LOG_ERR, "{}: {!s}".format(os.path.basename(sys.argv[0]), e)
-                )
+                    syslog.LOG_ERR,
+                    "{}: {!s}".format(os.path.basename(sys.argv[0]), e))
             time.sleep(2)
 
     def on_start(self):
@@ -157,9 +152,8 @@ class Daemon(object):
             else:
                 print(str(err.args))
                 sys.exit(1)
-        syslog.syslog(
-            syslog.LOG_INFO, "{}: stopped".format(os.path.basename(sys.argv[0]))
-        )
+        syslog.syslog(syslog.LOG_INFO,
+                      "{}: stopped".format(os.path.basename(sys.argv[0])))
 
     def restart(self):
         """Restart the daemon."""

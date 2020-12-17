@@ -49,17 +49,14 @@ class RingEditor(Editor, ComboSetter):
         """
         if isinstance(obj, RingAction):
             return True
-        return (
-            isinstance(obj, MultiAction)
-            and len(obj.actions) >= 2
-            and isinstance(obj.actions[1], RingAction)
-        )
+        return (isinstance(obj, MultiAction) and len(obj.actions) >= 2
+                and isinstance(obj.actions[1], RingAction))
 
     def on_adjRadius_value_changed(self, scale, *a):
         self.radius = scale.get_value()
 
     def on_sclRadius_format_value(self, scale, value):
-        return "%s%%" % (int(value * 100),)
+        return "%s%%" % (int(value * 100), )
 
     def on_Dialog_destroy(self, *a):
         self.remove_added_widget()
@@ -159,12 +156,12 @@ class RingEditor(Editor, ComboSetter):
         key = cbMode.get_model().get_value(cbMode.get_active_iter(), 0)
         if key == "inner":
             return MultiAction(
-                self.actions[1], RingAction(self.radius, self.actions[0], NoAction())
-            )
+                self.actions[1],
+                RingAction(self.radius, self.actions[0], NoAction()))
         if key == "outer":
             return MultiAction(
-                self.actions[0], RingAction(self.radius, NoAction(), self.actions[1])
-            )
+                self.actions[0],
+                RingAction(self.radius, NoAction(), self.actions[1]))
         return RingAction(self.radius, *self.actions)
 
     def _update(self):

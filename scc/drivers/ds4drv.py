@@ -57,14 +57,12 @@ class DS4Controller(HIDController):
         SCButtons.CPADPRESS,
     )
 
-    flags = (
-        ControllerFlags.EUREL_GYROS
-        | ControllerFlags.HAS_RSTICK
-        | ControllerFlags.HAS_CPAD
-        | ControllerFlags.HAS_DPAD
-        | ControllerFlags.SEPARATE_STICK
-        | ControllerFlags.NO_GRIPS
-    )
+    flags = (ControllerFlags.EUREL_GYROS
+             | ControllerFlags.HAS_RSTICK
+             | ControllerFlags.HAS_CPAD
+             | ControllerFlags.HAS_DPAD
+             | ControllerFlags.SEPARATE_STICK
+             | ControllerFlags.NO_GRIPS)
 
     def _load_hid_descriptor(self, config, max_size, vid, pid, test_mode):
         # Overrided and hardcoded
@@ -73,98 +71,86 @@ class DS4Controller(HIDController):
             mode=AxisMode.HATSWITCH,
             byte_offset=5,
             size=8,
-            data=AxisDataUnion(
-                hatswitch=HatswitchModeData(
-                    button=SCButtons.LPAD | SCButtons.LPADTOUCH,
-                    min=STICK_PAD_MIN,
-                    max=STICK_PAD_MAX,
-                )
-            ),
+            data=AxisDataUnion(hatswitch=HatswitchModeData(
+                button=SCButtons.LPAD | SCButtons.LPADTOUCH,
+                min=STICK_PAD_MIN,
+                max=STICK_PAD_MAX,
+            )),
         )
         self._decoder.axes[AxisType.AXIS_STICK_X] = AxisData(
             mode=AxisMode.AXIS,
             byte_offset=1,
             size=8,
-            data=AxisDataUnion(
-                axis=AxisModeData(scale=1.0, offset=-127.5, clamp_max=257, deadzone=10)
-            ),
+            data=AxisDataUnion(axis=AxisModeData(
+                scale=1.0, offset=-127.5, clamp_max=257, deadzone=10)),
         )
         self._decoder.axes[AxisType.AXIS_STICK_Y] = AxisData(
             mode=AxisMode.AXIS,
             byte_offset=2,
             size=8,
-            data=AxisDataUnion(
-                axis=AxisModeData(scale=-1.0, offset=127.5, clamp_max=257, deadzone=10)
-            ),
+            data=AxisDataUnion(axis=AxisModeData(
+                scale=-1.0, offset=127.5, clamp_max=257, deadzone=10)),
         )
         self._decoder.axes[AxisType.AXIS_RPAD_X] = AxisData(
             mode=AxisMode.AXIS,
             byte_offset=3,
             size=8,
-            data=AxisDataUnion(
-                axis=AxisModeData(
-                    button=SCButtons.RPADTOUCH,
-                    scale=1.0,
-                    offset=-127.5,
-                    clamp_max=257,
-                    deadzone=10,
-                )
-            ),
+            data=AxisDataUnion(axis=AxisModeData(
+                button=SCButtons.RPADTOUCH,
+                scale=1.0,
+                offset=-127.5,
+                clamp_max=257,
+                deadzone=10,
+            )),
         )
         self._decoder.axes[AxisType.AXIS_RPAD_Y] = AxisData(
             mode=AxisMode.AXIS,
             byte_offset=4,
             size=8,
-            data=AxisDataUnion(
-                axis=AxisModeData(
-                    button=SCButtons.RPADTOUCH,
-                    scale=-1.0,
-                    offset=127.5,
-                    clamp_max=257,
-                    deadzone=10,
-                )
-            ),
+            data=AxisDataUnion(axis=AxisModeData(
+                button=SCButtons.RPADTOUCH,
+                scale=-1.0,
+                offset=127.5,
+                clamp_max=257,
+                deadzone=10,
+            )),
         )
         self._decoder.axes[AxisType.AXIS_LTRIG] = AxisData(
             mode=AxisMode.AXIS,
             byte_offset=8,
             size=8,
-            data=AxisDataUnion(axis=AxisModeData(scale=1.0, clamp_max=1, deadzone=10)),
+            data=AxisDataUnion(
+                axis=AxisModeData(scale=1.0, clamp_max=1, deadzone=10)),
         )
         self._decoder.axes[AxisType.AXIS_RTRIG] = AxisData(
             mode=AxisMode.AXIS,
             byte_offset=9,
             size=8,
-            data=AxisDataUnion(axis=AxisModeData(scale=1.0, clamp_max=1, deadzone=10)),
+            data=AxisDataUnion(
+                axis=AxisModeData(scale=1.0, clamp_max=1, deadzone=10)),
         )
         self._decoder.axes[AxisType.AXIS_GPITCH] = AxisData(
-            mode=AxisMode.DS4ACCEL, byte_offset=13
-        )
+            mode=AxisMode.DS4ACCEL, byte_offset=13)
         self._decoder.axes[AxisType.AXIS_GROLL] = AxisData(
-            mode=AxisMode.DS4ACCEL, byte_offset=17
-        )
+            mode=AxisMode.DS4ACCEL, byte_offset=17)
         self._decoder.axes[AxisType.AXIS_GYAW] = AxisData(
-            mode=AxisMode.DS4ACCEL, byte_offset=15
-        )
-        self._decoder.axes[AxisType.AXIS_Q1] = AxisData(
-            mode=AxisMode.DS4GYRO, byte_offset=23
-        )
-        self._decoder.axes[AxisType.AXIS_Q2] = AxisData(
-            mode=AxisMode.DS4GYRO, byte_offset=19
-        )
-        self._decoder.axes[AxisType.AXIS_Q3] = AxisData(
-            mode=AxisMode.DS4GYRO, byte_offset=21
-        )
+            mode=AxisMode.DS4ACCEL, byte_offset=15)
+        self._decoder.axes[AxisType.AXIS_Q1] = AxisData(mode=AxisMode.DS4GYRO,
+                                                        byte_offset=23)
+        self._decoder.axes[AxisType.AXIS_Q2] = AxisData(mode=AxisMode.DS4GYRO,
+                                                        byte_offset=19)
+        self._decoder.axes[AxisType.AXIS_Q3] = AxisData(mode=AxisMode.DS4GYRO,
+                                                        byte_offset=21)
 
         self._decoder.axes[AxisType.AXIS_CPAD_X] = AxisData(
-            mode=AxisMode.DS4TOUCHPAD, byte_offset=36
-        )
+            mode=AxisMode.DS4TOUCHPAD, byte_offset=36)
         self._decoder.axes[AxisType.AXIS_CPAD_Y] = AxisData(
-            mode=AxisMode.DS4TOUCHPAD, byte_offset=37, bit_offset=4
-        )
-        self._decoder.buttons = ButtonData(
-            enabled=True, byte_offset=5, bit_offset=4, size=14, button_count=14
-        )
+            mode=AxisMode.DS4TOUCHPAD, byte_offset=37, bit_offset=4)
+        self._decoder.buttons = ButtonData(enabled=True,
+                                           byte_offset=5,
+                                           bit_offset=4,
+                                           size=14,
+                                           button_count=14)
 
         if test_mode:
             for x in range(BUTTON_COUNT):
@@ -186,7 +172,8 @@ class DS4Controller(HIDController):
                     self._decoder.state.buttons &= ~SCButtons.CPADTOUCH
                 else:
                     self._decoder.state.buttons |= SCButtons.CPADTOUCH
-                self.mapper.input(self, self._decoder.old_state, self._decoder.state)
+                self.mapper.input(self, self._decoder.old_state,
+                                  self._decoder.state)
 
     def get_gyro_enabled(self):
         # Cannot be actually turned off, so it's always active
@@ -200,7 +187,7 @@ class DS4Controller(HIDController):
         return "ds4-config.json"
 
     def __repr__(self):
-        return "<DS4Controller %s>" % (self.get_id(),)
+        return "<DS4Controller %s>" % (self.get_id(), )
 
     def _generate_id(self):
         """
@@ -210,7 +197,7 @@ class DS4Controller(HIDController):
         magic_number = 1
         id = "ds4"
         while id in self.daemon.get_active_ids():
-            id = "ds4:%s" % (magic_number,)
+            id = "ds4:%s" % (magic_number, )
             magic_number += 1
         return id
 
@@ -233,14 +220,52 @@ class DS4EvdevController(EvdevController):
         # 319: "CPAD",
     }
     AXIS_MAP = {
-        0: {"axis": "stick_x", "deadzone": 4, "max": 255, "min": 0},
-        1: {"axis": "stick_y", "deadzone": 4, "max": 0, "min": 255},
-        3: {"axis": "rpad_x", "deadzone": 4, "max": 255, "min": 0},
-        4: {"axis": "rpad_y", "deadzone": 8, "max": 0, "min": 255},
-        2: {"axis": "ltrig", "max": 255, "min": 0},
-        5: {"axis": "rtrig", "max": 255, "min": 0},
-        16: {"axis": "lpad_x", "deadzone": 0, "max": 1, "min": -1},
-        17: {"axis": "lpad_y", "deadzone": 0, "max": -1, "min": 1},
+        0: {
+            "axis": "stick_x",
+            "deadzone": 4,
+            "max": 255,
+            "min": 0
+        },
+        1: {
+            "axis": "stick_y",
+            "deadzone": 4,
+            "max": 0,
+            "min": 255
+        },
+        3: {
+            "axis": "rpad_x",
+            "deadzone": 4,
+            "max": 255,
+            "min": 0
+        },
+        4: {
+            "axis": "rpad_y",
+            "deadzone": 8,
+            "max": 0,
+            "min": 255
+        },
+        2: {
+            "axis": "ltrig",
+            "max": 255,
+            "min": 0
+        },
+        5: {
+            "axis": "rtrig",
+            "max": 255,
+            "min": 0
+        },
+        16: {
+            "axis": "lpad_x",
+            "deadzone": 0,
+            "max": 1,
+            "min": -1
+        },
+        17: {
+            "axis": "lpad_y",
+            "deadzone": 0,
+            "max": -1,
+            "min": 1
+        },
     }
     BUTTON_MAP_OLD = {
         304: "X",
@@ -257,14 +282,52 @@ class DS4EvdevController(EvdevController):
         # 317: "CPAD",
     }
     AXIS_MAP_OLD = {
-        0: {"axis": "stick_x", "deadzone": 4, "max": 255, "min": 0},
-        1: {"axis": "stick_y", "deadzone": 4, "max": 0, "min": 255},
-        2: {"axis": "rpad_x", "deadzone": 4, "max": 255, "min": 0},
-        5: {"axis": "rpad_y", "deadzone": 8, "max": 0, "min": 255},
-        3: {"axis": "ltrig", "max": 32767, "min": -32767},
-        4: {"axis": "rtrig", "max": 32767, "min": -32767},
-        16: {"axis": "lpad_x", "deadzone": 0, "max": 1, "min": -1},
-        17: {"axis": "lpad_y", "deadzone": 0, "max": -1, "min": 1},
+        0: {
+            "axis": "stick_x",
+            "deadzone": 4,
+            "max": 255,
+            "min": 0
+        },
+        1: {
+            "axis": "stick_y",
+            "deadzone": 4,
+            "max": 0,
+            "min": 255
+        },
+        2: {
+            "axis": "rpad_x",
+            "deadzone": 4,
+            "max": 255,
+            "min": 0
+        },
+        5: {
+            "axis": "rpad_y",
+            "deadzone": 8,
+            "max": 0,
+            "min": 255
+        },
+        3: {
+            "axis": "ltrig",
+            "max": 32767,
+            "min": -32767
+        },
+        4: {
+            "axis": "rtrig",
+            "max": 32767,
+            "min": -32767
+        },
+        16: {
+            "axis": "lpad_x",
+            "deadzone": 0,
+            "max": 1,
+            "min": -1
+        },
+        17: {
+            "axis": "lpad_y",
+            "deadzone": 0,
+            "max": -1,
+            "min": 1
+        },
     }
     GYRO_MAP = {
         EvdevController.ECODES.ABS_RX: ("gpitch", 0.01),
@@ -274,14 +337,12 @@ class DS4EvdevController(EvdevController):
         EvdevController.ECODES.ABS_Y: (None, 1),  # 'q3'
         EvdevController.ECODES.ABS_Z: (None, -1),  # 'q1'
     }
-    flags = (
-        ControllerFlags.EUREL_GYROS
-        | ControllerFlags.HAS_RSTICK
-        | ControllerFlags.HAS_CPAD
-        | ControllerFlags.HAS_DPAD
-        | ControllerFlags.SEPARATE_STICK
-        | ControllerFlags.NO_GRIPS
-    )
+    flags = (ControllerFlags.EUREL_GYROS
+             | ControllerFlags.HAS_RSTICK
+             | ControllerFlags.HAS_CPAD
+             | ControllerFlags.HAS_DPAD
+             | ControllerFlags.SEPARATE_STICK
+             | ControllerFlags.NO_GRIPS)
 
     def __init__(self, daemon, controllerdevice, gyro, touchpad):
         config = {
@@ -301,7 +362,8 @@ class DS4EvdevController(EvdevController):
                 device.grab()
         EvdevController.__init__(self, daemon, controllerdevice, None, config)
         if self.poller:
-            self.poller.register(touchpad.fd, self.poller.POLLIN, self._touchpad_input)
+            self.poller.register(touchpad.fd, self.poller.POLLIN,
+                                 self._touchpad_input)
             self.poller.register(gyro.fd, self.poller.POLLIN, self._gyro_input)
 
     def _gyro_input(self, *a):
@@ -312,8 +374,7 @@ class DS4EvdevController(EvdevController):
                     axis, factor = DS4EvdevController.GYRO_MAP[event.code]
                     if axis:
                         new_state = new_state._replace(
-                            **{axis: int(event.value * factor)}
-                        )
+                            **{axis: int(event.value * factor)})
         except IOError:
             # Errors here are not even reported, evdev class handles important
             # ones
@@ -352,7 +413,9 @@ class DS4EvdevController(EvdevController):
                         new_state = new_state._replace(buttons=b)
                     else:
                         b = new_state.buttons & ~SCButtons.CPADTOUCH
-                        new_state = new_state._replace(buttons=b, cpad_x=0, cpad_y=0)
+                        new_state = new_state._replace(buttons=b,
+                                                       cpad_x=0,
+                                                       cpad_y=0)
         except IOError:
             # Errors here are not even reported, evdev class handles important
             # ones
@@ -384,7 +447,7 @@ class DS4EvdevController(EvdevController):
         return "ds4-config.json"
 
     def __repr__(self):
-        return "<DS4EvdevController %s>" % (self.get_id(),)
+        return "<DS4EvdevController %s>" % (self.get_id(), )
 
     def _generate_id(self):
         """
@@ -394,7 +457,7 @@ class DS4EvdevController(EvdevController):
         magic_number = 1
         id = "ds4"
         while id in self.daemon.get_active_ids():
-            id = "ds4:%s" % (magic_number,)
+            id = "ds4:%s" % (magic_number, )
             magic_number += 1
         return id
 
@@ -440,7 +503,8 @@ def init(daemon, config):
                     touchpad = device
         # 3rd, do a magic
         if controllerdevice and gyro and touchpad:
-            return make_new_device(DS4EvdevController, controllerdevice, gyro, touchpad)
+            return make_new_device(DS4EvdevController, controllerdevice, gyro,
+                                   touchpad)
 
     def fail_cb(syspath, vid, pid):
         if HAVE_EVDEV:
@@ -455,14 +519,16 @@ def init(daemon, config):
             # TODO: Maybe add_error here, but error reporting needs little rework so it's not threated as fatal
             # daemon.add_error("ds4", "No access to DS4 device")
 
-    if config["drivers"].get("hiddrv") or (
-        HAVE_EVDEV and config["drivers"].get("evdevdrv")
-    ):
-        register_hotplug_device(hid_callback, VENDOR_ID, PRODUCT_ID, on_failure=fail_cb)
+    if config["drivers"].get("hiddrv") or (HAVE_EVDEV and
+                                           config["drivers"].get("evdevdrv")):
+        register_hotplug_device(hid_callback,
+                                VENDOR_ID,
+                                PRODUCT_ID,
+                                on_failure=fail_cb)
         if HAVE_EVDEV and config["drivers"].get("evdevdrv"):
-            daemon.get_device_monitor().add_callback(
-                "bluetooth", VENDOR_ID, PRODUCT_ID, make_evdev_device, None
-            )
+            daemon.get_device_monitor().add_callback("bluetooth", VENDOR_ID,
+                                                     PRODUCT_ID,
+                                                     make_evdev_device, None)
         return True
     else:
         log.warning(
