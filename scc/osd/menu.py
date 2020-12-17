@@ -220,7 +220,9 @@ class Menu(OSDWindow):
                 self._menuid = self.args.items[0]
                 self.items = MenuData.from_profile(self.args.from_profile, self._menuid)
             except IOError:
-                print("%s: error: profile file not found" % (sys.argv[0]), file=sys.stderr)
+                print(
+                    "%s: error: profile file not found" % (sys.argv[0]), file=sys.stderr
+                )
                 return False
             except ValueError:
                 print("%s: error: menu not found" % (sys.argv[0]), file=sys.stderr)
@@ -230,18 +232,20 @@ class Menu(OSDWindow):
                 self._menuid = self.args.from_file
                 self.items = MenuData.from_file(self.args.from_file)
             except:
-                print("%s: error: failed to load menu file" % (
-                    sys.argv[0]
-                ), file=sys.stderr)
+                print(
+                    "%s: error: failed to load menu file" % (sys.argv[0]),
+                    file=sys.stderr,
+                )
                 return False
         else:
             try:
                 self.items = MenuData.from_args(self.args.items)
                 self._menuid = None
             except ValueError:
-                print("%s: error: invalid number of arguments" % (
-                    sys.argv[0]
-                ), file=sys.stderr)
+                print(
+                    "%s: error: invalid number of arguments" % (sys.argv[0]),
+                    file=sys.stderr,
+                )
                 return False
         return True
 

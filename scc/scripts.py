@@ -193,26 +193,41 @@ def cmd_dependency_check(argv0, argv):
     except ValueError as e1:
         print(e1, file=sys.stderr)
         if "Rsvg" in str(e1):
-            print("Please, install 'gir1.2-rsvg-2.0' package to use this application", file=sys.stderr)
+            print(
+                "Please, install 'gir1.2-rsvg-2.0' package to use this application",
+                file=sys.stderr,
+            )
         else:
-            print("Please, install 'PyGObject' package to use this application", file=sys.stderr)
+            print(
+                "Please, install 'PyGObject' package to use this application",
+                file=sys.stderr,
+            )
     except ImportError as e2:
         print(e2, file=sys.stderr)
         if "gi" in str(e2):
-            print("Please, install 'PyGObject' package to use this application", file=sys.stderr)
+            print(
+                "Please, install 'PyGObject' package to use this application",
+                file=sys.stderr,
+            )
         return 1
     try:
         import evdev
     except Exception as e:
         print(e, file=sys.stderr)
-        print("Please, install python-evdev package to enable non-steam controller support", file=sys.stderr)
+        print(
+            "Please, install python-evdev package to enable non-steam controller support",
+            file=sys.stderr,
+        )
     try:
         import scc.lib.xwrappers as X
 
         X.Atom
     except Exception as e:
         print(e, file=sys.stderr)
-        print("Failed to load X11 helpers, please, check your X installation", file=sys.stderr)
+        print(
+            "Failed to load X11 helpers, please, check your X installation",
+            file=sys.stderr,
+        )
         return 1
     return 0
 

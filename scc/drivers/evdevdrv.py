@@ -551,9 +551,12 @@ def evdevdrv_test(args):
     c = EvdevController(None, dev, None, {})
     caps = dev.capabilities(verbose=False)
     print(("Buttons:", " ".join([str(x) for x in caps.get(ecodes.EV_KEY, [])])))
-    print((
-        "Axes:", " ".join([str(axis) for (axis, trash) in caps.get(ecodes.EV_ABS, [])])
-    ))
+    print(
+        (
+            "Axes:",
+            " ".join([str(axis) for (axis, trash) in caps.get(ecodes.EV_ABS, [])]),
+        )
+    )
     print("Ready")
     sys.stdout.flush()
     for event in dev.read_loop():

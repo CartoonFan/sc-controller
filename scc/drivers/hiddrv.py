@@ -236,32 +236,36 @@ class HIDController(USBDevice, Controller):
         if test_mode:
             self.set_input_interrupt(id, self._packet_size, self.test_input)
 
-            print((
-                "Buttons:",
-                " ".join(
-                    [
-                        str(x + FIRST_BUTTON)
-                        for x in range(self._decoder.buttons.button_count)
-                    ]
-                ),
-            ))
-            print((
-                "Axes:",
-                " ".join(
-                    [
-                        str(x)
-                        for x in range(
-                            len(
-                                [
-                                    a
-                                    for a in self._decoder.axes
-                                    if a.mode != AxisMode.DISABLED
-                                ]
+            print(
+                (
+                    "Buttons:",
+                    " ".join(
+                        [
+                            str(x + FIRST_BUTTON)
+                            for x in range(self._decoder.buttons.button_count)
+                        ]
+                    ),
+                )
+            )
+            print(
+                (
+                    "Axes:",
+                    " ".join(
+                        [
+                            str(x)
+                            for x in range(
+                                len(
+                                    [
+                                        a
+                                        for a in self._decoder.axes
+                                        if a.mode != AxisMode.DISABLED
+                                    ]
+                                )
                             )
-                        )
-                    ]
-                ),
-            ))
+                        ]
+                    ),
+                )
+            )
         else:
             self._id = self._generate_id()
             self.set_input_interrupt(id, self._packet_size, self.input)

@@ -134,7 +134,10 @@ class Dialog(OSDWindow):
             self.items = MenuData.from_args(self.args.items)
             self._menuid = None
         except ValueError:
-            print("%s: error: invalid number of arguments" % (sys.argv[0]), file=sys.stderr)
+            print(
+                "%s: error: invalid number of arguments" % (sys.argv[0]),
+                file=sys.stderr,
+            )
             return False
 
         self._text.set_label(self.args.text)
