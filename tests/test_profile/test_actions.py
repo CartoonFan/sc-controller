@@ -1,4 +1,3 @@
-
 from scc.actions import *
 from scc.modifiers import BallModifier
 from scc.uinput import Axes
