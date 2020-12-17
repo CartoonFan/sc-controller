@@ -5,7 +5,8 @@ Frontier is my favorite.
 """
 import logging
 
-from scc.actions import Action, ButtonAction
+from scc.actions import Action
+from scc.actions import ButtonAction
 from scc.uinput import Keys
 
 log = logging.getLogger("Macros")

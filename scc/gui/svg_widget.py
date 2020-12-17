@@ -13,7 +13,11 @@ from math import pi as PI
 from math import sin
 from xml.etree import ElementTree as ET
 
-from gi.repository import Gdk, GdkPixbuf, GObject, Gtk, Rsvg
+from gi.repository import Gdk
+from gi.repository import GdkPixbuf
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import Rsvg
 
 log = logging.getLogger("Background")
 ET.register_namespace("", "http://www.w3.org/2000/svg")

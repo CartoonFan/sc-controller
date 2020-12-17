@@ -9,8 +9,12 @@ it clean.
 import logging
 
 from scc.actions import Action
-from scc.constants import (CPAD, CPAD_MIN, CPAD_X_MAX, CPAD_Y_MAX,
-                           STICK_PAD_MAX, STICK_PAD_MIN)
+from scc.constants import CPAD
+from scc.constants import CPAD_MIN
+from scc.constants import CPAD_X_MAX
+from scc.constants import CPAD_Y_MAX
+from scc.constants import STICK_PAD_MAX
+from scc.constants import STICK_PAD_MIN
 from scc.tools import clamp
 
 log = logging.getLogger("Gestures")

@@ -11,14 +11,21 @@ import sys
 import threading
 import time
 import traceback
-from socketserver import StreamRequestHandler, ThreadingMixIn, UnixStreamServer
+from socketserver import StreamRequestHandler
+from socketserver import ThreadingMixIn
+from socketserver import UnixStreamServer
 
 from scc import drivers
 from scc.actions import Action
 from scc.cemuhook_server import CemuhookServer
 from scc.config import Config
-from scc.constants import (CPAD, DAEMON_VERSION, LEFT, RIGHT, STICK, HapticPos,
-                           SCButtons)
+from scc.constants import CPAD
+from scc.constants import DAEMON_VERSION
+from scc.constants import HapticPos
+from scc.constants import LEFT
+from scc.constants import RIGHT
+from scc.constants import SCButtons
+from scc.constants import STICK
 from scc.controller import HapticData
 from scc.custom import load_custom_module
 from scc.device_monitor import create_device_monitor
@@ -32,8 +39,14 @@ from scc.parser import TalkingActionParser
 from scc.poller import Poller
 from scc.profile import Profile
 from scc.scheduler import Scheduler
-from scc.tools import (clamp, find_binary, find_menu, find_profile, nameof,
-                       set_logging_level, shjoin, shsplit)
+from scc.tools import clamp
+from scc.tools import find_binary
+from scc.tools import find_menu
+from scc.tools import find_profile
+from scc.tools import nameof
+from scc.tools import set_logging_level
+from scc.tools import shjoin
+from scc.tools import shsplit
 from scc.uinput import CannotCreateUInputException
 
 log = logging.getLogger("SCCDaemon")

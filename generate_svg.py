@@ -1,14 +1,19 @@
 import os
 
-from scc.actions import Action, DPadAction, MouseAction, XYAction
+from scc.actions import Action
+from scc.actions import DPadAction
+from scc.actions import MouseAction
+from scc.actions import XYAction
 from scc.constants import SCButtons
 from scc.gui.svg_widget import SVGEditor
 from scc.lib import IntEnum
-from scc.modifiers import DoubleclickModifier, ModeModifier
+from scc.modifiers import DoubleclickModifier
+from scc.modifiers import ModeModifier
 from scc.parser import TalkingActionParser
 from scc.profile import Profile
 from scc.special_actions import MenuAction
-from scc.tools import _, nameof
+from scc.tools import _
+from scc.tools import nameof
 from scc.uinput import Rels
 
 

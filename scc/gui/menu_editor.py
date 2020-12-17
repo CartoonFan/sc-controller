@@ -8,22 +8,29 @@ import logging
 import os
 import traceback
 
-from gi.repository import GObject, Gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
-from scc.actions import Action, NoAction
+from scc.actions import Action
+from scc.actions import NoAction
 from scc.gui.action_editor import ActionEditor
 from scc.gui.dwsnc import headerbar
 from scc.gui.editor import Editor
 from scc.gui.icon_chooser import IconChooser
-from scc.menu_data import MenuData, MenuItem, Separator, Submenu
+from scc.menu_data import MenuData
+from scc.menu_data import MenuItem
+from scc.menu_data import Separator
+from scc.menu_data import Submenu
 from scc.osd.menu import MenuIcon
-from scc.osd.menu_generators import (GameListMenuGenerator,
-                                     ProfileListMenuGenerator,
-                                     RecentListMenuGenerator)
+from scc.osd.menu_generators import GameListMenuGenerator
+from scc.osd.menu_generators import ProfileListMenuGenerator
+from scc.osd.menu_generators import RecentListMenuGenerator
 from scc.parser import TalkingActionParser
-from scc.paths import get_default_menus_path, get_menus_path
+from scc.paths import get_default_menus_path
+from scc.paths import get_menus_path
 from scc.profile import Encoder
-from scc.tools import _, find_icon
+from scc.tools import _
+from scc.tools import find_icon
 
 log = logging.getLogger("MenuEditor")
 

@@ -11,7 +11,8 @@ import os
 import re
 from ctypes.util import find_library
 
-from scc.lib.eudevmonitor import Eudev, Monitor
+from scc.lib.eudevmonitor import Eudev
+from scc.lib.eudevmonitor import Monitor
 from scc.lib.ioctl_opt import IOR
 
 log = logging.getLogger("DevMon")

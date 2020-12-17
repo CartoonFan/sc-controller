@@ -2,11 +2,16 @@
 import logging
 import os
 
-from gi.repository import Gdk, GLib, Gtk
+from gi.repository import Gdk
+from gi.repository import GLib
+from gi.repository import Gtk
 
-from scc.actions import Action, NoAction, XYAction
+from scc.actions import Action
+from scc.actions import NoAction
+from scc.actions import XYAction
 from scc.gui.editor import ComboSetter
-from scc.tools import _, ensure_size
+from scc.tools import _
+from scc.tools import ensure_size
 
 log = logging.getLogger("AE")
 

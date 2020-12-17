@@ -6,12 +6,14 @@ Currently setups only one thing...
 import logging
 import os
 
-from gi.repository import GdkPixbuf, GLib
+from gi.repository import GdkPixbuf
+from gi.repository import GLib
 
-from scc.gui.editor import ComboSetter, Editor
+from scc.gui.editor import ComboSetter
+from scc.gui.editor import Editor
 from scc.gui.userdata_manager import UserDataManager
-from scc.paths import (get_controller_icons_path,
-                       get_default_controller_icons_path)
+from scc.paths import get_controller_icons_path
+from scc.paths import get_default_controller_icons_path
 from scc.tools import _
 
 log = logging.getLogger("GS")

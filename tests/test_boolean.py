@@ -1,4 +1,5 @@
-from scc.actions import Action, NoAction
+from scc.actions import Action
+from scc.actions import NoAction
 
 
 class TestBoolean(object):

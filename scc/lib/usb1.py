@@ -51,9 +51,20 @@ import sys
 import threading
 import warnings
 import weakref
-from ctypes import (POINTER, addressof, byref, c_char, c_int, c_ubyte, c_uint8,
-                    c_uint16, c_void_p, cast, cdll, create_string_buffer,
-                    sizeof, string_at)
+from ctypes import addressof
+from ctypes import byref
+from ctypes import c_char
+from ctypes import c_int
+from ctypes import c_ubyte
+from ctypes import c_uint16
+from ctypes import c_uint8
+from ctypes import c_void_p
+from ctypes import cast
+from ctypes import cdll
+from ctypes import create_string_buffer
+from ctypes import POINTER
+from ctypes import sizeof
+from ctypes import string_at
 from ctypes.util import find_library
 
 from . import libusb1

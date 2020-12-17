@@ -7,17 +7,30 @@ import ctypes
 import logging
 import sys
 
-from scc.constants import (STICK_PAD_MAX, STICK_PAD_MIN, ControllerFlags,
-                           SCButtons)
-from scc.drivers.evdevdrv import (HAVE_EVDEV, EvdevController, get_axes,
-                                  get_evdev_devices_from_syspath,
-                                  make_new_device)
-from scc.drivers.hiddrv import (BUTTON_COUNT, AxisData, AxisDataUnion,
-                                AxisMode, AxisModeData, AxisType, ButtonData,
-                                HatswitchModeData, HIDController, HIDDecoder,
-                                _lib, hiddrv_test)
+from scc.constants import ControllerFlags
+from scc.constants import SCButtons
+from scc.constants import STICK_PAD_MAX
+from scc.constants import STICK_PAD_MIN
+from scc.drivers.evdevdrv import EvdevController
+from scc.drivers.evdevdrv import get_axes
+from scc.drivers.evdevdrv import get_evdev_devices_from_syspath
+from scc.drivers.evdevdrv import HAVE_EVDEV
+from scc.drivers.evdevdrv import make_new_device
+from scc.drivers.hiddrv import _lib
+from scc.drivers.hiddrv import AxisData
+from scc.drivers.hiddrv import AxisDataUnion
+from scc.drivers.hiddrv import AxisMode
+from scc.drivers.hiddrv import AxisModeData
+from scc.drivers.hiddrv import AxisType
+from scc.drivers.hiddrv import BUTTON_COUNT
+from scc.drivers.hiddrv import ButtonData
+from scc.drivers.hiddrv import HatswitchModeData
+from scc.drivers.hiddrv import HIDController
+from scc.drivers.hiddrv import HIDDecoder
+from scc.drivers.hiddrv import hiddrv_test
 from scc.drivers.usb import register_hotplug_device
-from scc.tools import init_logging, set_logging_level
+from scc.tools import init_logging
+from scc.tools import set_logging_level
 
 log = logging.getLogger("DS4")
 

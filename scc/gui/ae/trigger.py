@@ -5,12 +5,23 @@ Assigns one or two emulated buttons to trigger
 """
 import logging
 
-from scc.actions import (Action, AxisAction, ButtonAction, HipfireAction,
-                         MouseAction, MultiAction, NoAction, TriggerAction)
-from scc.constants import (HIPFIRE_EXCLUSIVE, HIPFIRE_NORMAL, HIPFIRE_SENSIBLE,
-                           TRIGGER_CLICK, TRIGGER_HALF, TRIGGER_MAX,
-                           TRIGGER_MIN)
-from scc.gui.ae import AEComponent, describe_action
+from scc.actions import Action
+from scc.actions import AxisAction
+from scc.actions import ButtonAction
+from scc.actions import HipfireAction
+from scc.actions import MouseAction
+from scc.actions import MultiAction
+from scc.actions import NoAction
+from scc.actions import TriggerAction
+from scc.constants import HIPFIRE_EXCLUSIVE
+from scc.constants import HIPFIRE_NORMAL
+from scc.constants import HIPFIRE_SENSIBLE
+from scc.constants import TRIGGER_CLICK
+from scc.constants import TRIGGER_HALF
+from scc.constants import TRIGGER_MAX
+from scc.constants import TRIGGER_MIN
+from scc.gui.ae import AEComponent
+from scc.gui.ae import describe_action
 from scc.gui.binding_editor import BindingEditor
 from scc.gui.simple_chooser import SimpleChooser
 from scc.tools import _

@@ -15,7 +15,8 @@ from gi.repository import GLib
 from scc.foreign.vdf import VDFProfile
 from scc.foreign.vdffz import VDFFZProfile
 from scc.lib.vdf import parse_vdf
-from scc.tools import _, get_profiles_path
+from scc.tools import _
+from scc.tools import get_profiles_path
 
 log = logging.getLogger("IE.ImportVdf")
 
