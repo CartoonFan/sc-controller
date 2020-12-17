@@ -103,3 +103,4 @@ class TestMacros(object):
         """
         if not _parses_as_itself(TapAction(Keys.BTN_LEFT)):
             raise AssertionError
+ 

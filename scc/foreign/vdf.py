@@ -632,3 +632,4 @@ if __name__ == "__main__":
     init_logging()
     f = VDFProfile().load(sys.argv[1])
     f.save("output.sccprofile")
+ 

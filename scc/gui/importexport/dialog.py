@@ -170,3 +170,4 @@ class Dialog(Editor, ComboSetter, Export, ImportVdf, ImportSccprofile):
     def on_btImportVdf_clicked(self, *a):
         grVdfImport = self.builder.get_object("grVdfImport")
         self.next_page(grVdfImport)
+ 

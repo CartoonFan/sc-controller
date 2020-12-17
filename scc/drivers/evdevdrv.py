@@ -568,3 +568,4 @@ if __name__ == "__main__":
     init_logging()
     set_logging_level(True, True)
     sys.exit(evdevdrv_test(sys.argv[1:]))
+ 

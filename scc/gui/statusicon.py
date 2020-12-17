@@ -439,3 +439,4 @@ def get_status_icon(*args, **kwargs):
     # Use proxy backend to determine the correct backend while the application
     # is running
     return StatusIconProxy(*args, **kwargs)
+ 

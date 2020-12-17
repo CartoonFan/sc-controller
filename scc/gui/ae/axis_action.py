@@ -573,3 +573,4 @@ class FakeMapper(object):
 
         # Failed to get property or there is not any usable window
         return root
+ 

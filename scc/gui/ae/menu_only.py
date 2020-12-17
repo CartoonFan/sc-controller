@@ -47,3 +47,4 @@ class MenuOnlyComponent(AEComponent, MenuActionCofC):
     def handles(self, mode, action):
         """ Not visible by default """
         return False
+ 

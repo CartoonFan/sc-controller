@@ -415,3 +415,4 @@ class TapAction(PressAction):
         if self.count <= 1:
             return "%s(%s)" % (self.COMMAND, self.button)
         return "%s(%s, %s)" % (self.COMMAND, self.button, self.count)
+ 

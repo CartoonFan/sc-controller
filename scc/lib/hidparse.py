@@ -448,3 +448,4 @@ def make_parsers(data):
     if offset % 8 > 0:
         size += 1
     return size, parsers
+ 

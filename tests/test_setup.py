@@ -31,3 +31,4 @@ class TestSetup(object):
                     raise AssertionError(
                         "Package '%s' is not being installed by setup.py" % (modname,)
                     )
+ 

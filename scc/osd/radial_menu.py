@@ -319,3 +319,4 @@ if __name__ == "__main__":
     if m.get_exit_code() == 0:
         print(m.get_selected_item_id())
     sys.exit(m.get_exit_code())
+ 

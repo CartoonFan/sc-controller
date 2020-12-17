@@ -81,3 +81,4 @@ if "XDG_CURRENT_DESKTOP" in os.environ:
 if not hasattr(Gtk.Label, "set_xalign"):
     # GTK is old enough
     fix_label_missing_set_XYalign_methods()
+ 

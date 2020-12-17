@@ -271,3 +271,4 @@ class ImportSccprofile(object):
         trash, trash, importas, trash, obj = files[0]
         self.app.new_profile(obj.obj, importas)
         GLib.idle_add(self.window.destroy)
+ 

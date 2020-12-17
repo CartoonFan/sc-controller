@@ -78,3 +78,4 @@ class TestModeshift(object):
             raise AssertionError
         if not isinstance(lgrip.action, XYAction):
             raise AssertionError
+ 

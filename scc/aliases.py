@@ -66,3 +66,4 @@ for i in range(0, len(ALL_BUTTONS)):
 
 for i in range(0, len(ALL_AXES)):
     setattr(Axes, "ABS%i" % (i,), ALL_AXES[i])
+ 

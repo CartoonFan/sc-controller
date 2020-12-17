@@ -386,3 +386,4 @@ class AutoswitchOptsMenuGenerator(MenuGenerator):
 MENU_GENERATORS[
     AutoswitchOptsMenuGenerator.GENERATOR_NAME
 ] = AutoswitchOptsMenuGenerator
+ 

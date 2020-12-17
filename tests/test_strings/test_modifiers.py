@@ -20,3 +20,4 @@ class TestModifiers(object):
             BallModifier(15, 40, 15, 0.1, 3265, 4, AxisAction(Axes.ABS_X)),
         ):
             raise AssertionError
+ 

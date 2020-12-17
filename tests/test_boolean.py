@@ -22,3 +22,4 @@ class TestBoolean(object):
         if a:
             return
         raise Exception("Action is False :(")
+ 

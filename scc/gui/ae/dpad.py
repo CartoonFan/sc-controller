@@ -234,3 +234,4 @@ class DPADComponent(AEComponent, MenuActionCofC, BindingEditor):
     def on_exMenuPosition_activate(self, ex, *a):
         rvMenuPosition = self.builder.get_object("rvMenuPosition")
         rvMenuPosition.set_reveal_child(not ex.get_expanded())
+ 

@@ -233,3 +233,4 @@ class Config(object):
     def __contains__(self, key):
         """ Returns true if there is such value """
         return key in self.values
+ 

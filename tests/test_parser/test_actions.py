@@ -327,3 +327,4 @@ class TestActions(object):
         """
         if not _parses_as_itself(TriggerAction(15, 234, ButtonAction(Keys.KEY_A))):
             raise AssertionError
+ 

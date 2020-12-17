@@ -173,3 +173,4 @@ class StickGrabber(TriggerGrabber):
                 self.parent.generate_unassigned()
                 self.parent.generate_raw_data()
                 self.cancel()
+ 

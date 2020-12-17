@@ -183,3 +183,4 @@ class GameListMenuGenerator(MenuGenerator):
 for i in [globals()[x] for x in dir() if hasattr(globals()[x], "GENERATOR_NAME")]:
     if i.GENERATOR_NAME is not None:
         MENU_GENERATORS[i.GENERATOR_NAME] = i
+ 

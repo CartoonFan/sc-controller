@@ -832,3 +832,4 @@ class CemuHookAction(Action, SpecialAction):
 
 # Register actions from current module
 Action.register_all(sys.modules[__name__])
+ 

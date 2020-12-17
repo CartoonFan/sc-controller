@@ -226,3 +226,4 @@ class SpecialActionComponent(AEComponent, MenuActionCofC):
         if value < 1:
             return "%sms" % int(value * 1000)
         return "%ss" % value
+ 

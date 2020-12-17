@@ -1551,3 +1551,4 @@ else:
     libusb_hotplug_deregister_callback.restype = None
 
 # /libusb.h
+ 

@@ -549,3 +549,4 @@ class ControllerManager(GObject.GObject):
         if self._dm.alive:
             self._send_id()
             self._dm.request("Unlock.", lambda *a: False, lambda *a: False)
+ 

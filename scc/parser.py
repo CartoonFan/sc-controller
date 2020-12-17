@@ -397,3 +397,4 @@ class TalkingActionParser(ActionParser):
             return ActionParser.parse(self)
         except ParseError as e:
             print >>sys.stderr, "Warning: Failed to parse '%s':" % (self.string,), e
+ 

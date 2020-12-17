@@ -292,3 +292,4 @@ def create_device_monitor(daemon):
     m = Eudev().monitor(subclass=DeviceMonitor)
     m.daemon = daemon
     return m
+ 

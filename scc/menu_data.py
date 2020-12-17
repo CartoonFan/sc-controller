@@ -270,3 +270,4 @@ class MenuGenerator(object):
 
 # Holds dict of knowm menu ganerators, but generated elsewhere
 MENU_GENERATORS = {}
+ 

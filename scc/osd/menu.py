@@ -657,3 +657,4 @@ class MenuIcon(Gtk.DrawingArea):
                 Gdk.cairo_set_source_rgba(cr, context.get_color(Gtk.StateFlags.NORMAL))
                 cr.mask_surface(surf, 0, 0)
             cr.fill()
+ 

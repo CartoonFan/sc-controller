@@ -154,3 +154,4 @@ class RIBar(Gtk.Revealer):
             b.set_image(icon_widget)
             b.set_always_show_image(True)
         return b
+ 

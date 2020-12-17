@@ -144,3 +144,4 @@ def get_daemon_socket():
     ~/.config/scc/daemon.socket under normal conditions.
     """
     return os.path.join(get_config_path(), "daemon.socket")
+ 

@@ -486,3 +486,4 @@ class Launcher(OSDWindow):
                     self.quit(0)
                 else:
                     self.quit(-1)
+ 

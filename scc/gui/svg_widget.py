@@ -702,3 +702,4 @@ class SVGEditor(object):
     def load_from_file(filename):
         tree = ET.fromstring(open(filename, "r").read())
         return SVGEditor.find_by_tag(tree, "g")
+ 

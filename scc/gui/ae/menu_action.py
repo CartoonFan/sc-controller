@@ -492,3 +492,4 @@ class MenuActionCofC(UserDataManager):
             if val < 2:
                 return _("default")
             return str(int(val))
+ 

@@ -78,3 +78,4 @@ class PerAxisComponent(AEComponent):
         area = action_to_area(action)
         b.display_action(Action.AC_STICK, area)
         b.show(self.editor.window)
+ 

@@ -76,3 +76,4 @@ class Message(OSDWindow):
         self.timeout = self.args.t
         self.size = self.args.s
         return True
+ 

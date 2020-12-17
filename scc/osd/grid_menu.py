@@ -75,3 +75,4 @@ class GridMenu(Menu):
                 return widget
             else:
                 return Menu.generate_widget(self, item)
+ 

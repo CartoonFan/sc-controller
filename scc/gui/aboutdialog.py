@@ -42,3 +42,4 @@ class AboutDialog(Editor):
 
     def on_dialog_response(self, *a):
         self.close()
+ 

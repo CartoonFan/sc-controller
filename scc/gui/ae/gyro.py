@@ -205,3 +205,4 @@ class GyroComponent(AEComponent):
                 action = ModeModifier(what, action)
 
         self.editor.set_action(action)
+ 

@@ -916,3 +916,4 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
                     name = name[0:-5]
                 path = os.path.join(get_config_path(), "devices", filename)
                 lstControllers.append((path, name, self._get_gamepad_icon(drv)))
+ 

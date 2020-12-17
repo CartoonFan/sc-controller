@@ -1768,3 +1768,4 @@ class UndoRedo(object):
         self.id = id
         self.before = before
         self.after = after
+ 

@@ -417,3 +417,4 @@ class ImportVdf(object):
 
         self.app.new_profile(self._profile, name)
         GLib.idle_add(self.window.destroy)
+ 

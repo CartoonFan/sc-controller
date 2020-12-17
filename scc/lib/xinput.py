@@ -82,3 +82,4 @@ class XIDevice(object):
         return "<XIDevice #%s '%s' (%s)>" % (self._id, self._name, self._type)
 
     __repr__ = __str__
+ 

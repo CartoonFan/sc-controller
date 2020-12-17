@@ -102,3 +102,4 @@ class Chooser(Editor):
     def hide_mouse(self):
         """ Prevents user from selecting mouse-related stuff """
         self.mouse_allowed = False
+ 
