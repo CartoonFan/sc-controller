@@ -8,6 +8,7 @@ import logging
 
 from gi.repository import GLib
 from gi.repository import Gtk
+
 from scc.osd import OSDWindow
 from scc.special_actions import OSDAction
 
@@ -25,7 +26,7 @@ class Message(OSDWindow):
 
     def show(self):
         self.l = Gtk.Label()
-        self.l.set_name("osd-label-%s" % (self.size,))
+        self.l.set_name("osd-label-%s" % (self.size, ))
         self.l.set_label(self.text)
 
         self.add(self.l)
@@ -34,7 +35,8 @@ class Message(OSDWindow):
             self.set_name("osd-message-1")
         OSDWindow.show(self)
         if self.timeout > 0:
-            self._timeout_id = GLib.timeout_add_seconds(self.timeout, self.quit)
+            self._timeout_id = GLib.timeout_add_seconds(
+                self.timeout, self.quit)
 
     def extend(self):
         self.set_state(Gtk.StateType.ACTIVE)
@@ -42,7 +44,8 @@ class Message(OSDWindow):
         GLib.timeout_add_seconds(0.5, self.cancel_active_state)
         if self._timeout_id:
             GLib.source_remove(self._timeout_id)
-            self._timeout_id = GLib.timeout_add_seconds(self.timeout, self.quit)
+            self._timeout_id = GLib.timeout_add_seconds(
+                self.timeout, self.quit)
 
     def cancel_active_state(self):
         self.set_state(Gtk.StateType.NORMAL)

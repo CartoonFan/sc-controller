@@ -5,6 +5,7 @@ import os
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
+
 from scc.actions import Action
 from scc.actions import NoAction
 from scc.actions import XYAction
@@ -59,7 +60,8 @@ class AEComponent(ComboSetter):
         if self.loaded:
             return False
         self.builder = Gtk.Builder()
-        self.builder.add_from_file(os.path.join(self.app.gladepath, self.GLADE))
+        self.builder.add_from_file(os.path.join(self.app.gladepath,
+                                                self.GLADE))
         self.widget = self.builder.get_object(self.NAME)
         self.builder.connect_signals(self)
         self.loaded = True
@@ -100,7 +102,8 @@ def describe_action(mode, cls, v):
     if v is None or type(v) in (int, float, str, str):
         return _("(not set)")
     elif isinstance(v, Action):
-        dsc = v.describe(Action.AC_STICK if cls == XYAction else Action.AC_BUTTON)
+        dsc = v.describe(Action.AC_STICK if cls ==
+                         XYAction else Action.AC_BUTTON)
         if "\n" in dsc:
             dsc = "<small>" + "\n".join(dsc.split("\n")[0:2]) + "</small>"
         return dsc

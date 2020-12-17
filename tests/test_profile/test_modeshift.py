@@ -1,7 +1,6 @@
+from . import parser
 from scc.constants import SCButtons
 from scc.modifiers import *
-
-from . import parser
 
 
 class TestModeshift(object):
@@ -15,15 +14,19 @@ class TestModeshift(object):
         https://github.com/kozec/sc-controller/issues/146
         """
         STR = "mode(LB, dpad(button(Keys.KEY_UP)), rotate(3.8, sens(2.0, 2.0, ball(0.552, mouse()))))"
-        a = parser.from_json_data(
-            {
-                "action": "mouse()",
-                "ball": [0.552],
-                "rotate": 3.8,
-                "sensitivity": [2.0, 2.0, 1.0],
-                "modes": {"LB": {"dpad": [{"action": "button(Keys.KEY_UP)"}]}},
-            }
-        )
+        a = parser.from_json_data({
+            "action": "mouse()",
+            "ball": [0.552],
+            "rotate": 3.8,
+            "sensitivity": [2.0, 2.0, 1.0],
+            "modes": {
+                "LB": {
+                    "dpad": [{
+                        "action": "button(Keys.KEY_UP)"
+                    }]
+                }
+            },
+        })
 
         if a.to_string() != STR:
             raise AssertionError
@@ -47,20 +50,22 @@ class TestModeshift(object):
         https://github.com/kozec/sc-controller/issues/146
         """
         STR = "mode(LGRIP, ball(XY(mouse(Rels.REL_HWHEEL), mouse(Rels.REL_WHEEL))), rotate(3.8, sens(2.0, 2.0, mouse())))"
-        a = parser.from_json_data(
-            {
-                "action": "mouse()",
-                "rotate": 3.8,
-                "sensitivity": [2.0, 2.0, 1.0],
-                "modes": {
-                    "LGRIP": {
-                        "X": {"action": "mouse(Rels.REL_HWHEEL)"},
-                        "Y": {"action": "mouse(Rels.REL_WHEEL)"},
-                        "ball": [],
-                    }
-                },
-            }
-        )
+        a = parser.from_json_data({
+            "action": "mouse()",
+            "rotate": 3.8,
+            "sensitivity": [2.0, 2.0, 1.0],
+            "modes": {
+                "LGRIP": {
+                    "X": {
+                        "action": "mouse(Rels.REL_HWHEEL)"
+                    },
+                    "Y": {
+                        "action": "mouse(Rels.REL_WHEEL)"
+                    },
+                    "ball": [],
+                }
+            },
+        })
 
         if a.to_string() != STR:
             raise AssertionError

@@ -37,12 +37,10 @@ def IOC(dir, type, nr, size):
         raise AssertionError(nr)
     if size > _IOC_SIZEMASK:
         raise AssertionError(size)
-    return (
-        (dir << _IOC_DIRSHIFT)
-        | (type << _IOC_TYPESHIFT)
-        | (nr << _IOC_NRSHIFT)
-        | (size << _IOC_SIZESHIFT)
-    )
+    return ((dir << _IOC_DIRSHIFT)
+            | (type << _IOC_TYPESHIFT)
+            | (nr << _IOC_NRSHIFT)
+            | (size << _IOC_SIZESHIFT))
 
 
 def IOC_TYPECHECK(t):
