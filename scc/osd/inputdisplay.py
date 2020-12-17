@@ -169,7 +169,7 @@ class InputDisplay(OSDWindow):
                 # Non fatal
                 pass
         else:
-            print("event", what)
+            print(("event", what))
 
     def _update_background(self):
         h = {}

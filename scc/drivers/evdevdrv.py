@@ -253,12 +253,12 @@ class EvdevController(Controller):
         if event.type == ecodes.EV_KEY:
             if event.code >= FIRST_BUTTON:
                 if event.value:
-                    print("ButtonPress", event.code)
+                    print(("ButtonPress", event.code))
                 else:
-                    print("ButtonRelease", event.code)
+                    print(("ButtonRelease", event.code))
                 sys.stdout.flush()
         elif event.type == ecodes.EV_ABS:
-            print("Axis", event.code, event.value)
+            print(("Axis", event.code, event.value))
             sys.stdout.flush()
 
     def cancel_padpress_emulation(self, mapper):
@@ -459,7 +459,7 @@ class EvdevDriver(object):
         try:
             controller = factory(self.daemon, evdevdevice, *userdata)
         except IOError as e:
-            print >>sys.stderr, "Failed to open device:", str(e)
+            print("Failed to open device:", str(e), file=sys.stderr)
             return None
         if controller:
             self._devices[evdevdevice.fn] = controller
@@ -545,15 +545,15 @@ def evdevdrv_test(args):
     except IndexError:
         raise InvalidArguments()
     except Exception as e:
-        print >>sys.stderr, "Failed to open device:", str(e)
+        print("Failed to open device:", str(e), file=sys.stderr)
         return 2
 
     c = EvdevController(None, dev, None, {})
     caps = dev.capabilities(verbose=False)
-    print("Buttons:", " ".join([str(x) for x in caps.get(ecodes.EV_KEY, [])]))
-    print(
+    print(("Buttons:", " ".join([str(x) for x in caps.get(ecodes.EV_KEY, [])])))
+    print((
         "Axes:", " ".join([str(axis) for (axis, trash) in caps.get(ecodes.EV_ABS, [])])
-    )
+    ))
     print("Ready")
     sys.stdout.flush()
     for event in dev.read_loop():

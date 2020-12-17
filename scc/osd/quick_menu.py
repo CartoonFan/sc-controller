@@ -172,7 +172,7 @@ class QuickMenu(Menu):
                 self.items.append(item)
         self.pack_items(self.parent, self.items)
         if len(self.items) == 0:
-            print >>sys.stderr, "%s: error: no items in menu" % (sys.argv[0])
+            print("%s: error: no items in menu" % (sys.argv[0]), file=sys.stderr)
             return False
 
         return True
@@ -300,5 +300,5 @@ if __name__ == "__main__":
         sys.exit(1)
     m.run()
     if m.get_exit_code() == 0:
-        print(m.get_selected_item_id())
+        print((m.get_selected_item_id()))
     sys.exit(m.get_exit_code())

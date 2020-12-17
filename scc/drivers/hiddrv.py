@@ -236,7 +236,7 @@ class HIDController(USBDevice, Controller):
         if test_mode:
             self.set_input_interrupt(id, self._packet_size, self.test_input)
 
-            print(
+            print((
                 "Buttons:",
                 " ".join(
                     [
@@ -244,8 +244,8 @@ class HIDController(USBDevice, Controller):
                         for x in range(self._decoder.buttons.button_count)
                     ]
                 ),
-            )
-            print(
+            ))
+            print((
                 "Axes:",
                 " ".join(
                     [
@@ -261,7 +261,7 @@ class HIDController(USBDevice, Controller):
                         )
                     ]
                 ),
-            )
+            ))
         else:
             self._id = self._generate_id()
             self.set_input_interrupt(id, self._packet_size, self.input)
@@ -574,10 +574,10 @@ class HIDController(USBDevice, Controller):
         for j in range(0, self._decoder.buttons.button_count):
             mask = 1 << j
             if pressed & mask:
-                print("ButtonPress", FIRST_BUTTON + j)
+                print(("ButtonPress", FIRST_BUTTON + j))
                 sys.stdout.flush()
             if released & mask:
-                print("ButtonRelease", FIRST_BUTTON + j)
+                print(("ButtonRelease", FIRST_BUTTON + j))
                 sys.stdout.flush()
 
     def input(self, endpoint, data):
@@ -711,13 +711,13 @@ def hiddrv_test(cls, args):
         try:
             return cls(device, None, handle, None, None, test_mode=True)
         except NotHIDDevice:
-            print >>sys.stderr, "%.4x:%.4x is not a HID device" % (vid, pid)
+            print("%.4x:%.4x is not a HID device" % (vid, pid), file=sys.stderr)
             fake_daemon.exitcode = 3
         except UnparsableDescriptor as e:
-            print >>sys.stderr, "Invalid or unparsable HID descriptor", str(e)
+            print("Invalid or unparsable HID descriptor", str(e), file=sys.stderr)
             fake_daemon.exitcode = 4
         except Exception as e:
-            print >>sys.stderr, "Failed to open device:", str(e)
+            print("Failed to open device:", str(e), file=sys.stderr)
             fake_daemon.exitcode = 2
 
     _usb.set_daemon(fake_daemon)

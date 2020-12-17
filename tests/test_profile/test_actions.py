@@ -401,7 +401,7 @@ class TestActions(object):
         )
 
         print(a)
-        print(a.actions)
+        print((a.actions))
         if not isinstance(a, DPadAction):
             raise AssertionError
         for sub in a.actions:

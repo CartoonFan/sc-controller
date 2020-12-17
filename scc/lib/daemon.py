@@ -155,7 +155,7 @@ class Daemon(object):
                 if os.path.exists(self.pidfile):
                     os.remove(self.pidfile)
             else:
-                print(str(err.args))
+                print((str(err.args)))
                 sys.exit(1)
         syslog.syslog(
             syslog.LOG_INFO, "{}: stopped".format(os.path.basename(sys.argv[0]))

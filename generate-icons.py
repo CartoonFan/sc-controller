@@ -19,7 +19,7 @@ RECOLORS = {  # Defines set of hue shifts for controller-icons
 # Generate svg state icons
 for size in (24, 256):
     for state in ("alive", "dead", "error", "unknown"):
-        print("scc-statusicon-%s.png" % (state,))
+        print(("scc-statusicon-%s.png" % (state,)))
         subprocess.call(
             [
                 "inkscape",

@@ -366,4 +366,4 @@ if __name__ == "__main__":
     while True:
         d = m.receive_device()
         if d:
-            print(os.major(d.devnum), os.minor(d.devnum), d)
+            print((os.major(d.devnum), os.minor(d.devnum), d))

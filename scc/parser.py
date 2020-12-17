@@ -287,7 +287,7 @@ class ActionParser(object):
         except ValueError as e:
             raise ParseError(str(e))
         except TypeError as e:
-            print >>sys.stderr, e
+            print(e, file=sys.stderr)
             raise ParseError("Invalid number of parameters for '%s'" % (cls.COMMAND))
 
     def _parse_action(self, frm=Action.ALL):
@@ -396,4 +396,4 @@ class TalkingActionParser(ActionParser):
         try:
             return ActionParser.parse(self)
         except ParseError as e:
-            print >>sys.stderr, "Warning: Failed to parse '%s':" % (self.string,), e
+            print("Warning: Failed to parse '%s':" % (self.string,), e, file=sys.stderr)

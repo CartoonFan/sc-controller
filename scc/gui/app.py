@@ -1200,7 +1200,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
                 # Non fatal
                 pass
         else:
-            print("event", what)
+            print(("event", what))
 
     def on_profile_right_clicked(self, ps):
         for name in ("mnuConfigureController", "mnuTurnoffController"):
