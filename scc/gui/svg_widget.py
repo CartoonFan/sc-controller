@@ -141,7 +141,8 @@ class SVGWidget(Gtk.EventBox):
         """
         for child in xml:
             child_transform = SVGEditor.matrixmul(
-                parent_transform or SVGEditor.IDENTITY, SVGEditor.parse_transform(child)
+                parent_transform or SVGEditor.IDENTITY, SVGEditor.parse_transform(
+                    child)
             )
             if str(child.attrib.get("id")).startswith(prefix):
                 # log.debug("Found SVG area %s", child.attrib['id'][5:])
@@ -201,7 +202,8 @@ class SVGWidget(Gtk.EventBox):
             # 200 images by hand;
             if len(buttons) == 0:
                 # Quick way out - changes are not needed
-                svg = Rsvg.Handle.new_from_data(self.current_svg.encode("utf-8"))
+                svg = Rsvg.Handle.new_from_data(
+                    self.current_svg.encode("utf-8"))
             else:
                 # 1st, parse source as XML
                 tree = ET.fromstring(self.current_svg.encode("utf-8"))
@@ -480,7 +482,8 @@ class SVGEditor(object):
         for child in tree:
             if "style" in child.attrib:
                 if s_from in child.attrib["style"]:
-                    child.attrib["style"] = child.attrib["style"].replace(s_from, s_to)
+                    child.attrib["style"] = child.attrib["style"].replace(
+                        s_from, s_to)
             SVGEditor._recolor(child, s_from, s_to)
 
     def recolor_background(self, change_from, change_to):
@@ -580,7 +583,8 @@ class SVGEditor(object):
             matrix = SVGEditor.parse_transform(elm)
             parent = elm.parent
             while parent is not None:
-                matrix = SVGEditor.matrixmul(matrix, SVGEditor.parse_transform(parent))
+                matrix = SVGEditor.matrixmul(
+                    matrix, SVGEditor.parse_transform(parent))
                 parent = parent.parent
         else:
             matrix = elm_or_matrix
@@ -629,7 +633,8 @@ class SVGEditor(object):
                     matrix = SVGEditor.matrixmul(
                         matrix,
                         [[1.0, 0.0, x], [0.0, 1.0, y], [0.0, 0.0, 1.0]],
-                        [[cos(a), -sin(a), 0], [sin(a), cos(a), 0], [0.0, 0.0, 1.0]],
+                        [[cos(a), -sin(a), 0], [sin(a), cos(a), 0],
+                         [0.0, 0.0, 1.0]],
                         [[1.0, 0.0, -x], [0.0, 1.0, -y], [0.0, 0.0, 1.0]],
                     )
                 elif op == "scale":
@@ -639,7 +644,8 @@ class SVGEditor(object):
                     else:
                         sx, sy = scale
                     matrix = SVGEditor.matrixmul(
-                        matrix, ((sx, 0.0, 0.0), (0.0, sy, 0.0), (0.0, 0.0, 1.0))
+                        matrix, ((sx, 0.0, 0.0), (0.0, sy, 0.0),
+                                 (0.0, 0.0, 1.0))
                     )
                 elif op == "matrix":
                     m = [float(x) for x in values.split(",")][0:6]
@@ -702,4 +708,3 @@ class SVGEditor(object):
     def load_from_file(filename):
         tree = ET.fromstring(open(filename, "r").read())
         return SVGEditor.find_by_tag(tree, "g")
- 

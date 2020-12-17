@@ -48,4 +48,3 @@ class GuiActionParser(ActionParser):
             log.error("Failed to parse '%s'", self.string)
             log.error(e)
             return InvalidAction(self.string, e)
- 

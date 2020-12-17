@@ -87,7 +87,8 @@ class GyroActionComponent(AEComponent):
                 return
             if isinstance(action, ModeModifier):
                 self._recursing = True
-                self.builder.get_object("cbInvertGyro").set_active(bool(action.default))
+                self.builder.get_object("cbInvertGyro").set_active(
+                    bool(action.default))
                 self._recursing = False
                 b = list(action.mods.keys())[0]
                 action = action.mods[b] or action.default
@@ -280,7 +281,8 @@ class GyroActionComponent(AEComponent):
 
         if item and action:
             if item in TRIGGERS:
-                what = RangeOP(getattr(SCButtons, item), ">=", sclSoftLevel.get_value())
+                what = RangeOP(getattr(SCButtons, item),
+                               ">=", sclSoftLevel.get_value())
             elif item == STICK:
                 what = RangeOP(item, ">=", sclSoftLevel.get_value())
             else:
@@ -328,9 +330,9 @@ def is_gyro_enable(modemod):
 
 
 def fill_buttons(cb):
-    cb.set_row_separator_func(lambda model, iter: model.get_value(iter, 1) is None)
+    cb.set_row_separator_func(
+        lambda model, iter: model.get_value(iter, 1) is None)
     model = cb.get_model()
     for button, text in GyroActionComponent.BUTTONS:
         model.append((None if button is None else nameof(button), text))
     cb.set_active(0)
- 

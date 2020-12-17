@@ -49,11 +49,13 @@ class BindingEditor(object):
         for b in BUTTONS:
             w = self.builder.get_object("bt" + b.name)
             if w:
-                self.button_widgets[b] = ControllerButton(self, b, use_icons, w)
+                self.button_widgets[b] = ControllerButton(
+                    self, b, use_icons, w)
         for b in TRIGGERS:
             w = self.builder.get_object("bt" + b)
             if w:
-                self.button_widgets[b] = ControllerTrigger(self, b, use_icons, w)
+                self.button_widgets[b] = ControllerTrigger(
+                    self, b, use_icons, w)
         for b in PADS:
             w = self.builder.get_object("bt" + b)
             if w:
@@ -187,4 +189,3 @@ class BindingEditor(object):
 
     def show_editor(self, id):
         raise TypeError("show_editor not overriden")
- 

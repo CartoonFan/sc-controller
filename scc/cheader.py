@@ -187,4 +187,3 @@ if __name__ == "__main__":
     definesDict = defines(sys.argv[1], sys.argv[2])
     for k, v in list(definesDict.items()):
         print("{}:\t{}".format(k, v))
- 

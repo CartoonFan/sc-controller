@@ -60,4 +60,3 @@ class HorizontalMenu(GridMenu):
         if what == self._control_with and self._use_cursor:
             data = data[0], STICK_PAD_MIN
         GridMenu.on_event(self, daemon, what, data)
- 

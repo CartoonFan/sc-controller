@@ -60,4 +60,3 @@ class SimpleChooser(Editor):
     def hide_mouse(self):
         """ Prevents user from selecting mouse-related stuff """
         self.component.hide_mouse()
- 

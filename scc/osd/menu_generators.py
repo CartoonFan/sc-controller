@@ -38,7 +38,8 @@ class ProfileListMenuGenerator(MenuGenerator):
             menu.quit(-2)
 
         daemon.request(
-            b"OSD: " + menuitem.label.encode("utf-8") + b"\n", on_response, on_response
+            b"OSD: " +
+            menuitem.label.encode("utf-8") + b"\n", on_response, on_response
         )
 
     def describe(self):
@@ -83,7 +84,8 @@ class RecentListMenuGenerator(MenuGenerator):
             menu.quit(-2)
 
         daemon.request(
-            b"OSD: " + menuitem.label.encode("utf-8") + b"\n", on_response, on_response
+            b"OSD: " +
+            menuitem.label.encode("utf-8") + b"\n", on_response, on_response
         )
 
     def generate(self, menuhandler):
@@ -134,7 +136,7 @@ class WindowListMenuGenerator(MenuGenerator):
         wlist = cast(wlist, POINTER(X.XID))[0:count]
         for win in wlist:
             if not skip_taskbar in X.get_wm_state(dpy, win):
-                title = X.get_window_title(dpy, win)[0 : self.MAX_LENGHT]
+                title = X.get_window_title(dpy, win)[0: self.MAX_LENGHT]
                 menuitem = MenuItem(str(win), title)
                 menuitem.callback = WindowListMenuGenerator.callback
                 rv.append(menuitem)
@@ -183,4 +185,3 @@ class GameListMenuGenerator(MenuGenerator):
 for i in [globals()[x] for x in dir() if hasattr(globals()[x], "GENERATOR_NAME")]:
     if i.GENERATOR_NAME is not None:
         MENU_GENERATORS[i.GENERATOR_NAME] = i
- 

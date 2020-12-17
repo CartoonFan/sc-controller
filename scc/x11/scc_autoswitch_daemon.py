@@ -23,4 +23,3 @@ if __name__ == "__main__":
     d = AutoSwitcher()
     d.run()
     sys.exit(d.exit_code)
- 

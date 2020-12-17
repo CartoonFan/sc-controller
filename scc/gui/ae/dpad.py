@@ -114,7 +114,8 @@ class DPADComponent(AEComponent, MenuActionCofC, BindingEditor):
             self.editor.set_action(DPad8Action(scl.get_value(), *self.actions))
         elif key == "dpad":
             # 4-way dpad
-            self.editor.set_action(DPadAction(scl.get_value(), *self.actions[0:4]))
+            self.editor.set_action(DPadAction(
+                scl.get_value(), *self.actions[0:4]))
         elif key == "wsad":
             # special case of 4-way dpad
             a = DPadAction(
@@ -234,4 +235,3 @@ class DPADComponent(AEComponent, MenuActionCofC, BindingEditor):
     def on_exMenuPosition_activate(self, ex, *a):
         rvMenuPosition = self.builder.get_object("rvMenuPosition")
         rvMenuPosition.set_reveal_child(not ex.get_expanded())
- 

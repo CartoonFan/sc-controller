@@ -145,12 +145,14 @@ class Type(Macro):
         shift = False
         for letter in string:
             if (
-                (letter >= "a" and letter <= "z") or (letter >= "0" and letter <= "9")
+                (letter >= "a" and letter <= "z") or (
+                    letter >= "0" and letter <= "9")
             ) and hasattr(Keys, ("KEY_" + letter).upper()):
                 if shift:
                     params.append(ReleaseAction(Keys.KEY_LEFTSHIFT))
                     shift = False
-                params.append(ButtonAction(getattr(Keys, ("KEY_" + letter).upper())))
+                params.append(ButtonAction(
+                    getattr(Keys, ("KEY_" + letter).upper())))
                 continue
             if letter == " ":
                 params.append(ButtonAction(Keys.KEY_SPACE))
@@ -338,7 +340,8 @@ class TapAction(PressAction):
         # action touched same button.
         # ---
         if self.button in mapper.pressed and mapper.pressed[self.button] > 1:
-            log.warning("Failed to tap, two or more actions are holding button")
+            log.warning(
+                "Failed to tap, two or more actions are holding button")
             return
 
         # Generate as many clicks as requested
@@ -415,4 +418,3 @@ class TapAction(PressAction):
         if self.count <= 1:
             return "%s(%s)" % (self.COMMAND, self.button)
         return "%s(%s, %s)" % (self.COMMAND, self.button, self.count)
- 

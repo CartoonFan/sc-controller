@@ -115,7 +115,7 @@ def __bindConstants():
     PREFIX = "LIBUSB_"
     for name, value in list(libusb1.__dict__.items()):
         if name.startswith(PREFIX):
-            name = name[len(PREFIX) :]
+            name = name[len(PREFIX):]
             # Gah.
             if name == "5GBPS_OPERATION":
                 name = "SUPER_SPEED_OPERATION"
@@ -294,7 +294,8 @@ class USBTransfer(object):
         instances of this class.
         """
         if iso_packets < 0:
-            raise ValueError("Cannot request a negative number of iso packets.")
+            raise ValueError(
+                "Cannot request a negative number of iso packets.")
         self.__handle = handle
         self.__before_submit = before_submit
         self.__after_completion = after_completion
@@ -606,7 +607,8 @@ class USBTransfer(object):
             iso_transfer_length_list, libusb1.get_iso_packet_list(transfer_p)
         ):
             if length <= 0:
-                raise ValueError("Negative/null length transfers are not possible.")
+                raise ValueError(
+                    "Negative/null length transfers are not possible.")
             iso_packet_desc.length = length
         self.__callback = callback
         self.__initialized = True
@@ -685,7 +687,8 @@ class USBTransfer(object):
         # pylint: disable=undefined-variable
         if transfer.type != TRANSFER_TYPE_ISOCHRONOUS:
             # pylint: enable=undefined-variable
-            raise TypeError("This method cannot be called on non-iso transfers.")
+            raise TypeError(
+                "This method cannot be called on non-iso transfers.")
         return libusb1.get_iso_packet_buffer_list(transfer_p)
 
     def getISOSetupList(self):
@@ -706,7 +709,8 @@ class USBTransfer(object):
         # pylint: disable=undefined-variable
         if transfer.type != TRANSFER_TYPE_ISOCHRONOUS:
             # pylint: enable=undefined-variable
-            raise TypeError("This method cannot be called on non-iso transfers.")
+            raise TypeError(
+                "This method cannot be called on non-iso transfers.")
         return [
             {
                 "length": x.length,
@@ -729,7 +733,8 @@ class USBTransfer(object):
         # pylint: disable=undefined-variable
         if transfer.type != TRANSFER_TYPE_ISOCHRONOUS:
             # pylint: enable=undefined-variable
-            raise TypeError("This method cannot be called on non-iso transfers.")
+            raise TypeError(
+                "This method cannot be called on non-iso transfers.")
         buffer_position = transfer.buffer
         for iso_transfer in libusb1.get_iso_packet_list(transfer_p):
             yield (
@@ -752,7 +757,8 @@ class USBTransfer(object):
         # pylint: disable=undefined-variable
         if transfer.type == TRANSFER_TYPE_CONTROL:
             # pylint: enable=undefined-variable
-            raise ValueError("To alter control transfer buffer, use setControl")
+            raise ValueError(
+                "To alter control transfer buffer, use setControl")
         buff = create_binary_buffer(buffer_or_len)
         # pylint: disable=undefined-variable
         if (
@@ -780,7 +786,8 @@ class USBTransfer(object):
         if self.__submitted:
             raise ValueError("Cannot submit a submitted transfer")
         if not self.__initialized:
-            raise ValueError("Cannot submit a transfer until it has been initialized")
+            raise ValueError(
+                "Cannot submit a transfer until it has been initialized")
         if self.__doomed:
             raise DoomedTransferError("Cannot submit doomed transfer")
         self.__before_submit(self)
@@ -1071,7 +1078,8 @@ class USBPoller(object):
         Convenience method.
         """
         if fd in self.__fd_set:
-            raise ValueError("This fd is a special USB event fd, it cannot be polled.")
+            raise ValueError(
+                "This fd is a special USB event fd, it cannot be polled.")
         self.__poller.register(fd, events)
 
     def unregister(self, fd):
@@ -2006,7 +2014,8 @@ class USBDevice(object):
         See https://libusb.org/ticket/77 . You should instead consult the
         endpoint descriptor of current configuration and alternate setting.
         """
-        result = libusb1.libusb_get_max_iso_packet_size(self.device_p, endpoint)
+        result = libusb1.libusb_get_max_iso_packet_size(
+            self.device_p, endpoint)
         mayRaiseUSBError(result)
         return result
 
@@ -2268,7 +2277,8 @@ class USBContext(object):
                     # it doesn't copy pointer value (=pointed memory address) ?
                     # At least, it's not so convenient and forces using such
                     # weird code.
-                    device = USBDevice(self, libusb_device_p(device_p.contents))
+                    device = USBDevice(
+                        self, libusb_device_p(device_p.contents))
                 except USBError:
                     if not skip_on_error:
                         raise
@@ -2437,7 +2447,8 @@ class USBContext(object):
         this class with a polling mechanism.
         """
         timeval = libusb1.timeval()
-        result = libusb1.libusb_get_next_timeout(self.__context_p, byref(timeval))
+        result = libusb1.libusb_get_next_timeout(
+            self.__context_p, byref(timeval))
         if result == 0:
             return None
         elif result == 1:
@@ -2669,4 +2680,3 @@ class LibUSBContext(USBContext):
             DeprecationWarning,
         )
         super(LibUSBContext, self).__init__()
- 

@@ -22,4 +22,3 @@ class VDFFZProfile(VDFProfile):
         if "ConfigData" not in data:
             raise ValueError("ConfigData missing in JSON")
         self.load_data(parse_vdf(data["ConfigData"].encode("utf-8")))
- 

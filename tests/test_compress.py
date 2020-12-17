@@ -151,7 +151,8 @@ class TestCompress(object):
                 if "sensitivity" not in CASES[cls.COMMAND]:
                     raise AssertionError(
                         "%s supports setting sensitivity, but "
-                        "case for it has no 'sensitivity' key it" % (cls.COMMAND,)
+                        "case for it has no 'sensitivity' key it" % (
+                            cls.COMMAND,)
                     )
             if hasattr(cls, "set_haptic"):
                 if cls.COMMAND not in CASES:
@@ -254,4 +255,3 @@ class TestCompress(object):
                 raise AssertionError
             if action.get_speed()[0] != 2.0:
                 raise AssertionError
- 

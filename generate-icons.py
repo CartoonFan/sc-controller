@@ -25,7 +25,8 @@ for size in (24, 256):
                 "inkscape",
                 "%s/scc-statusicon-%s.svg" % (ICODIR, state),
                 "--export-area-page",
-                "--export-png=%s/%sx%s/status/scc-%s.png" % (ICODIR, size, size, state),
+                "--export-png=%s/%sx%s/status/scc-%s.png" % (
+                    ICODIR, size, size, state),
                 "--export-width=%s" % (size,),
                 "--export-height=%s" % (size,),
             ]
@@ -42,7 +43,8 @@ def html_to_rgb(html):
     elif len(html) != 8:
         raise ValueError("Needs RRGGBB(AA) format, got '%s'" % (html,))
     return tuple(
-        (float(int(html[i : i + 2], 16)) / 255.0 for i in range(0, len(html), 2))
+        (float(int(html[i: i + 2], 16)) /
+         255.0 for i in range(0, len(html), 2))
     )
 
 
@@ -99,4 +101,3 @@ for tp in ("sc", "scbt", "fake", "ds4", "hid", "rpad"):
         out = "%s/%s-%s.svg" % (CICONS, tp, key)
         file(out, "w").write(ET.tostring(tree))
         print(out)
- 

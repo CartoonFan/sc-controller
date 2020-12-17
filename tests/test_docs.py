@@ -34,4 +34,3 @@ class TestDocs(object):
                 raise AssertionError(
                     "Key '%s' is not documented in profile-file.md" % (key,)
                 )
- 

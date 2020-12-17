@@ -83,4 +83,3 @@ class Task(object):
         """ Marks task as canceled, without actually removing it from scheduler """
         self.callback = lambda *a, **b: False
         self.data = ()
- 

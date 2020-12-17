@@ -149,7 +149,8 @@ class Driver:
             controller = self._controllers[address]
 
         self._lib.remotepad_input(
-            controller._pad, cast(ctypes.c_char_p(data), POINTER(RemoteJoypadMessage))
+            controller._pad, cast(ctypes.c_char_p(
+                data), POINTER(RemoteJoypadMessage))
         )
 
 
@@ -158,4 +159,3 @@ def init(daemon, config):
 
     _drv = Driver(daemon, config)
     return True
- 

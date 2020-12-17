@@ -78,4 +78,3 @@ class DPadEmuData(object):
         self.axis_data = axis_data
         self.positive = positive
         self.button = AXIS_TO_BUTTON[axis_data.name]
- 

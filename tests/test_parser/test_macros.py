@@ -16,7 +16,8 @@ class TestMacros(object):
             if "/macros.py" in inspect.getfile(cls):
                 method_name = "test_%s" % (cls.COMMAND,)
                 if not hasattr(self, method_name):
-                    raise AssertionError("There is no test for %s" % (cls.COMMAND))
+                    raise AssertionError(
+                        "There is no test for %s" % (cls.COMMAND))
 
     def test_macro(self):
         """
@@ -103,4 +104,3 @@ class TestMacros(object):
         """
         if not _parses_as_itself(TapAction(Keys.BTN_LEFT)):
             raise AssertionError
- 

@@ -34,7 +34,8 @@ class ControllerSettings(Editor, UserDataManager, ComboSetter):
         self._eh_ids = ()
 
     def load_icons(self):
-        paths = [get_default_controller_icons_path(), get_controller_icons_path()]
+        paths = [get_default_controller_icons_path(),
+                 get_controller_icons_path()]
         self.load_user_data(paths, "*.svg", None, self.on_icons_loaded)
 
     def on_icons_loaded(self, icons):
@@ -161,7 +162,8 @@ class ControllerSettings(Editor, UserDataManager, ComboSetter):
         )
 
         try:
-            cfg["icon"] = cbIcon.get_model().get_value(cbIcon.get_active_iter(), 1)
+            cfg["icon"] = cbIcon.get_model().get_value(
+                cbIcon.get_active_iter(), 1)
             if self.profile_switcher:
                 self.profile_switcher.update_icon()
         except BaseException:
@@ -210,4 +212,3 @@ class ControllerSettings(Editor, UserDataManager, ComboSetter):
         cfg = self.app.config.get_controller_config(self.controller.get_id())
         cfg["idle_timeout"] = scale.get_value()
         self.schedule_save_config()
- 

@@ -102,4 +102,3 @@ class SCByCable(USBDevice, SCController):
 
     def turnoff(self):
         log.warning("Ignoring request to turn off wired controller.")
- 

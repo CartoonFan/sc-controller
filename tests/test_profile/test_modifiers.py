@@ -108,7 +108,8 @@ class TestModifiers(object):
         """
         Tests if CircularModifier is parsed correctly from json.
         """
-        a = parser.from_json_data({"action": "axis(ABS_X)", "circularabs": True})
+        a = parser.from_json_data(
+            {"action": "axis(ABS_X)", "circularabs": True})
         if not isinstance(a, CircularAbsModifier):
             raise AssertionError
 
@@ -127,7 +128,8 @@ class TestModifiers(object):
         """
         Tests if SmoothModifier is parsed correctly from json.
         """
-        a = parser.from_json_data({"action": "axis(ABS_X)", "smooth": [5, 0.3]})
+        a = parser.from_json_data(
+            {"action": "axis(ABS_X)", "smooth": [5, 0.3]})
 
         if not isinstance(a, SmoothModifier):
             raise AssertionError
@@ -143,7 +145,8 @@ class TestModifiers(object):
         Tests if DeadzoneModifier is parsed correctly from json.
         """
         # One parameter
-        a = parser.from_json_data({"action": "axis(ABS_X)", "deadzone": {"upper": 300}})
+        a = parser.from_json_data(
+            {"action": "axis(ABS_X)", "deadzone": {"upper": 300}})
 
         if not isinstance(a, DeadzoneModifier):
             raise AssertionError
@@ -199,7 +202,8 @@ class TestModifiers(object):
         ):
             raise AssertionError
         if not (
-            isinstance(a.action, GyroAction) and a.action.get_speed() == (7.0, 8.0, 9.0)
+            isinstance(a.action, GyroAction) and a.action.get_speed() == (
+                7.0, 8.0, 9.0)
         ):
             raise AssertionError
         if not (
@@ -253,7 +257,8 @@ class TestModifiers(object):
         Tests if FeedbackModifier is parsed correctly from json.
         """
         # One parameter
-        a = parser.from_json_data({"action": "axis(ABS_X)", "feedback": ["BOTH"]})
+        a = parser.from_json_data(
+            {"action": "axis(ABS_X)", "feedback": ["BOTH"]})
 
         if not isinstance(a, FeedbackModifier):
             raise AssertionError
@@ -342,7 +347,8 @@ class TestModifiers(object):
         Tests if DoubleclickModifier is parsed correctly from json.
         """
         a = parser.from_json_data(
-            {"action": "axis(ABS_RX)", "doubleclick": {"action": "axis(ABS_X)"}}
+            {"action": "axis(ABS_RX)", "doubleclick": {
+                "action": "axis(ABS_X)"}}
         )
 
         if not isinstance(a, DoubleclickModifier):
@@ -370,4 +376,3 @@ class TestModifiers(object):
             raise AssertionError
         if a.action:
             raise AssertionError
- 

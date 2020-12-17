@@ -64,4 +64,3 @@ class Poller(object):
             self._callbacks.get(fd, DO_NOTHING)(fd, Poller.POLLOUT)
         for fd in pri:
             self._callbacks.get(fd, DO_NOTHING)(fd, Poller.POLLPRI)
- 

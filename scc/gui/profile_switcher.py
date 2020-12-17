@@ -349,7 +349,8 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
         if c:
             name = self.config.get_controller_config(c.get_id())["name"]
             self._icon.set_tooltip_text(name)
-            self._signal = c.connect("profile-changed", self.on_profile_changed)
+            self._signal = c.connect(
+                "profile-changed", self.on_profile_changed)
         else:
             self._icon.set_tooltip_text(_("Profile"))
         self.update_icon()
@@ -373,8 +374,10 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
             icon = find_controller_icon(cfg["icon"])
             self._icon.set_from_file(icon)
         else:
-            log.debug("There is no icon for controller %s, auto assinging one", id)
-            paths = [get_default_controller_icons_path(), get_controller_icons_path()]
+            log.debug(
+                "There is no icon for controller %s, auto assinging one", id)
+            paths = [get_default_controller_icons_path(),
+                     get_controller_icons_path()]
 
             def cb(icons):
                 if id != self._controller.get_id():
@@ -387,7 +390,8 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
                     if "icon" in self.config["controllers"][x]
                 }
                 tp = "%s-" % (self._controller.get_type(),)
-                icons = sorted((os.path.split(x.get_path())[-1] for x in icons))
+                icons = sorted(
+                    (os.path.split(x.get_path())[-1] for x in icons))
                 log.debug("Searching for icon type: %s", tp.strip("-"))
                 for i in icons:
                     if i not in used_icons and i.startswith(tp):
@@ -417,4 +421,3 @@ class ButtonInRevealer(Gtk.Revealer):
         self.set_reveal_child(False)
         self.set_transition_type(Gtk.RevealerTransitionType.SLIDE_LEFT)
         self.add(self.button)
- 

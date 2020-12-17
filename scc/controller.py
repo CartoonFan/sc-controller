@@ -151,4 +151,3 @@ class HapticData(object):
         position, amplitude, period, count = self.data
         amplitude = min(amplitude * by, 0x8000)
         return HapticData(position, amplitude, self.frequency, period, count)
- 

@@ -122,4 +122,3 @@ class OSKPressAction(OSKAction):
 
     def to_string(self, multiline=False, pad=0):
         return (" " * pad) + "OSK.%s(%s)" % (self.COMMAND, self.side)
- 

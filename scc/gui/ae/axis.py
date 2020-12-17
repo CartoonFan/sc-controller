@@ -70,4 +70,3 @@ class AxisComponent(AEComponent, Chooser):
                 return False
             action = action.actions[1]
         return isinstance(action, (AxisAction, MouseAction))
- 

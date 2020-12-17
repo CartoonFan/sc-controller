@@ -63,7 +63,8 @@ class Menu(OSDWindow):
         self.config = None
         self.feedback = None
         self.controller = None
-        self.xdisplay = X.Display(hash(GdkX11.x11_get_default_xdisplay()))  # Magic
+        self.xdisplay = X.Display(
+            hash(GdkX11.x11_get_default_xdisplay()))  # Magic
 
         cursor = os.path.join(get_share_path(), "images", "menu-cursor.svg")
         self.cursor = Gtk.Image.new_from_file(cursor)
@@ -218,9 +219,11 @@ class Menu(OSDWindow):
         if self.args.from_profile:
             try:
                 self._menuid = self.args.items[0]
-                self.items = MenuData.from_profile(self.args.from_profile, self._menuid)
+                self.items = MenuData.from_profile(
+                    self.args.from_profile, self._menuid)
             except IOError:
-                print >>sys.stderr, "%s: error: profile file not found" % (sys.argv[0])
+                print >>sys.stderr, "%s: error: profile file not found" % (
+                    sys.argv[0])
                 return False
             except ValueError:
                 print >>sys.stderr, "%s: error: menu not found" % (sys.argv[0])
@@ -323,7 +326,8 @@ class Menu(OSDWindow):
                 icon_file = icon.get_filename() if icon else None
                 has_colors = True
             else:
-                icon_file, has_colors = find_icon(item.icon, self.PREFER_BW_ICONS)
+                icon_file, has_colors = find_icon(
+                    item.icon, self.PREFER_BW_ICONS)
 
             if icon_file:
                 icon = MenuIcon(icon_file, has_colors)
@@ -416,7 +420,8 @@ class Menu(OSDWindow):
 
         self._eh_ids += [
             (self.controller, self.controller.connect("event", self.on_event)),
-            (self.controller, self.controller.connect("lost", self.on_controller_lost)),
+            (self.controller, self.controller.connect(
+                "lost", self.on_controller_lost)),
         ]
         self.lock_inputs()
 
@@ -592,8 +597,10 @@ class Menu(OSDWindow):
                 x, y = circle_to_square(
                     x / (STICK_PAD_MAX * 2.0), y / (STICK_PAD_MAX * 2.0)
                 )
-                x = clamp(pad_w, (pad_w + max_w) * 0.5 + x * max_w, max_w - pad_w)
-                y = clamp(pad_h, (pad_h + max_h) * 0.5 + y * max_h * -1, max_h - pad_h)
+                x = clamp(pad_w, (pad_w + max_w) *
+                          0.5 + x * max_w, max_w - pad_w)
+                y = clamp(pad_h, (pad_h + max_h) * 0.5 +
+                          y * max_h * -1, max_h - pad_h)
                 self.f.move(self.cursor, int(x), int(y))
 
                 for i in self.items:
@@ -654,7 +661,7 @@ class MenuIcon(Gtk.DrawingArea):
                 # allocation.height, allocation.height)
                 cr.rectangle(0, 0, allocation.height, allocation.height)
             else:
-                Gdk.cairo_set_source_rgba(cr, context.get_color(Gtk.StateFlags.NORMAL))
+                Gdk.cairo_set_source_rgba(
+                    cr, context.get_color(Gtk.StateFlags.NORMAL))
                 cr.mask_surface(surf, 0, 0)
             cr.fill()
- 

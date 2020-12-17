@@ -268,7 +268,8 @@ class JSONEncoder(object):
 
             if not allow_nan:
                 raise ValueError(
-                    "Out of range float values are not JSON compliant: " + repr(o)
+                    "Out of range float values are not JSON compliant: " +
+                    repr(o)
                 )
 
             return text
@@ -493,4 +494,3 @@ def _make_iterencode(
                 del markers[markerid]
 
     return _iterencode
- 

@@ -168,7 +168,8 @@ class Config(object):
         if "autoswitch" in self.values:
             for a in self.values["autoswitch"]:
                 if "profile" in a:
-                    a["action"] = ChangeProfileAction(str(a["profile"])).to_string()
+                    a["action"] = ChangeProfileAction(
+                        str(a["profile"])).to_string()
                     del a["profile"]
                     rv = True
         return rv
@@ -233,4 +234,3 @@ class Config(object):
     def __contains__(self, key):
         """ Returns true if there is such value """
         return key in self.values
- 

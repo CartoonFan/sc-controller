@@ -69,4 +69,3 @@ class OSKActionComponent(AEComponent):
         cbActionType = self.builder.get_object("cbActionType")
         key = cbActionType.get_model().get_value(cbActionType.get_active_iter(), 0)
         self.editor.set_action(GuiActionParser().restart(key).parse())
- 

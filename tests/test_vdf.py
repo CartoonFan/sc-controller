@@ -93,4 +93,3 @@ class TestVDF(object):
             filename = os.path.join(path, f)
             print("Testing import of '%s'" % (filename,))
             VDFProfile().load(filename)
- 

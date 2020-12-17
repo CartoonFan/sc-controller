@@ -66,4 +66,3 @@ class CustomActionComponent(AEComponent):
 
     def hidden(self):
         self.editor.set_modifiers_enabled(True)
- 

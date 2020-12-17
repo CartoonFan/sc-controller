@@ -86,4 +86,3 @@ class SlaveMapper(Mapper):
         else:
             print(">>>", what, data)
         self.generate_events()
- 

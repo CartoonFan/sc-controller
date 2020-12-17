@@ -98,4 +98,3 @@ class GestureDraw(Gtk.DrawingArea):
                 drawing = True
         if drawing:
             cr.stroke()
- 

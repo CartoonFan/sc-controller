@@ -110,7 +110,8 @@ class IconChooser(Editor, UserDataManager):
                         m.group(2),
                         m.group(3),
                     )
-                lblLicense.set_markup(_("Free-use icon created by %s" % (license,)))
+                lblLicense.set_markup(
+                    _("Free-use icon created by %s" % (license,)))
             rvLicense.set_reveal_child(bool(license))
 
     def on_tvCategories_cursor_changed(self, view):
@@ -226,4 +227,3 @@ class CellRendererMenuIcon(Gtk.CellRenderer):
             Gdk.cairo_set_source_rgba(cr, context.get_color(color_flags))
             cr.mask_surface(surf, cell_area.x, cell_area.y)
         cr.fill()
- 

@@ -75,4 +75,3 @@ SDL_DPAD = {
     "dpright": (4, True),
     "dpup": (5, False),
 }
- 

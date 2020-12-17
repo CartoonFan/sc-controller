@@ -71,7 +71,8 @@ class QuickMenu(Menu):
             item.button = self.BUTTONS[self._button_index]
             self._button_index += 1
 
-            icon_file, has_colors = find_icon("buttons/%s" % item.button, False)
+            icon_file, has_colors = find_icon(
+                "buttons/%s" % item.button, False)
             icon = MenuIcon(icon_file, has_colors)
             label = widget.get_children()[0]
             for c in [] + widget.get_children():
@@ -302,4 +303,3 @@ if __name__ == "__main__":
     if m.get_exit_code() == 0:
         print(m.get_selected_item_id())
     sys.exit(m.get_exit_code())
- 
