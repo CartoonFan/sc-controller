@@ -1,10 +1,9 @@
 import inspect
 
+from . import _parses_as_itself
 from scc.constants import SCButtons
 from scc.constants import STICK
 from scc.special_actions import *
-
-from . import _parses_as_itself
 
 MENU_CLASSES = (
     MenuAction,
@@ -26,9 +25,10 @@ class TestSpecialActions(object):
                     # Skip over some hard-coded cases, these have
                     # tests merged together under weird names
                     continue
-                method_name = "test_%s" % (cls.COMMAND,)
+                method_name = "test_%s" % (cls.COMMAND, )
                 if not hasattr(self, method_name):
-                    raise AssertionError("There is no test for %s" % (cls.COMMAND))
+                    raise AssertionError("There is no test for %s" %
+                                         (cls.COMMAND))
 
     def test_profile(self):
         """
@@ -105,11 +105,11 @@ class TestSpecialActions(object):
                 raise AssertionError
             if not _parses_as_itself(cls("menu1", STICK, SCButtons.X)):
                 raise AssertionError
-            if not _parses_as_itself(cls("menu1", STICK, SCButtons.X, SCButtons.Y)):
+            if not _parses_as_itself(
+                    cls("menu1", STICK, SCButtons.X, SCButtons.Y)):
                 raise AssertionError
             if not _parses_as_itself(
-                cls("menu1", STICK, SCButtons.X, SCButtons.Y, True)
-            ):
+                    cls("menu1", STICK, SCButtons.X, SCButtons.Y, True)):
                 raise AssertionError
 
     def test_dialog(self):
@@ -118,34 +118,32 @@ class TestSpecialActions(object):
         back to same action.
         """
         if not _parses_as_itself(
-            DialogAction("Some Text", NameModifier("Option", OSDAction("display this")))
-        ):
+                DialogAction("Some Text",
+                             NameModifier("Option",
+                                          OSDAction("display this")))):
             raise AssertionError
         if not _parses_as_itself(
-            DialogAction(
-                SCButtons.X,
-                "Some Text",
-                NameModifier("Option", OSDAction("display this")),
-            )
-        ):
+                DialogAction(
+                    SCButtons.X,
+                    "Some Text",
+                    NameModifier("Option", OSDAction("display this")),
+                )):
             raise AssertionError
         if not _parses_as_itself(
-            DialogAction(
-                SCButtons.X,
-                SCButtons.Y,
-                "Some Text",
-                NameModifier("Option", OSDAction("display this")),
-            )
-        ):
+                DialogAction(
+                    SCButtons.X,
+                    SCButtons.Y,
+                    "Some Text",
+                    NameModifier("Option", OSDAction("display this")),
+                )):
             raise AssertionError
         if not _parses_as_itself(
-            DialogAction(
-                SCButtons.X,
-                SCButtons.Y,
-                "Some Text",
-                NameModifier("Option", OSDAction("display this")),
-            )
-        ):
+                DialogAction(
+                    SCButtons.X,
+                    SCButtons.Y,
+                    "Some Text",
+                    NameModifier("Option", OSDAction("display this")),
+                )):
             raise AssertionError
 
     def test_position(self):
@@ -153,7 +151,8 @@ class TestSpecialActions(object):
         Tests if PositionModifier can be converted to string and parsed
         back to same action.
         """
-        if not _parses_as_itself(PositionModifier(14, -34, MenuAction("menu1"))):
+        if not _parses_as_itself(PositionModifier(14, -34,
+                                                  MenuAction("menu1"))):
             raise AssertionError
 
     def test_keyboard(self):
@@ -170,8 +169,8 @@ class TestSpecialActions(object):
         same action.
         """
         if not _parses_as_itself(
-            GesturesAction("UUDD", KeyboardAction(), "LRLR", TurnOffAction())
-        ):
+                GesturesAction("UUDD", KeyboardAction(), "LRLR",
+                               TurnOffAction())):
             raise AssertionError
 
     def test_cemuhook(self):
@@ -179,4 +178,3 @@ class TestSpecialActions(object):
         Nothing to test here
         """
         pass
- 

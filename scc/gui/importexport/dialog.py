@@ -7,16 +7,15 @@ import logging
 import tarfile
 import traceback
 
+from .export import Export
+from .import_sccprofile import ImportSccprofile
+from .import_vdf import ImportVdf
 from scc.gui.editor import ComboSetter
 from scc.gui.editor import Editor
 from scc.tools import _
 from scc.tools import find_profile
 from scc.tools import profile_is_default
 from scc.tools import profile_is_override
-
-from .export import Export
-from .import_sccprofile import ImportSccprofile
-from .import_vdf import ImportVdf
 
 log = logging.getLogger("IE.Dialog")
 
@@ -124,7 +123,7 @@ class Dialog(Editor, ComboSetter, Export, ImportVdf, ImportSccprofile):
         stDialog = self.builder.get_object("stDialog")
         hbDialog = self.builder.get_object("hbDialog")
         hbDialog.set_title(stDialog.child_get_property(page, "title"))
-        hname = "on_%s_activated" % (page.get_name(),)
+        hname = "on_%s_activated" % (page.get_name(), )
         if hasattr(self, hname):
             getattr(self, hname)()
 
@@ -170,4 +169,3 @@ class Dialog(Editor, ComboSetter, Export, ImportVdf, ImportSccprofile):
     def on_btImportVdf_clicked(self, *a):
         grVdfImport = self.builder.get_object("grVdfImport")
         self.next_page(grVdfImport)
- 

@@ -42,12 +42,10 @@ class SpecialActionComponent(AEComponent, MenuActionCofC):
         AEComponent.load(self)
         cbConfirmWith = self.builder.get_object("cbConfirmWith")
         cbCancelWith = self.builder.get_object("cbCancelWith")
-        cbConfirmWith.set_row_separator_func(
-            lambda model, iter: model.get_value(iter, 0) == "-"
-        )
-        cbCancelWith.set_row_separator_func(
-            lambda model, iter: model.get_value(iter, 0) == "-"
-        )
+        cbConfirmWith.set_row_separator_func(lambda model, iter: model.
+                                             get_value(iter, 0) == "-")
+        cbCancelWith.set_row_separator_func(lambda model, iter: model.
+                                            get_value(iter, 0) == "-")
 
     def shown(self):
         if not self._userdata_load_started:
@@ -139,12 +137,14 @@ class SpecialActionComponent(AEComponent, MenuActionCofC):
     def on_cbActionType_changed(self, *a):
         cbActionType = self.builder.get_object("cbActionType")
         stActionData = self.builder.get_object("stActionData")
-        key = cbActionType.get_model().get_value(cbActionType.get_active_iter(), 0)
+        key = cbActionType.get_model().get_value(
+            cbActionType.get_active_iter(), 0)
         if key == "shell":
             stActionData.set_visible_child(self.builder.get_object("vbShell"))
             self.on_enCommand_changed()
         elif key == "profile":
-            stActionData.set_visible_child(self.builder.get_object("vbProfile"))
+            stActionData.set_visible_child(
+                self.builder.get_object("vbProfile"))
             self.on_cbProfile_changed()
         elif key == "keyboard":
             stActionData.set_visible_child(self.builder.get_object("nothing"))
@@ -194,7 +194,8 @@ class SpecialActionComponent(AEComponent, MenuActionCofC):
         if self._recursing:
             return
         enCommand = self.builder.get_object("enCommand")
-        self.editor.set_action(ShellCommandAction(enCommand.get_text().decode("utf-8")))
+        self.editor.set_action(
+            ShellCommandAction(enCommand.get_text().decode("utf-8")))
 
     def on_osd_settings_changed(self, *a):
         if self._recursing:
@@ -209,8 +210,7 @@ class SpecialActionComponent(AEComponent, MenuActionCofC):
                 0 if timeout > 60.0 else timeout,
                 size,
                 enOSDText.get_text().decode("utf-8"),
-            )
-        )
+            ))
 
     def on_exMenuControl_activate(self, ex, *a):
         rvMenuControl = self.builder.get_object("rvMenuControl")
@@ -226,4 +226,3 @@ class SpecialActionComponent(AEComponent, MenuActionCofC):
         if value < 1:
             return "%sms" % int(value * 1000)
         return "%ss" % value
- 

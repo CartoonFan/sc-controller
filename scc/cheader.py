@@ -59,7 +59,8 @@ def eval_expr(expr):
         if isinstance(node, ast.Num):
             return node.n
         elif isinstance(node, ast.BinOp):
-            return OPERATORS[type(node.op)](_eval(node.left), _eval(node.right))
+            return OPERATORS[type(node.op)](_eval(node.left),
+                                            _eval(node.right))
         elif isinstance(node, ast.UnaryOp):
             return OPERATORS[type(node.op)](_eval(node.operand))
         elif isinstance(node, ast.BoolOp):
@@ -187,4 +188,3 @@ if __name__ == "__main__":
     definesDict = defines(sys.argv[1], sys.argv[2])
     for k, v in list(definesDict.items()):
         print("{}:\t{}".format(k, v))
- 

@@ -24,16 +24,12 @@ def load_custom_module(log, who_calls="daemon"):
     filename = os.path.join(get_config_path(), "custom.py")
     if os.path.exists(filename):
         log.warning("=" * 60)
-        log.warning("Loading %s" % (filename,))
-        log.warning(
-            "If you don't know what this means or you haven't "
-            "created it, stop daemon right now and remove this file."
-        )
+        log.warning("Loading %s" % (filename, ))
+        log.warning("If you don't know what this means or you haven't "
+                    "created it, stop daemon right now and remove this file.")
         log.warning("")
-        log.warning(
-            "Also try removing it if %s crashes "
-            "shortly after this message." % (who_calls,)
-        )
+        log.warning("Also try removing it if %s crashes "
+                    "shortly after this message." % (who_calls, ))
 
         import imp
 
@@ -41,4 +37,3 @@ def load_custom_module(log, who_calls="daemon"):
         log.warning("=" * 60)
         return True
     return False
- 

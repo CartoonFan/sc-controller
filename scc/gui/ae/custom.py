@@ -54,9 +54,8 @@ class CustomActionComponent(AEComponent):
         sends that instance back to editor.
         """
         txCustomAction = self.builder.get_object("txCustomAction")
-        txt = tbCustomAction.get_text(
-            tbCustomAction.get_start_iter(), tbCustomAction.get_end_iter(), True
-        )
+        txt = tbCustomAction.get_text(tbCustomAction.get_start_iter(),
+                                      tbCustomAction.get_end_iter(), True)
         if len(txt.strip(" \t\r\n")) > 0:
             action = self.parser.restart(txt).parse()
             self.editor.set_action(action, from_custom=True)
@@ -66,4 +65,3 @@ class CustomActionComponent(AEComponent):
 
     def hidden(self):
         self.editor.set_modifiers_enabled(True)
- 

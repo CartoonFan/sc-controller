@@ -51,8 +51,7 @@ class AxisComponent(AEComponent, Chooser):
                 # axis + button on fully pressed trigger
                 self.full = action.actions[0].button2
                 self.builder.get_object("lblFullPressed").set_label(
-                    describe_action(Action.AC_BUTTON, ButtonAction, self.full)
-                )
+                    describe_action(Action.AC_BUTTON, ButtonAction, self.full))
                 action = action.actions[1]
             area = action_to_area(action)
             if area is not None:
@@ -70,4 +69,3 @@ class AxisComponent(AEComponent, Chooser):
                 return False
             action = action.actions[1]
         return isinstance(action, (AxisAction, MouseAction))
- 

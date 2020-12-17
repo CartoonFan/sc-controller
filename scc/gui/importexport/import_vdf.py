@@ -11,6 +11,7 @@ import threading
 from io import StringIO
 
 from gi.repository import GLib
+
 from scc.foreign.vdf import VDFProfile
 from scc.foreign.vdffz import VDFFZProfile
 from scc.lib.vdf import parse_vdf
@@ -26,7 +27,8 @@ class ImportVdf(object):
 
     def __init__(self):
         self._profile = None
-        self._lstVdfProfiles = self.builder.get_object("tvVdfProfiles").get_model()
+        self._lstVdfProfiles = self.builder.get_object(
+            "tvVdfProfiles").get_model()
         self._q_games = collections.deque()
         self._q_profiles = collections.deque()
         self._s_games = threading.Semaphore(0)
@@ -87,8 +89,7 @@ class ImportVdf(object):
         listitems = []
         for gameid in cc:
             if "selected" in cc[gameid] and cc[gameid]["selected"].startswith(
-                "workshop"
-            ):
+                    "workshop"):
                 profile_id = cc[gameid]["selected"].split("/")[-1]
                 listitems.append((i, gameid, profile_id, None))
                 i += 1
@@ -119,17 +120,20 @@ class ImportVdf(object):
                 break
             if gameid.isdigit():
                 name = _("Unknown App ID %s") % (gameid)
-                filename = os.path.join(sa_path, "appmanifest_%s.acf" % (gameid,))
+                filename = os.path.join(sa_path,
+                                        "appmanifest_%s.acf" % (gameid, ))
                 self._lock.acquire()
                 if os.path.exists(filename):
                     try:
                         data = parse_vdf(open(filename, "r"))
                         name = data["appstate"]["name"]
                     except Exception as e:
-                        log.error("Failed to load app manifest for '%s'", gameid)
+                        log.error("Failed to load app manifest for '%s'",
+                                  gameid)
                         log.exception(e)
                 else:
-                    log.warning("Skiping non-existing app manifest '%s'", filename)
+                    log.warning("Skiping non-existing app manifest '%s'",
+                                filename)
                 self._lock.release()
             else:
                 name = gameid
@@ -157,9 +161,8 @@ class ImportVdf(object):
         """
         content_path = os.path.join(self._find_steamapps(), "workshop/content")
         if not os.path.exists(content_path):
-            log.warning(
-                "Cannot find '%s'; Cannot import anything without it", content_path
-            )
+            log.warning("Cannot find '%s'; Cannot import anything without it",
+                        content_path)
             return
         while True:
             # Wait until something is added to the queue
@@ -170,15 +173,13 @@ class ImportVdf(object):
                 break
             self._lock.acquire()
             for user in os.listdir(content_path):
-                filename = os.path.join(
-                    content_path, user, profile_id, "controller_configuration.vdf"
-                )
+                filename = os.path.join(content_path, user, profile_id,
+                                        "controller_configuration.vdf")
                 if not os.path.exists(filename):
                     # If there is no 'controller_configuration.vdf', try
                     # finding *_legacy.bin
                     filename = self._find_legacy_bin(
-                        os.path.join(content_path, user, profile_id)
-                    )
+                        os.path.join(content_path, user, profile_id))
                 if not filename or not os.path.exists(filename):
                     # If not even *_legacy.bin is found, skip to next user
                     continue
@@ -186,13 +187,16 @@ class ImportVdf(object):
                 try:
                     data = parse_vdf(open(filename, "r"))
                     name = data["controller_mappings"]["title"]
-                    GLib.idle_add(self._set_profile_name, index, name, filename)
+                    GLib.idle_add(self._set_profile_name, index, name,
+                                  filename)
                     break
                 except Exception as e:
-                    log.error("Failed to read profile name from '%s'", filename)
+                    log.error("Failed to read profile name from '%s'",
+                              filename)
                     log.exception(e)
             else:
-                log.warning("Profile %s for game %s not found.", profile_id, gameid)
+                log.warning("Profile %s for game %s not found.", profile_id,
+                            gameid)
                 name = _("(not found)")
                 GLib.idle_add(self._set_profile_name, index, name, None)
             self._lock.release()
@@ -273,19 +277,16 @@ class ImportVdf(object):
             lblASetsNotice.set_visible(True)
             lblASetList.set_visible(True)
             log.info("Imported profile contains action sets")
-            lblASetList.set_text(
-                "\n".join(
-                    [
-                        self.gen_aset_name(txName.get_text().decode("utf-8").strip(), x)
-                        for x in self._profile.action_sets
-                        if x != "default"
-                    ]
-                )
-            )
+            lblASetList.set_text("\n".join([
+                self.gen_aset_name(txName.get_text().decode("utf-8").strip(),
+                                   x) for x in self._profile.action_sets
+                if x != "default"
+            ]))
         else:
             lblASetsNotice.set_visible(False)
             lblASetList.set_visible(False)
-        btNext.set_sensitive(self.check_name(txName.get_text().decode("utf-8")))
+        btNext.set_sensitive(self.check_name(
+            txName.get_text().decode("utf-8")))
 
     def on_preload_finished(self, callback, *data):
         """
@@ -297,8 +298,7 @@ class ImportVdf(object):
         # TODO: Jump directly to page
         tvVdfProfiles = self.builder.get_object("tvVdfProfiles")
         iter = self._lstVdfProfiles.append(
-            (-1, _("No game"), _("Dropped profile"), filename)
-        )
+            (-1, _("No game"), _("Dropped profile"), filename))
         tvVdfProfiles.get_selection().select_iter(iter)
         self.window.set_page_complete(self.window.get_nth_page(0), True)
         self.window.set_current_page(1)
@@ -312,12 +312,12 @@ class ImportVdf(object):
         filename = model.get_value(iter, 3)
 
         dump = StringIO()
-        dump.write("\nProfile filename: %s\n" % (filename,))
+        dump.write("\nProfile filename: %s\n" % (filename, ))
         dump.write("\nProfile dump:\n")
         try:
             dump.write(open(filename, "r").read())
         except Exception as e:
-            dump.write("(failed to write: %s)" % (e,))
+            dump.write("(failed to write: %s)" % (e, ))
         tvError.get_buffer().set_text(dump.getvalue())
         swError.set_visible(True)
         btDump.set_sensitive(False)
@@ -375,12 +375,12 @@ class ImportVdf(object):
 
             lblVdfImportFinished.set_text(_("Import failed"))
 
-            error_log.write("\nProfile filename: %s\n" % (filename,))
+            error_log.write("\nProfile filename: %s\n" % (filename, ))
             error_log.write("\nProfile dump:\n")
             try:
                 error_log.write(open(filename, "r").read())
             except Exception as e:
-                error_log.write("(failed to write: %s)" % (e,))
+                error_log.write("(failed to write: %s)" % (e, ))
 
             tvError.get_buffer().set_text(error_log.getvalue())
         else:
@@ -389,17 +389,20 @@ class ImportVdf(object):
                 swError.set_visible(True)
                 lblError.set_visible(True)
 
-                lblVdfImportFinished.set_text(_("Profile imported with warnings"))
+                lblVdfImportFinished.set_text(
+                    _("Profile imported with warnings"))
 
                 tvError.get_buffer().set_text(error_log.getvalue())
                 txName.set_text(self._profile.name)
             else:
-                lblVdfImportFinished.set_text(_("Profile sucessfully imported"))
+                lblVdfImportFinished.set_text(
+                    _("Profile sucessfully imported"))
                 txName.set_text(self._profile.name)
             self.on_txName_changed()
 
     def vdf_import_confirmed(self, *a):
-        name = self.builder.get_object("txName").get_text().decode("utf-8").strip()
+        name = self.builder.get_object("txName").get_text().decode(
+            "utf-8").strip()
 
         if len(self._profile.action_sets) > 1:
             # Update ChangeProfileActions with correct profile names
@@ -417,4 +420,3 @@ class ImportVdf(object):
 
         self.app.new_profile(self._profile, name)
         GLib.idle_add(self.window.destroy)
- 

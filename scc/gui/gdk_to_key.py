@@ -6,6 +6,7 @@ Maps Gdk.KEY_* constants into Keys.KEY_* constants.
 Used by ActionEditor (when grabbing the key)
 """
 from gi.repository import Gdk
+
 from scc.uinput import Keys
 
 GDK_TO_KEY = {
@@ -213,4 +214,3 @@ def keyevent_to_key(event):
     if event.hardware_keycode in KEYCODE_TO_KEY:
         return KEYCODE_TO_KEY[event.hardware_keycode]
     return None
- 

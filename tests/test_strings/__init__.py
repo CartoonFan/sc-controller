@@ -37,4 +37,3 @@ def _same_action(a1, a2):
     if a1.to_string() != a2.to_string():
         raise AssertionError
     return True
- 

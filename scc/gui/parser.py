@@ -15,7 +15,7 @@ class InvalidAction(Action):
         self.name = None
 
     def __str__(self):
-        return "<Invalid Action '%s'>" % (self.string,)
+        return "<Invalid Action '%s'>" % (self.string, )
 
     __repr__ = __str__
 
@@ -48,4 +48,3 @@ class GuiActionParser(ActionParser):
             log.error("Failed to parse '%s'", self.string)
             log.error(e)
             return InvalidAction(self.string, e)
- 

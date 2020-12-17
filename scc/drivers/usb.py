@@ -37,10 +37,8 @@ class USBDevice(object):
         """
 
         def callback_wrapper(transfer):
-            if (
-                transfer.getStatus() != usb1.TRANSFER_COMPLETED
-                or transfer.getActualLength() != size
-            ):
+            if (transfer.getStatus() != usb1.TRANSFER_COMPLETED
+                    or transfer.getActualLength() != size):
                 return
 
             data = transfer.getBuffer()
@@ -96,15 +94,13 @@ class USBDevice(object):
         Schedules synchronous request that requires response.
         Request is done ASAP and provided callback is called with recieved data.
         """
-        self._rmsg.append(
-            (
-                # request_type  # request  # value
-                (0x21, 0x09, 0x0300, index, data),
-                index,
-                size,
-                callback,
-            )
-        )
+        self._rmsg.append((
+            # request_type  # request  # value
+            (0x21, 0x09, 0x0300, index, data),
+            index,
+            size,
+            callback,
+        ))
 
     def flush(self):
         """ Flushes all prepared control messages to the device """
@@ -116,7 +112,11 @@ class USBDevice(object):
             msg, index, size, callback = self._rmsg.pop()
             self.handle.controlWrite(*msg)
             data = self.handle.controlRead(
-                0xA1, 0x01, 0x0300, index, size  # request_type  # request  # value
+                0xA1,
+                0x01,
+                0x0300,
+                index,
+                size  # request_type  # request  # value
             )
             callback(data)
 
@@ -149,7 +149,8 @@ class USBDevice(object):
                 number = setting.getNumber()
                 if self.handle.kernelDriverActive(number):
                     self.handle.detachKernelDriver(number)
-                ksp = setting.getClass(), setting.getSubClass(), setting.getProtocol()
+                ksp = setting.getClass(), setting.getSubClass(
+                ), setting.getProtocol()
                 if ksp == (klass, subclass, protocol):
                     self.claim(number)
                     rv += 1
@@ -231,21 +232,21 @@ class USBDriver(object):
             return
         bus, dev = self.daemon.get_device_monitor().get_usb_address(syspath)
         for device in self._ctx.getDeviceIterator():
-            if (bus, dev) == (device.getBusNumber(), device.getDeviceAddress()):
+            if (bus, dev) == (device.getBusNumber(),
+                              device.getDeviceAddress()):
                 try:
                     handle = device.open()
                     break
                 except usb1.USBError as e:
-                    log.error(
-                        "Failed to open USB device %.4x:%.4x : %s", tp[0], tp[1], e
-                    )
+                    log.error("Failed to open USB device %.4x:%.4x : %s",
+                              tp[0], tp[1], e)
                     if tp in self._fail_cbs:
                         self._fail_cbs[tp](syspath, *tp)
                         return
                     if self.daemon:
                         self.daemon.add_error(
                             "usb:%s:%s" % (tp[0], tp[1]),
-                            "Failed to open USB device: %s" % (e,),
+                            "Failed to open USB device: %s" % (e, ),
                         )
                     return
         else:
@@ -256,7 +257,8 @@ class USBDriver(object):
         try:
             handled_device = callback(device, handle)
         except usb1.USBErrorBusy as e:
-            log.error("Failed to claim USB device %.4x:%.4x : %s", tp[0], tp[1], e)
+            log.error("Failed to claim USB device %.4x:%.4x : %s", tp[0],
+                      tp[1], e)
             if tp in self._fail_cbs:
                 device.close()
                 self._fail_cbs[tp](*tp)
@@ -265,7 +267,7 @@ class USBDriver(object):
                 if self.daemon:
                     self.daemon.add_error(
                         "usb:%s:%s" % (tp[0], tp[1]),
-                        "Failed to claim USB device: %s" % (e,),
+                        "Failed to claim USB device: %s" % (e, ),
                     )
                 self._retry_devices.append((syspath, tp))
                 device.close()
@@ -293,7 +295,8 @@ class USBDriver(object):
                 # Safe to ignore, happens when device is physiucally removed
                 pass
 
-    def register_hotplug_device(self, callback, vendor_id, product_id, on_failure):
+    def register_hotplug_device(self, callback, vendor_id, product_id,
+                                on_failure):
         self._known_ids[vendor_id, product_id] = callback
         if on_failure:
             self._fail_cbs[vendor_id, product_id] = on_failure
@@ -312,14 +315,16 @@ class USBDriver(object):
             del self._known_ids[vendor_id, product_id]
             if (vendor_id, product_id) in self._fail_cbs:
                 del self._fail_cbs[vendor_id, product_id]
-            log.debug("Unregistred USB driver for %.4x:%.4x", vendor_id, product_id)
+            log.debug("Unregistred USB driver for %.4x:%.4x", vendor_id,
+                      product_id)
 
     def mainloop(self):
         if self._changed > 0:
             self._ctx.handleEventsTimeout()
             self._changed = 0
 
-        for d in list(self._devices.values()):  # TODO: don't use .values() here
+        for d in list(
+                self._devices.values()):  # TODO: don't use .values() here
             try:
                 d.flush()
             except usb1.USBErrorPipe:
@@ -355,4 +360,3 @@ def register_hotplug_device(callback, vendor_id, product_id, on_failure=None):
 
 def unregister_hotplug_device(callback, vendor_id, product_id):
     _usb.unregister_hotplug_device(callback, vendor_id, product_id)
- 

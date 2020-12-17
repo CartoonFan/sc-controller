@@ -9,6 +9,7 @@ import logging
 import math
 
 from gi.repository import Gtk
+
 from scc.menu_data import Separator
 from scc.menu_data import Submenu
 from scc.osd.menu import Menu
@@ -75,4 +76,3 @@ class GridMenu(Menu):
                 return widget
             else:
                 return Menu.generate_widget(self, item)
- 

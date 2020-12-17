@@ -10,6 +10,7 @@ awfull with larger number of items.
 import logging
 
 from gi.repository import Gtk
+
 from scc.constants import STICK_PAD_MIN
 from scc.menu_data import Separator
 from scc.menu_data import Submenu
@@ -60,4 +61,3 @@ class HorizontalMenu(GridMenu):
         if what == self._control_with and self._use_cursor:
             data = data[0], STICK_PAD_MIN
         GridMenu.on_event(self, daemon, what, data)
- 

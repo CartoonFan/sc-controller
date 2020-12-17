@@ -6,9 +6,8 @@ VDFProfile to decode rest.
 import json
 import logging
 
-from scc.lib.vdf import parse_vdf
-
 from .vdf import VDFProfile
+from scc.lib.vdf import parse_vdf
 
 log = logging.getLogger("import.vdffz")
 
@@ -22,4 +21,3 @@ class VDFFZProfile(VDFProfile):
         if "ConfigData" not in data:
             raise ValueError("ConfigData missing in JSON")
         self.load_data(parse_vdf(data["ConfigData"].encode("utf-8")))
- 

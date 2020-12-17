@@ -10,14 +10,21 @@ data_files = [
     ("share/scc/glade/ae", glob.glob("glade/ae/*.glade")),
     ("share/scc/images", glob.glob("images/*.svg")),
     ("share/scc/images", glob.glob("images/*.json")),
-    ("share/scc/images/button-images", glob.glob("images/button-images/*.svg")),
-    ("share/scc/images/button-images", glob.glob("images/button-images/*.json")),
-    ("share/scc/images/controller-icons", glob.glob("images/controller-icons/*.svg")),
-    ("share/scc/images/controller-images", glob.glob("images/controller-images/*.svg")),
-    ("share/icons/hicolor/24x24/status", glob.glob("images/24x24/status/*.png")),
-    ("share/icons/hicolor/256x256/status", glob.glob("images/256x256/status/*.png")),
+    ("share/scc/images/button-images",
+     glob.glob("images/button-images/*.svg")),
+    ("share/scc/images/button-images",
+     glob.glob("images/button-images/*.json")),
+    ("share/scc/images/controller-icons",
+     glob.glob("images/controller-icons/*.svg")),
+    ("share/scc/images/controller-images",
+     glob.glob("images/controller-images/*.svg")),
+    ("share/icons/hicolor/24x24/status",
+     glob.glob("images/24x24/status/*.png")),
+    ("share/icons/hicolor/256x256/status",
+     glob.glob("images/256x256/status/*.png")),
     ("share/scc/default_profiles", glob.glob("default_profiles/*.sccprofile")),
-    ("share/scc/default_profiles", glob.glob("default_profiles/.*.sccprofile")),
+    ("share/scc/default_profiles",
+     glob.glob("default_profiles/.*.sccprofile")),
     ("share/scc/default_menus", glob.glob("default_menus/*.menu")),
     ("share/scc/default_menus", glob.glob("default_menus/.*.menu")),
     ("share/scc/osd-styles", glob.glob("osd-styles/*.json")),
@@ -31,8 +38,7 @@ data_files = [
     (
         "share/scc/images/menu-icons/" + x.split("/")[-1],
         [x + "/LICENCES"] + glob.glob(x + "/*.png"),
-    )
-    for x in glob.glob("images/menu-icons/*")
+    ) for x in glob.glob("images/menu-icons/*")
 ]
 
 packages = [
@@ -83,7 +89,7 @@ if __name__ == "__main__":
             ),
             Extension("libhiddrv", sources=["scc/drivers/hiddrv.c"]),
             Extension("libsc_by_bt", sources=["scc/drivers/sc_by_bt.c"]),
-            Extension("libremotepad", sources=["scc/drivers/remotepad_controller.c"]),
+            Extension("libremotepad",
+                      sources=["scc/drivers/remotepad_controller.c"]),
         ],
     )
- 

@@ -8,4 +8,3 @@ Used by OSD keyboard
 from .gdk_to_key import KEYCODE_TO_KEY
 
 KEY_TO_KEYCODE = {KEYCODE_TO_KEY[a]: a for a in KEYCODE_TO_KEY}
- 

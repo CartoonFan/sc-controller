@@ -54,4 +54,3 @@ class TestGlade(object):
         for filename in _get_files():
             root = ET.parse(filename).getroot()
             _check_ids(root, filename, "<root element>")
- 
