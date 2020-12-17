@@ -1,4 +1,3 @@
-import inspect
 
 from scc.actions import *
 from scc.modifiers import BallModifier
