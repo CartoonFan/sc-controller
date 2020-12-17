@@ -37,6 +37,7 @@ FLOAT_REPR = repr
 
 def encode_basestring(s):
     """Return a JSON representation of a Python string"""
+
     def replace(match):
         return ESCAPE_DCT[match.group(0)]
 
@@ -103,16 +104,16 @@ class JSONEncoder(object):
     key_separator = ": "
 
     def __init__(
-            self,
-            skipkeys=False,
-            ensure_ascii=True,
-            check_circular=True,
-            allow_nan=True,
-            sort_keys=False,
-            indent=None,
-            separators=None,
-            encoding="utf-8",
-            default=None,
+        self,
+        skipkeys=False,
+        ensure_ascii=True,
+        check_circular=True,
+        allow_nan=True,
+        sort_keys=False,
+        indent=None,
+        separators=None,
+        encoding="utf-8",
+        default=None,
     ):
         """Constructor for JSONEncoder, with sensible defaults.
 
@@ -246,11 +247,11 @@ class JSONEncoder(object):
                 return _orig_encoder(o)
 
         def floatstr(
-                o,
-                allow_nan=self.allow_nan,
-                _repr=FLOAT_REPR,
-                _inf=INFINITY,
-                _neginf=-INFINITY,
+            o,
+            allow_nan=self.allow_nan,
+            _repr=FLOAT_REPR,
+            _inf=INFINITY,
+            _neginf=-INFINITY,
         ):
             # Check for specials.  Note that this type of test is processor
             # and/or platform-specific, so do tests which don't depend on the
@@ -267,13 +268,17 @@ class JSONEncoder(object):
 
             if not allow_nan:
                 raise ValueError(
-                    "Out of range float values are not JSON compliant: " +
-                    repr(o))
+                    "Out of range float values are not JSON compliant: " + repr(o)
+                )
 
             return text
 
-        if (_one_shot and c_make_encoder is not None and self.indent is None
-                and not self.sort_keys):
+        if (
+            _one_shot
+            and c_make_encoder is not None
+            and self.indent is None
+            and not self.sort_keys
+        ):
             _iterencode = c_make_encoder(
                 markers,
                 self.default,
@@ -302,28 +307,28 @@ class JSONEncoder(object):
 
 
 def _make_iterencode(
-        markers,
-        _default,
-        _encoder,
-        _indent,
-        _floatstr,
-        _key_separator,
-        _item_separator,
-        _sort_keys,
-        _skipkeys,
-        _one_shot,
-        # HACK: hand-optimized bytecode; turn globals into locals
-        ValueError=ValueError,
-        str=str,
-        dict=dict,
-        float=float,
-        id=id,
-        int=int,
-        isinstance=isinstance,
-        list=list,
-        long=int,
-        str=str,
-        tuple=tuple,
+    markers,
+    _default,
+    _encoder,
+    _indent,
+    _floatstr,
+    _key_separator,
+    _item_separator,
+    _sort_keys,
+    _skipkeys,
+    _one_shot,
+    # HACK: hand-optimized bytecode; turn globals into locals
+    ValueError=ValueError,
+    str=str,
+    dict=dict,
+    float=float,
+    id=id,
+    int=int,
+    isinstance=isinstance,
+    list=list,
+    long=int,
+    str=str,
+    tuple=tuple,
 ):
     def _iterencode_list(lst, _current_indent_level):
         if not lst:

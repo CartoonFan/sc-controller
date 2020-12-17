@@ -44,6 +44,7 @@ class TestGlade(object):
 
     (one case on one environment so far)
     """
+
     def test_every_widget_has_id(self):
         """
         Tests if every defined widget has ID.

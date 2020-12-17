@@ -29,10 +29,11 @@ class TestModifiers(object):
         """
         for cls in list(Action.ALL.values()):
             if "/modifiers.py" in inspect.getfile(cls):
-                method_name = "test_%s" % (cls.COMMAND, )
+                method_name = "test_%s" % (cls.COMMAND,)
                 if not hasattr(self, method_name):
-                    raise AssertionError("There is no test for %s modifier" %
-                                         (cls.COMMAND))
+                    raise AssertionError(
+                        "There is no test for %s modifier" % (cls.COMMAND)
+                    )
 
     def test_name(self):
         """
@@ -107,10 +108,7 @@ class TestModifiers(object):
         """
         Tests if CircularModifier is parsed correctly from json.
         """
-        a = parser.from_json_data({
-            "action": "axis(ABS_X)",
-            "circularabs": True
-        })
+        a = parser.from_json_data({"action": "axis(ABS_X)", "circularabs": True})
         if not isinstance(a, CircularAbsModifier):
             raise AssertionError
 
@@ -129,10 +127,7 @@ class TestModifiers(object):
         """
         Tests if SmoothModifier is parsed correctly from json.
         """
-        a = parser.from_json_data({
-            "action": "axis(ABS_X)",
-            "smooth": [5, 0.3]
-        })
+        a = parser.from_json_data({"action": "axis(ABS_X)", "smooth": [5, 0.3]})
 
         if not isinstance(a, SmoothModifier):
             raise AssertionError
@@ -148,12 +143,7 @@ class TestModifiers(object):
         Tests if DeadzoneModifier is parsed correctly from json.
         """
         # One parameter
-        a = parser.from_json_data({
-            "action": "axis(ABS_X)",
-            "deadzone": {
-                "upper": 300
-            }
-        })
+        a = parser.from_json_data({"action": "axis(ABS_X)", "deadzone": {"upper": 300}})
 
         if not isinstance(a, DeadzoneModifier):
             raise AssertionError
@@ -163,13 +153,9 @@ class TestModifiers(object):
             raise AssertionError
 
         # Two parameters
-        a = parser.from_json_data({
-            "action": "axis(ABS_X)",
-            "deadzone": {
-                "upper": 300,
-                "lower": 50
-            }
-        })
+        a = parser.from_json_data(
+            {"action": "axis(ABS_X)", "deadzone": {"upper": 300, "lower": 50}}
+        )
 
         if not isinstance(a, DeadzoneModifier):
             raise AssertionError
@@ -183,10 +169,9 @@ class TestModifiers(object):
         Tests if SensitivityModifier is parsed correctly from json.
         """
         # Simple
-        a = parser.from_json_data({
-            "action": "axis(ABS_X)",
-            "sensitivity": [2.0, 3.0, 4.0]
-        })
+        a = parser.from_json_data(
+            {"action": "axis(ABS_X)", "sensitivity": [2.0, 3.0, 4.0]}
+        )
         if not isinstance(a, SensitivityModifier):
             raise AssertionError
         if a.speeds != [2.0, 3.0, 4.0]:
@@ -195,64 +180,72 @@ class TestModifiers(object):
             raise AssertionError
 
         # Hold and doubleclick
-        a = parser.from_json_data({
-            "hold": {
-                "action": "mouse(ROLL)",
-                "sensitivity": [3.0, 4.0]
-            },
-            "doubleclick": {
-                "action": "gyro(ABS_RZ, ABS_RX, ABS_Z)",
-                "sensitivity": [7.0, 8.0, 9.0],
-            },
-            "action": "axis(ABS_Z)",
-            "sensitivity": [
-                10.0,
-            ],
-        }).compress()
-        if not (isinstance(a.holdaction, MouseAction)
-                and a.holdaction.get_speed() == (3.0, 4.0)):
+        a = parser.from_json_data(
+            {
+                "hold": {"action": "mouse(ROLL)", "sensitivity": [3.0, 4.0]},
+                "doubleclick": {
+                    "action": "gyro(ABS_RZ, ABS_RX, ABS_Z)",
+                    "sensitivity": [7.0, 8.0, 9.0],
+                },
+                "action": "axis(ABS_Z)",
+                "sensitivity": [
+                    10.0,
+                ],
+            }
+        ).compress()
+        if not (
+            isinstance(a.holdaction, MouseAction)
+            and a.holdaction.get_speed() == (3.0, 4.0)
+        ):
             raise AssertionError
-        if not (isinstance(a.action, GyroAction)
-                and a.action.get_speed() == (7.0, 8.0, 9.0)):
+        if not (
+            isinstance(a.action, GyroAction) and a.action.get_speed() == (7.0, 8.0, 9.0)
+        ):
             raise AssertionError
-        if not (isinstance(a.normalaction, AxisAction)
-                and a.normalaction.get_speed() == (10.0, )):
+        if not (
+            isinstance(a.normalaction, AxisAction)
+            and a.normalaction.get_speed() == (10.0,)
+        ):
             raise AssertionError
 
         # Modeshift
-        a = parser.from_json_data({
-            "modes": {
-                "A": {
-                    "action": "mouse(ROLL)",
-                    "sensitivity": [3.0, 4.0]
+        a = parser.from_json_data(
+            {
+                "modes": {
+                    "A": {"action": "mouse(ROLL)", "sensitivity": [3.0, 4.0]},
+                    "B": {
+                        "action": "axis(ABS_X)",
+                        "sensitivity": [
+                            7.0,
+                        ],
+                    },
+                    "X": {
+                        "action": "gyro(ABS_RZ, ABS_RX, ABS_Z)",
+                        "sensitivity": [8.0, 9.0, 10.0],
+                    },
                 },
-                "B": {
-                    "action": "axis(ABS_X)",
-                    "sensitivity": [
-                        7.0,
-                    ],
-                },
-                "X": {
-                    "action": "gyro(ABS_RZ, ABS_RX, ABS_Z)",
-                    "sensitivity": [8.0, 9.0, 10.0],
-                },
-            },
-            "action": "axis(ABS_Z)",
-            "sensitivity": [
-                12.0,
-            ],
-        }).compress()
-        if not (isinstance(a.mods[SCButtons.A], MouseAction)
-                and a.mods[SCButtons.A].get_speed() == (3.0, 4.0)):
+                "action": "axis(ABS_Z)",
+                "sensitivity": [
+                    12.0,
+                ],
+            }
+        ).compress()
+        if not (
+            isinstance(a.mods[SCButtons.A], MouseAction)
+            and a.mods[SCButtons.A].get_speed() == (3.0, 4.0)
+        ):
             raise AssertionError
-        if not (isinstance(a.mods[SCButtons.B], AxisAction)
-                and a.mods[SCButtons.B].get_speed() == (7.0, )):
+        if not (
+            isinstance(a.mods[SCButtons.B], AxisAction)
+            and a.mods[SCButtons.B].get_speed() == (7.0,)
+        ):
             raise AssertionError
-        if not (isinstance(a.mods[SCButtons.X], GyroAction)
-                and a.mods[SCButtons.X].get_speed() == (8.0, 9.0, 10.0)):
+        if not (
+            isinstance(a.mods[SCButtons.X], GyroAction)
+            and a.mods[SCButtons.X].get_speed() == (8.0, 9.0, 10.0)
+        ):
             raise AssertionError
-        if not (isinstance(a.default, AxisAction)
-                and a.default.get_speed() == (12.0, )):
+        if not (isinstance(a.default, AxisAction) and a.default.get_speed() == (12.0,)):
             raise AssertionError
 
     def test_feedback(self):
@@ -260,10 +253,7 @@ class TestModifiers(object):
         Tests if FeedbackModifier is parsed correctly from json.
         """
         # One parameter
-        a = parser.from_json_data({
-            "action": "axis(ABS_X)",
-            "feedback": ["BOTH"]
-        })
+        a = parser.from_json_data({"action": "axis(ABS_X)", "feedback": ["BOTH"]})
 
         if not isinstance(a, FeedbackModifier):
             raise AssertionError
@@ -273,10 +263,9 @@ class TestModifiers(object):
             raise AssertionError
 
         # All parameters
-        a = parser.from_json_data({
-            "action": "axis(ABS_X)",
-            "feedback": ["RIGHT", 1024, 8, 2048]
-        })
+        a = parser.from_json_data(
+            {"action": "axis(ABS_X)", "feedback": ["RIGHT", 1024, 8, 2048]}
+        )
 
         if not isinstance(a, FeedbackModifier):
             raise AssertionError
@@ -309,19 +298,15 @@ class TestModifiers(object):
         Tests if ModeModifier is parsed correctly from json.
         """
         # Without default
-        a = parser.from_json_data({
-            "modes": {
-                "A": {
-                    "action": "axis(ABS_X)"
-                },
-                "B": {
-                    "action": "axis(ABS_Y)"
-                },
-                "LT": {
-                    "action": "axis(ABS_Z)"
-                },
+        a = parser.from_json_data(
+            {
+                "modes": {
+                    "A": {"action": "axis(ABS_X)"},
+                    "B": {"action": "axis(ABS_Y)"},
+                    "LT": {"action": "axis(ABS_Z)"},
+                }
             }
-        })
+        )
 
         if not isinstance(a, ModeModifier):
             raise AssertionError
@@ -333,17 +318,15 @@ class TestModifiers(object):
             raise AssertionError
 
         # With default
-        a = parser.from_json_data({
-            "action": "axis(ABS_RX)",
-            "modes": {
-                "X": {
-                    "action": "axis(ABS_X)"
+        a = parser.from_json_data(
+            {
+                "action": "axis(ABS_RX)",
+                "modes": {
+                    "X": {"action": "axis(ABS_X)"},
+                    "RT": {"action": "axis(ABS_Z)"},
                 },
-                "RT": {
-                    "action": "axis(ABS_Z)"
-                },
-            },
-        })
+            }
+        )
 
         if not isinstance(a, ModeModifier):
             raise AssertionError
@@ -358,12 +341,9 @@ class TestModifiers(object):
         """
         Tests if DoubleclickModifier is parsed correctly from json.
         """
-        a = parser.from_json_data({
-            "action": "axis(ABS_RX)",
-            "doubleclick": {
-                "action": "axis(ABS_X)"
-            }
-        })
+        a = parser.from_json_data(
+            {"action": "axis(ABS_RX)", "doubleclick": {"action": "axis(ABS_X)"}}
+        )
 
         if not isinstance(a, DoubleclickModifier):
             raise AssertionError
@@ -378,12 +358,9 @@ class TestModifiers(object):
         """
         Tests if HoldModifier is parsed correctly from json.
         """
-        a = parser.from_json_data({
-            "action": "axis(ABS_RX)",
-            "hold": {
-                "action": "axis(ABS_X)"
-            }
-        })
+        a = parser.from_json_data(
+            {"action": "axis(ABS_RX)", "hold": {"action": "axis(ABS_X)"}}
+        )
 
         if not isinstance(a, HoldModifier):
             raise AssertionError

@@ -8,9 +8,11 @@ from scc.lib.vdf import parse_vdf
 
 class TestVDF(object):
     """ Tests VDF parser """
+
     def test_parsing(self):
         """ Tests if VDF parser parses VDF """
-        sio = StringIO("""
+        sio = StringIO(
+            """
         "data"
         {
             "version" "3"
@@ -18,7 +20,8 @@ class TestVDF(object):
                 "version" "7"
             }
         }
-        """)
+        """
+        )
         parsed = parse_vdf(sio)
         if not isinstance(parsed["data"], dict):
             raise AssertionError
@@ -31,7 +34,8 @@ class TestVDF(object):
         """
         Tests if VDF parser throws exception when there is dict with key missing
         """
-        sio = StringIO("""
+        sio = StringIO(
+            """
         "data"
         {
             "version" "3"
@@ -39,7 +43,8 @@ class TestVDF(object):
                 "version" "7"
             }
         }
-        """)
+        """
+        )
         with pytest.raises(ValueError) as excinfo:
             parsed = parse_vdf(sio)
 
@@ -47,14 +52,16 @@ class TestVDF(object):
         """
         Tests if VDF parser throws exception when there is unclosed {
         """
-        sio = StringIO("""
+        sio = StringIO(
+            """
         "data"
         {
             "version" "3"
             "more data" {
                 "version" "7"
             }
-        """)
+        """
+        )
         with pytest.raises(ValueError) as excinfo:
             parsed = parse_vdf(sio)
 
@@ -62,7 +69,8 @@ class TestVDF(object):
         """
         Tests if VDF parser throws exception when there is } wihtout matching {
         """
-        sio = StringIO("""
+        sio = StringIO(
+            """
         "data"
         {
             "version" "3"
@@ -71,7 +79,8 @@ class TestVDF(object):
             }
             }
         }
-        """)
+        """
+        )
         with pytest.raises(ValueError) as excinfo:
             parsed = parse_vdf(sio)
 
@@ -82,5 +91,5 @@ class TestVDF(object):
         path = "tests/vdfs"
         for f in os.listdir(path):
             filename = os.path.join(path, f)
-            print("Testing import of '%s'" % (filename, ))
+            print("Testing import of '%s'" % (filename,))
             VDFProfile().load(filename)

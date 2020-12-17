@@ -70,14 +70,16 @@ class RemoteJoypadMessage(ctypes.Structure):
 
 
 class RemotePadController(Controller):
-    flags = (ControllerFlags.HAS_DPAD
-             | ControllerFlags.NO_GRIPS
-             | ControllerFlags.HAS_RSTICK
-             | ControllerFlags.SEPARATE_STICK)
+    flags = (
+        ControllerFlags.HAS_DPAD
+        | ControllerFlags.NO_GRIPS
+        | ControllerFlags.HAS_RSTICK
+        | ControllerFlags.SEPARATE_STICK
+    )
 
     def __init__(self, driver, address):
         Controller.__init__(self)
-        self._id = "rpad%s" % (self._id, )
+        self._id = "rpad%s" % (self._id,)
         self._driver = driver
         self._address = address
         self._enabled = True
@@ -147,8 +149,8 @@ class Driver:
             controller = self._controllers[address]
 
         self._lib.remotepad_input(
-            controller._pad,
-            cast(ctypes.c_char_p(data), POINTER(RemoteJoypadMessage)))
+            controller._pad, cast(ctypes.c_char_p(data), POINTER(RemoteJoypadMessage))
+        )
 
 
 def init(daemon, config):

@@ -108,7 +108,7 @@ def cmd_list_profiles(argv0, argv):
                 if x.endswith(".sccprofile"):
                     if not include_hidden and x.startswith("."):
                         continue
-                    lst.add(x[0:-len(".sccprofile")])
+                    lst.add(x[0 : -len(".sccprofile")])
         except OSError:
             pass
     for x in sorted(lst):
@@ -133,17 +133,17 @@ def cmd_set_profile(argv0, argv):
     if len(argv) >= 2:
         profile = find_profile(argv[1])
         if profile is None:
-            print >> sys.stderr, "Unknown profile:", argv[1]
+            print >>sys.stderr, "Unknown profile:", argv[1]
             return 1
-        print >> s, "Controller: %s" % (argv[0], )
+        print >> s, "Controller: %s" % (argv[0],)
         if not check_error(s):
             return 1
     else:
         profile = find_profile(argv[0])
         if profile is None:
-            print >> sys.stderr, "Unknown profile:", argv[0]
+            print >>sys.stderr, "Unknown profile:", argv[0]
             return 1
-    print >> s, "Profile: %s" % (profile, )
+    print >> s, "Profile: %s" % (profile,)
     if not check_error(s):
         return 1
     return 0
@@ -191,28 +191,28 @@ def cmd_dependency_check(argv0, argv):
         gi.require_version("GdkX11", "3.0")
         gi.require_version("Rsvg", "2.0")
     except ValueError as e1:
-        print >> sys.stderr, e1
+        print >>sys.stderr, e1
         if "Rsvg" in str(e1):
-            print >> sys.stderr, "Please, install 'gir1.2-rsvg-2.0' package to use this application"
+            print >>sys.stderr, "Please, install 'gir1.2-rsvg-2.0' package to use this application"
         else:
-            print >> sys.stderr, "Please, install 'PyGObject' package to use this application"
+            print >>sys.stderr, "Please, install 'PyGObject' package to use this application"
     except ImportError as e2:
-        print >> sys.stderr, e2
+        print >>sys.stderr, e2
         if "gi" in str(e2):
-            print >> sys.stderr, "Please, install 'PyGObject' package to use this application"
+            print >>sys.stderr, "Please, install 'PyGObject' package to use this application"
         return 1
     try:
         import evdev
     except Exception as e:
-        print >> sys.stderr, e
-        print >> sys.stderr, "Please, install python-evdev package to enable non-steam controller support"
+        print >>sys.stderr, e
+        print >>sys.stderr, "Please, install python-evdev package to enable non-steam controller support"
     try:
         import scc.lib.xwrappers as X
 
         X.Atom
     except Exception as e:
-        print >> sys.stderr, e
-        print >> sys.stderr, "Failed to load X11 helpers, please, check your X installation"
+        print >>sys.stderr, e
+        print >>sys.stderr, "Failed to load X11 helpers, please, check your X installation"
         return 1
     return 0
 
@@ -247,15 +247,15 @@ def cmd_lock_inputs(argv0, argv, lock="Lock: "):
                 print >> s, lock + " ".join([x.upper() for x in argv])
                 s.flush()
             elif line.startswith("Error:"):
-                print >> sys.stderr, line.strip()
+                print >>sys.stderr, line.strip()
                 return -4
             elif line.startswith("Fail:"):
-                print >> sys.stderr, line.strip()
+                print >>sys.stderr, line.strip()
                 return -2
             elif line.startswith("Event:"):
                 data = line.strip().split(" ")
                 try:
-                    print >> sys.stdout, " ".join(data[2:])
+                    print >>sys.stdout, " ".join(data[2:])
                     sys.stdout.flush()
                 except IOError:
                     # Output closed, bail out
@@ -298,7 +298,7 @@ def connect_to_daemon():
         s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         s.connect(get_daemon_socket())
     except Exception as e:
-        print >> sys.stderr, "Connection to scc-daemon failed: %s" % (e, )
+        print >>sys.stderr, "Connection to scc-daemon failed: %s" % (e,)
         return None
     return s.makefile()
 
@@ -313,7 +313,7 @@ def check_error(s):
     while True:
         line = s.readline()
         if len(line) == 0:
-            print >> sys.stderr, "Connection closed"
+            print >>sys.stderr, "Connection closed"
             return False
         line = line.strip("\n\r\t ")
         if line == "OK.":
@@ -321,7 +321,7 @@ def check_error(s):
         if line.startswith("Fail:"):
             if "\\n" in line:
                 line = line.replace("\\n", "\n")
-            print >> sys.stderr, line
+            print >>sys.stderr, line
             return False
 
 
@@ -366,21 +366,18 @@ def show_help(command=None, out=sys.stdout):
             lines = hlp.split("\n")
             if len(lines) > 0:
                 for line in lines:
-                    line = line.replace("Usage: scc",
-                                        "Usage: %s" % (sys.argv[0], ))
+                    line = line.replace("Usage: scc", "Usage: %s" % (sys.argv[0],))
                     if line.startswith("\t"):
                         line = line[1:]
                     print >> out, line
                 return 0
 
-    print >> out, "Usage: %s <command> [ arguments ]" % (sys.argv[0], )
+    print >> out, "Usage: %s <command> [ arguments ]" % (sys.argv[0],)
     print >> out, ""
     print >> out, "List of commands:"
     for name in sorted(names):
-        hlp = (globals()["cmd_" + name].__doc__
-               or "").strip("\t \r\n").split("\n")[0]
-        print >> out, (" - %%-%ss %%s" %
-                       (max_len, )) % (name.replace("_", "-"), hlp)
+        hlp = (globals()["cmd_" + name].__doc__ or "").strip("\t \r\n").split("\n")[0]
+        print >> out, (" - %%-%ss %%s" % (max_len,)) % (name.replace("_", "-"), hlp)
     return 0
 
 
@@ -394,8 +391,8 @@ def main():
         while "--help" in sys.argv:
             sys.argv.remove("--help")
         sys.exit(
-            show_help(
-                sys.argv[1].replace("-", "_") if len(sys.argv) > 1 else None))
+            show_help(sys.argv[1].replace("-", "_") if len(sys.argv) > 1 else None)
+        )
     if "-v" in sys.argv:
         while "-v" in sys.argv:
             sys.argv.remove("-v")
@@ -405,7 +402,7 @@ def main():
     try:
         command = globals()["cmd_" + sys.argv[1].replace("-", "_")]
     except:
-        print >> sys.stderr, "Unknown command: %s" % (sys.argv[1], )
+        print >>sys.stderr, "Unknown command: %s" % (sys.argv[1],)
         sys.exit(show_help(out=sys.stderr))
 
     try:
@@ -413,7 +410,7 @@ def main():
     except KeyboardInterrupt:
         sys.exit(0)
     except InvalidArguments:
-        print >> sys.stderr, "Invalid arguments"
-        print >> sys.stderr, ""
+        print >>sys.stderr, "Invalid arguments"
+        print >>sys.stderr, ""
         show_help(sys.argv[1], out=sys.stderr)
         sys.exit(1)

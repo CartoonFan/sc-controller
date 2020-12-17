@@ -34,10 +34,7 @@ class ControllerSettings(Editor, UserDataManager, ComboSetter):
         self._eh_ids = ()
 
     def load_icons(self):
-        paths = [
-            get_default_controller_icons_path(),
-            get_controller_icons_path()
-        ]
+        paths = [get_default_controller_icons_path(), get_controller_icons_path()]
         self.load_user_data(paths, "*.svg", None, self.on_icons_loaded)
 
     def on_icons_loaded(self, icons):
@@ -121,10 +118,12 @@ class ControllerSettings(Editor, UserDataManager, ComboSetter):
         self.set_cb(cbControlWith, cfg["menu_control"], keyindex=1)
         self.set_cb(cbConfirmWith, cfg["menu_confirm"], keyindex=1)
         self.set_cb(cbCancelWith, cfg["menu_cancel"], keyindex=1)
-        cbConfirmWith.set_row_separator_func(lambda model, iter: model.
-                                             get_value(iter, 0) == "-")
-        cbCancelWith.set_row_separator_func(lambda model, iter: model.
-                                            get_value(iter, 0) == "-")
+        cbConfirmWith.set_row_separator_func(
+            lambda model, iter: model.get_value(iter, 0) == "-"
+        )
+        cbCancelWith.set_row_separator_func(
+            lambda model, iter: model.get_value(iter, 0) == "-"
+        )
         self._recursing = False
 
     def save_config(self, *a):
@@ -152,15 +151,17 @@ class ControllerSettings(Editor, UserDataManager, ComboSetter):
         cfg["input_rotation_l"] = sclLeftRotation.get_value()
         cfg["input_rotation_r"] = sclRightRotation.get_value()
         cfg["menu_control"] = cbControlWith.get_model().get_value(
-            cbControlWith.get_active_iter(), 1)
+            cbControlWith.get_active_iter(), 1
+        )
         cfg["menu_confirm"] = cbConfirmWith.get_model().get_value(
-            cbConfirmWith.get_active_iter(), 1)
+            cbConfirmWith.get_active_iter(), 1
+        )
         cfg["menu_cancel"] = cbCancelWith.get_model().get_value(
-            cbCancelWith.get_active_iter(), 1)
+            cbCancelWith.get_active_iter(), 1
+        )
 
         try:
-            cfg["icon"] = cbIcon.get_model().get_value(
-                cbIcon.get_active_iter(), 1)
+            cfg["icon"] = cbIcon.get_model().get_value(cbIcon.get_active_iter(), 1)
             if self.profile_switcher:
                 self.profile_switcher.update_icon()
         except BaseException:
@@ -175,6 +176,7 @@ class ControllerSettings(Editor, UserDataManager, ComboSetter):
         Schedules config saving in 1s.
         Done to prevent literal madness when user moves slider.
         """
+
         def cb(*a):
             self._timer = None
             self.app.save_config()

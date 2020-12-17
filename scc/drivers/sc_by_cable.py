@@ -28,6 +28,7 @@ log = logging.getLogger("SCCable")
 
 def init(daemon, config):
     """ Registers hotplug callback for controller dongle """
+
     def cb(device, handle):
         return SCByCable(device, handle, daemon)
 
@@ -60,11 +61,11 @@ class SCByCable(USBDevice, SCController):
         pass
 
     def __repr__(self):
-        return "<SCByCable %s>" % (self.get_id(), )
+        return "<SCByCable %s>" % (self.get_id(),)
 
     def on_serial_got(self):
         log.debug("Got wired SC with serial %s", self._serial)
-        self._id = "sc%s" % (self._serial, )
+        self._id = "sc%s" % (self._serial,)
         self.set_input_interrupt(ENDPOINT, 64, self._wait_input)
 
     def _wait_input(self, endpoint, data):
@@ -89,8 +90,7 @@ class SCByCable(USBDevice, SCController):
                 self.flush()
             except USBError as e:
                 log.exception(e)
-                log.error(
-                    "Error while communicating with device, baling out...")
+                log.error("Error while communicating with device, baling out...")
                 self.force_restart()
 
     def close(self):

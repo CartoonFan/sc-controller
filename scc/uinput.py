@@ -57,19 +57,18 @@ Keys = IntEnum(
 )
 # Keys enum contains all keys and button from linux/uinput.h (KEY_* BTN_*)
 KeysOnly = IntEnum(
-    "KeysOnly",
-    {i: CHEAD[i]
-     for i in list(CHEAD.keys()) if i.startswith("KEY_")})
+    "KeysOnly", {i: CHEAD[i] for i in list(CHEAD.keys()) if i.startswith("KEY_")}
+)
 
 # Axes enum contains all axes from linux/uinput.h (ABS_*)
 Axes = IntEnum(
-    "Axes", {i: CHEAD[i]
-             for i in list(CHEAD.keys()) if i.startswith("ABS_")})
+    "Axes", {i: CHEAD[i] for i in list(CHEAD.keys()) if i.startswith("ABS_")}
+)
 
 # Rels enum contains all rels from linux/uinput.h (REL_*)
 Rels = IntEnum(
-    "Rels", {i: CHEAD[i]
-             for i in list(CHEAD.keys()) if i.startswith("REL_")})
+    "Rels", {i: CHEAD[i] for i in list(CHEAD.keys()) if i.startswith("REL_")}
+)
 
 # Scan codes for each keys (taken from a logitech keyboard)
 Scans = {
@@ -221,27 +220,26 @@ class UInput(object):
 
     See Gamepad, Mouse, Keyboard for examples
     """
+
     def __init__(
-            self,
-            vendor,
-            product,
-            version,
-            name,
-            keys,
-            axes,
-            rels,
-            keyboard=False,
-            rumble=False,
+        self,
+        vendor,
+        product,
+        version,
+        name,
+        keys,
+        axes,
+        rels,
+        keyboard=False,
+        rumble=False,
     ):
         self._lib = None
         self._k = keys
         self.name = name
         if not axes or len(axes) == 0:
-            self._a, self._amin, self._amax, self._afuzz, self._aflat = [[]
-                                                                         ] * 5
+            self._a, self._amin, self._amax, self._afuzz, self._aflat = [[]] * 5
         else:
-            self._a, self._amin, self._amax, self._afuzz, self._aflat = list(
-                zip(*axes))
+            self._a, self._amin, self._amax, self._afuzz, self._aflat = list(zip(*axes))
 
         self._r = rels
 
@@ -258,9 +256,9 @@ class UInput(object):
         except BaseException:
             import sys
 
-            print >> sys.stderr, "Invalid native module version. Please, recompile 'libuinput.so'"
-            print >> sys.stderr, "If you are running sc-controller from source, you can do this by removing 'build' directory"
-            print >> sys.stderr, "and runinng 'python setup.py build' or 'run.sh' script"
+            print >>sys.stderr, "Invalid native module version. Please, recompile 'libuinput.so'"
+            print >>sys.stderr, "If you are running sc-controller from source, you can do this by removing 'build' directory"
+            print >>sys.stderr, "and runinng 'python setup.py build' or 'run.sh' script"
             raise Exception("Invalid native module version")
 
         c_k = (ctypes.c_uint16 * len(self._k))(*self._k)
@@ -297,8 +295,8 @@ class UInput(object):
         )
         if self._fd < 0:
             raise CannotCreateUInputException(
-                "Failed to create uinput device. Error code: %s" %
-                (self._fd, ))
+                "Failed to create uinput device. Error code: %s" % (self._fd,)
+            )
 
     def getDescriptor(self):
         return self._fd
@@ -310,8 +308,7 @@ class UInput(object):
         @param int axis      key or btn event (KEY_* or BTN_*)
         @param int val        event value
         """
-        self._lib.uinput_key(self._fd, ctypes.c_uint16(key),
-                             ctypes.c_int32(val))
+        self._lib.uinput_key(self._fd, ctypes.c_uint16(key), ctypes.c_int32(val))
 
     def axisEvent(self, axis, val):
         """
@@ -320,8 +317,7 @@ class UInput(object):
         @param int axis      abs event (ABS_*)
         @param int val        event value
         """
-        self._lib.uinput_abs(self._fd, ctypes.c_uint16(axis),
-                             ctypes.c_int32(val))
+        self._lib.uinput_abs(self._fd, ctypes.c_uint16(axis), ctypes.c_int32(val))
 
     def relEvent(self, rel, val):
         """
@@ -330,8 +326,7 @@ class UInput(object):
         @param int rel        rel event (REL_*)
         @param int val        event value
         """
-        self._lib.uinput_rel(self._fd, ctypes.c_uint16(rel),
-                             ctypes.c_int32(val))
+        self._lib.uinput_rel(self._fd, ctypes.c_uint16(rel), ctypes.c_int32(val))
 
     def scanEvent(self, val):
         """
@@ -355,8 +350,9 @@ class UInput(object):
         @param int period      period is ms
         """
 
-        self._lib.uinput_set_delay_period(self._fd, ctypes.c_int32(delay),
-                                          ctypes.c_int32(period))
+        self._lib.uinput_set_delay_period(
+            self._fd, ctypes.c_int32(delay), ctypes.c_int32(period)
+        )
 
     def keyManaged(self, ev):
         return ev in self._k
@@ -372,8 +368,9 @@ class UInput(object):
         Returns effect that should be played or None if there were no such request.
         """
         if self._ff_events:
-            id = self._lib.uinput_ff_read(self._fd, MAX_FEEDBACK_EFFECTS,
-                                          byref(self._ff_events))
+            id = self._lib.uinput_ff_read(
+                self._fd, MAX_FEEDBACK_EFFECTS, byref(self._ff_events)
+            )
             if id >= 0:
                 return self._ff_events[id].contents
         return None
@@ -387,6 +384,7 @@ class Gamepad(UInput):
     """
     Gamepad uinput class, create a Xbox360 gamepad device
     """
+
     def __init__(self, name):
         super(Gamepad, self).__init__(
             vendor=0x045E,
@@ -479,9 +477,7 @@ class Mouse(UInput):
         self._xscale = xscale
         self._yscale = yscale
 
-    def updateScrollParams(self,
-                           xscale=DEFAULT_SCR_XSCALE,
-                           yscale=DEFAULT_SCR_YSCALE):
+    def updateScrollParams(self, xscale=DEFAULT_SCR_XSCALE, yscale=DEFAULT_SCR_YSCALE):
         """
         Update Scroll parameters
 
@@ -533,13 +529,11 @@ class Mouse(UInput):
         self._scr_dy += dy * self._scr_yscale
         _syn = False
         if int(self._scr_dx):
-            self.relEvent(rel=Rels.REL_HWHEEL,
-                          val=int(copysign(1, self._scr_dx)))
+            self.relEvent(rel=Rels.REL_HWHEEL, val=int(copysign(1, self._scr_dx)))
             self._scr_dx -= int(self._scr_dx)
             _syn = True
         if int(self._scr_dy):
-            self.relEvent(rel=Rels.REL_WHEEL,
-                          val=int(copysign(1, self._scr_dy)))
+            self.relEvent(rel=Rels.REL_WHEEL, val=int(copysign(1, self._scr_dy)))
             self._scr_dy -= int(self._scr_dy)
             _syn = True
         if _syn:
@@ -556,6 +550,7 @@ class Keyboard(UInput):
     autorepead delay and period are preset respectively to 250ms and 33ms
     setDelayPeriod permits to update these values
     """
+
     def __init__(self, name):
         super(Keyboard, self).__init__(
             vendor=0x28DE,
@@ -596,8 +591,7 @@ class Keyboard(UInput):
         @param list of Keys keys        keys to release, give None or empty list
                                         to release all
         """
-        rem = [k for k in keys
-               if k in self._pressed] if keys else list(self._pressed)
+        rem = [k for k in keys if k in self._pressed] if keys else list(self._pressed)
         for i in rem:
             self.scanEvent(Scans[i])
             self.keyEvent(i, 0)
@@ -608,6 +602,7 @@ class Keyboard(UInput):
 
 class Dummy(object):
     """ Fake uinput device that does nothing, but has all required methods """
+
     def __init__(self, *a, **b):
         pass
 

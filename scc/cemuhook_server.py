@@ -37,13 +37,9 @@ class CemuhookServer:
 
     def __init__(self, daemon):
         self._lib = find_library("libcemuhook")
-        self._lib.cemuhook_data_recieved.argtypes = [
-            c_int, c_int, c_char_p, c_size_t
-        ]
+        self._lib.cemuhook_data_recieved.argtypes = [c_int, c_int, c_char_p, c_size_t]
         self._lib.cemuhook_data_recieved.restype = None
-        self._lib.cemuhook_feed.argtypes = [
-            c_int, c_int, CemuhookServer.C_DATA_T
-        ]
+        self._lib.cemuhook_feed.argtypes = [c_int, c_int, CemuhookServer.C_DATA_T]
         self._lib.cemuhook_feed.restype = None
         self._lib.cemuhook_socket_enable.argtypes = []
         self._lib.cemuhook_socket_enable.restype = c_bool
@@ -55,8 +51,9 @@ class CemuhookServer:
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
         poller = daemon.get_poller()
-        daemon.poller.register(self.socket.fileno(), poller.POLLIN,
-                               self.on_data_recieved)
+        daemon.poller.register(
+            self.socket.fileno(), poller.POLLIN, self.on_data_recieved
+        )
 
         self.socket.bind(("127.0.0.1", 26760))
         log.info("Created CemuHookUDP Motion Provider")
@@ -66,8 +63,7 @@ class CemuhookServer:
             return
         message, (ip, port) = self.socket.recvfrom(BUFFER_SIZE)
         buffer = create_string_buffer(BUFFER_SIZE)
-        self._lib.cemuhook_data_recieved(fd, port, message, len(message),
-                                         buffer)
+        self._lib.cemuhook_data_recieved(fd, port, message, len(message), buffer)
 
     def feed(self, data):
         c_data = CemuhookServer.C_DATA_T()
