@@ -69,7 +69,8 @@ def init_logging(prefix="", suffix=""):
     old_log = logging.Logger._log
 
     def _log(self, level, msg, args, exc_info=None, extra=None):
-        args = tuple(str(c).decode("utf-8") if isinstance(c, str) else c for c in args)
+        args = tuple(
+            str(c).decode("utf-8") if isinstance(c, str) else c for c in args)
         msg = msg if isinstance(msg, str) else str(msg).decode("utf-8")
         old_log(self, level, msg, args, exc_info, extra)
 
@@ -104,7 +105,7 @@ def quat2euler(q0, q1, q2, q3):
     Converts quaterion to (pitch, yaw, roll).
     Values are in -PI to PI range.
     """
-    qq0, qq1, qq2, qq3 = q0 ** 2, q1 ** 2, q2 ** 2, q3 ** 2
+    qq0, qq1, qq2, qq3 = q0**2, q1**2, q2**2, q3**2
     xa = qq0 - qq1 - qq2 + qq3
     xb = 2 * (q0 * q1 + q2 * q3)
     xn = 2 * (q0 * q2 - q1 * q3)
@@ -112,18 +113,14 @@ def quat2euler(q0, q1, q2, q3):
     zn = qq3 + qq2 - qq0 - qq1
 
     pitch = atan2(xb, xa)
-    yaw = atan2(xn, sqrt(1 - xn ** 2))
+    yaw = atan2(xn, sqrt(1 - xn**2))
     roll = atan2(yn, zn)
     return pitch, yaw, roll
 
 
 def point_in_gtkrect(rect, x, y):
-    return (
-        x > rect.x
-        and y > rect.y
-        and x < rect.x + rect.width
-        and y < rect.y + rect.height
-    )
+    return (x > rect.x and y > rect.y and x < rect.x + rect.width
+            and y < rect.y + rect.height)
 
 
 def anglediff(a1, a2):
@@ -148,9 +145,11 @@ def shjoin(lst):
     """ Joins list into shell-escaped, utf-8 encoded string """
     s = [str(x).encode("utf-8") for x in lst]
     #   - escape quotes
-    s = [x.encode("string_escape") if (b'"' in x or b"'" in x) else x for x in s]
+    s = [
+        x.encode("string_escape") if (b'"' in x or b"'" in x) else x for x in s
+    ]
     #   - quote strings with spaces
-    s = [b"'%s'" % (x,) if b" " in x else x for x in s]
+    s = [b"'%s'" % (x, ) if b" " in x else x for x in s]
     return b" ".join(s)
 
 
@@ -179,11 +178,10 @@ def profile_is_override(name):
     Returns True if named profile exists both in user config directory and
     default_profiles directory.
     """
-    filename = "%s.sccprofile" % (name,)
+    filename = "%s.sccprofile" % (name, )
     return bool(
-        os.path.exists(os.path.join(get_profiles_path(), filename))
-        and os.path.exists(os.path.join(get_default_profiles_path(), filename))
-    )
+        os.path.exists(os.path.join(get_profiles_path(), filename)) and
+        os.path.exists(os.path.join(get_default_profiles_path(), filename)))
 
 
 def profile_is_default(name):
@@ -191,7 +189,7 @@ def profile_is_default(name):
     Returns True if named profile exists in default_profiles directory, even
     if it is overrided by profile in user config directory.
     """
-    filename = "%s.sccprofile" % (name,)
+    filename = "%s.sccprofile" % (name, )
     return os.path.exists(os.path.join(get_default_profiles_path(), filename))
 
 
@@ -217,7 +215,7 @@ def find_profile(name):
 
     Returns None if profile cannot be found.
     """
-    filename = "%s.sccprofile" % (name,)
+    filename = "%s.sccprofile" % (name, )
     for p in (get_profiles_path(), get_default_profiles_path()):
         path = os.path.join(p, filename)
         if os.path.exists(path):
@@ -274,9 +272,10 @@ def find_icon(name, prefer_bw=False, paths=None, extensions=("png", "svg")):
 
 def find_button_image(name, prefer_bw=False):
     """ Similar to find_icon, but searches for button image """
-    return find_icon(
-        nameof(name), prefer_bw, paths=[get_button_images_path()], extensions=("svg",)
-    )
+    return find_icon(nameof(name),
+                     prefer_bw,
+                     paths=[get_button_images_path()],
+                     extensions=("svg", ))
 
 
 def menu_is_default(name):
@@ -310,7 +309,8 @@ def find_controller_icon(name):
 
     Returns None if icon cannot be found.
     """
-    for p in (get_controller_icons_path(), get_default_controller_icons_path()):
+    for p in (get_controller_icons_path(),
+              get_default_controller_icons_path()):
         path = os.path.join(p, name)
         if os.path.exists(path):
             return path
@@ -325,12 +325,12 @@ def find_binary(name):
     """
     if name.startswith("scc-osd-daemon"):
         # Special case, this one is not supposed to go to /usr/bin
-        return os.path.join(os.path.split(__file__)[0], "x11", "scc-osd-daemon.py")
+        return os.path.join(
+            os.path.split(__file__)[0], "x11", "scc-osd-daemon.py")
     if name.startswith("scc-autoswitch-daemon"):
         # As above
         return os.path.join(
-            os.path.split(__file__)[0], "x11", "scc-autoswitch-daemon.py"
-        )
+            os.path.split(__file__)[0], "x11", "scc-autoswitch-daemon.py")
     user_path = os.environ["PATH"].split(":")
     # Try to add the standard binary paths if not present in PATH
     for d in ["/sbin", "/bin", "/usr/sbin", "/usr/bin"]:
@@ -358,11 +358,11 @@ def find_library(libname):
     for extension in so_extensions:
         search_paths += [
             os.path.abspath(
-                os.path.normpath(os.path.join(base_path, "..", libname + extension))
-            ),
+                os.path.normpath(
+                    os.path.join(base_path, "..", libname + extension))),
             os.path.abspath(
-                os.path.normpath(os.path.join(base_path, "../..", libname + extension))
-            ),
+                os.path.normpath(
+                    os.path.join(base_path, "../..", libname + extension))),
         ]
 
     for path in search_paths:
@@ -371,9 +371,8 @@ def find_library(libname):
             break
 
     if not lib:
-        raise OSError(
-            "Cant find %s.so. searched at:\n %s" % (libname, "\n".join(search_paths))
-        )
+        raise OSError("Cant find %s.so. searched at:\n %s" %
+                      (libname, "\n".join(search_paths)))
     return ctypes.CDLL(lib)
 
 
@@ -399,19 +398,15 @@ def check_access(filename, write_required=True):
     """
     if HAVE_POSIX1E:
         for pset in posix1e.ACL(file=filename):
-            if (
-                pset.tag_type == posix1e.ACL_USER
-                and pset.qualifier == os.geteuid()
-                and pset.permset.test(posix1e.ACL_READ)
-                and (not write_required or pset.permset.test(posix1e.ACL_WRITE))
-            ):
+            if (pset.tag_type == posix1e.ACL_USER
+                    and pset.qualifier == os.geteuid()
+                    and pset.permset.test(posix1e.ACL_READ) and
+                (not write_required or pset.permset.test(posix1e.ACL_WRITE))):
                 return True
-            if (
-                pset.tag_type == posix1e.ACL_GROUP
-                and pset.qualifier in os.getgroups()
-                and pset.permset.test(posix1e.ACL_READ)
-                and (not write_required or pset.permset.test(posix1e.ACL_WRITE))
-            ):
+            if (pset.tag_type == posix1e.ACL_GROUP
+                    and pset.qualifier in os.getgroups()
+                    and pset.permset.test(posix1e.ACL_READ) and
+                (not write_required or pset.permset.test(posix1e.ACL_WRITE))):
                 return True
     if write_required:
         return os.access(filename, os.R_OK | os.W_OK)

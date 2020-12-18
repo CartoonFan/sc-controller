@@ -51,8 +51,7 @@ class OSDModeKeyboard(object):
         self.display = Gdk.Display.get_default()
         self.manager = self.display.get_device_manager()
         self.device = [
-            x
-            for x in self.manager.list_devices(Gdk.DeviceType.MASTER)
+            x for x in self.manager.list_devices(Gdk.DeviceType.MASTER)
             if x.get_source() == Gdk.InputSource.KEYBOARD
         ][0]
 
@@ -87,8 +86,7 @@ class OSDModeMouse(object):
         self.display = Gdk.Display.get_default()
         self.manager = self.display.get_device_manager()
         self.device = [
-            x
-            for x in self.manager.list_devices(Gdk.DeviceType.MASTER)
+            x for x in self.manager.list_devices(Gdk.DeviceType.MASTER)
             if x.get_source() == Gdk.InputSource.MOUSE
         ][0]
 
@@ -105,13 +103,12 @@ class OSDModeMouse(object):
 
         gtk_window = None
         for w in Gtk.Window.list_toplevels():
-            if (
-                w.get_window()
-                and window.get_toplevel().get_xid() == w.get_window().get_xid()
-            ):
+            if (w.get_window() and window.get_toplevel().get_xid() ==
+                    w.get_window().get_xid()):
                 gtk_window = w
                 break
-        if gtk_window and gtk_window.get_type_hint() == Gdk.WindowTypeHint.COMBO:
+        if gtk_window and gtk_window.get_type_hint(
+        ) == Gdk.WindowTypeHint.COMBO:
             # Special case, clicking on combo does nothing, so
             # pressing "space" is emulated instead.
             if not val:
@@ -152,15 +149,18 @@ class OSDModeMappings(object):
         self.parent = app.window
         self.first_window = None
         GLib.timeout_add(10, self.move_around)
-        self.app.window.connect("focus-in-event", self.on_main_window_focus_in_event)
-        self.app.window.connect("focus-out-event", self.on_main_window_focus_out_event)
+        self.app.window.connect("focus-in-event",
+                                self.on_main_window_focus_in_event)
+        self.app.window.connect("focus-out-event",
+                                self.on_main_window_focus_out_event)
         self.on_main_window_focus_in_event()
 
     def set_controller(self, c):
         config = c.load_gui_config(self.app.imagepath or {})
         for name in OSDModeMappings.ICONS:
             w = self.app.builder.get_object(name)
-            icon, trash = c.get_button_icon(config, OSDModeMappings.ICONS[name])
+            icon, trash = c.get_button_icon(config,
+                                            OSDModeMappings.ICONS[name])
             w.set_from_file(icon)
 
     def on_main_window_focus_in_event(self, *a):
