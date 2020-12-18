@@ -9,10 +9,13 @@ Mouse movement (but not buttons) are passed to uinput as usual.
 """
 import logging
 
-from gi.repository import Gdk, GLib, Gtk
+from gi.repository import Gdk
+from gi.repository import GLib
+from gi.repository import Gtk
 
 from scc.constants import SCButtons
-from scc.gui.gdk_to_key import KEY_TO_GDK, KEY_TO_KEYCODE
+from scc.gui.gdk_to_key import KEY_TO_GDK
+from scc.gui.gdk_to_key import KEY_TO_KEYCODE
 from scc.osd.slave_mapper import SlaveMapper
 from scc.uinput import Keys
 

@@ -12,9 +12,12 @@ import os
 from gi.repository import Gio
 
 from scc.gui.parser import GuiActionParser
-from scc.paths import (get_default_menuicons_path, get_default_menus_path,
-                       get_default_profiles_path, get_menuicons_path,
-                       get_menus_path, get_profiles_path)
+from scc.paths import get_default_menuicons_path
+from scc.paths import get_default_menus_path
+from scc.paths import get_default_profiles_path
+from scc.paths import get_menuicons_path
+from scc.paths import get_menus_path
+from scc.paths import get_profiles_path
 from scc.profile import Profile
 
 log = logging.getLogger("UDataManager")

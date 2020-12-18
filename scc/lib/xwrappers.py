@@ -16,9 +16,21 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
-from ctypes import (CDLL, POINTER, Structure, byref, c_bool, c_char_p, c_int,
-                    c_long, c_short, c_ubyte, c_uint, c_ulong, c_ushort,
-                    c_void_p, cast)
+from ctypes import byref
+from ctypes import c_bool
+from ctypes import c_char_p
+from ctypes import c_int
+from ctypes import c_long
+from ctypes import c_short
+from ctypes import c_ubyte
+from ctypes import c_uint
+from ctypes import c_ulong
+from ctypes import c_ushort
+from ctypes import c_void_p
+from ctypes import cast
+from ctypes import CDLL
+from ctypes import POINTER
+from ctypes import Structure
 
 
 def _load_lib(*names):

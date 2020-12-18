@@ -6,13 +6,18 @@ import os
 import re
 import traceback
 
-from gi.repository import Gdk, GdkPixbuf, Gio, GObject, Gtk
+from gi.repository import Gdk
+from gi.repository import GdkPixbuf
+from gi.repository import Gio
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from scc.gui.dwsnc import headerbar
 from scc.gui.editor import Editor
 from scc.gui.userdata_manager import UserDataManager
 from scc.paths import get_menuicons_path
-from scc.tools import _, find_icon
+from scc.tools import _
+from scc.tools import find_icon
 
 log = logging.getLogger("IconChooser")
 RE_URL = re.compile(r"(.*)(https?://[^ ]+)(.*)")

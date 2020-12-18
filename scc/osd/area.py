@@ -5,7 +5,8 @@ Displays border around area.
 """
 import logging
 
-from gi.repository import GdkX11, Gtk
+from gi.repository import GdkX11
+from gi.repository import Gtk
 
 from scc.lib import xwrappers as X
 from scc.osd import OSDWindow
