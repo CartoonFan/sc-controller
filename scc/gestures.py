@@ -62,51 +62,52 @@ class GestureDetector(Action):
         return self._resolution
 
     def whole(self, mapper, x, y, what):
-        if self._enabled:
-            if (x, y) == (0, 0):
-                # Pad was released
-                self._enabled = False
-                self._on_finished(self, "".join(self._result))
-                return
+        if not self._enabled:
+            return
+        if (x, y) == (0, 0):
+            # Pad was released
+            self._enabled = False
+            self._on_finished(self, "".join(self._result))
+            return
+        else:
+            # Convert positions on pad to position on grid
+            if what == CPAD:
+                x = clamp(0, float(x) / (CPAD_X_MAX - CPAD_MIN), 1.0)
+                y = clamp(0, float(y) / (CPAD_Y_MAX - CPAD_MIN), 1.0)
+                x *= self._resolution
+                y *= self._resolution
             else:
-                # Convert positions on pad to position on grid
-                if what == CPAD:
-                    x = clamp(0, float(x) / (CPAD_X_MAX - CPAD_MIN), 1.0)
-                    y = clamp(0, float(y) / (CPAD_Y_MAX - CPAD_MIN), 1.0)
-                    x *= self._resolution
-                    y *= self._resolution
-                else:
-                    x -= STICK_PAD_MIN
-                    y = STICK_PAD_MAX - y
-                    x = float(x) / (float(STICK_PAD_MAX - STICK_PAD_MIN) /
-                                    self._resolution)
-                    y = float(y) / (float(STICK_PAD_MAX - STICK_PAD_MIN) /
-                                    self._resolution)
-                # Check for deadzones around grid lines
-                for i in range(1, self._resolution):
-                    if x > i - self._deadzone and x < i + self._deadzone:
-                        return
-                    if y > i - self._deadzone and y < i + self._deadzone:
-                        return
-                # Round
-                x = clamp(0, int(x), self._resolution - 1)
-                y = clamp(0, int(y), self._resolution - 1)
-                if self._positions:
-                    ox, oy = self._positions[-1]
-                    if (x, y) != (ox, oy):
-                        self._positions.append((x, y))
-                        while (x, y) != (ox, oy):
-                            if x < ox:
-                                self._result.append(self.LEFT)
-                                x += 1
-                            elif x > ox:
-                                self._result.append(self.RIGHT)
-                                x -= 1
-                            elif y < oy:
-                                self._result.append(self.UP)
-                                y += 1
-                            elif y > oy:
-                                self._result.append(self.DOWN)
-                                y -= 1
-                else:
+                x -= STICK_PAD_MIN
+                y = STICK_PAD_MAX - y
+                x = float(x) / (float(STICK_PAD_MAX - STICK_PAD_MIN) /
+                                self._resolution)
+                y = float(y) / (float(STICK_PAD_MAX - STICK_PAD_MIN) /
+                                self._resolution)
+            # Check for deadzones around grid lines
+            for i in range(1, self._resolution):
+                if x > i - self._deadzone and x < i + self._deadzone:
+                    return
+                if y > i - self._deadzone and y < i + self._deadzone:
+                    return
+            # Round
+            x = clamp(0, int(x), self._resolution - 1)
+            y = clamp(0, int(y), self._resolution - 1)
+            if self._positions:
+                ox, oy = self._positions[-1]
+                if (x, y) != (ox, oy):
                     self._positions.append((x, y))
+                    while (x, y) != (ox, oy):
+                        if x < ox:
+                            self._result.append(self.LEFT)
+                            x += 1
+                        elif x > ox:
+                            self._result.append(self.RIGHT)
+                            x -= 1
+                        elif y < oy:
+                            self._result.append(self.UP)
+                            y += 1
+                        elif y > oy:
+                            self._result.append(self.DOWN)
+                            y -= 1
+            else:
+                self._positions.append((x, y))

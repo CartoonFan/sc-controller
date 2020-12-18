@@ -38,9 +38,9 @@ class TiltComponent(AEComponent, BindingEditor):
             self.update_button_desc(action)
 
     def update_button_desc(self, action):
-        for i in range(0, len(action.actions)):
+        for i in range(len(action.actions)):
             self.actions[i] = action.actions[i]
-        for i in range(0, 6):
+        for i in range(6):
             self.set_button_desc(i)
 
     def set_button_desc(self, i):
