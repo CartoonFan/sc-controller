@@ -6,8 +6,7 @@ Allows to edit button or trigger actions.
 import logging
 import os
 
-from gi.repository import Gdk
-from gi.repository import Gtk
+from gi.repository import Gdk, Gtk
 
 log = logging.getLogger("Editor")
 

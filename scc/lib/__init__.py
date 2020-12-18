@@ -1,3 +1,1 @@
-from .enum import Enum
-from .enum import IntEnum
-from .enum import unique
+from .enum import Enum, IntEnum, unique

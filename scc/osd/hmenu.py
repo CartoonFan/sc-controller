@@ -11,8 +11,7 @@ import logging
 from gi.repository import Gtk
 
 from scc.constants import STICK_PAD_MIN
-from scc.menu_data import Separator
-from scc.menu_data import Submenu
+from scc.menu_data import Separator, Submenu
 from scc.osd.grid_menu import GridMenu
 from scc.osd.menu import MenuIcon
 
