@@ -63,8 +63,7 @@ class ControllerImage(SVGWidget):
             self._controller_image.use_config(config)
 
     def _make_controller_image_path(self, img):
-        return os.path.join(self.app.imagepath,
-                            "controller-images/%s.svg" % (img, ))
+        return os.path.join(self.app.imagepath, "controller-images/%s.svg" % (img,))
 
     def get_config(self):
         """
@@ -76,12 +75,11 @@ class ControllerImage(SVGWidget):
         """ Ensure that required keys are present in config data """
         data["gui"] = data.get("gui", {})
         data["gui"]["background"] = data["gui"].get("background", "sc")
-        data["gui"]["buttons"] = (data["gui"].get("buttons")
-                                  or self._get_default_images())
-        data["gui"]["no_buttons_in_gui"] = data["gui"].get(
-            "no_buttons_in_gui") or False
-        data["buttons"] = data.get(
-            "buttons") or ControllerImage.DEFAULT_BUTTONS
+        data["gui"]["buttons"] = (
+            data["gui"].get("buttons") or self._get_default_images()
+        )
+        data["gui"]["no_buttons_in_gui"] = data["gui"].get("no_buttons_in_gui") or False
+        data["buttons"] = data.get("buttons") or ControllerImage.DEFAULT_BUTTONS
         data["axes"] = data.get("axes") or ControllerImage.DEFAULT_AXES
         data["gyros"] = data.get("gyros", data["gui"]["background"] == "sc")
         return data
@@ -94,8 +92,10 @@ class ControllerImage(SVGWidget):
         """
         if type(dict_or_tuple) in (list, tuple):
             return dict_or_tuple
-        return [(x["axis"] if isinstance(x, dict) else x)
-                for x in list(dict_or_tuple.values())]
+        return [
+            (x["axis"] if isinstance(x, dict) else x)
+            for x in list(dict_or_tuple.values())
+        ]
 
     def use_config(self, config, backup=None):
         """
@@ -107,9 +107,9 @@ class ControllerImage(SVGWidget):
         self.set_image(
             os.path.join(
                 self.app.imagepath,
-                "controller-images/%s.svg" %
-                (self.current["gui"]["background"], ),
-            ))
+                "controller-images/%s.svg" % (self.current["gui"]["background"],),
+            )
+        )
         if not self.current["gui"]["no_buttons_in_gui"]:
             self._fill_button_images(self.current["gui"]["buttons"])
         self.hilight({})
@@ -123,8 +123,8 @@ class ControllerImage(SVGWidget):
         if self.backup is None:
             self.backup = copy.deepcopy(self.current)
         data = json.loads(
-            open(os.path.join(self.app.imagepath, "%s.json" % (filename, )),
-                 "r").read())
+            open(os.path.join(self.app.imagepath, "%s.json" % (filename,)), "r").read()
+        )
         self.current["gui"]["background"] = data["gui"]["background"]
         self.use_config(self.current, self.backup)
 
@@ -136,8 +136,8 @@ class ControllerImage(SVGWidget):
         if self.backup is None:
             self.backup = copy.deepcopy(self.current)
         data = json.loads(
-            open(os.path.join(self.app.imagepath, "%s.json" % (filename, )),
-                 "r").read())
+            open(os.path.join(self.app.imagepath, "%s.json" % (filename,)), "r").read()
+        )
         self.current["gui"]["buttons"] = data["gui"]["buttons"]
         self.current["buttons"] = data["buttons"]
         self.use_config(self.current, self.backup)
@@ -150,12 +150,10 @@ class ControllerImage(SVGWidget):
     def get_button_groups(self):
         groups = json.loads(
             open(
-                os.path.join(self.app.imagepath, "button-images",
-                             "groups.json"), "r").read())
-        return {
-            x["key"]: x["buttons"]
-            for x in groups if x["type"] == "buttons"
-        }
+                os.path.join(self.app.imagepath, "button-images", "groups.json"), "r"
+            ).read()
+        )
+        return {x["key"]: x["buttons"] for x in groups if x["type"] == "buttons"}
 
     def _get_default_images(self):
         return self.get_button_groups()[ControllerImage.DEFAULT]
@@ -168,7 +166,7 @@ class ControllerImage(SVGWidget):
         for i in range(len(ControllerImage.BUTTONS_WITH_IMAGES)):
             b = nameof(ControllerImage.BUTTONS_WITH_IMAGES[i])
             try:
-                elm = SVGEditor.get_element(e, "AREA_%s" % (b, ))
+                elm = SVGEditor.get_element(e, "AREA_%s" % (b,))
                 if elm is None:
                     log.warning("Area for button %s not found", b)
                     continue
@@ -184,10 +182,10 @@ class ControllerImage(SVGWidget):
                     else:
                         x -= (tw - w) * 0.25
                         y -= (th - h) * 0.25
-                path = os.path.join(self.app.imagepath, "button-images",
-                                    "%s.svg" % (buttons[i], ))
-                img = SVGEditor.get_element(SVGEditor.load_from_file(path),
-                                            "button")
+                path = os.path.join(
+                    self.app.imagepath, "button-images", "%s.svg" % (buttons[i],)
+                )
+                img = SVGEditor.get_element(SVGEditor.load_from_file(path), "button")
                 img.attrib["transform"] = "translate(%s, %s) scale(%s)" % (
                     x - target_x,
                     y - target_y,

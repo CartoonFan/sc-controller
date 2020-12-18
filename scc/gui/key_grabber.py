@@ -60,8 +60,7 @@ class KeyGrabber(object):
 
     def setup_widgets(self):
         self.builder = Gtk.Builder()
-        self.builder.add_from_file(os.path.join(self.app.gladepath,
-                                                self.GLADE))
+        self.builder.add_from_file(os.path.join(self.app.gladepath, self.GLADE))
         self.window = self.builder.get_object("KeyGrab")
         self.builder.connect_signals(self)
 
@@ -78,15 +77,17 @@ class KeyGrabber(object):
         """
         key = keyevent_to_key(event)
         if key is None:
-            log.warning("Unknown keycode %s/%s" %
-                        (event.keyval, event.hardware_keycode))
+            log.warning(
+                "Unknown keycode %s/%s" % (event.keyval, event.hardware_keycode)
+            )
             return
 
         if key in MODIFIERS:
             self.active_mods.append(key)
             self.builder.get_object("tg" + key.name).set_active(True)
             self.builder.get_object("lblKey").set_label(
-                merge_modifiers(self.active_mods))
+                merge_modifiers(self.active_mods)
+            )
             return
 
         label = merge_modifiers(self.active_mods)
@@ -117,8 +118,9 @@ class KeyGrabber(object):
                         return
                     self.active_mods.remove(key)
                     self.builder.get_object("tg" + key.name).set_active(False)
-                self.builder.get_object("lblKey").set_label("+".join(
-                    [key.name.split("_")[-1] for key in self.active_mods]))
+                self.builder.get_object("lblKey").set_label(
+                    "+".join([key.name.split("_")[-1] for key in self.active_mods])
+                )
                 return
 
             self.callback(self.active_mods + [key])
@@ -133,9 +135,11 @@ class KeyGrabber(object):
                 if obj.get_active() and key not in self.active_mods:
                     self.active_mods.append(key)
                     self.builder.get_object("lblKey").set_label(
-                        merge_modifiers(self.active_mods))
+                        merge_modifiers(self.active_mods)
+                    )
                 elif not obj.get_active() and key in self.active_mods:
                     self.active_mods.remove(key)
                     self.builder.get_object("lblKey").set_label(
-                        merge_modifiers(self.active_mods))
+                        merge_modifiers(self.active_mods)
+                    )
                 return
