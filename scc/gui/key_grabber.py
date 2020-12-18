@@ -90,10 +90,8 @@ class KeyGrabber(object):
             return
 
         label = merge_modifiers(self.active_mods)
-        if len(self.active_mods) > 0:
-            label = label + "+" + key.name
-        else:
-            label = key.name
+        label = label + "+" + key.name if len(
+            self.active_mods) > 0 else key.name
         self.builder.get_object("lblKey").set_label(label)
 
     def on_keyGrab_key_release_event(self, trash, event):

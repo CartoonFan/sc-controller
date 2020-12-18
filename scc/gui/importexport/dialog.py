@@ -62,7 +62,7 @@ class Dialog(Editor, ComboSetter, Export, ImportVdf, ImportSccprofile):
             try:
                 tar = tarfile.open(filename, "r:gz")
                 names = [x.name for x in tar]
-                any_profile = any([x.endswith(".sccprofile") for x in names])
+                any_profile = any(x.endswith(".sccprofile") for x in names)
                 if any_profile and "profile-name" in names:
                     return "sccprofile.tar.gz"
             except BaseException:
@@ -134,7 +134,7 @@ class Dialog(Editor, ComboSetter, Export, ImportVdf, ImportSccprofile):
 
         Returns 'Next' button widget.
         """
-        if not (not enabled or callback):
+        if enabled and not callback:
             raise AssertionError
         btNext = self.builder.get_object("btNext")
         btNext.set_visible(enabled)
