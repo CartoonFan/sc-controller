@@ -28,11 +28,11 @@ class SVGWidget(Gtk.EventBox):
 
     __gsignals__ = {
         # Raised when mouse is over defined area
-        b"hover": (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+        b"hover": (GObject.SignalFlags.RUN_FIRST, None, (object, )),
         # Raised when mouse leaves all defined areas
         b"leave": (GObject.SignalFlags.RUN_FIRST, None, ()),
         # Raised user clicks on defined area
-        b"click": (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+        b"click": (GObject.SignalFlags.RUN_FIRST, None, (object, )),
     }
 
     def __init__(self, filename, init_hilighted=True):
@@ -42,9 +42,8 @@ class SVGWidget(Gtk.EventBox):
 
         self.connect("motion-notify-event", self.on_mouse_moved)
         self.connect("button-press-event", self.on_mouse_click)
-        self.set_events(
-            Gdk.EventMask.POINTER_MOTION_MASK | Gdk.EventMask.BUTTON_PRESS_MASK
-        )
+        self.set_events(Gdk.EventMask.POINTER_MOTION_MASK
+                        | Gdk.EventMask.BUTTON_PRESS_MASK)
 
         self.size_override = None
         self.image_width = 1
@@ -131,17 +130,21 @@ class SVGWidget(Gtk.EventBox):
         a = self.get_area(area_id)
         if a:
             return a.x, a.y, a.w, a.h
-        raise ValueError("Area '%s' not found" % (area_id,))
+        raise ValueError("Area '%s' not found" % (area_id, ))
 
     @staticmethod
-    def find_areas(xml, parent_transform, areas, get_colors=False, prefix="AREA_"):
+    def find_areas(xml,
+                   parent_transform,
+                   areas,
+                   get_colors=False,
+                   prefix="AREA_"):
         """
         Recursively searches throught XML for anything with ID of 'AREA_SOMETHING'
         """
         for child in xml:
             child_transform = SVGEditor.matrixmul(
-                parent_transform or SVGEditor.IDENTITY, SVGEditor.parse_transform(child)
-            )
+                parent_transform or SVGEditor.IDENTITY,
+                SVGEditor.parse_transform(child))
             if str(child.attrib.get("id")).startswith(prefix):
                 # log.debug("Found SVG area %s", child.attrib['id'][5:])
                 a = Area(child, child_transform)
@@ -159,9 +162,11 @@ class SVGWidget(Gtk.EventBox):
                             a.color = SVGWidget.color_to_float(style["fill"])
                 areas.append(a)
             else:
-                SVGWidget.find_areas(
-                    child, child_transform, areas, get_colors=get_colors, prefix=prefix
-                )
+                SVGWidget.find_areas(child,
+                                     child_transform,
+                                     areas,
+                                     get_colors=get_colors,
+                                     prefix=prefix)
 
     def get_rect_area(self, element):
         """
@@ -200,7 +205,8 @@ class SVGWidget(Gtk.EventBox):
             # 200 images by hand;
             if len(buttons) == 0:
                 # Quick way out - changes are not needed
-                svg = Rsvg.Handle.new_from_data(self.current_svg.encode("utf-8"))
+                svg = Rsvg.Handle.new_from_data(
+                    self.current_svg.encode("utf-8"))
             else:
                 # 1st, parse source as XML
                 tree = ET.fromstring(self.current_svg.encode("utf-8"))
@@ -220,8 +226,7 @@ class SVGWidget(Gtk.EventBox):
             if self.size_override:
                 w, h = self.size_override
                 self.cache[cache_id] = svg.get_pixbuf().scale_simple(
-                    w, h, GdkPixbuf.InterpType.BILINEAR
-                )
+                    w, h, GdkPixbuf.InterpType.BILINEAR)
             else:
                 self.cache[cache_id] = svg.get_pixbuf()
 
@@ -258,12 +263,8 @@ class Area:
         self.h = float(element.attrib.get("height", 0))
 
     def contains(self, x, y):
-        return (
-            x >= self.x
-            and y >= self.y
-            and x <= self.x + self.w
-            and y <= self.y + self.h
-        )
+        return (x >= self.x and y >= self.y and x <= self.x + self.w
+                and y <= self.y + self.h)
 
     def __str__(self):
         return "<Area %s,%s %sx%s>" % (self.x, self.y, self.w, self.h)
@@ -356,12 +357,10 @@ class SVGEditor(object):
 
         def recursive(element):
             for child in list(element):
-                if (
-                    child.tag.endswith("metadata")
-                    or child.tag.endswith("defs")
-                    or child.tag.endswith("defs")
-                    or child.tag.endswith("namedview")
-                ):
+                if (child.tag.endswith("metadata")
+                        or child.tag.endswith("defs")
+                        or child.tag.endswith("defs")
+                        or child.tag.endswith("namedview")):
                     recursive(child)
                 elif child.attrib.get("id") not in ids:
                     element.remove(child)
@@ -436,31 +435,28 @@ class SVGEditor(object):
 
         Returns True on success, False if element cannot be recolored.
         """
-        if (
-            element.tag.endswith("path")
-            or element.tag.endswith("rect")
-            or element.tag.endswith("circle")
-            or element.tag.endswith("ellipse")
-            or element.tag.endswith("text")
-        ):
+        if (element.tag.endswith("path") or element.tag.endswith("rect")
+                or element.tag.endswith("circle")
+                or element.tag.endswith("ellipse")
+                or element.tag.endswith("text")):
             if "style" in element.attrib:
                 style = {
                     y[0]: y[1]
                     for y in [
-                        x.split(":", 1) for x in element.attrib["style"].split(";")
+                        x.split(":", 1)
+                        for x in element.attrib["style"].split(";")
                     ]
                 }
                 if "fill" in style:
                     if len(color.strip("#")) == 8:
-                        style["fill"] = "#%s" % (color[-6:],)
+                        style["fill"] = "#%s" % (color[-6:], )
                         alpha = float(int(color.strip("#")[0:2], 16)) / 255.0
                         style["fill-opacity"] = style["opacity"] = str(alpha)
                     else:
                         style["fill"] = color
                         style["fill-opacity"] = style["opacity"] = "1"
                     element.attrib["style"] = ";".join(
-                        ["%s:%s" % (x, style[x]) for x in style]
-                    )
+                        ["%s:%s" % (x, style[x]) for x in style])
                     return True
         elif element.tag.endswith("g"):
             # Group, needs to find RECT, CIRCLE or PATH, whatever comes first
@@ -474,7 +470,8 @@ class SVGEditor(object):
         """ Recursive part of recolor_strokes and recolor_background """
         for child in tree:
             if "style" in child.attrib and s_from in child.attrib["style"]:
-                child.attrib["style"] = child.attrib["style"].replace(s_from, s_to)
+                child.attrib["style"] = child.attrib["style"].replace(
+                    s_from, s_to)
             SVGEditor._recolor(child, s_from, s_to)
 
     def recolor_background(self, change_from, change_to):
@@ -484,8 +481,8 @@ class SVGEditor(object):
 
         Returns self.
         """
-        s_from = "fill:#%s" % (change_from,)
-        s_to = "fill:#%s" % (change_to,)
+        s_from = "fill:#%s" % (change_from, )
+        s_to = "fill:#%s" % (change_to, )
         SVGEditor._recolor(self._tree, s_from, s_to)
         return self
 
@@ -496,8 +493,8 @@ class SVGEditor(object):
 
         Returns self.
         """
-        s_from = "stroke:#%s" % (change_from,)
-        s_to = "stroke:#%s" % (change_to,)
+        s_from = "stroke:#%s" % (change_from, )
+        s_to = "stroke:#%s" % (change_to, )
         SVGEditor._recolor(self._tree, s_from, s_to)
         return self
 
@@ -574,7 +571,8 @@ class SVGEditor(object):
             matrix = SVGEditor.parse_transform(elm)
             parent = elm.parent
             while parent is not None:
-                matrix = SVGEditor.matrixmul(matrix, SVGEditor.parse_transform(parent))
+                matrix = SVGEditor.matrixmul(matrix,
+                                             SVGEditor.parse_transform(parent))
                 parent = parent.parent
         else:
             matrix = elm_or_matrix
@@ -611,9 +609,9 @@ class SVGEditor(object):
                     while len(translation) < 2:
                         translation.append(0.0)
                     x, y = translation
-                    matrix = SVGEditor.matrixmul(
-                        matrix, ((1.0, 0.0, x), (0.0, 1.0, y), (0.0, 0.0, 1.0))
-                    )
+                    matrix = SVGEditor.matrixmul(matrix,
+                                                 ((1.0, 0.0, x), (0.0, 1.0, y),
+                                                  (0.0, 0.0, 1.0)))
                 elif op == "rotate":
                     rotation = [float(x) for x in values.split(",")[0:3]]
                     while len(rotation) < 3:
@@ -623,23 +621,23 @@ class SVGEditor(object):
                     matrix = SVGEditor.matrixmul(
                         matrix,
                         [[1.0, 0.0, x], [0.0, 1.0, y], [0.0, 0.0, 1.0]],
-                        [[cos(a), -sin(a), 0], [sin(a), cos(a), 0], [0.0, 0.0, 1.0]],
+                        [[cos(a), -sin(a), 0], [sin(a), cos(a), 0],
+                         [0.0, 0.0, 1.0]],
                         [[1.0, 0.0, -x], [0.0, 1.0, -y], [0.0, 0.0, 1.0]],
                     )
                 elif op == "scale":
                     scale = tuple(float(x) for x in values.split(",")[0:2])
                     sx, sy = (scale[0], scale[0]) if len(scale) == 1 else scale
-                    matrix = SVGEditor.matrixmul(
-                        matrix, ((sx, 0.0, 0.0), (0.0, sy, 0.0), (0.0, 0.0, 1.0))
-                    )
+                    matrix = SVGEditor.matrixmul(matrix, ((sx, 0.0, 0.0),
+                                                          (0.0, sy, 0.0),
+                                                          (0.0, 0.0, 1.0)))
                 elif op == "matrix":
                     m = [float(x) for x in values.split(",")][0:6]
                     while len(m) < 6:
                         m.append(0.0)
                     a, b, c, d, e, f = m
                     matrix = SVGEditor.matrixmul(
-                        matrix, [[a, c, e], [b, d, f], [0, 0, 1]]
-                    )
+                        matrix, [[a, c, e], [b, d, f], [0, 0, 1]])
 
                 match = SVGEditor.RE_PARSE_TRANSFORM.match(transform.strip())
 
@@ -665,7 +663,8 @@ class SVGEditor(object):
 
         def walk(xml):
             for child in xml:
-                if "id" in child.attrib and child.attrib["id"].startswith("LABEL_"):
+                if "id" in child.attrib and child.attrib["id"].startswith(
+                        "LABEL_"):
                     id = child.attrib["id"][6:]
                     if id in labels:
                         SVGEditor.set_text(child, labels[id])
