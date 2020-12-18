@@ -94,7 +94,8 @@ class Daemon(object):
                 # No such process
                 pass
             except BaseException:
-                message = "pidfile {0} already exist. " + "Daemon already running?\n"
+                message = "pidfile {0} already exist. " + \
+                    "Daemon already running?\n"
                 sys.stderr.write(message.format(self.pidfile))
                 sys.exit(1)
 
