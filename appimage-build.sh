@@ -6,42 +6,42 @@ EXEC="scc"
 LIB="lib"
 
 EVDEV_VERSION=0.7.0
-[ x"$BUILD_APPDIR" == "x" ] && BUILD_APPDIR=$(pwd)/appimage
+[ x"$BUILD_APPDIR" == "x" ] && BUILD_APPDIR=$PWD/appimage
 
 
 function download_dep() {
     NAME=$1
     URL=$2
-    if [ -e ../../${NAME}.obstargz ] ; then
+    if [ -e ../../"$NAME".obstargz ] ; then
         # Special case for OBS
-        cp ../../${NAME}.obstargz ${DEPCACHE}/${NAME}.tar.gz
-    elif [ -e ${NAME}.tar.gz ] ; then
-        cp ${NAME}.tar.gz ${DEPCACHE}/${NAME}.tar.gz
-    elif [ -e ${DEPCACHE}/${NAME}.tar.gz ] ; then
-        echo "${DEPCACHE}/${NAME}.tar.gz already downloaded"
+        cp ../../"$NAME".obstargz "$DEPCACHE/$NAME".tar.gz
+    elif [ -e "$NAME".tar.gz ] ; then
+        cp "$NAME".tar.gz "$DEPCACHE/$NAME".tar.gz
+    elif [ -e "$DEPCACHE/$NAME".tar.gz ] ; then
+        echo "$DEPCACHE/$NAME.tar.gz already downloaded"
     else
-        wget -c "${URL}" -O ${DEPCACHE}/${NAME}.tar.gz
+        wget -c "$URL" -O "$DEPCACHE/$NAME".tar.gz
     fi
 }
 
 function build_dep() {
     NAME="$1"
-    mkdir -p ${BUILDCACHE}/${NAME}
-    pushd ${BUILDCACHE}/${NAME}
-    tar --extract --strip-components=1 -f ${DEPCACHE}/${NAME}.tar.gz
-    PYTHONPATH=${BUILD_APPDIR}/usr/lib/python2.7/site-packages python2 \
+    mkdir -p "$BUILDCACHE/$NAME"
+    pushd "$BUILDCACHE/$NAME"
+    tar --extract --strip-components=1 -f "$DEPCACHE/$NAME".tar.gz
+    PYTHONPATH=$BUILD_APPDIR/usr/lib/python2.7/site-packages python2 \
         setup.py install --optimize=1 \
-        --prefix="/usr/" --root="${BUILD_APPDIR}"
-    mkdir -p "${BUILD_APPDIR}/usr/lib/python2.7/site-packages/"
-    python2 setup.py install --prefix="/usr/" --root="${BUILD_APPDIR}"
+        --prefix="/usr/" --root="$BUILD_APPDIR"
+    mkdir -p "$BUILD_APPDIR/usr/lib/python2.7/site-packages/"
+    python2 setup.py install --prefix="/usr/" --root="$BUILD_APPDIR"
     popd
 }
 
 function unpack_dep() {
     NAME="$1"
-    pushd ${BUILD_APPDIR}
+    pushd "$BUILD_APPDIR"
     tar --extract --exclude="usr/include**" --exclude="usr/lib/pkgconfig**" \
-            --exclude="usr/lib/python3.6**" -f ${DEPCACHE}/${NAME}.tar.gz
+            --exclude="usr/lib/python3.6**" -f "$DEPCACHE/$NAME".tar.gz
     popd
 }
 
@@ -63,12 +63,12 @@ download_dep "icu-60.2" "https://archive.archlinux.org/packages/i/icu/icu-60.2-1
 download_dep "zlib-1:1.2.11" "https://archive.archlinux.org/packages/z/zlib/zlib-1%3A1.2.11-1-x86_64.pkg.tar.xz"
 
 # Prepare & build deps
-export PYTHONPATH=${BUILD_APPDIR}/usr/lib/python2.7/site-packages/
+export PYTHONPATH="$BUILD_APPDIR"/usr/lib/python2.7/site-packages/
 mkdir -p "$PYTHONPATH"
 if [[ $(grep ID_LIKE /etc/os-release) == *"suse"* ]] ; then
     # Special handling for OBS
-    ln -s lib64 ${BUILD_APPDIR}/usr/lib
-    export PYTHONPATH="$PYTHONPATH":${BUILD_APPDIR}/usr/lib64/python2.7/site-packages/
+    ln -s lib64 "$BUILD_APPDIR"/usr/lib
+    export PYTHONPATH="$PYTHONPATH":"$BUILD_APPDIR"/usr/lib64/python2.7/site-packages/
     LIB=lib64
 fi
 
@@ -87,54 +87,54 @@ unpack_dep "icu-60.2"
 unpack_dep "zlib-1:1.2.11"
 
 # Remove uneeded files
-rm -f "${BUILD_APPDIR}/usr/${LIB}/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-ani.so"
-rm -f "${BUILD_APPDIR}/usr/${LIB}/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-bmp.so"
-rm -f "${BUILD_APPDIR}/usr/${LIB}/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-gif.so"
-rm -f "${BUILD_APPDIR}/usr/${LIB}/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-icns.so"
-rm -f "${BUILD_APPDIR}/usr/${LIB}/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-ico.so"
-rm -f "${BUILD_APPDIR}/usr/${LIB}/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-jasper.so"
-rm -f "${BUILD_APPDIR}/usr/${LIB}/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-jpeg.so"
-rm -f "${BUILD_APPDIR}/usr/${LIB}/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-qtif.so"
-rm -f "${BUILD_APPDIR}/usr/${LIB}/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-tga.so"
-rm -f "${BUILD_APPDIR}/usr/${LIB}/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-tiff.so"
-rm -R "${BUILD_APPDIR}/usr/lib/cmake"
-rm -R "${BUILD_APPDIR}/usr/share/doc"
-rm -R "${BUILD_APPDIR}/usr/share/gtk-doc"
-rm -R "${BUILD_APPDIR}/usr/share/locale"
-rm -R "${BUILD_APPDIR}/usr/share/man"
-rm -R "${BUILD_APPDIR}/usr/share/thumbnailers"
-rm -R "${BUILD_APPDIR}/usr/share/vala"
-rm -R "${BUILD_APPDIR}/usr/share/icu"
+rm -f "$BUILD_APPDIR/usr/$LIB/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-ani.so"
+rm -f "$BUILD_APPDIR/usr/$LIB/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-bmp.so"
+rm -f "$BUILD_APPDIR/usr/$LIB/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-gif.so"
+rm -f "$BUILD_APPDIR/usr/$LIB/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-icns.so"
+rm -f "$BUILD_APPDIR/usr/$LIB/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-ico.so"
+rm -f "$BUILD_APPDIR/usr/$LIB/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-jasper.so"
+rm -f "$BUILD_APPDIR/usr/$LIB/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-jpeg.so"
+rm -f "$BUILD_APPDIR/usr/$LIB/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-qtif.so"
+rm -f "$BUILD_APPDIR/usr/$LIB/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-tga.so"
+rm -f "$BUILD_APPDIR/usr/$LIB/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-tiff.so"
+rm -R "$BUILD_APPDIR/usr/lib/cmake"
+rm -R "$BUILD_APPDIR/usr/share/doc"
+rm -R "$BUILD_APPDIR/usr/share/gtk-doc"
+rm -R "$BUILD_APPDIR/usr/share/locale"
+rm -R "$BUILD_APPDIR/usr/share/man"
+rm -R "$BUILD_APPDIR/usr/share/thumbnailers"
+rm -R "$BUILD_APPDIR/usr/share/vala"
+rm -R "$BUILD_APPDIR/usr/share/icu"
 
 # Build important part
 python2 setup.py build
-python2 setup.py install --prefix ${BUILD_APPDIR}/usr
+python2 setup.py install --prefix "$BUILD_APPDIR"/usr
 
 # Move udev stuff
-mv ${BUILD_APPDIR}/usr/lib/udev/rules.d/69-${APP}.rules ${BUILD_APPDIR}/
-rmdir ${BUILD_APPDIR}/usr/lib/udev/rules.d/
-rmdir ${BUILD_APPDIR}/usr/lib/udev/
-cp "/usr/include/linux/input-event-codes.h" ${BUILD_APPDIR}/usr/${LIB}/python2.7/site-packages/scc/
+mv "$BUILD_APPDIR/usr/lib/udev/rules.d/69-$APP".rules "$BUILD_APPDIR"/
+rmdir "$BUILD_APPDIR"/usr/lib/udev/rules.d/
+rmdir "$BUILD_APPDIR"/usr/lib/udev/
+cp "/usr/include/linux/input-event-codes.h" "$BUILD_APPDIR/usr/$LIB"/python2.7/site-packages/scc/
 
 # Move & patch desktop file
-mv ${BUILD_APPDIR}/usr/share/applications/${APP}.desktop ${BUILD_APPDIR}/
-sed -i "s/Icon=.*/Icon=${APP}/g" ${BUILD_APPDIR}/${APP}.desktop
-sed -i "s/Exec=.*/Exec=.\/usr\/bin\/scc gui/g" ${BUILD_APPDIR}/${APP}.desktop
+mv "$BUILD_APPDIR/usr/share/applications/$APP".desktop "$BUILD_APPDIR"/
+sed -i "s/Icon=.*/Icon=$APP/g" "$BUILD_APPDIR/$APP".desktop
+sed -i "s/Exec=.*/Exec=.\/usr\/bin\/scc gui/g" "$BUILD_APPDIR/$APP".desktop
 
 # Convert icon
-convert -background none ${BUILD_APPDIR}/usr/share/pixmaps/${APP}.svg ${BUILD_APPDIR}/${APP}.png
+convert -background none "$BUILD_APPDIR/usr/share/pixmaps/$APP".svg "$BUILD_APPDIR/$APP".png
 
 # Copy appdata.xml
-mkdir -p ${BUILD_APPDIR}/usr/share/metainfo/
-cp scripts/${APP}.appdata.xml ${BUILD_APPDIR}/usr/share/metainfo/${APP}.appdata.xml
+mkdir -p "$BUILD_APPDIR"/usr/share/metainfo/
+cp scripts/"$APP".appdata.xml "$BUILD_APPDIR/usr/share/metainfo/$APP".appdata.xml
 
 # Fix shebangs
-for x in "${BUILD_APPDIR}/usr/bin"/sc-controller "${BUILD_APPDIR}/usr/bin"/scc* ; do
+for x in "$BUILD_APPDIR/usr/bin"/sc-controller "$BUILD_APPDIR/usr/bin"/scc* ; do
     sed -i 's|#!/usr/bin/python2||' "$x"
 done
 
 # Copy AppRun script
-cp scripts/appimage-AppRun.sh ${BUILD_APPDIR}/AppRun
-chmod +x ${BUILD_APPDIR}/AppRun
+cp scripts/appimage-AppRun.sh "$BUILD_APPDIR"/AppRun
+chmod +x "$BUILD_APPDIR"/AppRun
 
-echo "Run appimagetool -n ${BUILD_APPDIR} to finish prepared appimage"
+echo "Run appimagetool -n $BUILD_APPDIR to finish prepared appimage"
