@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 import json
 import logging
 import os
@@ -99,45 +98,46 @@ class Export(UserDataManager):
         """
         As _add_refereced_profile, but reads and parses menu file.
         """
-        if "." in menu_id and menu_id not in used:
-            # Dot in id means filename
-            used.add(menu_id)
-            filename = find_menu(menu_id)
-            name = ".".join(menu_id.split(".")[0:-1])
-            if name.startswith(".") and menu_is_default(menu_id):
-                # Default and hidden, don't bother user with it
+        if "." not in menu_id or menu_id in used:
+            return
+        # Dot in id means filename
+        used.add(menu_id)
+        filename = find_menu(menu_id)
+        name = ".".join(menu_id.split(".")[0:-1])
+        if name.startswith(".") and menu_is_default(menu_id):
+            # Default and hidden, don't bother user with it
+            return
+        if filename:
+            model.append((
+                not menu_is_default(menu_id),
+                _("Menu"),
+                name,
+                filename,
+                True,
+                self.TP_MENU,
+            ))
+            try:
+                menu = MenuData.from_file(filename, ActionParser())
+            except Exception as e:
+                # Menu that cannot be parsed shouldn't be exported
+                log.error(e)
                 return
-            if filename:
-                model.append((
-                    not menu_is_default(menu_id),
-                    _("Menu"),
-                    name,
-                    filename,
-                    True,
-                    self.TP_MENU,
-                ))
-                try:
-                    menu = MenuData.from_file(filename, ActionParser())
-                except Exception as e:
-                    # Menu that cannot be parsed shouldn't be exported
-                    log.error(e)
-                    return
-                for item in menu:
-                    if isinstance(item, Submenu):
-                        self._add_refereced_menu(
-                            model,
-                            os.path.split(item.filename)[-1], used)
-                    if hasattr(item, "action"):
-                        self._parse_action(model, item.action, used)
-            else:
-                model.append((
-                    False,
-                    _("Menu"),
-                    _("%s (not found)") % (name, ),
-                    "",
-                    False,
-                    self.TP_MENU,
-                ))
+            for item in menu:
+                if isinstance(item, Submenu):
+                    self._add_refereced_menu(model,
+                                             os.path.split(item.filename)[-1],
+                                             used)
+                if hasattr(item, "action"):
+                    self._parse_action(model, item.action, used)
+        else:
+            model.append((
+                False,
+                _("Menu"),
+                _("%s (not found)") % (name, ),
+                "",
+                False,
+                self.TP_MENU,
+            ))
 
     def _parse_action(self, model, action, used):
         """
@@ -181,11 +181,11 @@ class Export(UserDataManager):
 
         package = tvPackage.get_model()
         package.clear()
-        used = set()
-
         model, iter = tvProfiles.get_selection().get_selected()
         if iter:
             giofile = model[iter][1]
+            used = set()
+
             s = self._add_refereced_profile(package, giofile, used)
             if self._needs_package():
                 # Profile references other menus or profiles
@@ -207,7 +207,7 @@ class Export(UserDataManager):
         """
         tvPackage = self.builder.get_object("tvPackage")
         package = tvPackage.get_model()
-        return any([row[0] for row in package])
+        return any(row[0] for row in package)
 
     def on_btSelectAll_clicked(self, *a):
         tvPackage = self.builder.get_object("tvPackage")

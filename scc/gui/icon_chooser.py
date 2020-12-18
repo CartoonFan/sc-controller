@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Icon Chooser
 """
@@ -122,10 +121,8 @@ class IconChooser(Editor, UserDataManager):
 
     @staticmethod
     def color_icon_exists(model, search_name):
-        for name, pb, has_colors in model:
-            if has_colors and search_name == name:
-                return True
-        return False
+        return any(has_colors and search_name == name
+                   for name, pb, has_colors in model)
 
     def on_menuicons_loaded(self, icons):
         tvIcons = self.builder.get_object("tvIcons")
@@ -183,9 +180,8 @@ class IconChooser(Editor, UserDataManager):
         if not os.path.exists(licensefile):
             return None
         for line in file(licensefile, "r").readlines():
-            if line.startswith(name):
-                if "-" in line:
-                    return line.split("-")[-1].strip("\t\r\n ")
+            if line.startswith(name) and "-" in line:
+                return line.split("-")[-1].strip("\t\r\n ")
         return None
 
 

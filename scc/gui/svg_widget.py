@@ -1,8 +1,7 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Background
 
-Changes SVG on the fly and uptates that magnificent image on background with it.
+Changes SVG on the fly and updates that magnificent image on background with it.
 Also supports clicking on areas defined in SVG image.
 """
 import logging
@@ -287,9 +286,6 @@ class SVGEditor(object):
         if isinstance(svgw, str):
             self._svgw = None
             self._tree = ET.fromstring(svgw)
-        elif isinstance(svgw, str):
-            self._svgw = None
-            self._tree = ET.fromstring(svgw.encode("utf-8"))
         else:
             self._svgw = svgw
             self._tree = ET.fromstring(svgw.current_svg.encode("utf-8"))
@@ -409,9 +405,8 @@ class SVGEditor(object):
         Returns element or None, if there is not any.
         """
         for child in tree:
-            if "id" in child.attrib:
-                if child.attrib["id"] == id:
-                    return child
+            if "id" in child.attrib and child.attrib["id"] == id:
+                return child
             r = SVGEditor.find_by_id(child, id)
             if r is not None:
                 return r
@@ -474,10 +469,9 @@ class SVGEditor(object):
     def _recolor(tree, s_from, s_to):
         """ Recursive part of recolor_strokes and recolor_background """
         for child in tree:
-            if "style" in child.attrib:
-                if s_from in child.attrib["style"]:
-                    child.attrib["style"] = child.attrib["style"].replace(
-                        s_from, s_to)
+            if "style" in child.attrib and s_from in child.attrib["style"]:
+                child.attrib["style"] = child.attrib["style"].replace(
+                    s_from, s_to)
             SVGEditor._recolor(child, s_from, s_to)
 
     def recolor_background(self, change_from, change_to):
@@ -632,11 +626,8 @@ class SVGEditor(object):
                         [[1.0, 0.0, -x], [0.0, 1.0, -y], [0.0, 0.0, 1.0]],
                     )
                 elif op == "scale":
-                    scale = tuple([float(x) for x in values.split(",")[0:2]])
-                    if len(scale) == 1:
-                        sx, sy = scale[0], scale[0]
-                    else:
-                        sx, sy = scale
+                    scale = tuple(float(x) for x in values.split(",")[0:2])
+                    sx, sy = (scale[0], scale[0]) if len(scale) == 1 else scale
                     matrix = SVGEditor.matrixmul(matrix, ((sx, 0.0, 0.0),
                                                           (0.0, sy, 0.0),
                                                           (0.0, 0.0, 1.0)))
@@ -672,11 +663,11 @@ class SVGEditor(object):
 
         def walk(xml):
             for child in xml:
-                if "id" in child.attrib:
-                    if child.attrib["id"].startswith("LABEL_"):
-                        id = child.attrib["id"][6:]
-                        if id in labels:
-                            SVGEditor.set_text(child, labels[id])
+                if "id" in child.attrib and child.attrib["id"].startswith(
+                        "LABEL_"):
+                    id = child.attrib["id"][6:]
+                    if id in labels:
+                        SVGEditor.set_text(child, labels[id])
                 walk(child)
 
         walk(self._tree)

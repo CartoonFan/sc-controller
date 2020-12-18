@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC Controller - Special Actions
 
@@ -371,33 +370,35 @@ class MenuAction(Action, SpecialAction, HapticEnabledAction):
         return True
 
     def button_press(self, mapper):
-        if not self.show_with_release:
-            confirm_with = self.confirm_with
-            cancel_with = self.cancel_with
-            args = [mapper]
-            if confirm_with == SAME:
-                confirm_with = mapper.get_pressed_button() or DEFAULT
-            elif confirm_with == DEFAULT:
-                confirm_with = DEFAULT
-            if cancel_with == DEFAULT:
-                cancel_with = DEFAULT
-            if nameof(self.control_with) in (LEFT, RIGHT):
-                args += ["--use-cursor"]
-            args += [
-                "--control-with",
-                nameof(self.control_with),
-                "-x",
-                str(self.x),
-                "-y",
-                str(self.y),
-                "--size",
-                str(self.size),
-                "--confirm-with",
-                nameof(confirm_with),
-                "--cancel-with",
-                nameof(cancel_with),
-            ]
-            self.execute(*args)
+        if self.show_with_release:
+            return
+
+        confirm_with = self.confirm_with
+        cancel_with = self.cancel_with
+        args = [mapper]
+        if confirm_with == SAME:
+            confirm_with = mapper.get_pressed_button() or DEFAULT
+        elif confirm_with == DEFAULT:
+            confirm_with = DEFAULT
+        if cancel_with == DEFAULT:
+            cancel_with = DEFAULT
+        if nameof(self.control_with) in (LEFT, RIGHT):
+            args += ["--use-cursor"]
+        args += [
+            "--control-with",
+            nameof(self.control_with),
+            "-x",
+            str(self.x),
+            "-y",
+            str(self.y),
+            "--size",
+            str(self.size),
+            "--confirm-with",
+            nameof(confirm_with),
+            "--cancel-with",
+            nameof(cancel_with),
+        ]
+        self.execute(*args)
 
     def button_release(self, mapper):
         if self.show_with_release:
@@ -551,8 +552,8 @@ class DialogAction(Action, SpecialAction):
         # First and 2nd parameter may be confirm and cancel button
         if len(pars) > 0 and pars[0] in SCButtons:
             self.confirm_with, pars = pars[0], pars[1:]
-            if len(pars) > 0 and pars[0] in SCButtons:
-                self.cancel_with, pars = pars[0], pars[1:]
+        if len(pars) > 0 and pars[0] in SCButtons:
+            self.cancel_with, pars = pars[0], pars[1:]
         # 1st always present argument is title
         if len(pars) > 0:
             self.text, pars = pars[0], pars[1:]
@@ -579,10 +580,7 @@ class DialogAction(Action, SpecialAction):
                 rv += "\n%s" % (" " * (pad + 2))
 
         rv = rv.strip("\n ,")
-        if multiline:
-            rv += "\n)"
-        else:
-            rv += ")"
+        rv += "\n)" if multiline else ")"
         return rv
 
     def get_previewable(self):

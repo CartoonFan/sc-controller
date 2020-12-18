@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 Python wrapper for some X-related stuff.
 
@@ -210,9 +209,9 @@ translate_coordinates.restype = c_bool
 
 get_input_focus = libX11.XGetInputFocus
 get_input_focus.__doc__ = """Returns window that currently have window focus.
-	Most of window managers and some GTK applications are breaking this.
-	See https://specifications.freedesktop.org/wm-spec/1.3/ar01s03.html
-	"""
+    Most of window managers and some GTK applications are breaking this.
+    See https://specifications.freedesktop.org/wm-spec/1.3/ar01s03.html
+    """
 get_input_focus.argtypes = [c_void_p, POINTER(XID), POINTER(c_int)]
 
 get_window_property = libX11.XGetWindowProperty
@@ -237,7 +236,7 @@ alloc_class_hint = libX11.XAllocClassHint
 alloc_class_hint.restype = POINTER(XClassHint)
 alloc_class_hint.argtypes = []
 alloc_class_hint.__doc__ = """Allocates and returns a pointer to a XClassHint
-	structure. Returned pointer has to be deallocated using free()"""
+    structure. Returned pointer has to be deallocated using free()"""
 
 get_class_hint = libX11.XGetClassHint
 get_class_hint.argtypes = [c_void_p, XID, POINTER(XClassHint)]

@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller
 Copyright (C) 2018 Kozec

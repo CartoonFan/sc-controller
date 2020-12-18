@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 import logging
 import os
 import tarfile
@@ -192,7 +191,7 @@ class ImportSccprofile(object):
             _('Import normaly, with names formated as "%s:name"') %
             (main_name, ))
 
-        for i in range(0, len(files)):
+        for i in range(len(files)):
             enabled, name, importas, type, obj = files[i]
             if enabled == 2:
                 importas = main_name

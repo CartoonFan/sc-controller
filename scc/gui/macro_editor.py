@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Action Editor
 
@@ -66,7 +65,7 @@ class MacroEditor(Editor):
         entName = self.builder.get_object("entName")
         cbMacroType = self.builder.get_object("cbMacroType")
         pars = [x[0] for x in self.actions]
-        if len(pars) == 0:
+        if not pars:
             # No action is actually set
             action = NoAction()
         elif cbMacroType.get_active() == 2:

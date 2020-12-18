@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """Generic linux daemon base class"""
 # Adapted from http://www.jejik.com/files/examples/daemon3x.py
 # thanks to the original author
@@ -135,11 +134,11 @@ class Daemon(object):
 
         # Try killing the daemon process
         try:
-            for x in range(0, 10):  # Waits max 1s
+            for _ in range(10):  # Waits max 1s
                 os.kill(pid, signal.SIGTERM)
                 if once:
                     break
-                for x in range(50):
+                for _ in range(50):
                     os.kill(pid, 0)
                     time.sleep(0.1)
                 time.sleep(0.1)

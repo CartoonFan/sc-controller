@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Simple Chooser
 
@@ -33,10 +32,10 @@ class SimpleChooser(Editor):
         mod = importlib.import_module("scc.gui.ae.%s" % (component_name, ))
         for x in dir(mod):
             cls = getattr(mod, x)
-            if isinstance(cls, type) and issubclass(cls, AEComponent):
-                if cls.NAME == component_name:
-                    self.component = cls(self.app, self)
-                    break
+            if (isinstance(cls, type) and issubclass(cls, AEComponent)
+                    and cls.NAME == component_name):
+                self.component = cls(self.app, self)
+                break
         if self.component is None:
             raise ValueError("Unknown component '%s'" % (component_name, ))
         self.component.load()

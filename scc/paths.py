@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Paths
 
@@ -8,7 +7,7 @@ where sccdaemon can be executed from and similar.
 This is gui-only thing, as sccdaemon doesn't really need to load anything what
 python can't handle.
 All this is needed since I want to have entire thing installable, runnable
-from source tarball *and* debugable in working folder.
+from source tarball *and* debuggable in working folder.
 """
 import os
 import sys

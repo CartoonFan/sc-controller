@@ -1,8 +1,7 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Action Editor
 
-Allows to edit button or trigger action.
+Allows to edit button or trigger actions.
 """
 import logging
 import os

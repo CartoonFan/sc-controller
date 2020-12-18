@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - GDK_TO_KEY
 
@@ -198,9 +197,8 @@ KEYCODE_TO_KEY = {
 names = {x.name: x for x in Keys}
 
 for x in dir(Gdk):
-    if x.startswith("KEY_"):
-        if x in names:
-            GDK_TO_KEY[getattr(Gdk, x)] = names[x]
+    if x.startswith("KEY_") and x in names:
+        GDK_TO_KEY[getattr(Gdk, x)] = names[x]
 
 # A-Z keys, because GDK has different codes for 'A' and 'a'
 for x in range(ord("a"), ord("z") + 1):

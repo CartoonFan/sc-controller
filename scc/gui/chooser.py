@@ -1,6 +1,5 @@
-#!/usr/bin/env python2
 """
-SC-Controller - Action Editor
+SC-Controller - Chooser
 
 Allows to edit button or trigger action.
 """
@@ -70,9 +69,9 @@ class Chooser(Editor):
 
     def on_background_area_hover(self, background, area):
         if area in AREA_TO_ACTION:
-            if AREA_TO_ACTION[area][0] in AXIS_ACTION_CLASSES:
-                if not self.axes_allowed:
-                    return
+            if AREA_TO_ACTION[area][
+                    0] in AXIS_ACTION_CLASSES and not self.axes_allowed:
+                return
             if not self.mouse_allowed and "MOUSE" in area:
                 return
         background.hilight({

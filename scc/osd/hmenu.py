@@ -1,11 +1,10 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Horisontal OSD Menu
 
 Works as OSD menu, but displays all items in one row.
 
 Designed mainly as RPG numeric pad display and looks
-awfull with larger number of items.
+awful with a large number of items.
 """
 import logging
 
@@ -36,18 +35,15 @@ class HorizontalMenu(GridMenu):
         """
         if isinstance(item, (Separator, Submenu)) or item.id is None:
             return None
-        else:
-            widget = GridMenu.generate_widget(self, item)
-            icon = widget.get_children()[-1]
-            if self._size > 1 and isinstance(icon, MenuIcon):
-                widget.set_size_request(-1, 32 + self._size * 3)
-            return widget
+        widget = GridMenu.generate_widget(self, item)
+        icon = widget.get_children()[-1]
+        if self._size > 1 and isinstance(icon, MenuIcon):
+            widget.set_size_request(-1, 32 + self._size * 3)
+        return widget
 
     def pack_items(self, parent, items):
-        x = 0
-        for item in items:
+        for x, item in enumerate(items):
             parent.attach(item.widget, x, 0, 1, 1)
-            x += 1
 
     def on_stick_direction(self, trash, x, y):
         if x != 0:

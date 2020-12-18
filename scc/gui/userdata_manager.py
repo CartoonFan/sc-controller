@@ -1,11 +1,10 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Profile Manager
 
 Simple class that manages stuff related to creating, loading, listing (...) of
 user-editable data - that are profiles, menus and controller-icons.
 
-Main App class interits from this.
+Main App class inherits from this.
 """
 import logging
 import os
@@ -91,7 +90,7 @@ class UserDataManager(object):
         # Number is increased when list is loaded until it reaches 2
         data = [None] * len(paths)
 
-        for i in range(0, len(paths)):
+        for i in range(len(paths)):
             f = Gio.File.new_for_path(paths[i])
             f.enumerate_children_async(
                 pattern,

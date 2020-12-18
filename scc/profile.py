@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Profile
 
@@ -219,11 +218,9 @@ class Profile(object):
         Used for checks when profile is exported or imported.
         """
         for action in self.get_actions():
-            for i in action.get_all_actions():
-                yield i
+            yield from action.get_all_actions()
         for id in self.menus:
-            for i in self.menus[id].get_all_actions():
-                yield i
+            yield from self.menus[id].get_all_actions()
 
     def get_actions(self):
         """
@@ -233,8 +230,7 @@ class Profile(object):
         for dct in (self.buttons, self.triggers, self.pads):
             for k in dct:
                 yield dct[k]
-        for action in (self.stick, self.gyro):
-            yield action
+        yield from (self.stick, self.gyro)
 
     def get_filename(self):
         """

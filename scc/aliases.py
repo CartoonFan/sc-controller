@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Aliases
 
@@ -61,8 +60,8 @@ ALL_AXES = (
     Axes.ABS_MISC,
 )
 
-for i in range(0, len(ALL_BUTTONS)):
+for i in range(len(ALL_BUTTONS)):
     setattr(Keys, "BTN%i" % (i, ), ALL_BUTTONS[i])
 
-for i in range(0, len(ALL_AXES)):
+for i in range(len(ALL_AXES)):
     setattr(Axes, "ABS%i" % (i, ), ALL_AXES[i])

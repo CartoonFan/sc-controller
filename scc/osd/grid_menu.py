@@ -1,8 +1,7 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Grid OSD Menu
 
-Works as OSD menu, but displays item in (as rectangluar as possible - and
+Works as OSD menu, but displays item in (as rectangular as possible - and
 that's usually not very much) grid.
 """
 import logging
@@ -52,7 +51,7 @@ class GridMenu(Menu):
         if x != 0:
             self.next_item(-x)
         elif y != 0:
-            for i in range(0, self.ipr):
+            for _ in range(self.ipr):
                 self.next_item(y)
 
     def generate_widget(self, item):

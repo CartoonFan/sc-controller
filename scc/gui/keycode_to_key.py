@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - KEYCODE_TO_KEY
 
