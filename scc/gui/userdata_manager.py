@@ -90,7 +90,7 @@ class UserDataManager(object):
         # Number is increased when list is loaded until it reaches 2
         data = [None] * len(paths)
 
-        for i in range(0, len(paths)):
+        for i in range(len(paths)):
             f = Gio.File.new_for_path(paths[i])
             f.enumerate_children_async(
                 pattern,

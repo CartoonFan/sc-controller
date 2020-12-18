@@ -120,7 +120,7 @@ class RIBar(Gtk.Revealer):
 
     def _cb_destroy(self, *a):
         """ Callback used by _cb_close method """
-        if not self.get_parent() is None:
+        if self.get_parent() is not None:
             self.get_parent().remove(self)
         self.destroy()
 

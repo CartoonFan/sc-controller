@@ -23,7 +23,7 @@ if ENV_VAR in os.environ:
     def start(daemon):
         num = int(os.environ[ENV_VAR])
         log.debug("Creating %s fake controllers", num)
-        for x in range(0, num):
+        for x in range(num):
             daemon.add_controller(FakeController(x))
 
 
