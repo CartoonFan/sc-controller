@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 import logging
 import os
 import tarfile

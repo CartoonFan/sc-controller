@@ -1,6 +1,5 @@
-#!/usr/bin/env python2
 """
-SC-Controller - Action Editor
+SC-Controller - Chooser
 
 Allows to edit button or trigger action.
 """

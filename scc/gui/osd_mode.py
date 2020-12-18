@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - OSD Mode Mapper
 
@@ -6,7 +5,7 @@ Very special case of mapper used when main application is launched in "odd mode"
 That means it's drawn in OSD layer, cannot be clicked and cannot react to
 keyboard. This mapper emulates input events on it using GTK methods.
 
-Mouse movement (but not buttons) are passed to uinput as usuall.
+Mouse movement (but not buttons) are passed to uinput as usual.
 """
 import logging
 

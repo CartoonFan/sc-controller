@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """Generic linux daemon base class"""
 # Adapted from http://www.jejik.com/files/examples/daemon3x.py
 # thanks to the original author

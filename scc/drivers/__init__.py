@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller goes through all modules in scc.drivers package and calls
 init(daemon) methods from every module that defines it.

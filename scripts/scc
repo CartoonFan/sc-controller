@@ -1,7 +1,6 @@
-#!/usr/bin/env python2
 """
 Script that integrates everything SCC can do in one executable.
-Created so scc-* stuff doesn't polute /usr/bin.
+Created so scc-* stuff doesn't pollute /usr/bin.
 """
 from scc.scripts import main
 

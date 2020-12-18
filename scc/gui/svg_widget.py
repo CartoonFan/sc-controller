@@ -1,8 +1,7 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Background
 
-Changes SVG on the fly and uptates that magnificent image on background with it.
+Changes SVG on the fly and updates that magnificent image on background with it.
 Also supports clicking on areas defined in SVG image.
 """
 import logging

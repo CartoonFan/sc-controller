@@ -1,8 +1,7 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Controller Registration Constants
 
-Just huge chunk of constants put aside to make impotant code more readable
+Just a huge chunk of constants put aside to make important code more readable
 """
 from scc.constants import LEFT
 from scc.constants import RIGHT

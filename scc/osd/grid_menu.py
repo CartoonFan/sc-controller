@@ -1,8 +1,7 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Grid OSD Menu
 
-Works as OSD menu, but displays item in (as rectangluar as possible - and
+Works as OSD menu, but displays item in (as rectangular as possible - and
 that's usually not very much) grid.
 """
 import logging

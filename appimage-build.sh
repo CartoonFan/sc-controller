@@ -10,42 +10,42 @@ EVDEV_VERSION=0.7.0
 
 
 function download_dep() {
-	NAME=$1
-	URL=$2
-	if [ -e ../../${NAME}.obstargz ] ; then
-		# Special case for OBS
-		cp ../../${NAME}.obstargz ${DEPCACHE}/${NAME}.tar.gz
-	elif [ -e ${NAME}.tar.gz ] ; then
-		cp ${NAME}.tar.gz ${DEPCACHE}/${NAME}.tar.gz
-	elif [ -e ${DEPCACHE}/${NAME}.tar.gz ] ; then
-		echo "${DEPCACHE}/${NAME}.tar.gz already downloaded"
-	else
-		wget -c "${URL}" -O ${DEPCACHE}/${NAME}.tar.gz
-	fi
+    NAME=$1
+    URL=$2
+    if [ -e ../../${NAME}.obstargz ] ; then
+        # Special case for OBS
+        cp ../../${NAME}.obstargz ${DEPCACHE}/${NAME}.tar.gz
+    elif [ -e ${NAME}.tar.gz ] ; then
+        cp ${NAME}.tar.gz ${DEPCACHE}/${NAME}.tar.gz
+    elif [ -e ${DEPCACHE}/${NAME}.tar.gz ] ; then
+        echo "${DEPCACHE}/${NAME}.tar.gz already downloaded"
+    else
+        wget -c "${URL}" -O ${DEPCACHE}/${NAME}.tar.gz
+    fi
 }
 
 function build_dep() {
-	NAME="$1"
-	mkdir -p ${BUILDCACHE}/${NAME}
-	pushd ${BUILDCACHE}/${NAME}
-	tar --extract --strip-components=1 -f ${DEPCACHE}/${NAME}.tar.gz
-	PYTHONPATH=${BUILD_APPDIR}/usr/lib/python2.7/site-packages python2 \
-		setup.py install --optimize=1 \
-		--prefix="/usr/" --root="${BUILD_APPDIR}"
-	mkdir -p "${BUILD_APPDIR}/usr/lib/python2.7/site-packages/"
-	python2 setup.py install --prefix="/usr/" --root="${BUILD_APPDIR}"
-	popd
+    NAME="$1"
+    mkdir -p ${BUILDCACHE}/${NAME}
+    pushd ${BUILDCACHE}/${NAME}
+    tar --extract --strip-components=1 -f ${DEPCACHE}/${NAME}.tar.gz
+    PYTHONPATH=${BUILD_APPDIR}/usr/lib/python2.7/site-packages python2 \
+        setup.py install --optimize=1 \
+        --prefix="/usr/" --root="${BUILD_APPDIR}"
+    mkdir -p "${BUILD_APPDIR}/usr/lib/python2.7/site-packages/"
+    python2 setup.py install --prefix="/usr/" --root="${BUILD_APPDIR}"
+    popd
 }
 
 function unpack_dep() {
-	NAME="$1"
-	pushd ${BUILD_APPDIR}
-	tar --extract --exclude="usr/include**" --exclude="usr/lib/pkgconfig**" \
-			--exclude="usr/lib/python3.6**" -f ${DEPCACHE}/${NAME}.tar.gz
-	popd
+    NAME="$1"
+    pushd ${BUILD_APPDIR}
+    tar --extract --exclude="usr/include**" --exclude="usr/lib/pkgconfig**" \
+            --exclude="usr/lib/python3.6**" -f ${DEPCACHE}/${NAME}.tar.gz
+    popd
 }
 
-set -ex		# display commands, terminate after 1st failure
+set -ex     # display commands, terminate after 1st failure
 
 # Download deps
 download_dep "python-2.7.18" "https://archive.archlinux.org/packages/p/python2/python2-2.7.18-1-x86_64.pkg.tar.zst"
@@ -66,10 +66,10 @@ download_dep "zlib-1:1.2.11" "https://archive.archlinux.org/packages/z/zlib/zlib
 export PYTHONPATH=${BUILD_APPDIR}/usr/lib/python2.7/site-packages/
 mkdir -p "$PYTHONPATH"
 if [[ $(grep ID_LIKE /etc/os-release) == *"suse"* ]] ; then
-	# Special handling for OBS
-	ln -s lib64 ${BUILD_APPDIR}/usr/lib
-	export PYTHONPATH="$PYTHONPATH":${BUILD_APPDIR}/usr/lib64/python2.7/site-packages/
-	LIB=lib64
+    # Special handling for OBS
+    ln -s lib64 ${BUILD_APPDIR}/usr/lib
+    export PYTHONPATH="$PYTHONPATH":${BUILD_APPDIR}/usr/lib64/python2.7/site-packages/
+    LIB=lib64
 fi
 
 build_dep "python-evdev-0.7.0"
@@ -130,7 +130,7 @@ cp scripts/${APP}.appdata.xml ${BUILD_APPDIR}/usr/share/metainfo/${APP}.appdata.
 
 # Fix shebangs
 for x in "${BUILD_APPDIR}/usr/bin"/sc-controller "${BUILD_APPDIR}/usr/bin"/scc* ; do
-	sed -i 's|#!/usr/bin/python2|#!/usr/bin/env python2|' "$x"
+    sed -i 's|#!/usr/bin/python2||' "$x"
 done
 
 # Copy AppRun script

@@ -1,11 +1,10 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Profile Manager
 
 Simple class that manages stuff related to creating, loading, listing (...) of
 user-editable data - that are profiles, menus and controller-icons.
 
-Main App class interits from this.
+Main App class inherits from this.
 """
 import logging
 import os

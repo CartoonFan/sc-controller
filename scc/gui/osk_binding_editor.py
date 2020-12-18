@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC-Controller - On Screen Keyboard Binding Editor
 

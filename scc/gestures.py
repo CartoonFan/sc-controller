@@ -1,9 +1,8 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Gestures
 
 Everything related to non-GUI part of gesture detection lies here.
-It's technically part of SCC-Daemon, separater into special module just to keep
+It's technically part of SCC-Daemon, separated into a special module just to keep
 it clean.
 """
 import logging

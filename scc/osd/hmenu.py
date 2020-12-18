@@ -1,11 +1,10 @@
-#!/usr/bin/env python2
 """
 SC-Controller - Horisontal OSD Menu
 
 Works as OSD menu, but displays all items in one row.
 
 Designed mainly as RPG numeric pad display and looks
-awfull with larger number of items.
+awful with a large number of items.
 """
 import logging
 

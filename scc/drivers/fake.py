@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 SC Controller - Fake controller driver
 
@@ -6,7 +5,7 @@ This driver does nothing by default, unless SCC_FAKES environment variable is
 set. If it is, creates as many fake controller devices as integer stored in
 SCC_FAKES says.
 
-Created controllers are completely useless. For debuging purposes only.
+Created controllers are completely useless. For debugging purposes only.
 """
 import logging
 import os
