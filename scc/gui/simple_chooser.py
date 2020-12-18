@@ -32,11 +32,8 @@ class SimpleChooser(Editor):
         mod = importlib.import_module("scc.gui.ae.%s" % (component_name, ))
         for x in dir(mod):
             cls = getattr(mod, x)
-            if (
-                isinstance(cls, type)
-                and issubclass(cls, AEComponent)
-                and cls.NAME == component_name
-            ):
+            if (isinstance(cls, type) and issubclass(cls, AEComponent)
+                    and cls.NAME == component_name):
                 self.component = cls(self.app, self)
                 break
         if self.component is None:

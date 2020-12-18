@@ -69,7 +69,8 @@ def init_logging(prefix="", suffix=""):
     old_log = logging.Logger._log
 
     def _log(self, level, msg, args, exc_info=None, extra=None):
-        args = tuple(str(c).decode("utf-8") if isinstance(c, str) else c for c in args)
+        args = tuple(
+            str(c).decode("utf-8") if isinstance(c, str) else c for c in args)
         msg = msg if isinstance(msg, str) else str(msg).decode("utf-8")
         old_log(self, level, msg, args, exc_info, extra)
 
@@ -179,9 +180,8 @@ def profile_is_override(name):
     """
     filename = "%s.sccprofile" % (name, )
     return bool(
-        os.path.exists(os.path.join(get_profiles_path(), filename))
-        and os.path.exists(os.path.join(get_default_profiles_path(), filename))
-    )
+        os.path.exists(os.path.join(get_profiles_path(), filename)) and
+        os.path.exists(os.path.join(get_default_profiles_path(), filename)))
 
 
 def profile_is_default(name):
@@ -398,23 +398,15 @@ def check_access(filename, write_required=True):
     """
     if HAVE_POSIX1E:
         for pset in posix1e.ACL(file=filename):
-            if (
-                pset.tag_type == posix1e.ACL_USER
-                and pset.qualifier == os.geteuid()
-                and pset.permset.test(posix1e.ACL_READ)
-                and (
-                    not write_required or pset.permset.test(posix1e.ACL_WRITE)
-                )
-            ):
+            if (pset.tag_type == posix1e.ACL_USER
+                    and pset.qualifier == os.geteuid()
+                    and pset.permset.test(posix1e.ACL_READ) and
+                (not write_required or pset.permset.test(posix1e.ACL_WRITE))):
                 return True
-            if (
-                pset.tag_type == posix1e.ACL_GROUP
-                and pset.qualifier in os.getgroups()
-                and pset.permset.test(posix1e.ACL_READ)
-                and (
-                    not write_required or pset.permset.test(posix1e.ACL_WRITE)
-                )
-            ):
+            if (pset.tag_type == posix1e.ACL_GROUP
+                    and pset.qualifier in os.getgroups()
+                    and pset.permset.test(posix1e.ACL_READ) and
+                (not write_required or pset.permset.test(posix1e.ACL_WRITE))):
                 return True
     if write_required:
         return os.access(filename, os.R_OK | os.W_OK)

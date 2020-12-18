@@ -103,13 +103,12 @@ class OSDModeMouse(object):
 
         gtk_window = None
         for w in Gtk.Window.list_toplevels():
-            if (
-                w.get_window()
-                and window.get_toplevel().get_xid() == w.get_window().get_xid()
-            ):
+            if (w.get_window() and window.get_toplevel().get_xid() ==
+                    w.get_window().get_xid()):
                 gtk_window = w
                 break
-        if gtk_window and gtk_window.get_type_hint() == Gdk.WindowTypeHint.COMBO:
+        if gtk_window and gtk_window.get_type_hint(
+        ) == Gdk.WindowTypeHint.COMBO:
             # Special case, clicking on combo does nothing, so
             # pressing "space" is emulated instead.
             if not val:

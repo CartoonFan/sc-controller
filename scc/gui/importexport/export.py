@@ -124,9 +124,9 @@ class Export(UserDataManager):
                 return
             for item in menu:
                 if isinstance(item, Submenu):
-                    self._add_refereced_menu(
-                        model,
-                        os.path.split(item.filename)[-1], used)
+                    self._add_refereced_menu(model,
+                                             os.path.split(item.filename)[-1],
+                                             used)
                 if hasattr(item, "action"):
                     self._parse_action(model, item.action, used)
         else:

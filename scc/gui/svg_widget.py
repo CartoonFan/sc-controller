@@ -663,7 +663,8 @@ class SVGEditor(object):
 
         def walk(xml):
             for child in xml:
-                if "id" in child.attrib and child.attrib["id"].startswith("LABEL_"):
+                if "id" in child.attrib and child.attrib["id"].startswith(
+                        "LABEL_"):
                     id = child.attrib["id"][6:]
                     if id in labels:
                         SVGEditor.set_text(child, labels[id])

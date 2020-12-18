@@ -121,9 +121,8 @@ class IconChooser(Editor, UserDataManager):
 
     @staticmethod
     def color_icon_exists(model, search_name):
-        return any(
-            has_colors and search_name == name for name, pb, has_colors in model
-        )
+        return any(has_colors and search_name == name
+                   for name, pb, has_colors in model)
 
     def on_menuicons_loaded(self, icons):
         tvIcons = self.builder.get_object("tvIcons")
